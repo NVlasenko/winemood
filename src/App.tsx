@@ -4,7 +4,7 @@ export function App() {
 
   return (
     <>
-      <div>Hello</div>
+      <div>Test</div>
     </>
   )
 }

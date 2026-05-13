@@ -3,7 +3,7 @@ import searchIcon from "../../assets/images/icons/search.svg";
 import iconProfile from "../../assets/images/icons/icon-account.svg";
 import { useState } from "react";
 import { navLinks } from "../../constants/navigation";
-
+import "./Header.scss";
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 

@@ -1,0 +1,31 @@
+@import "tailwindcss";
+@import './styles/theme';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@import './styles/theme';
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--background);
+}
+
+body {
+  margin: 0;
+  color: var(--text-primary);
+  font-family: Arial, sans-serif;
+}
+
+
+.hero {
+  position: relative;
+}
+
+

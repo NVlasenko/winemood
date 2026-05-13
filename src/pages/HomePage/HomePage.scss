@@ -1,0 +1,25 @@
+.home-page__title {
+  position: relative;
+  color: #fff;
+  z-index: 1;
+}
+
+.home-page__title::before {
+  content: '';
+  position: absolute;
+  top: -100px;
+  left: 10%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 600px;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(123, 0, 0, 0.35) 0%,
+      transparent 70%
+    );
+
+  filter: blur(60px);
+  z-index: -1;
+}

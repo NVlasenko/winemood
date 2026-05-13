@@ -1,10 +1,16 @@
-import './App.css'
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+// import { Header } from './components/Header/Header';
 
-export function App() {
+import './App.scss';
 
+export const App: React.FC = () => {
   return (
-    <>
-      <div>Test2</div>
-    </>
-  )
-}
+    <div className="App">
+      {/* <Header /> */}
+      <main className="content">
+        <Outlet />
+      </main>
+    </div>
+  );
+};

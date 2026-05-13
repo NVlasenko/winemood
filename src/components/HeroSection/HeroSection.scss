@@ -1,11 +1,12 @@
 @import '../../styles/mixins';
+@import '../../styles/variables';
 
 .hero-section {
   height: 100vh;
   position: relative;
   overflow: hidden;
   background: #050505;
-  padding: 170px 20px 80px;
+  // padding: 170px 20px 80px;
 
   &__content {
     position: relative;
@@ -15,24 +16,19 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: 140px;
+    margin-top: 330px;
 
     &::before {
       content: '';
       position: absolute;
-      top: -180px;
+      top: -140px;
       left: 50%;
       transform: translateX(-50%);
-      width: 700px;
-      height: 700px;
-      background:
-        radial-gradient(
-          circle,
-          rgba(164, 22, 26, 0.7) 0%,
-          transparent 70%
-        );
-  
-      filter: blur(90px);
+      width: 400px;
+      height: 400px;
+      background: $wine-glow-gradient;
+
+      filter: blur($wine-glow-blur);
   
       z-index: -1;
       transition:
@@ -41,6 +37,7 @@
       filter 0.5s ease;
     }
 
+    
     &:hover::before {
       opacity: 1;
   
@@ -148,11 +145,17 @@
 
   @include on-tablet {
     min-height: 720px;
-    padding: 220px 48px 90px;
+    // padding: 220px 48px 90px;
 
     &__content {
       max-width: 620px;
-      margin-top: 0;
+      // margin-left: -40px;
+      margin-top: 313px;
+      &::before {
+        top: -150px;
+        width: 500px;
+        height: 500px;
+      }
     }
 
     &__title {
@@ -184,9 +187,14 @@
 
     &__content {
       max-width: 720px;
-      margin-left: 120px;
-      margin-top: 100px;
+      margin-left: 103px;
+      margin-top: 313px;
       align-items: center;
+      &::before {
+        top: -180px;
+        width: 600px;
+        height: 500px;
+      }
     }
 
     &__title {

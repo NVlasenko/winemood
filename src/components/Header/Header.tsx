@@ -13,7 +13,8 @@ export const Header = () => {
 
   return (
     <header className="header">
-      <div className="header__inner">
+      <div className="container">
+           <div className="header__inner">
         <NavLink to="/" className="header__logo" onClick={closeMenu}>
           Vinoteca
         </NavLink>
@@ -65,6 +66,8 @@ export const Header = () => {
           <span />
         </button>
       </div>
+      </div>
+   
     </header>
   );
 };

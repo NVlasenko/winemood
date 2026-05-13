@@ -1,7 +1,6 @@
 import { NavLink } from "react-router-dom";
 import searchIcon from "../../assets/images/icons/search.svg";
-import iconProfile from "../../assets/images/icons/Icon_Account.svg";
-import "./Header.scss";
+import iconProfile from "../../assets/images/icons/icon-account.svg";
 import { useState } from "react";
 import { navLinks } from "../../constants/navigation";
 

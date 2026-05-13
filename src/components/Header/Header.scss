@@ -7,19 +7,11 @@
   left: 0;
   width: 100%;
   z-index: 1000;
-  
-  @include on-tablet {
-    padding: 20px 32px;
-  }
-
-  @include on-desktop {
-    padding: 28px 48px;
-  }
 
   &__inner {
     height: 88px;
-    margin: 0 20px;
-    padding: 0 32px;
+    margin: 20px 20px;
+    padding: 15px 15px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -33,12 +25,13 @@
 
     @include on-tablet {
       height: 72px;
-      padding: 0 28px;
+      padding: 18px 15px;
     }
 
     @include on-desktop {
       height: 78px;
-      padding: 0 36px;
+      padding: 20px 15px;
+      margin: 30px 30px;
     }
   }
 

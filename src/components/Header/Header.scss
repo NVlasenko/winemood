@@ -17,12 +17,11 @@
     justify-content: space-between;
     border: 1px solid rgba(217, 217, 217, 0.16);
     border-radius: 8px;
-    background: rgba(15, 15, 15, 0.18);
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+ 
+    background: rgba(10, 10, 10, 0.05);
 
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     @include on-tablet {
       height: 72px;
       padding: 18px 15px;

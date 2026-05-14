@@ -2,6 +2,7 @@ import "./PopularCategories.scss";
 
 import redWineImage from "../../assets/images/red-wine.png";
 import type { Category } from "../../types/categories";
+import { SectionTitle } from "../SectionTitle";
 
 const categories: Category[] = [
   {
@@ -49,13 +50,7 @@ export const PopularCategories = () => {
   return (
     <section className="popular-categories">
       <div className="container">
-        <div className="popular-categories__header">
-          <span />
-
-          <h2 className="popular-categories__title">Popular Categories</h2>
-
-          <span />
-        </div>
+      <SectionTitle title="Popular Categories" />
 
         <div className="popular-categories__grid">
           {categories.map((category) => (

@@ -4,6 +4,7 @@ import { HeroSection } from "../../components/HeroSection";
 import { RevealOnScroll } from "../RevealOnScroll/RevealOnScroll";
 import { PopularCategories } from "../../components/PopularCategories/PopularCategories";
 import { QuizCTA } from "../../components/QuizCTA/QuizCTA";
+import { WineCountries } from "../../components/WineCountries/WineCountries";
 
 export const HomePage: React.FC = () => {
   return (
@@ -18,6 +19,10 @@ export const HomePage: React.FC = () => {
 
       <RevealOnScroll>
         <QuizCTA />
+      </RevealOnScroll>
+
+      <RevealOnScroll>
+        <WineCountries />
       </RevealOnScroll>
     </section>
   );

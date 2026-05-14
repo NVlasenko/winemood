@@ -3,7 +3,7 @@ import { AnimatePresence, motion, type Variants } from 'framer-motion';
 import { SectionTitle } from '../SectionTitle';
 import type { CountryWine } from '../../types/countryWine';
 import arrowRight from '../../assets/images/icons/arrow-red.svg';
-import wineImage from '../../assets/images/wine.svg';
+import wineImage from '../../assets/images/wine.png';
 import countryBg from '../../assets/images/countryBg.png';
 import './WineCountries.scss';
 

@@ -1,8 +1,8 @@
 import React from "react";
 import "./HomePage.scss";
 import { HeroSection } from "../../components/HeroSection";
-import { PopularCategories } from "../../components/PopularCategories/ PopularCategories";
 import { RevealOnScroll } from "../RevealOnScroll/RevealOnScroll";
+import { PopularCategories } from "../../components/PopularCategories/PopularCategories";
 
 export const HomePage: React.FC = () => {
   return (

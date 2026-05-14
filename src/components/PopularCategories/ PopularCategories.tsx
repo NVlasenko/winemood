@@ -1,47 +1,47 @@
-import './PopularCategories.scss';
+import "./PopularCategories.scss";
 
-import redWineImage from '../../assets/images/red-wine.png';
-import type { Category } from '../../types/categories';
+import redWineImage from "../../assets/images/red-wine.png";
+import type { Category } from "../../types/categories";
 
 const categories: Category[] = [
   {
     id: 1,
-    title: 'Red Wines',
+    title: "Red Wines",
     image: redWineImage,
   },
   {
     id: 2,
-    title: 'Rosé',
+    title: "Rosé",
     image: redWineImage,
   },
   {
     id: 3,
-    title: 'Sparkling',
+    title: "Sparkling",
     image: redWineImage,
   },
   {
     id: 4,
-    title: 'Premium',
+    title: "Premium",
     image: redWineImage,
   },
 ];
 
 const getCardClassName = (title: string) => {
   switch (title) {
-    case 'Red Wines':
-      return 'popular-categories__card--red';
+    case "Red Wines":
+      return "popular-categories__card--red";
 
-    case 'Rosé':
-      return 'popular-categories__card--rose';
+    case "Rosé":
+      return "popular-categories__card--rose";
 
-    case 'Sparkling':
-      return 'popular-categories__card--sparkling';
+    case "Sparkling":
+      return "popular-categories__card--sparkling";
 
-    case 'Premium':
-      return 'popular-categories__card--premium';
+    case "Premium":
+      return "popular-categories__card--premium";
 
     default:
-      return '';
+      return "";
   }
 };
 
@@ -49,37 +49,35 @@ export const PopularCategories = () => {
   return (
     <section className="popular-categories">
       <div className="container">
-      <div className="popular-categories__header">
-        <span />
+        <div className="popular-categories__header">
+          <span />
 
-        <h2 className="popular-categories__title">
-          Popular Categories
-        </h2>
+          <h2 className="popular-categories__title">Popular Categories</h2>
 
-        <span />
-      </div>
+          <span />
+        </div>
 
-      <div className="popular-categories__grid">
-        {categories.map(category => (
-          <article
-            key={category.id}
-            className={`
+        <div className="popular-categories__grid">
+          {categories.map((category) => (
+            <article
+              key={category.id}
+              className={`
               popular-categories__card
               ${getCardClassName(category.title)}
             `}
-          >
-            <h3 className="popular-categories__card-title">
-              {category.title}
-            </h3>
+            >
+              <h3 className="popular-categories__card-title">
+                {category.title}
+              </h3>
 
-            <img
-              className="popular-categories__card-image"
-              src={category.image}
-              alt={category.title}
-            />
-          </article>
-        ))}
-      </div>
+              <img
+                className="popular-categories__card-image"
+                src={category.image}
+                alt={category.title}
+              />
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );

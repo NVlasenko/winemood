@@ -1,12 +1,11 @@
-@import '../../styles/mixins';
-@import '../../styles/variables';
+@import "../../styles/mixins";
+@import "../../styles/variables";
 
 .hero-section {
   height: 100vh;
   position: relative;
   overflow: hidden;
   background: #050505;
-  // padding: 170px 20px 80px;
 
   &__content {
     position: relative;
@@ -19,7 +18,7 @@
     margin-top: 330px;
 
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       top: -140px;
       left: 50%;
@@ -29,29 +28,23 @@
       background: $wine-glow-gradient;
 
       filter: blur($wine-glow-blur);
-  
+
       z-index: -1;
-      transition:
-      opacity 0.5s ease,
-      transform 0.5s ease,
-      filter 0.5s ease;
+      transition: opacity 0.5s ease, transform 0.5s ease, filter 0.5s ease;
     }
 
-    
     &:hover::before {
       opacity: 1;
-  
-      transform:
-        translateX(-50%)
-        scale(1.12);
-  
+
+      transform: translateX(-50%) scale(1.12);
+
       filter: blur(110px);
     }
   }
 
   &__title {
     margin: 0;
-    font-family: 'Marcellus', serif;
+    font-family: "Marcellus", serif;
     font-weight: 400;
     font-size: 36px;
     line-height: 1.15;
@@ -70,7 +63,7 @@
 
     p {
       margin: 0;
-      font-family: 'Poppins', sans-serif;
+      font-family: "Poppins", sans-serif;
       font-weight: 500;
       font-size: 12px;
       line-height: 1;
@@ -88,44 +81,9 @@
   }
 
   &__button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     margin-top: 36px;
     padding: 14px 28px;
-    border: none;
-    border-radius: 4px;
-
-    background: linear-gradient(
-      135deg,
-      rgba(102, 7, 8, 1) 0%,
-      rgba(164, 22, 26, 0.8) 100%
-    );
-    font-family: 'Inter', sans-serif;
-    font-weight: 500;
     font-size: 13px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: rgba(211, 211, 211, 1);
-    cursor: pointer;
-
-    transition:
-      transform 0.3s ease,
-      box-shadow 0.3s ease;
-      &-arrow {
-        width: 24px;
-        height: 24px;
-        margin-left: 12px;
-        flex-shrink: 0;
-        transition: transform 0.3s ease;
-      }
-
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow:
-        0 12px 34px rgba(186, 24, 27, 0.38);
-    }
-   
   }
 
   &__image {
@@ -145,11 +103,9 @@
 
   @include on-tablet {
     min-height: 720px;
-    // padding: 220px 48px 90px;
 
     &__content {
       max-width: 620px;
-      // margin-left: -40px;
       margin-top: 313px;
       &::before {
         top: -150px;

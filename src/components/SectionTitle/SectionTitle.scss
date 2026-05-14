@@ -7,14 +7,32 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-
   gap: 14px;
 
   &__line {
     width: 48px;
     height: 1px;
+    flex-shrink: 0;
 
-    background: rgba(164, 22, 26, 0.6);
+    &--right {
+      background: linear-gradient(
+        90deg,
+        rgba(164, 22, 26, 1) 0%,
+        rgba(102, 7, 8, 0.12) 100%
+      );
+
+      box-shadow: 0 0 10px rgba(164, 22, 26, 0.25);
+    }
+
+    &--left {
+      background: linear-gradient(
+        90deg,
+        rgba(102, 7, 8, 0.12) 0%,
+        rgba(164, 22, 26, 1) 100%
+      );
+
+      box-shadow: 0 0 10px rgba(164, 22, 26, 0.25);
+    }
   }
 
   &__text {
@@ -22,15 +40,11 @@
 
     font-family: 'Marcellus', serif;
     font-weight: 400;
-
     font-size: 21px;
     line-height: 1.2;
-
     letter-spacing: 0.08em;
     text-transform: uppercase;
     text-align: left;
-
-    white-space: nowrap;
 
     color: rgba(211, 211, 211, 1);
   }
@@ -44,6 +58,7 @@
 
     &__text {
       font-size: 38px;
+      white-space: nowrap;
     }
   }
 

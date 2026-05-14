@@ -4,7 +4,6 @@
 .wine-countries {
   position: relative;
   padding: 90px 0 100px;
-  // background: #050505;
   overflow: hidden;
 
   &::before {
@@ -47,7 +46,6 @@
 
   &__card {
     position: relative;
-    height: 180px;
     padding: 0;
     border-radius: 14px;
     background-size: cover;
@@ -67,8 +65,7 @@
   }
 
   &__content {
-    height: 100%;
-    padding: 28px 24px;
+    height: 180px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -91,7 +88,7 @@
 
   &__image-wrap {
     position: absolute;
-    top: 100px;
+    top: 0;
     right: 30px;
     bottom: 0;
     z-index: 3;
@@ -106,7 +103,7 @@
     height: 100%;
     object-fit: contain;
     pointer-events: none;
-    transform: scale(2);
+    transform: scale(0.8);
     transform-origin: center bottom;
   }
 
@@ -167,13 +164,8 @@
       gap: 32px;
     }
 
-    &__card {
-      height: 190px;
-    }
-
     &__content {
-      height: 100%;
-      padding: 32px 28px;
+      height: 190px;
       gap: 28px;
     }
 
@@ -183,15 +175,15 @@
     }
 
     &__image-wrap {
-      top: 100px;
-      right: 100px;
+      top: -6px;
+      right: 126px;
       bottom: -6px;
       width: 140px;
       height: 190px;
     }
 
     &__card-image {
-      transform: scale(2.1);
+      transform: scale(0.9);
     }
 
     &__view-all {
@@ -217,30 +209,25 @@
       gap: 50px;
     }
 
-    &__card {
-      height: 190px;
-    }
-
     &__content {
-      height: 100%;
-      padding: 40px 56px;
+      height: 224px;
       gap: 40px;
     }
 
     &__card-title {
-      padding-right: 160px;
+      padding-right: 150px;
     }
 
     &__image-wrap {
-      top: 180px;
-      right: 200px;
+      top: 27px;
+      right: 195px;
       bottom: -6px;
       width: 140px;
-      height: 190px;
+      height: 170px;
     }
 
     &__card-image {
-      transform: scale(2.8);
+      transform: scale(1.1);
     }
 
     &__view-all {

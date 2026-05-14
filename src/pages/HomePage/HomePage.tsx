@@ -3,6 +3,7 @@ import "./HomePage.scss";
 import { HeroSection } from "../../components/HeroSection";
 import { RevealOnScroll } from "../RevealOnScroll/RevealOnScroll";
 import { PopularCategories } from "../../components/PopularCategories/PopularCategories";
+import { QuizCTA } from "../../components/QuizCTA/QuizCTA";
 
 export const HomePage: React.FC = () => {
   return (
@@ -13,6 +14,10 @@ export const HomePage: React.FC = () => {
 
       <RevealOnScroll>
         <PopularCategories />
+      </RevealOnScroll>
+
+      <RevealOnScroll>
+        <QuizCTA />
       </RevealOnScroll>
     </section>
   );

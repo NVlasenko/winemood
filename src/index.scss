@@ -1,11 +1,12 @@
-@import './styles/theme';
+@import "./styles/theme";
+@import "./styles/container";
+@import "./styles/buttons";
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-
 
 html,
 body,
@@ -20,10 +21,4 @@ body {
   color: var(--text-primary);
   font-family: Arial, sans-serif;
 }
-
-
-.hero {
-  position: relative;
-}
-
 

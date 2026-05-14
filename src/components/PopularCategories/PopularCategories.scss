@@ -4,7 +4,7 @@
 .popular-categories {
   position: relative;
   padding-top: 50px;
-  background: #050505;
+  // background: #050505;
   overflow: hidden;
   &::before {
     content: "";
@@ -25,36 +25,6 @@
     opacity: 1;
     transform: scale(1.12);
     filter: blur($wine-glow-blur-hover);
-  }
-
-  &__header {
-    position: relative;
-    z-index: 2;
-
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 14px;
-    margin-bottom: 90px;
-
-    span {
-      width: 48px;
-      height: 1px;
-      background: rgba(164, 22, 26, 0.6);
-    }
-  }
-
-  &__title {
-    margin: 0;
-    font-family: "Marcellus", serif;
-    font-weight: 400;
-    font-size: 21px;
-    line-height: 1.2;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    text-align: left;
-    color: rgba(211, 211, 211, 1);
-    white-space: nowrap;
   }
 
   &__grid {
@@ -181,18 +151,18 @@
       height: 200px;
     }
 
-    &__header {
-      gap: 20px;
-      margin-bottom: 110px;
+    // &__header {
+    //   gap: 20px;
+    //   margin-bottom: 110px;
 
-      span {
-        width: 120px;
-      }
-    }
+    //   span {
+    //     width: 120px;
+    //   }
+    // }
 
-    &__title {
-      font-size: 38px;
-    }
+    // &__title {
+    //   font-size: 38px;
+    // }
 
     &__grid {
       grid-template-columns: repeat(2, 1fr);
@@ -227,18 +197,18 @@
       height: 200px;
     }
 
-    &__header {
-      gap: 24px;
-      margin-bottom: 130px;
+    // &__header {
+    //   gap: 24px;
+    //   margin-bottom: 130px;
 
-      span {
-        width: 240px;
-      }
-    }
+    //   span {
+    //     width: 240px;
+    //   }
+    // }
 
-    &__title {
-      font-size: 42px;
-    }
+    // &__title {
+    //   font-size: 42px;
+    // }
 
     &__grid {
       grid-template-columns: repeat(4, 1fr);

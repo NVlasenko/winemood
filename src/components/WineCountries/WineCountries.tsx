@@ -1,13 +1,10 @@
-import { useState } from 'react';
-
+import { useEffect, useState } from 'react';
+import { AnimatePresence, motion, type Variants } from 'framer-motion';
 import { SectionTitle } from '../SectionTitle';
-
 import type { CountryWine } from '../../types/countryWine';
 import arrowRight from '../../assets/images/icons/arrow-red.svg';
 import wineImage from '../../assets/images/wine.svg';
 import countryBg from '../../assets/images/countryBg.png';
-import { AnimatePresence, motion } from 'framer-motion';
-
 import './WineCountries.scss';
 
 const countries: CountryWine[] = [
@@ -21,63 +18,120 @@ const countries: CountryWine[] = [
   { id: 8, title: 'German Riesling', backgroundImage: countryBg, wineImage },
 ];
 
+const cardVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 35,
+    scale: 0.96,
+  },
+
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+
+    transition: {
+      duration: 0.7,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+
+  exit: {
+    opacity: 0,
+    y: 25,
+    scale: 0.96,
+
+    transition: {
+      duration: 0.45,
+      ease: [0.4, 0, 0.2, 1],
+    },
+  },
+};
+
 export const WineCountries = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(2);
 
-  const visibleCountries = isOpen ? countries : countries.slice(0, 2);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setVisibleCount(prev => {
+        if (isOpen && prev < countries.length) {
+          return prev + 1;
+        }
+
+        if (!isOpen && prev > 2) {
+          return prev - 1;
+        }
+
+        clearInterval(timer);
+        return prev;
+      });
+    }, 480);
+
+    return () => clearInterval(timer);
+  }, [isOpen]);
+
+  const visibleCountries = countries.slice(0, visibleCount);
 
   return (
     <section className="wine-countries">
       <div className="container">
         <SectionTitle title="Explore Wine Countries" />
 
-        <div className="wine-countries__grid">
-  <AnimatePresence>
-    {visibleCountries.map((country) => (
-    <motion.article
-    key={country.id}
-    className="wine-countries__card"
-    style={{
-      backgroundImage: `url(${country.backgroundImage})`,
-    }}
-    initial={{ opacity: 0, y: 30, scale: 0.96 }}
-    animate={{ opacity: 1, y: 0, scale: 1 }}
-    exit={{ opacity: 0, y: 20, scale: 0.96 }}
-    transition={{ duration: 0.35, ease: 'easeOut' }}
-  >
-    <div className="wine-countries__content">
-      <h3 className="wine-countries__card-title">
-        {country.title}
-      </h3>
-    </div>
-  
-    <div className="wine-countries__image-wrap">
-      <img
-        className="wine-countries__card-image"
-        src={country.wineImage}
-        alt={country.title}
-      />
-    </div>
-  </motion.article>
-    ))}
-  </AnimatePresence>
-</div>
+        <motion.div
+          className="wine-countries__grid-wrap"
+          layout={!isOpen}
+          transition={{
+            duration: 0.8,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+        >
+          <div className="wine-countries__grid">
+            <AnimatePresence>
+              {visibleCountries.map(country => (
+                <motion.article
+                  key={country.id}
+                  className="wine-countries__card"
+                  style={{
+                    backgroundImage: `url(${country.backgroundImage})`,
+                  }}
+                  variants={cardVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                >
+                  <div className="wine-countries__content">
+                    <h3 className="wine-countries__card-title">
+                      {country.title}
+                    </h3>
+                  </div>
 
-<button
-  className="wine-countries__view-all"
-  type="button"
-  onClick={() => setIsOpen(prev => !prev)}
->
+                  <div className="wine-countries__image-wrap">
+                    <img
+                      className="wine-countries__card-image"
+                      src={country.wineImage}
+                      alt={country.title}
+                    />
+                  </div>
+                </motion.article>
+              ))}
+            </AnimatePresence>
+          </div>
+        </motion.div>
 
+        <button
+          className="wine-countries__view-all"
+          type="button"
+          onClick={() => setIsOpen(prev => !prev)}
+        >
+          <img
+            className="wine-countries__view-all-arrow"
+            src={arrowRight}
+            alt=""
+          />
 
-  <img
-    className="wine-countries__view-all-arrow"
-    src={arrowRight}
-    alt=""
-  />
-
-  {isOpen ? 'Hide Countries' : 'View All Countries'}
-</button>
+          {isOpen ? 'Hide Countries' : 'View All Countries'}
+        </button>
       </div>
     </section>
   );

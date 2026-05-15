@@ -20,7 +20,7 @@ export const QuizCTA = () => {
             <img
               className="quiz-cta__button-arrow"
               src={arrowRight}
-              alt=""
+              alt="arrow"
             />
           </button>
         </div>

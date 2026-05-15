@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { AnimatePresence, motion, type Variants } from 'framer-motion';
+import { AnimatePresence, motion} from 'framer-motion';
 import { SectionTitle } from '../SectionTitle';
 import type { CountryWine } from '../../types/countryWine';
-import arrowRight from '../../assets/images/icons/arrow-red.svg';
 import wineImage from '../../assets/images/wine.png';
 import countryBg from '../../assets/images/countryBg.png';
 import './WineCountries.scss';
+import { cardVariants } from '../../animations/cardVariants';
+import { MoodLinkButton } from '../MoodLinkButton';
 
 const countries: CountryWine[] = [
   { id: 1, title: 'Italian Red', backgroundImage: countryBg, wineImage },
@@ -17,36 +18,6 @@ const countries: CountryWine[] = [
   { id: 7, title: 'Chilean Merlot', backgroundImage: countryBg, wineImage },
   { id: 8, title: 'German Riesling', backgroundImage: countryBg, wineImage },
 ];
-
-const cardVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 35,
-    scale: 0.96,
-  },
-
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-
-    transition: {
-      duration: 0.7,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  },
-
-  exit: {
-    opacity: 0,
-    y: 25,
-    scale: 0.96,
-
-    transition: {
-      duration: 0.45,
-      ease: [0.4, 0, 0.2, 1],
-    },
-  },
-};
 
 export const WineCountries = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -119,19 +90,11 @@ export const WineCountries = () => {
           </div>
         </motion.div>
 
-        <button
+        <MoodLinkButton
           className="wine-countries__view-all"
-          type="button"
+          text={isOpen ? 'Hide Countries' : 'View All Countries'}
           onClick={() => setIsOpen(prev => !prev)}
-        >
-          <img
-            className="wine-countries__view-all-arrow"
-            src={arrowRight}
-            alt=""
-          />
-
-          {isOpen ? 'Hide Countries' : 'View All Countries'}
-        </button>
+        />
       </div>
     </section>
   );

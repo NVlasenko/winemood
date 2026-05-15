@@ -1,4 +1,5 @@
 @import "../../styles/mixins";
+@import '../../styles/variables';
 
 .header {
   width: 100%;
@@ -135,7 +136,7 @@
     line-height: 1;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: rgba(211, 211, 211, 1);
+    color: $text-primary;
     text-decoration: none;
 
     transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease;
@@ -149,7 +150,7 @@
       height: 2px;
       transform: translateX(-50%);
       border-radius: 999px;
-      background: rgba(102, 7, 8, 1);
+      background: $accent-color;
       box-shadow: 0 0 12px rgba(196, 28, 36, 0.75),
         0 0 30px rgba(196, 28, 36, 0.45);
       transition: width 0.35s ease;
@@ -177,9 +178,9 @@
     }
 
     &:hover {
-      color: rgba(186, 24, 27, 1);
+      color: $active-color;
       transform: translateY(-1px);
-      text-shadow: 0 0 18px rgba(102, 7, 8, 1);
+      text-shadow: 0 0 18px $accent-color;
 
       &::before {
         width: 38px;
@@ -187,7 +188,7 @@
     }
 
     &--active {
-      color: rgba(186, 24, 27, 1);
+      color: $active-color;
 
       &::before {
         width: 56px;
@@ -290,7 +291,7 @@
         0 0 44px rgba(186, 24, 27, 0.22);
 
       span {
-        background: rgba(186, 24, 27, 1);
+        background: $active-color;
 
         &:nth-child(1) {
           transform: translateY(7px) rotate(45deg);

@@ -1,9 +1,9 @@
 @import '../../styles/mixins';
+@import '../../styles/variables';
 
 .section-title {
   position: relative;
   z-index: 2;
-
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -17,27 +17,26 @@
     &--right {
       background: linear-gradient(
         90deg,
-        rgba(164, 22, 26, 1) 0%,
-        rgba(102, 7, 8, 0.12) 100%
+        var(--line-gradient-end) 0%,
+        var(--line-gradient-start) 100%
       );
-
-      box-shadow: 0 0 10px rgba(164, 22, 26, 0.25);
+    
+      box-shadow: 0 0 10px var(--line-shadow);
     }
-
+    
     &--left {
       background: linear-gradient(
         90deg,
-        rgba(102, 7, 8, 0.12) 0%,
-        rgba(164, 22, 26, 1) 100%
+        var(--line-gradient-start) 0%,
+        var(--line-gradient-end) 100%
       );
-
-      box-shadow: 0 0 10px rgba(164, 22, 26, 0.25);
+    
+      box-shadow: 0 0 10px var(--line-shadow);
     }
   }
 
   &__text {
     margin: 0;
-
     font-family: 'Marcellus', serif;
     font-weight: 400;
     font-size: 21px;
@@ -45,8 +44,7 @@
     letter-spacing: 0.08em;
     text-transform: uppercase;
     text-align: left;
-
-    color: rgba(211, 211, 211, 1);
+    color: $text-primary;
   }
 
   @include on-tablet {

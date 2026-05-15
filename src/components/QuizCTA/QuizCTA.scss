@@ -4,14 +4,13 @@
 .quiz-cta {
   position: relative;
   padding: 100px 0 50px;
-  // background: #050505;
   overflow: hidden;
 
   &__box {
     position: relative;
     z-index: 2;
     padding: 42px 24px;
-    border: 2px solid rgba(164, 22, 26, 1);
+    border: 2px solid var(--border-color);
     border-radius: 12px;
     overflow: hidden;
 
@@ -22,7 +21,7 @@
       left: -120px;
       width: 380px;
       height: 380px;
-      background: $wine-glow-gradient;
+      background: var(--wine-glow-gradient);
       filter: blur($wine-glow-blur);
       opacity: 0.8;
       z-index: -1;
@@ -49,7 +48,7 @@
     line-height: 1.2;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: rgba(211, 211, 211, 1);
+    color: $text-primary;
   }
 
   &__text {
@@ -121,7 +120,6 @@
 
     &__text {
       margin-top: 12px;
-
       font-size: 18px;
     }
 

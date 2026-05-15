@@ -2,15 +2,11 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Particles, { initParticlesEngine } from '@tsparticles/react';
 import { loadAll } from '@tsparticles/all';
 import type { Engine } from '@tsparticles/engine';
-
 import { useMoodTheme } from '../../context/MoodThemeContext';
 import { moods } from '../../data/moods';
 import type { MoodCardTheme } from '../../types/mood';
-
 import { SectionTitle } from '../SectionTitle';
-
 import arrowRight from '../../assets/images/icons/arrow-right.svg';
-
 import './BrowseByMood.scss';
 import { fireCelebrationConfetti, getParticleOptions } from '../../utils/moodEffects';
 

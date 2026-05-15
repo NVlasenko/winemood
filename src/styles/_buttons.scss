@@ -1,3 +1,5 @@
+@import '../styles/variables';
+
 .button-primary {
   display: flex;
   align-items: center;
@@ -7,22 +9,24 @@
 
   background: linear-gradient(
     135deg,
-    rgba(102, 7, 8, 1) 0%,
-    rgba(164, 22, 26, 1) 100%
+    var(--button-gradient-start) 0%,
+    var(--button-gradient-end) 100%
   );
 
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-
-  color: rgba(211, 211, 211, 1);
+  color: $text-primary;
   cursor: pointer;
 
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.6s ease;
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 34px rgba(102, 7, 8, 1);
+    box-shadow: 0 12px 34px var(--button-shadow);
   }
 }

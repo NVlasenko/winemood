@@ -17,9 +17,61 @@ export const MoodThemeProvider = ({ children }: React.PropsWithChildren) => {
 
   useEffect(() => {
     const theme = moodThemeValues[moodTheme];
+  
+    document.documentElement.style.setProperty(
+      '--background',
+      theme.background,
+    );
+  
+    document.documentElement.style.setProperty(
+      '--wine-glow-rgb',
+      theme.glowRgb,
+    );
+  
+    document.documentElement.style.setProperty(
+      '--button-gradient-start',
+      theme.buttonGradientStart,
+    );
+  
+    document.documentElement.style.setProperty(
+      '--button-gradient-end',
+      theme.buttonGradientEnd,
+    );
+  
+    document.documentElement.style.setProperty(
+      '--button-shadow',
+      theme.buttonShadow,
+    );
 
-    document.documentElement.style.setProperty('--background', theme.background);
-    document.documentElement.style.setProperty('--wine-glow-rgb', theme.glowRgb);
+    document.documentElement.style.setProperty(
+      '--line-gradient-start',
+      theme.lineGradientStart,
+    );
+    
+    document.documentElement.style.setProperty(
+      '--line-gradient-end',
+      theme.lineGradientEnd,
+    );
+    
+    document.documentElement.style.setProperty(
+      '--line-shadow',
+      theme.lineShadow,
+    );
+
+    document.documentElement.style.setProperty(
+      '--border-color',
+      theme.borderColor,
+    );
+
+    document.documentElement.style.setProperty(
+      '--mood-link-color',
+      theme.linkColor,
+    );
+    
+    document.documentElement.style.setProperty(
+      '--mood-link-hover-color',
+      theme.linkHoverColor,
+    );
   }, [moodTheme]);
 
   return (

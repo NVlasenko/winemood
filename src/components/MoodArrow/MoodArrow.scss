@@ -1,0 +1,11 @@
+.mood-arrow {
+  width: 130px;
+  height: 22px;
+
+  flex-shrink: 0;
+  object-fit: contain;
+
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
+}

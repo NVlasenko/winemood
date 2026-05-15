@@ -1,9 +1,9 @@
 import type { Mood } from '../types/mood';
 
-import celebrationImage from '../assets/images/moods/celebration.png';
-import cozyEveningImage from '../assets/images/moods/cozy-evening.png';
-import dateNightImage from '../assets/images/moods/date-night.png';
-import culinaryImage from '../assets/images/moods/culinary.png';
+import celebrationImage from '../assets/images/moods/moods-img/celebration.png';
+import cozyEveningImage from '../assets/images/moods/moods-img/cozy-evening.png';
+import dateNightImage from '../assets/images/moods/moods-img/date-night.png';
+import culinaryImage from '../assets/images/moods/moods-img/culinary.png';
 
 export const moods: Mood[] = [
   {

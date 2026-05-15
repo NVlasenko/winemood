@@ -83,7 +83,7 @@
     letter-spacing: 0.08em;
     text-transform: uppercase;
     text-align: center;
-    color: rgba(211, 211, 211, 1);
+    color: $text-primary;
   }
 
   &__image-wrap {
@@ -108,44 +108,7 @@
   }
 
   &__view-all {
-    width: fit-content;
     margin: 56px 0 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    border: none;
-    background: transparent;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 500;
-    font-size: 13px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(211, 211, 211, 1);
-    cursor: pointer;
-
-    transition:
-      transform 0.3s ease,
-      color 0.3s ease;
-
-    &__view-all-arrow {
-      width: 130px;
-      height: 22px;
-      flex-shrink: 0;
-      transition: transform 0.3s ease;
-    }
-
-    @media (hover: hover) {
-      &:hover {
-        transform: translateX(4px);
-        color: rgba(186, 24, 27, 1);
-      }
-    }
-  }
-
-  @media (hover: hover) {
-    &__view-all:hover &__view-all-arrow {
-      transform: translateX(-4px);
-    }
   }
 
   @include on-tablet {
@@ -188,8 +151,6 @@
 
     &__view-all {
       margin: 56px 0 0 auto;
-      justify-content: flex-end;
-      font-size: 15px;
     }
   }
 
@@ -232,8 +193,6 @@
 
     &__view-all {
       margin: 56px 0 0 auto;
-      justify-content: flex-end;
-      font-size: 16px;
     }
   }
 }

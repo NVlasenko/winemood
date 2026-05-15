@@ -3,6 +3,19 @@
   --text-primary: #ffffff;
 
   --wine-glow-rgb: 164, 22, 26;
+
+  --button-gradient-start: rgba(102, 7, 8, 1);
+  --button-gradient-end: rgba(164, 22, 26, 1);
+
+  --line-gradient-start: rgba(102, 7, 8, 0.12);
+  --line-gradient-end: rgba(164, 22, 26, 1);
+  --line-shadow: rgba(164, 22, 26, 0.25);
+
+  --border-color: rgba(164, 22, 26, 1);
+
+  --mood-link-color: rgba(211, 211, 211, 1);
+  --mood-link-hover-color: rgba(186, 24, 27, 1);
+
   --wine-glow-gradient: radial-gradient(
     circle,
     rgba(var(--wine-glow-rgb), 0.7) 0%,

@@ -4,9 +4,8 @@
 .quiz-cta {
   position: relative;
   padding: 100px 0 50px;
-  // background: #050505;
   overflow: hidden;
-
+  
   &__box {
     position: relative;
     z-index: 2;
@@ -22,7 +21,7 @@
       left: -120px;
       width: 380px;
       height: 380px;
-      background: $wine-glow-gradient;
+      background: var(--wine-glow-gradient);
       filter: blur($wine-glow-blur);
       opacity: 0.8;
       z-index: -1;

@@ -8,21 +8,25 @@ const categories: Category[] = [
   {
     id: 1,
     title: "Red Wines",
+    type: "Red",
     image: redWineImage,
   },
   {
     id: 2,
     title: "Rosé",
+    type: "Rosé",
     image: redWineImage,
   },
   {
     id: 3,
     title: "Sparkling",
+    type: "Sparkling",
     image: redWineImage,
   },
   {
     id: 4,
     title: "Premium",
+    type: "Premium",
     image: redWineImage,
   },
 ];

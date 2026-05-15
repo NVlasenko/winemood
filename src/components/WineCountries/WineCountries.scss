@@ -13,7 +13,7 @@
     left: 10%;
     width: 420px;
     height: 320px;
-    background: $wine-glow-gradient;
+    background: var(--wine-glow-gradient);
     filter: blur($wine-glow-blur);
     opacity: 0.7;
     pointer-events: none;
@@ -197,7 +197,7 @@
     padding: 222px 0 150px;
 
     &::before {
-      top: 100px;
+      top: 300px;
       left: 14%;
       width: 900px;
       height: 260px;
@@ -220,7 +220,7 @@
 
     &__image-wrap {
       top: 27px;
-      right: 195px;
+      right: 150px;
       bottom: -6px;
       width: 140px;
       height: 170px;

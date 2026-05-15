@@ -1,11 +1,11 @@
 :root {
   --background: #050505;
+  --text-primary: #ffffff;
+
+  --wine-glow-rgb: 164, 22, 26;
+  --wine-glow-gradient: radial-gradient(
+    circle,
+    rgba(var(--wine-glow-rgb), 0.7) 0%,
+    transparent 70%
+  );
 }
-
-// [data-theme='dark'] {
-//   --background: #0f0f10;
-//   --surface: #17181a;
-
-//   --text-primary: #ffffff;
-//   --text-secondary: #b4bdc3;
-// }

@@ -1,5 +1,5 @@
-@import '../../styles/mixins';
-@import '../../styles/variables';
+@import "../../styles/mixins";
+@import "../../styles/variables";
 
 .section-title {
   position: relative;
@@ -20,24 +20,24 @@
         var(--line-gradient-end) 0%,
         var(--line-gradient-start) 100%
       );
-    
+
       box-shadow: 0 0 10px var(--line-shadow);
     }
-    
+
     &--left {
       background: linear-gradient(
         90deg,
         var(--line-gradient-start) 0%,
         var(--line-gradient-end) 100%
       );
-    
+
       box-shadow: 0 0 10px var(--line-shadow);
     }
   }
 
   &__text {
     margin: 0;
-    font-family: 'Marcellus', serif;
+    font-family: "Marcellus", serif;
     font-weight: 400;
     font-size: 23px;
     line-height: 1.2;

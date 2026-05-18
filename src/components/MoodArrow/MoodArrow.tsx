@@ -1,13 +1,13 @@
-import { useMoodTheme } from '../../context/MoodThemeContext';
-import { moodArrows } from '../../data/moodArrows';
+import { useMoodTheme } from "../../context/MoodThemeContext";
+import { moodArrows } from "../../data/moodArrows";
 
-import './MoodArrow.scss';
+import "./MoodArrow.scss";
 
 type Props = {
   className?: string;
 };
 
-export const MoodArrow = ({ className = '' }: Props) => {
+export const MoodArrow = ({ className = "" }: Props) => {
   const { moodTheme } = useMoodTheme();
 
   return (

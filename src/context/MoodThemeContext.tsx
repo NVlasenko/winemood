@@ -1,7 +1,7 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from "react";
 
-import type { MoodTheme } from '../types/mood';
-import { moodThemeValues } from '../data/moodThemes';
+import type { MoodTheme } from "../types/mood";
+import { moodThemeValues } from "../data/moodThemes";
 
 type MoodThemeContextType = {
   moodTheme: MoodTheme;
@@ -9,68 +9,68 @@ type MoodThemeContextType = {
 };
 
 const MoodThemeContext = createContext<MoodThemeContextType | undefined>(
-  undefined,
+  undefined
 );
 
 export const MoodThemeProvider = ({ children }: React.PropsWithChildren) => {
-  const [moodTheme, setMoodTheme] = useState<MoodTheme>('default');
+  const [moodTheme, setMoodTheme] = useState<MoodTheme>("default");
 
   useEffect(() => {
     const theme = moodThemeValues[moodTheme];
-  
+
     document.documentElement.style.setProperty(
-      '--background',
-      theme.background,
-    );
-  
-    document.documentElement.style.setProperty(
-      '--wine-glow-rgb',
-      theme.glowRgb,
-    );
-  
-    document.documentElement.style.setProperty(
-      '--button-gradient-start',
-      theme.buttonGradientStart,
-    );
-  
-    document.documentElement.style.setProperty(
-      '--button-gradient-end',
-      theme.buttonGradientEnd,
-    );
-  
-    document.documentElement.style.setProperty(
-      '--button-shadow',
-      theme.buttonShadow,
+      "--background",
+      theme.background
     );
 
     document.documentElement.style.setProperty(
-      '--line-gradient-start',
-      theme.lineGradientStart,
-    );
-    
-    document.documentElement.style.setProperty(
-      '--line-gradient-end',
-      theme.lineGradientEnd,
-    );
-    
-    document.documentElement.style.setProperty(
-      '--line-shadow',
-      theme.lineShadow,
+      "--wine-glow-rgb",
+      theme.glowRgb
     );
 
     document.documentElement.style.setProperty(
-      '--border-color',
-      theme.borderColor,
+      "--button-gradient-start",
+      theme.buttonGradientStart
     );
 
     document.documentElement.style.setProperty(
-      '--mood-link-color',
-      theme.linkColor,
+      "--button-gradient-end",
+      theme.buttonGradientEnd
     );
-    
+
     document.documentElement.style.setProperty(
-      '--mood-link-hover-color',
-      theme.linkHoverColor,
+      "--button-shadow",
+      theme.buttonShadow
+    );
+
+    document.documentElement.style.setProperty(
+      "--line-gradient-start",
+      theme.lineGradientStart
+    );
+
+    document.documentElement.style.setProperty(
+      "--line-gradient-end",
+      theme.lineGradientEnd
+    );
+
+    document.documentElement.style.setProperty(
+      "--line-shadow",
+      theme.lineShadow
+    );
+
+    document.documentElement.style.setProperty(
+      "--border-color",
+      theme.borderColor
+    );
+
+    document.documentElement.style.setProperty(
+      "--mood-link-color",
+      theme.linkColor
+    );
+
+    document.documentElement.style.setProperty(
+      "--mood-link-hover-color",
+      theme.linkHoverColor
     );
   }, [moodTheme]);
 
@@ -85,7 +85,7 @@ export const useMoodTheme = () => {
   const context = useContext(MoodThemeContext);
 
   if (!context) {
-    throw new Error('useMoodTheme must be used within MoodThemeProvider');
+    throw new Error("useMoodTheme must be used within MoodThemeProvider");
   }
 
   return context;

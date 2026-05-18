@@ -1,25 +1,9 @@
-import './Footer.scss';
-
-const discoveryLinks = [
-  'Find Inspiration',
-  'Search by Region',
-  'Food Pairing Guide',
-  'Wine Map Explorer',
-  'Vintage Collections',
-];
-
-const resourceLinks = [
-  'Sommelier Blog',
-  'Grape Variety Guides',
-  'Tasting Library',
-  'Community Picks',
-];
-
-const socialLinks = [
-  'Instagram',
-  'LinkedIn',
-  'Twitter / X',
-];
+import {
+  discoveryLinks,
+  resourceLinks,
+  socialLinks,
+} from "../../data/footerLinks";
+import "./Footer.scss";
 
 export const Footer = () => {
   return (
@@ -27,16 +11,14 @@ export const Footer = () => {
       <div className="container">
         <div className="footer__wrapper">
           <div className="footer__top">
-            <h2 className="footer__logo">
-              Vinoteca
-            </h2>
+            <h2 className="footer__logo">Vinoteca</h2>
 
             <div className="footer__content">
               <div className="footer__column">
                 <h3 className="footer__title">Discovery</h3>
 
                 <div className="footer__links">
-                  {discoveryLinks.map(link => (
+                  {discoveryLinks.map((link) => (
                     <a key={link} href="/" className="footer__link">
                       {link}
                     </a>
@@ -48,7 +30,7 @@ export const Footer = () => {
                 <h3 className="footer__title">Resources</h3>
 
                 <div className="footer__links">
-                  {resourceLinks.map(link => (
+                  {resourceLinks.map((link) => (
                     <a key={link} href="/" className="footer__link">
                       {link}
                     </a>
@@ -60,7 +42,7 @@ export const Footer = () => {
                 <h3 className="footer__title">Social</h3>
 
                 <div className="footer__links">
-                  {socialLinks.map(link => (
+                  {socialLinks.map((link) => (
                     <a key={link} href="/" className="footer__link">
                       {link}
                     </a>
@@ -77,16 +59,12 @@ export const Footer = () => {
               Online wine store | All rights reserved
             </p>
 
-            <p className="footer__privacy">
-              Privacy & Cookie Policies
-            </p>
+            <p className="footer__privacy">Privacy & Cookie Policies</p>
           </div>
         </div>
       </div>
 
-      <h2 className="footer__background-text">
-        Vinoteca
-      </h2>
+      <h2 className="footer__background-text">Vinoteca</h2>
     </footer>
   );
 };

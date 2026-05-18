@@ -5,7 +5,7 @@
 }
 
 .home__page--title::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -100px;
   left: 10%;
@@ -13,12 +13,11 @@
   width: 600px;
   height: 600px;
 
-  background:
-    radial-gradient(
-      circle,
-      rgba(164, 22, 26, 0.28) 0%,
-      transparent 70%
-    );
+  background: radial-gradient(
+    circle,
+    rgba(164, 22, 26, 0.28) 0%,
+    transparent 70%
+  );
 
   filter: blur(60px);
   z-index: -1;

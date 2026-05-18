@@ -1,9 +1,8 @@
-import confetti from 'canvas-confetti';
-import type { ISourceOptions } from '@tsparticles/engine';
+import confetti from "canvas-confetti";
+import type { ISourceOptions } from "@tsparticles/engine";
+import type { MoodCardTheme } from "../types/mood";
 
-import type { MoodCardTheme } from '../types/mood';
-
-type ParticleTheme = Exclude<MoodCardTheme, 'celebration'>;
+type ParticleTheme = Exclude<MoodCardTheme, "celebration">;
 
 export const fireCelebrationConfetti = () => {
   confetti({
@@ -14,38 +13,29 @@ export const fireCelebrationConfetti = () => {
     ticks: 220,
     scalar: 0.95,
     origin: { x: 0.5, y: 0.55 },
-    colors: [
-      '#f7aafb',
-      '#ff5e32',
-      '#ffd166',
-      '#ffffff',
-      '#ba181b',
-      '#7dd3fc',
-    ],
+    colors: ["#f7aafb", "#ff5e32", "#ffd166", "#ffffff", "#ba181b", "#7dd3fc"],
   });
 };
 
-export const getParticleOptions = (
-  theme: ParticleTheme,
-): ISourceOptions => {
+export const getParticleOptions = (theme: ParticleTheme): ISourceOptions => {
   const config = {
     cozy: {
-      values: ['✨', '☁️', '🌙', '⭐', '💫'],
-      colors: ['#ffffff', '#7dd3fc', '#b8d8ff'],
+      values: ["✨", "☁️", "🌙", "⭐", "💫"],
+      colors: ["#ffffff", "#7dd3fc", "#b8d8ff"],
       speed: 1.3,
       size: 18,
     },
 
     dateNight: {
-      values: ['❤️', '💕', '💖', '✨', '💘'],
-      colors: ['#ff4fa3', '#ff8cc6', '#ffffff'],
+      values: ["❤️", "💕", "💖", "✨", "💘"],
+      colors: ["#ff4fa3", "#ff8cc6", "#ffffff"],
       speed: 1.7,
       size: 22,
     },
 
     culinary: {
-      values: ['🍷', '✨', '🥂', '🍇', '⭐'],
-      colors: ['#ff5e32', '#ffb36b', '#ffd166', '#ffffff'],
+      values: ["🍷", "✨", "🥂", "🍇", "⭐"],
+      colors: ["#ff5e32", "#ffb36b", "#ffd166", "#ffffff"],
       speed: 1.5,
       size: 20,
     },
@@ -72,13 +62,13 @@ export const getParticleOptions = (
       },
 
       shape: {
-        type: 'char',
+        type: "char",
         options: {
           char: {
             value: config.values,
-            font: 'Verdana',
-            style: '',
-            weight: '400',
+            font: "Verdana",
+            style: "",
+            weight: "400",
           },
         },
       },
@@ -91,8 +81,8 @@ export const getParticleOptions = (
         animation: {
           enable: true,
           speed: 0.8,
-          startValue: 'max',
-          destroy: 'min',
+          startValue: "max",
+          destroy: "min",
         },
       },
 
@@ -106,11 +96,11 @@ export const getParticleOptions = (
       move: {
         enable: true,
         speed: config.speed,
-        direction: 'top',
+        direction: "top",
         random: true,
         straight: false,
         outModes: {
-          default: 'destroy',
+          default: "destroy",
         },
       },
 

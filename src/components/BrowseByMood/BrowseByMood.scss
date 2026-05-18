@@ -1,5 +1,5 @@
-@import '../../styles/mixins';
-@import '../../styles/variables';
+@import "../../styles/mixins";
+@import "../../styles/variables";
 
 .browse-by-mood {
   position: relative;
@@ -7,7 +7,7 @@
   overflow: hidden;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 60px;
     left: 10%;
@@ -18,10 +18,7 @@
     filter: blur($wine-glow-blur);
     opacity: 0.7;
     pointer-events: none;
-    transition:
-      opacity 0.5s ease,
-      transform 0.5s ease,
-      filter 0.5s ease;
+    transition: opacity 0.5s ease, transform 0.5s ease, filter 0.5s ease;
   }
 
   &:hover::before {
@@ -48,21 +45,17 @@
     overflow: visible;
     cursor: pointer;
     border: 1px solid rgba(125, 124, 124, 0.55);
-    box-shadow:
-      0 0 0 1px rgba(247, 170, 251, 0.08),
+    box-shadow: 0 0 0 1px rgba(247, 170, 251, 0.08),
       0 10px 30px rgba(0, 0, 0, 0.35);
 
-    transition:
-      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-      box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-      border-color 0.45s ease,
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.45s ease,
       filter 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 
     &:hover {
       transform: translateY(-8px);
       border-color: rgba(247, 170, 251, 0.45);
-      box-shadow:
-        0 0 0 1px rgba(247, 170, 251, 0.2),
+      box-shadow: 0 0 0 1px rgba(247, 170, 251, 0.2),
         0 28px 60px rgba(0, 0, 0, 0.55);
       filter: brightness(1.08);
     }
@@ -109,7 +102,7 @@
     bottom: 24px;
     z-index: 2;
     margin: 0;
-    font-family: 'Marcellus', serif;
+    font-family: "Marcellus", serif;
     font-weight: 400;
     font-size: 20px;
     line-height: 1.2;

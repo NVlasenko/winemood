@@ -19,24 +19,19 @@ body {
   position: relative;
   margin: 0;
   overflow-x: hidden;
-
   color: var(--text-primary);
   font-family: Arial, sans-serif;
-
   background: var(--background);
   background-size: 100% 100%;
   background-repeat: no-repeat;
 
-  transition:
-    background 1.2s cubic-bezier(0.22, 1, 0.36, 1),
-    color 0.6s ease;
+  transition: background 1.2s cubic-bezier(0.22, 1, 0.36, 1), color 0.6s ease;
 }
 
 #root {
   position: relative;
   z-index: 1;
 }
-
 
 img {
   display: block;

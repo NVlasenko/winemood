@@ -1,19 +1,19 @@
-import { MoodArrow } from '../MoodArrow';
+import { MoodArrow } from "../MoodArrow";
 
-import './MoodLinkButton.scss';
+import "./MoodLinkButton.scss";
 
 type Props = {
   text: string;
   onClick?: () => void;
   className?: string;
-  type?: 'button' | 'submit';
+  type?: "button" | "submit";
 };
 
 export const MoodLinkButton = ({
   text,
   onClick,
-  className = '',
-  type = 'button',
+  className = "",
+  type = "button",
 }: Props) => {
   return (
     <button
@@ -23,9 +23,7 @@ export const MoodLinkButton = ({
     >
       <MoodArrow className="mood-link-button__arrow" />
 
-      <span className="mood-link-button__text">
-        {text}
-      </span>
+      <span className="mood-link-button__text">{text}</span>
     </button>
   );
 };

@@ -9,11 +9,11 @@ export const Root: React.FC = () => {
   return (
     <HashRouter>
       <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<App />}>
-            <Route index element={<HomePage />} />
-          </Route>
-        </Routes>
+      <Routes>
+        <Route path="/" element={<App />}>
+          <Route index element={<HomePage />} />
+        </Route>
+      </Routes>
     </HashRouter>
   );
 };

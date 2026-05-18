@@ -1,16 +1,19 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import Particles, { initParticlesEngine } from '@tsparticles/react';
-import { loadAll } from '@tsparticles/all';
-import type { Engine } from '@tsparticles/engine';
-import { useMoodTheme } from '../../context/MoodThemeContext';
-import { moods } from '../../data/moods';
-import type { MoodCardTheme } from '../../types/mood';
-import { SectionTitle } from '../SectionTitle';
-import arrowRight from '../../assets/images/icons/arrow-right.svg';
-import './BrowseByMood.scss';
-import { fireCelebrationConfetti, getParticleOptions } from '../../utils/moodEffects';
+import { useEffect, useMemo, useRef, useState } from "react";
+import Particles, { initParticlesEngine } from "@tsparticles/react";
+import { loadAll } from "@tsparticles/all";
+import type { Engine } from "@tsparticles/engine";
+import { useMoodTheme } from "../../context/MoodThemeContext";
+import { moods } from "../../data/moods";
+import type { MoodCardTheme } from "../../types/mood";
+import { SectionTitle } from "../SectionTitle";
+import arrowRight from "../../assets/images/icons/arrow-right.svg";
+import "./BrowseByMood.scss";
+import {
+  fireCelebrationConfetti,
+  getParticleOptions,
+} from "../../utils/moodEffects";
 
-type ParticleTheme = Exclude<MoodCardTheme, 'celebration'>;
+type ParticleTheme = Exclude<MoodCardTheme, "celebration">;
 
 export const BrowseByMood = () => {
   const { setMoodTheme } = useMoodTheme();
@@ -40,14 +43,14 @@ export const BrowseByMood = () => {
     if (particleTimeoutRef.current) {
       window.clearTimeout(particleTimeoutRef.current);
     }
-  
+
     setActiveParticleTheme(null);
-  
+
     requestAnimationFrame(() => {
-      setParticleKey(prev => prev + 1);
+      setParticleKey((prev) => prev + 1);
       setActiveParticleTheme(theme);
     });
-  
+
     particleTimeoutRef.current = window.setTimeout(() => {
       setActiveParticleTheme(null);
       particleTimeoutRef.current = null;
@@ -63,7 +66,7 @@ export const BrowseByMood = () => {
   const handleMoodClick = (theme: MoodCardTheme) => {
     setMoodTheme(theme);
 
-    if (theme === 'celebration') {
+    if (theme === "celebration") {
       fireCelebrationConfetti();
       return;
     }
@@ -86,7 +89,7 @@ export const BrowseByMood = () => {
         <SectionTitle title="Browse By Mood" />
 
         <div className="browse-by-mood__grid">
-          {moods.map(mood => (
+          {moods.map((mood) => (
             <article
               key={mood.id}
               className="browse-by-mood__card"
@@ -101,9 +104,7 @@ export const BrowseByMood = () => {
 
                 <div className="browse-by-mood__card-overlay" />
 
-                <h3 className="browse-by-mood__card-title">
-                  {mood.title}
-                </h3>
+                <h3 className="browse-by-mood__card-title">{mood.title}</h3>
               </div>
             </article>
           ))}
@@ -115,7 +116,6 @@ export const BrowseByMood = () => {
             type="button"
           >
             Find My Wine
-
             <img
               src={arrowRight}
               alt="Arrow right"

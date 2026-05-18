@@ -11,7 +11,7 @@ export const App: React.FC = () => {
       <main className="content">
         <Outlet />
       </main>
-      <Footer/>
+      <Footer />
     </div>
   );
 };

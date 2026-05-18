@@ -10,7 +10,7 @@ import { BrowseByMood } from "../../components/BrowseByMood";
 export const HomePage: React.FC = () => {
   return (
     <section className="home__page">
-       <RevealOnScroll>
+      <RevealOnScroll>
         <HeroSection />
       </RevealOnScroll>
 

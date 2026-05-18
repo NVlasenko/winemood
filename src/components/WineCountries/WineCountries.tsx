@@ -1,22 +1,22 @@
-import { useEffect, useState } from 'react';
-import { AnimatePresence, motion} from 'framer-motion';
-import { SectionTitle } from '../SectionTitle';
-import type { CountryWine } from '../../types/countryWine';
-import wineImage from '../../assets/images/wine.png';
-import countryBg from '../../assets/images/countryBg.png';
-import './WineCountries.scss';
-import { cardVariants } from '../../animations/cardVariants';
-import { MoodLinkButton } from '../MoodLinkButton';
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { SectionTitle } from "../SectionTitle";
+import type { CountryWine } from "../../types/countryWine";
+import wineImage from "../../assets/images/wine.png";
+import countryBg from "../../assets/images/countryBg.png";
+import "./WineCountries.scss";
+import { cardVariants } from "../../animations/cardVariants";
+import { MoodLinkButton } from "../MoodLinkButton";
 
 const countries: CountryWine[] = [
-  { id: 1, title: 'Italian Red', backgroundImage: countryBg, wineImage },
-  { id: 2, title: 'Californian White', backgroundImage: countryBg, wineImage },
-  { id: 3, title: 'French Rosé', backgroundImage: countryBg, wineImage },
-  { id: 4, title: 'Spanish Red', backgroundImage: countryBg, wineImage },
-  { id: 5, title: 'Georgian Amber', backgroundImage: countryBg, wineImage },
-  { id: 6, title: 'Portuguese Port', backgroundImage: countryBg, wineImage },
-  { id: 7, title: 'Chilean Merlot', backgroundImage: countryBg, wineImage },
-  { id: 8, title: 'German Riesling', backgroundImage: countryBg, wineImage },
+  { id: 1, title: "Italian Red", backgroundImage: countryBg, wineImage },
+  { id: 2, title: "Californian White", backgroundImage: countryBg, wineImage },
+  { id: 3, title: "French Rosé", backgroundImage: countryBg, wineImage },
+  { id: 4, title: "Spanish Red", backgroundImage: countryBg, wineImage },
+  { id: 5, title: "Georgian Amber", backgroundImage: countryBg, wineImage },
+  { id: 6, title: "Portuguese Port", backgroundImage: countryBg, wineImage },
+  { id: 7, title: "Chilean Merlot", backgroundImage: countryBg, wineImage },
+  { id: 8, title: "German Riesling", backgroundImage: countryBg, wineImage },
 ];
 
 export const WineCountries = () => {
@@ -25,7 +25,7 @@ export const WineCountries = () => {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setVisibleCount(prev => {
+      setVisibleCount((prev) => {
         if (isOpen && prev < countries.length) {
           return prev + 1;
         }
@@ -59,7 +59,7 @@ export const WineCountries = () => {
         >
           <div className="wine-countries__grid">
             <AnimatePresence>
-              {visibleCountries.map(country => (
+              {visibleCountries.map((country) => (
                 <motion.article
                   key={country.id}
                   className="wine-countries__card"
@@ -92,8 +92,8 @@ export const WineCountries = () => {
 
         <MoodLinkButton
           className="wine-countries__view-all"
-          text={isOpen ? 'Hide Countries' : 'View All Countries'}
-          onClick={() => setIsOpen(prev => !prev)}
+          text={isOpen ? "Hide Countries" : "View All Countries"}
+          onClick={() => setIsOpen((prev) => !prev)}
         />
       </div>
     </section>

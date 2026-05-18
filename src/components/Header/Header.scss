@@ -150,9 +150,13 @@
       height: 2px;
       transform: translateX(-50%);
       border-radius: 999px;
-      background: $accent-color;
-      box-shadow: 0 0 12px rgba(196, 28, 36, 0.75),
-        0 0 30px rgba(196, 28, 36, 0.45);
+    
+      background: var(--button-gradient-start);
+    
+      box-shadow:
+        0 0 12px var(--button-shadow),
+        0 0 30px var(--button-shadow);
+    
       transition: width 0.35s ease;
     }
 
@@ -166,10 +170,10 @@
       transform: translateX(-50%) scaleX(0);
       transform-origin: center;
       background: radial-gradient(
-        ellipse,
-        rgba(196, 28, 36, 0.32) 0%,
-        transparent 70%
-      );
+      ellipse,
+      var(--line-shadow) 0%,
+      transparent 70%
+    );
 
       filter: blur(12px);
       opacity: 0;
@@ -178,9 +182,9 @@
     }
 
     &:hover {
-      color: $active-color;
+      color: var(--mood-link-hover-color);
       transform: translateY(-1px);
-      text-shadow: 0 0 18px $accent-color;
+      text-shadow: 0 0 18px var(--button-gradient-start);
 
       &::before {
         width: 38px;
@@ -188,7 +192,7 @@
     }
 
     &--active {
-      color: $active-color;
+      color: var(--mood-link-hover-color);
 
       &::before {
         width: 56px;
@@ -236,8 +240,8 @@
     &:hover {
       transform: translateY(-2px) scale(1.06);
       border-color: var(--primary-40);
-      background-color: rgba(196, 28, 36, 0.08);
-      box-shadow: 0 0 22px rgba(196, 28, 36, 0.35);
+      background-color: var(--line-gradient-start);
+      box-shadow: 0 0 22px var(--line-shadow);
     }
 
     @include on-desktop {
@@ -291,7 +295,7 @@
         0 0 44px rgba(186, 24, 27, 0.22);
 
       span {
-        background: $active-color;
+        background: var(--mood-link-hover-color);
 
         &:nth-child(1) {
           transform: translateY(7px) rotate(45deg);

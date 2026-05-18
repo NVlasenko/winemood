@@ -1,9 +1,5 @@
 import { useEffect, useState } from 'react';
-
 import './PopularCategories.scss';
-
-import redWineImage from '../../assets/images/red-wine.png';
-
 import { SectionTitle } from '../SectionTitle';
 import type { Category } from '../../types/categories';
 import { getCategories } from '../../shared/api/categoryApi';
@@ -65,7 +61,7 @@ export const PopularCategories = () => {
 
               <img
                 className="popular-categories__card-image"
-                src={category.image || redWineImage}
+                src={category.image}
                 alt={category.title}
               />
             </article>

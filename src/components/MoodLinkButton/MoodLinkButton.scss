@@ -1,0 +1,41 @@
+@import "../../styles/variables";
+
+.mood-link-button {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+
+  transition: transform 0.3s ease, color 0.3s ease;
+
+  &__text {
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mood-link-color);
+    transition: color 0.3s ease;
+  }
+
+  &__arrow {
+    transition: transform 0.3s ease;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      transform: translateX(4px);
+    }
+
+    &:hover &__text {
+      color: var(--mood-link-hover-color);
+    }
+
+    &:hover &__arrow {
+      transform: translateX(-4px);
+    }
+  }
+}

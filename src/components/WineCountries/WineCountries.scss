@@ -1,0 +1,197 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.wine-countries {
+  position: relative;
+  padding: 90px 0 100px;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: -10%;
+    left: 10%;
+    width: 420px;
+    height: 320px;
+    background: var(--wine-glow-gradient);
+    filter: blur($wine-glow-blur);
+    opacity: 0.7;
+    pointer-events: none;
+
+    transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+      filter 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  &:hover::before {
+    opacity: 1;
+    transform: scale(1.12);
+    filter: blur($wine-glow-blur-hover);
+  }
+
+  &__grid {
+    position: relative;
+    z-index: 2;
+    margin-top: 80px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+    will-change: transform;
+    &-wrap {
+      overflow-x: visible;
+      overflow-y: hidden;
+    }
+  }
+
+  &__card {
+    position: relative;
+    padding: 0;
+    border-radius: 14px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+      filter 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+
+    &:hover {
+      box-shadow: 0 22px 44px rgba(0, 0, 0, 0.34);
+      filter: brightness(1.08);
+    }
+  }
+
+  &__content {
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.18);
+    border-radius: 14px;
+  }
+
+  &__card-title {
+    width: 100%;
+    margin: 0;
+    padding-right: 120px;
+    font-family: "Marcellus", serif;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 1.2;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: center;
+    color: $text-primary;
+  }
+
+  &__image-wrap {
+    position: absolute;
+    top: 0;
+    right: 30px;
+    bottom: 0;
+    z-index: 3;
+    width: 120px;
+    height: 170px;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  &__card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+    transform: scale(0.8);
+    transform-origin: center bottom;
+  }
+
+  &__view-all {
+    margin: 56px 0 0 auto;
+  }
+
+  @include on-tablet {
+    padding: 110px 0 120px;
+
+    &::before {
+      top: 36px;
+      left: 0;
+      width: 900px;
+      height: 260px;
+    }
+
+    &__grid {
+      margin-top: 100px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+
+    &__content {
+      height: 190px;
+      gap: 28px;
+    }
+
+    &__card-title {
+      padding-right: 140px;
+      white-space: nowrap;
+    }
+
+    &__image-wrap {
+      top: -6px;
+      right: 126px;
+      bottom: -6px;
+      width: 140px;
+      height: 190px;
+    }
+
+    &__card-image {
+      transform: scale(0.9);
+    }
+
+    &__view-all {
+      margin: 56px 0 0 auto;
+    }
+  }
+
+  @include on-desktop {
+    padding: 222px 0 150px;
+
+    &::before {
+      top: 300px;
+      left: 14%;
+      width: 900px;
+      height: 260px;
+    }
+
+    &__grid {
+      margin-top: 120px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 50px;
+    }
+
+    &__content {
+      height: 224px;
+      gap: 40px;
+    }
+
+    &__card-title {
+      padding-right: 150px;
+    }
+
+    &__image-wrap {
+      top: 27px;
+      right: 150px;
+      bottom: -6px;
+      width: 140px;
+      height: 170px;
+    }
+
+    &__card-image {
+      transform: scale(1.1);
+    }
+
+    &__view-all {
+      margin: 56px 0 0 auto;
+    }
+  }
+}

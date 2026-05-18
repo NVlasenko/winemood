@@ -1,0 +1,29 @@
+@import "../styles/variables";
+
+.button-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 4px;
+
+  background: linear-gradient(
+    135deg,
+    var(--button-gradient-start) 0%,
+    var(--button-gradient-end) 100%
+  );
+
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $text-primary;
+  cursor: pointer;
+
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.6s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 34px var(--button-shadow);
+  }
+}

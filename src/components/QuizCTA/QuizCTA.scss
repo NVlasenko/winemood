@@ -1,0 +1,130 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.quiz-cta {
+  position: relative;
+  padding: 100px 0 50px;
+  overflow: hidden;
+
+  &__box {
+    position: relative;
+    z-index: 2;
+    padding: 42px 24px;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: -120px;
+      left: -120px;
+      width: 380px;
+      height: 380px;
+      background: var(--wine-glow-gradient);
+      filter: blur($wine-glow-blur);
+      opacity: 0.8;
+      z-index: -1;
+      pointer-events: none;
+
+      transition: opacity 0.5s ease, transform 0.5s ease, filter 0.5s ease;
+    }
+
+    &:hover::before {
+      opacity: 1;
+      transform: scale(1.12);
+      filter: blur($wine-glow-blur-hover);
+    }
+  }
+
+  &__title {
+    margin: 0;
+    font-family: "Marcellus", serif;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 1.2;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $text-primary;
+  }
+
+  &__text {
+    margin: 24px 0 0;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1.5;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(211, 211, 211, 0.82);
+  }
+
+  &__button {
+    width: 100%;
+    max-width: 296px;
+    height: 60px;
+    margin-top: 36px;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  &__button-arrow {
+    width: 24px;
+    height: 24px;
+    margin-left: 12px;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+  }
+
+  &__button:hover &__button-arrow {
+    transform: translateX(4px);
+  }
+
+  @include on-tablet {
+    padding: 150px 0 70px;
+
+    &__box {
+      padding: 60px 48px;
+    }
+
+    &__title {
+      font-size: 38px;
+    }
+
+    &__text {
+      max-width: 740px;
+      margin-top: 24px;
+      font-size: 16px;
+    }
+
+    &__button {
+      height: 64px;
+      margin-top: 42px;
+      font-size: 15px;
+    }
+  }
+
+  @include on-desktop {
+    padding: 250px 0 100px;
+
+    &__box {
+      padding: 50px 40px;
+    }
+
+    &__title {
+      font-size: 42px;
+    }
+
+    &__text {
+      margin-top: 12px;
+      font-size: 18px;
+    }
+
+    &__button {
+      width: 296px;
+      height: 68px;
+      margin-top: 48px;
+      font-size: 16px;
+    }
+  }
+}

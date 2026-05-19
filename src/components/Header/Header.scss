@@ -2,38 +2,28 @@
 @import "../../styles/variables";
 
 .header {
-  width: 100%;
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
   z-index: 1000;
+  width: 100%;
 
   &__inner {
     height: 88px;
     margin: 20px 0;
-    padding: 15px 15px;
+    padding: 15px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     border: 1px solid rgba(217, 217, 217, 0.16);
     border-radius: 8px;
-    background: rgba(10, 10, 10, 0.05);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    @include on-tablet {
-      height: 72px;
-      padding: 18px 15px;
-    }
-
-    @include on-desktop {
-      height: 78px;
-      padding: 20px 30px;
-      margin: 30px 0;
-    }
+    background: rgba(10, 10, 10, 0.18);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
   }
 
   &__logo {
+    flex-shrink: 0;
     display: inline-block;
     font-family: "Cormorant", serif;
     font-weight: 700;
@@ -42,19 +32,12 @@
     line-height: 1;
     color: #fff;
     text-decoration: none;
+
     transition: transform 0.35s ease, text-shadow 0.35s ease;
 
     &:hover {
       transform: translateY(-1px);
       text-shadow: 0 0 22px rgba(255, 255, 255, 0.35);
-    }
-
-    @include on-tablet {
-      font-size: 35px;
-    }
-
-    @include on-desktop {
-      font-size: 36px;
     }
   }
 
@@ -89,6 +72,7 @@
       pointer-events: auto;
       transform: translateY(0) scale(1);
       border-color: rgba(255, 255, 255, 0.1);
+
       background: linear-gradient(
         180deg,
         rgba(12, 12, 12, 0.96) 0%,
@@ -101,29 +85,8 @@
       box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55),
         inset 0 1px 0 rgba(255, 255, 255, 0.06);
     }
-
-    @include on-tablet {
-      position: static;
-      height: auto;
-      padding: 0;
-      flex-direction: row;
-      gap: 28px;
-      opacity: 1;
-      pointer-events: auto;
-      transform: none;
-      overflow: visible;
-      border: none;
-      border-radius: 0;
-      background: transparent;
-      backdrop-filter: none;
-      -webkit-backdrop-filter: none;
-      box-shadow: none;
-    }
-
-    @include on-desktop {
-      gap: 54px;
-    }
   }
+
   &__nav-link {
     position: relative;
     padding: 10px 0;
@@ -147,9 +110,7 @@
       transform: translateX(-50%);
       border-radius: 999px;
       background: var(--button-gradient-start);
-
       box-shadow: 0 0 12px var(--button-shadow), 0 0 30px var(--button-shadow);
-
       transition: width 0.35s ease;
     }
 
@@ -162,6 +123,7 @@
       height: 34px;
       transform: translateX(-50%) scaleX(0);
       transform-origin: center;
+
       background: radial-gradient(
         ellipse,
         var(--line-shadow) 0%,
@@ -195,23 +157,11 @@
         transform: translateX(-50%) scaleX(1);
       }
     }
-    @include on-tablet {
-      padding: 28px 0;
-    }
   }
 
   &__actions {
     display: none;
-
-    @include on-tablet {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-    }
-
-    @include on-desktop {
-      gap: 26px;
-    }
+    margin-left: auto;
   }
 
   &__icon {
@@ -220,10 +170,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
-    border: none;
-    background: transparent;
     padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
     cursor: pointer;
 
     transition: transform 0.3s ease, border-color 0.3s ease,
@@ -231,14 +181,10 @@
 
     &:hover {
       transform: translateY(-2px) scale(1.06);
+
       border-color: var(--primary-40);
       background-color: var(--line-gradient-start);
       box-shadow: 0 0 22px var(--line-shadow);
-    }
-
-    @include on-desktop {
-      width: 28px;
-      height: 28px;
     }
   }
 
@@ -247,6 +193,7 @@
     z-index: 1001;
     width: 38px;
     height: 38px;
+    margin-left: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -258,11 +205,12 @@
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
 
+    transition: transform 0.3s ease, box-shadow 0.3s ease,
+      border-color 0.3s ease;
+
     &:focus {
       outline: none;
     }
-    transition: transform 0.3s ease, box-shadow 0.3s ease,
-      border-color 0.3s ease;
 
     span {
       width: 16px;
@@ -270,6 +218,7 @@
       border-radius: 999px;
       background: #fff;
       transform-origin: center;
+
       transition: width 0.3s ease, opacity 0.3s ease, transform 0.3s ease,
         background-color 0.3s ease;
     }
@@ -303,9 +252,66 @@
         }
       }
     }
+  }
 
-    @include on-tablet {
+  @include on-tablet {
+    &__inner {
+      height: 72px;
+      padding: 18px 15px;
+    }
+
+    &__nav {
+      position: static;
+      margin-left: 50px;
+      height: auto;
+      padding: 0;
+      flex-direction: row;
+      gap: 28px;
+      overflow: visible;
+      opacity: 1;
+      pointer-events: auto;
+      transform: none;
+      border: none;
+      border-radius: 0;
+      background: transparent;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      box-shadow: none;
+    }
+
+    &__nav-link {
+      padding: 28px 0;
+    }
+
+    &__actions {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    &__burger {
       display: none;
+    }
+  }
+
+  @include on-desktop {
+    &__inner {
+      height: 78px;
+      margin: 30px 0;
+      padding: 20px 30px;
+    }
+
+    &__logo {
+      font-size: 36px;
+    }
+
+    &__nav {
+      gap: 54px;
+      margin-left: 120px;
+    }
+
+    &__actions {
+      gap: 26px;
     }
   }
 }

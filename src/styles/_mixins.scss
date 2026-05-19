@@ -1,3 +1,5 @@
+@import './variables';
+
 @mixin on-tablet {
   @media (min-width: 640px) {
     @content;
@@ -8,4 +10,28 @@
   @media (min-width: 1440px) {
     @content;
   }
+}
+
+@mixin on-large-desktop {
+  @media (min-width: 1440px) and (max-width: 1670px) {
+    @content;
+  }
+}
+
+@mixin mood-glow {
+  content: "";
+  position: absolute;
+  background: var(--wine-glow-gradient);
+  filter: blur($wine-glow-blur);
+  opacity: 0.75;
+  pointer-events: none;
+    transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@mixin mood-glow-hover {
+  opacity: 1;
+  transform: scale(1);
+  filter: blur($wine-glow-blur-hover);
 }

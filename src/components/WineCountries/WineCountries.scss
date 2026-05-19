@@ -8,10 +8,10 @@
 
   &::before {
     @include mood-glow;
-    top: -10%;
+    top: 0;
     left: 10%;
-    width: 420px;
-    height: 320px;
+    width: 350px;
+    height: 250px;
     z-index: 1;
   }
 

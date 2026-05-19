@@ -3,19 +3,16 @@
 
 .footer {
   position: relative;
-  padding: 0 0 40px;
+  padding: 100px 0 40px;
   overflow: hidden;
 
   &__wrapper {
     position: relative;
     z-index: 2;
-
     min-height: 400px;
     padding: 48px 24px 32px;
-
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 8px;
-
     background: linear-gradient(
       180deg,
       rgba(11, 11, 11, 0.85) 0%,
@@ -191,7 +188,7 @@
   }
 
   @include on-desktop {
-    padding: 30px 0 30px;
+    padding: 180px 0 50px;
 
     &__wrapper {
       padding: 44px 40px 32px;

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadAll } from "@tsparticles/all";
+import { Link } from "react-router-dom";
 import type { Engine } from "@tsparticles/engine";
 import { useMoodTheme } from "../../context/MoodThemeContext";
 import { moods } from "../../data/moods";
@@ -111,17 +112,14 @@ export const BrowseByMood = () => {
         </div>
 
         <div className="browse-by-mood__button-wrapper">
-          <button
-            className="button-primary browse-by-mood__button"
-            type="button"
-          >
+          <Link to="/catalog" className="button-primary browse-by-mood__button">
             Find My Wine
             <img
               src={arrowRight}
               alt="Arrow right"
               className="browse-by-mood__button-arrow"
             />
-          </button>
+          </Link>
         </div>
       </div>
     </section>

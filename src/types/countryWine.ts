@@ -1,6 +1,6 @@
 export type CountryWine = {
   id: number;
-  title: string;
+  nationality: string;
   backgroundImage: string;
   wineImage: string;
 };

@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
-
 import "./PopularCategories.scss";
-
 import { SectionTitle } from "../SectionTitle";
-
 import type { Category } from "../../types/categories";
-
 import { getCategories } from "../../shared/api/categoryApi";
 
 const getCardClassName = (type: string) => {

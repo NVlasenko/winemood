@@ -2,26 +2,29 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { SectionTitle } from "../SectionTitle";
 import type { CountryWine } from "../../types/countryWine";
-import wineImage from "../../assets/images/wine.png";
-import countryBg from "../../assets/images/countryBg.png";
 import "./WineCountries.scss";
 import { cardVariants } from "../../animations/cardVariants";
 import { MoodLinkButton } from "../MoodLinkButton";
-
-const countries: CountryWine[] = [
-  { id: 1, title: "Italian Red", backgroundImage: countryBg, wineImage },
-  { id: 2, title: "Californian White", backgroundImage: countryBg, wineImage },
-  { id: 3, title: "French Rosé", backgroundImage: countryBg, wineImage },
-  { id: 4, title: "Spanish Red", backgroundImage: countryBg, wineImage },
-  { id: 5, title: "Georgian Amber", backgroundImage: countryBg, wineImage },
-  { id: 6, title: "Portuguese Port", backgroundImage: countryBg, wineImage },
-  { id: 7, title: "Chilean Merlot", backgroundImage: countryBg, wineImage },
-  { id: 8, title: "German Riesling", backgroundImage: countryBg, wineImage },
-];
+import { getCountries } from "../../shared/api/countryApi";
 
 export const WineCountries = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(2);
+  const [countries, setCountries] = useState<CountryWine[]>([]);
+
+  useEffect(() => {
+    const loadCountries = async () => {
+      try {
+        const data = await getCountries();
+  
+        setCountries(data);
+      } catch (error) {
+        console.error("Failed to load countries", error);
+      }
+    };
+  
+    loadCountries();
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -73,7 +76,7 @@ export const WineCountries = () => {
                 >
                   <div className="wine-countries__content">
                     <h3 className="wine-countries__card-title">
-                      {country.title}
+                      {country.nationality}
                     </h3>
                   </div>
 
@@ -81,7 +84,7 @@ export const WineCountries = () => {
                     <img
                       className="wine-countries__card-image"
                       src={country.wineImage}
-                      alt={country.title}
+                      alt={country.nationality}
                     />
                   </div>
                 </motion.article>

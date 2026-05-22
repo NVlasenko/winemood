@@ -42,7 +42,7 @@
     -webkit-backdrop-filter: blur(40px);
     overflow-y: auto;
     transform: translateX(-100%);
-
+    background: rgba(8, 8, 8, 0.82);
     transition:
       transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
       box-shadow 0.35s ease;

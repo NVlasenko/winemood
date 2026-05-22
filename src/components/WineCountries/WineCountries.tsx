@@ -1,28 +1,70 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+
 import { SectionTitle } from "../SectionTitle";
-import type { CountryWine } from "../../types/countryWine";
-import "./WineCountries.scss";
-import { cardVariants } from "../../animations/cardVariants";
 import { MoodLinkButton } from "../MoodLinkButton";
+
+import type { CountryWine } from "../../types/countryWine";
 import { getCountries } from "../../shared/api/countryApi";
+
+import { cardVariants } from "../../animations/cardVariants";
+
+import "./WineCountries.scss";
 
 export const WineCountries = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(2);
   const [countries, setCountries] = useState<CountryWine[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const loadCountries = async () => {
       try {
+        setLoading(true);
+        setError("");
+
         const data = await getCountries();
-  
+
+        if (!Array.isArray(data)) {
+          throw new Error("Invalid countries data");
+        }
+
         setCountries(data);
       } catch (error) {
-        console.error("Failed to load countries", error);
+        console.error("Failed to load countries:", error);
+
+        if (error instanceof TypeError) {
+          setError("Network error. Please check your internet connection.");
+          return;
+        }
+
+        if (error instanceof Error) {
+          if (error.message.includes("404")) {
+            setError("Countries endpoint not found.");
+            return;
+          }
+
+          if (error.message.includes("500")) {
+            setError("Server error. Please try again later.");
+            return;
+          }
+
+          if (error.message.includes("Failed to fetch")) {
+            setError("Unable to connect to the server.");
+            return;
+          }
+
+          setError(error.message);
+          return;
+        }
+
+        setError("Something went wrong.");
+      } finally {
+        setLoading(false);
       }
     };
-  
+
     loadCountries();
   }, []);
 
@@ -43,9 +85,47 @@ export const WineCountries = () => {
     }, 480);
 
     return () => clearInterval(timer);
-  }, [isOpen]);
+  }, [isOpen, countries.length]);
 
   const visibleCountries = countries.slice(0, visibleCount);
+
+  if (loading) {
+    return (
+      <section className="wine-countries">
+        <div className="container">
+          <SectionTitle title="Explore Wine Countries" />
+
+          <p className="wine-countries__state">Loading countries...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="wine-countries">
+        <div className="container">
+          <SectionTitle title="Explore Wine Countries" />
+
+          <p className="wine-countries__state wine-countries__state--error">
+            {error}
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  if (!countries.length) {
+    return (
+      <section className="wine-countries">
+        <div className="container">
+          <SectionTitle title="Explore Wine Countries" />
+
+          <p className="wine-countries__state">No countries found.</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="wine-countries">
@@ -93,11 +173,13 @@ export const WineCountries = () => {
           </div>
         </motion.div>
 
-        <MoodLinkButton
-          className="wine-countries__view-all"
-          text={isOpen ? "Hide Countries" : "View All Countries"}
-          onClick={() => setIsOpen((prev) => !prev)}
-        />
+        {countries.length > 2 && (
+          <MoodLinkButton
+            className="wine-countries__view-all"
+            text={isOpen ? "Hide Countries" : "View All Countries"}
+            onClick={() => setIsOpen((prev) => !prev)}
+          />
+        )}
       </div>
     </section>
   );

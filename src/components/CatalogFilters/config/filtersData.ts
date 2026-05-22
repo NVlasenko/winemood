@@ -2,21 +2,13 @@ export const filters = [
   {
     id: "aromatic-notes",
     title: "Aromatic Notes",
-    groups: [
-      {
-        title: "Fruity",
-        options: ["Berries", "Citrus", "Tropical"],
-      },
-      {
-        title: "Other Notes",
-        options: [
-          "Floral",
-          "Spicy",
-          "Woody / Barrel",
-          "Mineral",
-          "Nutty / Honey",
-        ],
-      },
+    options: [
+      "Fruity",
+      "Floral",
+      "Spicy",
+      "Woody / Barrel",
+      "Mineral",
+      "Nutty / Honey",
     ],
   },
   {

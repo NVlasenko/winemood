@@ -15,6 +15,7 @@ export const wines: Wine[] = [
     alcoholByVolume: 14.5,
     appellation: "Barolo DOCG",
     fermentation: "Oak barrel fermentation",
+    vintage: 2010,
     category: {
       id: 1,
       title: "Red Wines",
@@ -58,6 +59,7 @@ export const wines: Wine[] = [
     alcoholByVolume: 13.5,
     appellation: "Chianti Classico DOCG",
     fermentation: "Stainless steel",
+    vintage: 1999,
     category: {
       id: 1,
       title: "Red Wines",
@@ -101,6 +103,7 @@ export const wines: Wine[] = [
     alcoholByVolume: 12.5,
     appellation: "Côtes de Provence AOC",
     fermentation: "Cold fermentation",
+    vintage: 2005,
     category: {
       id: 3,
       title: "Rosé",
@@ -144,6 +147,7 @@ export const wines: Wine[] = [
     alcoholByVolume: 12,
     appellation: "Champagne AOC",
     fermentation: "Traditional method",
+    vintage: 2007,
     category: {
       id: 4,
       title: "Sparkling",
@@ -187,6 +191,7 @@ export const wines: Wine[] = [
     alcoholByVolume: 10.5,
     appellation: "Mosel Qualitätswein",
     fermentation: "Stainless steel",
+    vintage: 2003,
     category: {
       id: 2,
       title: "White Wines",
@@ -231,6 +236,7 @@ export const wines: Wine[] = [
     alcoholByVolume: 14,
     appellation: "Rioja DOCa",
     fermentation: "Oak barrel",
+    vintage: 2005,
     category: {
       id: 1,
       title: "Red Wines",
@@ -275,6 +281,7 @@ export const wines: Wine[] = [
     alcoholByVolume: 13,
     appellation: "Bourgogne AOC",
     fermentation: "Open-top fermentation",
+    vintage: 2008,
     category: {
       id: 1,
       title: "Red Wines",
@@ -319,6 +326,7 @@ export const wines: Wine[] = [
     alcoholByVolume: 12.8,
     appellation: "Marlborough GI",
     fermentation: "Stainless steel",
+    vintage: 2009,
     category: {
       id: 2,
       title: "White Wines",
@@ -363,6 +371,7 @@ export const wines: Wine[] = [
     alcoholByVolume: 15.5,
     appellation: "Amarone della Valpolicella DOCG",
     fermentation: "Appassimento method",
+    vintage: 2011,
     category: {
       id: 1,
       title: "Red Wines",
@@ -407,6 +416,7 @@ export const wines: Wine[] = [
     alcoholByVolume: 11.8,
     appellation: "Cava DO",
     fermentation: "Traditional method",
+    vintage: 2003,
     category: {
       id: 4,
       title: "Sparkling",

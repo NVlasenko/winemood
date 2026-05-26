@@ -46,6 +46,7 @@ export type Wine = {
   grapeVariety: string;
   image: string;
   description: string;
+  vintage: number;
   rating: number;
   agingYears: number;
   alcoholByVolume: number;

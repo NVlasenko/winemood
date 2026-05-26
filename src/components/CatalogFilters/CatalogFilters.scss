@@ -322,6 +322,21 @@
     }
   }
 
+  &__group-header,
+  &__subgroup-header {
+  outline: none;
+  box-shadow: none;
+
+  -webkit-tap-highlight-color: transparent;
+
+  &:focus,
+  &:focus-visible,
+  &:active {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
   &__sub-arrow {
     width: 18px;
     height: 18px;

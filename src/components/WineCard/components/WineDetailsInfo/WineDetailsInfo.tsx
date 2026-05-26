@@ -26,22 +26,22 @@ export const WineDetailsInfo = ({ wine }: Props) => {
     },
     {
       title: "Producer",
-      value: wine.producer.name,
+      value: wine.producerName,
       icon: producerIcons[moodTheme],
     },
     {
       title: "Aging",
-      value: `${wine.agingYears * 12} months total`,
+      value: `${wine.agingMonths * 12} months total`,
       icon: agingIcons[moodTheme],
     },
     {
       title: "Ecological attributes",
-      value: wine.ecoAttributes.join(" / "),
+      value: wine.environmentalAttributes.join(" / "),
       icon: ecoIcons[moodTheme],
     },
     {
       title: "Fermentation",
-      value: wine.fermentation,
+      value: wine.fermentationType,
       icon: fermentationIcons[moodTheme],
     },
     {

@@ -30,4 +30,72 @@
     line-height: 1.7;
     color: rgba(178, 178, 178, 1);
   }
+
+  &__loader-wrapper {
+    position: relative;
+  
+    min-height: 100vh;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  &__loader-glow {
+    position: absolute;
+  
+    width: 260px;
+    height: 260px;
+  
+    border-radius: 50%;
+  
+    background: rgba(var(--wine-glow-rgb), 0.32);
+  
+    filter: blur(100px);
+  
+    animation: wineLoaderGlow 3s ease-in-out infinite;
+  }
+  
+  &__loader {
+    position: relative;
+    z-index: 2;
+  
+    width: 84px;
+    height: 84px;
+  
+    border-radius: 50%;
+  
+    border: 3px solid rgba(255, 255, 255, 0.12);
+  
+    border-top: 3px solid rgba(var(--wine-glow-rgb), 1);
+  
+    animation: wineLoaderSpin 0.9s linear infinite;
+  }
+}
+
+@keyframes wineLoaderSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes wineLoaderGlow {
+  0% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
 }

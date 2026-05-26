@@ -1,63 +1,45 @@
+export type Wine = {
+  id: number;
+  name: string;
+  type: WineType;
+  volumeMl: number;
+  description: string;
+  imageUrl: string;
+  rating: number;
+  alcoholPercentage: number;
+  sweetnessLevel: SweetnessLevel;
+  grapeVariety: GrapeVariety;
+  agingMonths: number;
+  environmentalAttributes: EnvironmentalAttribute[];
+  fermentationType: string;
+  vintage: number;
+  appellation: string;
+  producerName: string;
+  countryName: string;
+  region: string;
+};
+
+export type WineType =
+  | "RED"
+  | "WHITE"
+  | "ROSE"
+  | "SPARKLING";
+
 export type SweetnessLevel =
   | "DRY"
   | "SEMI_DRY"
   | "SEMI_SWEET"
-  | "SWEET"
-  | "BRUT";
+  | "SWEET";
+
+export type GrapeVariety =
+  | "CABERNET_SAUVIGNON"
+  | "MERLOT"
+  | "PINOT_NOIR"
+  | "CHARDONNAY"
+  | "SAUVIGNON_BLANC"
+  | "RIESLING";
 
 export type EnvironmentalAttribute =
   | "ORGANIC"
-  | "VEGAN"
-  | "SUSTAINABLE"
-  | "BIODYNAMIC";
-
-export type Category = {
-  id: number;
-  title: string;
-  type: string;
-  image?: string;
-};
-
-export type Region = {
-  id: number;
-  name: string;
-};
-
-export type Country = {
-  id: number;
-  name: string;
-};
-
-export type Producer = {
-  id: number;
-  name: string;
-};
-
-export type Food = {
-  id: number;
-  name: string;
-  image?: string;
-};
-
-export type Wine = {
-  id: number;
-  name: string;
-  bottleVolume: number;
-  grapeVariety: string;
-  image: string;
-  description: string;
-  vintage: number;
-  rating: number;
-  agingYears: number;
-  alcoholByVolume: number;
-  appellation: string;
-  fermentation: string;
-  category: Category;
-  region: Region;
-  country: Country;
-  sweetness: SweetnessLevel;
-  ecoAttributes: EnvironmentalAttribute[];
-  aromaticNotes: string;
-  producer: Producer;
-  foods: Food[];
-};
+  | "BIODYNAMIC"
+  | "VEGAN";

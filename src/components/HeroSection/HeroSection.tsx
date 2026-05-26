@@ -1,5 +1,5 @@
 import "./HeroSection.scss";
-import bgHero from "../../assets/images/bg-pictures/bgHero.png";
+import bgHero from "../../assets/images/bg-pictures/bgHero.svg";
 import arrowRight from "../../assets/images/icons/arrow-right.svg";
 
 export const HeroSection = () => {

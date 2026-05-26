@@ -9,7 +9,9 @@ export const SectionTitle = ({ title }: Props) => {
     <div className="section-title">
       <span className="section-title__line section-title__line--left" />
 
-      <h2 className="section-title__text">{title}</h2>
+      <span className="section-title__text-wrap">
+        <h2 className="section-title__text">{title}</h2>
+      </span>
 
       <span className="section-title__line section-title__line--right" />
     </div>

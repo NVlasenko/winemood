@@ -8,6 +8,6 @@ window.scrollTo(0, 0);
 
 createRoot(document.getElementById("root")!).render(
   <MoodThemeProvider>
-    <Root />
+      <Root />
   </MoodThemeProvider>
 );

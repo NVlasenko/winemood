@@ -1,6 +1,6 @@
 import type { Wine } from "../types/wine";
 
-import wineImage from "../assets/images/wine.png";
+import wineImage from "../assets/images/wine2.svg";
 
 export const wines: Wine[] = [
   {
@@ -10,7 +10,7 @@ export const wines: Wine[] = [
     grapeVariety: "Nebbiolo",
     image: wineImage,
     description: "Elegant red wine with cherry, rose, leather and spice notes.",
-    rating: 4.9,
+    rating: 5,
     agingYears: 5,
     alcoholByVolume: 14.5,
     appellation: "Barolo DOCG",

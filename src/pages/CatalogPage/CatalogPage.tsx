@@ -3,10 +3,11 @@ import { Link } from "react-router-dom";
 import wineDropIcon from "../../assets/images/wine/sweet.svg";
 import bottleIcon from "../../assets/images/wine/bottle.svg";
 import { SectionTitle } from "../../components/SectionTitle";
-import { wines } from "../../data/wines";
 import { CatalogFilters } from "../../components/CatalogFilters/CatalogFilters";
 import { useFavorites } from "../../context/FavoritesContext";
+import type { Wine } from "@/types/wine";
 import "./CatalogPage.scss";
+import { getWines } from "@/shared/api/wineApi";
 
 const sortOptions = ["Popularity", "Top Rated", "Alphabetical"];
 
@@ -14,10 +15,12 @@ export const CatalogPage = () => {
   const [activeSort, setActiveSort] = useState("Popularity");
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const [wines, setWines] = useState<Wine[]>([]);
   const { favorites, toggleFavorite } = useFavorites();
   const sortRef = useRef<HTMLDivElement | null>(null);
   const visibleWines = wines;
   const hasNoResults = visibleWines.length === 0;
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleOpenFilters = () => {
     setIsFiltersOpen(true);
@@ -36,6 +39,24 @@ export const CatalogPage = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+  const loadWines = async () => {
+    try {
+      setIsLoading(true);
+
+      const data = await getWines();
+
+      setWines(data);
+    } catch (error) {
+      console.error("Failed to load wines", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  loadWines();
+}, []);
 
   return (
     <main className="catalog-page">
@@ -90,25 +111,33 @@ export const CatalogPage = () => {
           </button>
         </div>
 
-        {hasNoResults ? (
-          <div className="catalog-page__empty">
-            <div className="catalog-page__empty-glow" />
+        {isLoading ? (
+            <div className="catalog-page__loader-wrapper">
+              <div className="catalog-page__loader-glow" />
 
-            <h3 className="catalog-page__empty-title">No wines found</h3>
+              <div className="catalog-page__loader" />
+            </div>
+          ) : hasNoResults ? (
+            <div className="catalog-page__empty">
+              <div className="catalog-page__empty-glow" />
 
-            <p className="catalog-page__empty-text">
-              Try changing filters or reset your selection.
-            </p>
+              <h3 className="catalog-page__empty-title">
+                No wines found
+              </h3>
 
-            <button
-              type="button"
-              className="button-primary catalog-page__empty-button"
-              onClick={handleOpenFilters}
-            >
-              Change filters
-            </button>
-          </div>
-        ) : (
+              <p className="catalog-page__empty-text">
+                Try changing filters or reset your selection.
+              </p>
+
+              <button
+                type="button"
+                className="button-primary catalog-page__empty-button"
+                onClick={handleOpenFilters}
+              >
+                Change filters
+              </button>
+            </div>
+          ) : (
           <>
             <div className="catalog-page__grid">
               {visibleWines.map((wine) => {
@@ -141,34 +170,45 @@ export const CatalogPage = () => {
 
                       <img
                         className="catalog-page__image"
-                        src={wine.image}
+                        src={wine.imageUrl}
                         alt={wine.name}
                       />
                     </Link>
 
                     <div className="catalog-page__info">
                       <p className="catalog-page__country">
-                        {wine.country.name}
+                        {wine.countryName}
                       </p>
 
-                      <h3 className="catalog-page__name">{wine.name}</h3>
+                      <h3 className="catalog-page__name">
+                        {wine.name}
+                      </h3>
 
                       <div className="catalog-page__rating">
-                        <span className="catalog-page__stars">★★★★★</span>
+                        <span className="catalog-page__stars">
+                          ★★★★★
+                        </span>
+
                         <span>{wine.rating} (154)</span>
                       </div>
 
                       <div className="catalog-page__meta">
                         <div className="catalog-page__meta-item">
-                          <img src={wineDropIcon} alt="Sweetness" />
+                          <img
+                            src={wineDropIcon}
+                            alt="Sweetness"
+                          />
 
-                          <span>{wine.sweetness}</span>
+                          <span>{wine.sweetnessLevel}</span>
                         </div>
 
                         <div className="catalog-page__meta-item">
-                          <img src={bottleIcon} alt="Bottle volume" />
+                          <img
+                            src={bottleIcon}
+                            alt="Bottle volume"
+                          />
 
-                          <span>{wine.bottleVolume} ml</span>
+                          <span>{wine.volumeMl} ml</span>
                         </div>
                       </div>
                     </div>
@@ -178,7 +218,10 @@ export const CatalogPage = () => {
             </div>
 
             <div className="catalog-page__pagination">
-              <button className="catalog-page__pagination-arrow" type="button">
+              <button
+                className="catalog-page__pagination-arrow"
+                type="button"
+              >
                 ‹
               </button>
 
@@ -189,21 +232,35 @@ export const CatalogPage = () => {
                 1
               </button>
 
-              <button className="catalog-page__pagination-item" type="button">
+              <button
+                className="catalog-page__pagination-item"
+                type="button"
+              >
                 2
               </button>
 
-              <button className="catalog-page__pagination-item" type="button">
+              <button
+                className="catalog-page__pagination-item"
+                type="button"
+              >
                 3
               </button>
 
-              <span className="catalog-page__pagination-dots">...</span>
+              <span className="catalog-page__pagination-dots">
+                ...
+              </span>
 
-              <button className="catalog-page__pagination-item" type="button">
+              <button
+                className="catalog-page__pagination-item"
+                type="button"
+              >
                 12
               </button>
 
-              <button className="catalog-page__pagination-arrow" type="button">
+              <button
+                className="catalog-page__pagination-arrow"
+                type="button"
+              >
                 ›
               </button>
             </div>

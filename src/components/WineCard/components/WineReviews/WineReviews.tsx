@@ -1,9 +1,7 @@
 import { useState } from "react";
-
 import type { Wine } from "@/types/wine";
 import { reviews } from "@/data/reviews";
 import { SectionTitle } from "@/components/SectionTitle";
-
 import reviewsBg from "@/assets/images/wineDetailsInfo/wineReviews/reviews-bg.svg";
 import quoteIcon from "@/assets/images/wineDetailsInfo/wineReviews/quote.svg";
 import arrowIcon from "@/assets/images/icons/arrow-right.svg";
@@ -80,7 +78,7 @@ export const WineReviews = ({ wine }: Props) => {
 
               <img
                 className="wine-reviews__bottle"
-                src={wine.image}
+                src={wine.imageUrl}
                 alt={wine.name}
               />
             </div>

@@ -25,6 +25,7 @@ export const WineHero = ({ wine }: Props) => {
   const { moodTheme } = useMoodTheme();
 
   const isFavorite = favorites.includes(wine.id);
+
   const currentBottleIcon = wineBottleIcons[moodTheme];
   const currentSweetnessIcon = wineSweetnessIcons[moodTheme];
   const currentVintageIcon = wineVintageIcons[moodTheme];
@@ -81,33 +82,33 @@ export const WineHero = ({ wine }: Props) => {
             <div className="wine-hero__info">
               <div className="wine-hero__info-item">
                 <p>Type</p>
-                <span>{wine.category.type}</span>
+                <span>{wine.type}</span>
               </div>
 
               <div className="wine-hero__info-item">
                 <p>Origin</p>
                 <span>
-                  {wine.region.name}, {wine.country.name}
+                  {wine.region}, {wine.countryName}
                 </span>
               </div>
 
               <div className="wine-hero__info-item">
                 <p>Alcohol</p>
-                <span>{wine.alcoholByVolume}%</span>
+                <span>{wine.alcoholPercentage}%</span>
               </div>
             </div>
 
             <div className="wine-hero__meta">
               <div className="wine-hero__meta-item">
                 <img src={currentSweetnessIcon} alt="" />
-                <span>{wine.sweetness.replace("_", " ")}</span>
+                <span>{wine.sweetnessLevel.replace("_", " ")}</span>
               </div>
 
               <div className="wine-hero__meta-item">
                 <img src={currentBottleIcon} alt="" />
-                <span>{wine.bottleVolume} ML</span>
+                <span>{wine.volumeMl} ML</span>
               </div>
-              
+
               <div className="wine-hero__meta-item">
                 <img src={currentVintageIcon} alt="" />
                 <span>{wine.vintage}</span>
@@ -122,7 +123,7 @@ export const WineHero = ({ wine }: Props) => {
 
             <img
               className="wine-hero__image"
-              src={wine.image}
+              src={wine.imageUrl}
               alt={wine.name}
             />
           </div>

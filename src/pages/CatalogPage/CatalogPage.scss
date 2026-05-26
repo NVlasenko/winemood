@@ -301,6 +301,8 @@
   }
 
   &__card {
+    display: flex;
+    flex-direction: column;
     position: relative;
     min-height: 372px;
     padding: 24px 20px 28px;
@@ -421,10 +423,15 @@
   &__info {
     position: relative;
     z-index: 3;
-    margin-top: 22px;
+  
+    margin-top: 65px;
+  
     display: flex;
     flex-direction: column;
-    gap: 18px;
+  
+    flex: 1;
+  
+    gap: 12px;
   }
 
   &__country {
@@ -467,6 +474,7 @@
   }
 
   &__meta {
+    margin-top: auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -581,6 +589,49 @@
     font-weight: 500;
     font-size: 14px;
     color: $text-primary;
+  }
+
+  &__loader-wrapper {
+    position: relative;
+  
+    min-height: 420px;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  &__loader-glow {
+    position: absolute;
+  
+    width: 220px;
+    height: 220px;
+  
+    border-radius: 50%;
+  
+    background: rgba(var(--wine-glow-rgb), 0.28);
+  
+    filter: blur(90px);
+  
+    animation: loaderGlow 3s ease-in-out infinite;
+  }
+  
+  &__loader {
+    position: relative;
+    z-index: 2;
+  
+    width: 74px;
+    height: 74px;
+  
+    border-radius: 50%;
+  
+    border:
+      3px solid rgba(255, 255, 255, 0.12);
+  
+    border-top:
+      3px solid rgba(var(--wine-glow-rgb), 1);
+  
+    animation: catalogSpin 0.9s linear infinite;
   }
 
   .catalog-page {
@@ -771,5 +822,32 @@
     &__pagination {
       gap: 18px;
     }
+  }
+}
+
+@keyframes catalogSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loaderGlow {
+  0% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
   }
 }

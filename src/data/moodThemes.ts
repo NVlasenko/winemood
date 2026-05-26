@@ -19,6 +19,10 @@ export const moodThemeValues: Record<
 
     linkColor: string;
     linkHoverColor: string;
+
+    wineBackgroundStart: string;
+    wineBackgroundMiddle: string;
+    wineBackgroundEnd: string;
   }
 > = {
   default: {
@@ -42,6 +46,10 @@ export const moodThemeValues: Record<
 
     linkColor: "rgba(211, 211, 211, 1)",
     linkHoverColor: "rgba(186, 24, 27, 1)",
+
+    wineBackgroundStart: "#020202",
+    wineBackgroundMiddle: "#080202",
+    wineBackgroundEnd: "#3d080a",
   },
 
   celebration: {
@@ -65,6 +73,10 @@ export const moodThemeValues: Record<
 
     linkColor: "rgba(255, 255, 255, 0.95)",
     linkHoverColor: "rgba(247, 170, 251, 1)",
+
+    wineBackgroundStart: "#1f081d",
+    wineBackgroundMiddle: "#3d1038",
+    wineBackgroundEnd: "#6b1e5e",
   },
 
   cozy: {
@@ -88,6 +100,10 @@ export const moodThemeValues: Record<
 
     linkColor: "rgba(230, 240, 255, 0.96)",
     linkHoverColor: "rgba(125, 211, 252, 1)",
+
+    wineBackgroundStart: "#020611",
+    wineBackgroundMiddle: "#0b1c36",
+    wineBackgroundEnd: "#163f73",
   },
 
   dateNight: {
@@ -111,6 +127,10 @@ export const moodThemeValues: Record<
 
     linkColor: "rgba(255, 240, 248, 0.96)",
     linkHoverColor: "rgba(255, 79, 163, 1)",
+
+    wineBackgroundStart: "#060206",
+    wineBackgroundMiddle: "#220a1d",
+    wineBackgroundEnd: "#5e103e",
   },
 
   culinary: {
@@ -134,5 +154,9 @@ export const moodThemeValues: Record<
 
     linkColor: "rgba(255, 244, 235, 0.96)",
     linkHoverColor: "rgba(255, 94, 50, 1)",
+
+    wineBackgroundStart: "#0b0502",
+    wineBackgroundMiddle: "#2e1409",
+    wineBackgroundEnd: "#6b2a12",
   },
 };

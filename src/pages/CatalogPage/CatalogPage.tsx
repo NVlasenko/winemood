@@ -1,13 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-
 import wineDropIcon from "../../assets/images/wine/sweet.svg";
 import bottleIcon from "../../assets/images/wine/bottle.svg";
-
 import { SectionTitle } from "../../components/SectionTitle";
 import { wines } from "../../data/wines";
 import { CatalogFilters } from "../../components/CatalogFilters/CatalogFilters";
-
+import { useFavorites } from "../../context/FavoritesContext";
 import "./CatalogPage.scss";
 
 const sortOptions = ["Popularity", "Top Rated", "Alphabetical"];
@@ -15,19 +13,11 @@ const sortOptions = ["Popularity", "Top Rated", "Alphabetical"];
 export const CatalogPage = () => {
   const [activeSort, setActiveSort] = useState("Popularity");
   const [isSortOpen, setIsSortOpen] = useState(false);
-  const [favorites, setFavorites] = useState<number[]>([]);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-
+  const { favorites, toggleFavorite } = useFavorites();
   const sortRef = useRef<HTMLDivElement | null>(null);
-
   const visibleWines = wines;
   const hasNoResults = visibleWines.length === 0;
-
-  const toggleFavorite = (id: number) => {
-    setFavorites((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
-    );
-  };
 
   const handleOpenFilters = () => {
     setIsFiltersOpen(true);
@@ -121,59 +111,70 @@ export const CatalogPage = () => {
         ) : (
           <>
             <div className="catalog-page__grid">
-              {visibleWines.map((wine) => (
-                <article className="catalog-page__card" key={wine.id}>
-                  <button
-                    className={
-                      favorites.includes(wine.id)
-                        ? "catalog-page__favorite catalog-page__favorite--active"
-                        : "catalog-page__favorite"
-                    }
-                    type="button"
-                    aria-label="Add to favorites"
-                    onClick={() => toggleFavorite(wine.id)}
-                  >
-                    ♥
-                  </button>
+              {visibleWines.map((wine) => {
+                const isFavorite = favorites.includes(wine.id);
 
-                  <Link
-                    to={`/catalog/${wine.id}`}
-                    className="catalog-page__image-link"
-                  >
-                    <span className="catalog-page__wine-glow" />
+                return (
+                  <article className="catalog-page__card" key={wine.id}>
+                    <button
+                      className={
+                        isFavorite
+                          ? "catalog-page__favorite catalog-page__favorite--active"
+                          : "catalog-page__favorite"
+                      }
+                      type="button"
+                      aria-label={
+                        isFavorite
+                          ? "Remove from favorites"
+                          : "Add to favorites"
+                      }
+                      onClick={() => toggleFavorite(wine.id)}
+                    >
+                      ♥
+                    </button>
 
-                    <img
-                      className="catalog-page__image"
-                      src={wine.image}
-                      alt={wine.name}
-                    />
-                  </Link>
+                    <Link
+                      to={`/catalog/${wine.id}`}
+                      className="catalog-page__image-link"
+                    >
+                      <span className="catalog-page__wine-glow" />
 
-                  <div className="catalog-page__info">
-                    <p className="catalog-page__country">{wine.country.name}</p>
-                    <h3 className="catalog-page__name">{wine.name}</h3>
+                      <img
+                        className="catalog-page__image"
+                        src={wine.image}
+                        alt={wine.name}
+                      />
+                    </Link>
 
-                    <div className="catalog-page__rating">
-                      <span className="catalog-page__stars">★★★★★</span>
-                      <span>{wine.rating} (154)</span>
-                    </div>
+                    <div className="catalog-page__info">
+                      <p className="catalog-page__country">
+                        {wine.country.name}
+                      </p>
 
-                    <div className="catalog-page__meta">
-                      <div className="catalog-page__meta-item">
-                        <img src={wineDropIcon} alt="Sweetness" />
+                      <h3 className="catalog-page__name">{wine.name}</h3>
 
-                        <span>{wine.sweetness}</span>
+                      <div className="catalog-page__rating">
+                        <span className="catalog-page__stars">★★★★★</span>
+                        <span>{wine.rating} (154)</span>
                       </div>
 
-                      <div className="catalog-page__meta-item">
-                        <img src={bottleIcon} alt="Bottle volume" />
+                      <div className="catalog-page__meta">
+                        <div className="catalog-page__meta-item">
+                          <img src={wineDropIcon} alt="Sweetness" />
 
-                        <span>{wine.bottleVolume} ml</span>
+                          <span>{wine.sweetness}</span>
+                        </div>
+
+                        <div className="catalog-page__meta-item">
+                          <img src={bottleIcon} alt="Bottle volume" />
+
+                          <span>{wine.bottleVolume} ml</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </article>
-              ))}
+                  </article>
+                );
+              })}
             </div>
 
             <div className="catalog-page__pagination">

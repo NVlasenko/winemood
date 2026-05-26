@@ -106,9 +106,9 @@
   }
 
   &__button-wrapper {
-    margin-top: 88px;
+    margin-top: 58px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
   }
 
   &__button {
@@ -156,6 +156,10 @@
     &__grid {
       grid-template-columns: repeat(2, 1fr);
       gap: 20px;
+    }
+
+    &__button-wrapper {
+      justify-content: flex-end;
     }
   }
 

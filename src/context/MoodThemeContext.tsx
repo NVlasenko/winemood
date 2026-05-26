@@ -72,6 +72,21 @@ export const MoodThemeProvider = ({ children }: React.PropsWithChildren) => {
       "--mood-link-hover-color",
       theme.linkHoverColor
     );
+
+    document.documentElement.style.setProperty(
+      "--wine-background-start",
+      theme.wineBackgroundStart,
+    );
+    
+    document.documentElement.style.setProperty(
+      "--wine-background-middle",
+      theme.wineBackgroundMiddle,
+    );
+    
+    document.documentElement.style.setProperty(
+      "--wine-background-end",
+      theme.wineBackgroundEnd,
+    );
   }, [moodTheme]);
 
   return (

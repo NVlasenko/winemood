@@ -1,0 +1,33 @@
+.wine-details-page {
+  min-height: 100vh;
+  background: #050505;
+
+  &__empty {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+  }
+
+  &__title {
+    margin: 0 0 18px;
+    font-family: "Marcellus", serif;
+    font-weight: 400;
+    font-size: 42px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 1);
+  }
+
+  &__text {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.7;
+    color: rgba(178, 178, 178, 1);
+  }
+}

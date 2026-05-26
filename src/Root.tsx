@@ -5,10 +5,12 @@ import { App } from "./App";
 import { HomePage } from "./pages/HomePage";
 import { ScrollToTop } from "./components/ScrollToTop/ScrollToTop";
 import { CatalogPage } from "./pages/CatalogPage";
-import { WineDetailsPage } from "./components/WineCatalogCard";
+import { FavoritesProvider } from "./context/FavoritesContext";
+import { WineDetailsPage } from "./pages/WineDetailsPage";
 
 export const Root: React.FC = () => {
   return (
+    <FavoritesProvider>
     <HashRouter>
       <ScrollToTop />
       <Routes>
@@ -19,5 +21,6 @@ export const Root: React.FC = () => {
         </Route>
       </Routes>
     </HashRouter>
+    </FavoritesProvider>
   );
 };

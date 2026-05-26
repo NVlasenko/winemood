@@ -90,56 +90,22 @@
     box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
   }
 
-  // &__sort-item {
-  //   width: 100%;
-  //   padding: 14px 0;
-  //   border: none;
-  //   border-bottom: 0.4px solid rgba(217, 217, 217, 0.16);
-  //   background: transparent;
-  //   font-family: 'Poppins', sans-serif;
-  //   font-weight: 500;
-  //   font-size: 13px;
-  //   text-align: left;
-  //   text-transform: uppercase;
-  //   letter-spacing: 0.04em;
-  //   color: rgba(211, 211, 211, 0.72);
-  //   cursor: pointer;
-  //   transition:
-  //     color 0.3s ease,
-  //     text-shadow 0.3s ease;
-
-  //   &:last-child {
-  //     border-bottom: none;
-  //   }
-
-  //   &--active,
-  //   &:hover {
-  //     color: var(--mood-link-hover-color);
-  //     text-shadow: 0 0 18px var(--button-shadow);
-  //   }
-  // }
   &__sort-item {
     position: relative;
     overflow: hidden;
-  
     width: 100%;
     padding: 14px 16px;
-  
     border: none;
     border-bottom: 0.4px solid rgba(217, 217, 217, 0.16);
     border-radius: 8px;
-  
     background: transparent;
-  
     font-family: 'Poppins', sans-serif;
     font-weight: 500;
     font-size: 13px;
     text-align: left;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-  
     color: rgba(211, 211, 211, 0.72);
-  
     cursor: pointer;
   
     transition:
@@ -149,16 +115,12 @@
   
     &::before {
       content: "";
-  
       position: absolute;
       top: 50%;
       left: 50%;
-  
       width: 120px;
       height: 120px;
-  
       transform: translate(-50%, -50%) scale(0.6);
-  
       border-radius: 50%;
   
       background: radial-gradient(
@@ -169,7 +131,6 @@
       );
   
       opacity: 0;
-  
       filter: blur(28px);
   
       transition:
@@ -225,7 +186,6 @@
   
       &::before {
         content: "";
-      
         position: absolute;
         top: 50%;
         left: 50%;
@@ -233,7 +193,6 @@
         height: 50px;
         transform: translate(-50%, -50%);
         border-radius: 14px;
-      
         background: linear-gradient(
         135deg,
         var(--button-gradient-start) 0%,
@@ -427,21 +386,22 @@
 
   &__wine-glow {
     position: absolute;
-    top: 34px;
+    top: 14px;
     left: 50%;
     z-index: 1;
-    width: 190px;
-    height: 190px;
+    width: 210px;
+    height: 210px;
     transform: translateX(-50%);
 
     background: radial-gradient(
       circle,
-      rgba(var(--wine-glow-rgb), 0.75) 0%,
-      rgba(var(--wine-glow-rgb), 0.32) 38%,
-      transparent 72%
+      rgba(var(--wine-glow-rgb), 1) 0%,
+      rgba(var(--wine-glow-rgb), 0.72) 28%,
+      rgba(var(--wine-glow-rgb), 0.28) 55%,
+      transparent 78%
     );
-
-    filter: blur(40px);
+    
+    filter: blur(30px);
     pointer-events: none;
   }
 
@@ -804,8 +764,8 @@
 
     &__wine-glow {
       top: 38px;
-      width: 190px;
-      height: 190px;
+      width: 210px;
+      height: 210px;
     }
 
     &__pagination {

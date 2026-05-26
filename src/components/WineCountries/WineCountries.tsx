@@ -147,7 +147,7 @@ export const WineCountries = () => {
                   key={country.id}
                   className="wine-countries__card"
                   style={{
-                    backgroundImage: `url(${country.backgroundImage})`,
+                    backgroundImage: `url(${country.flagImageUrl})`,
                   }}
                   variants={cardVariants}
                   initial="hidden"
@@ -163,7 +163,7 @@ export const WineCountries = () => {
                   <div className="wine-countries__image-wrap">
                     <img
                       className="wine-countries__card-image"
-                      src={country.wineImage}
+                      src={country.bottleImageUrl}
                       alt={country.nationality}
                     />
                   </div>

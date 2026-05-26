@@ -16,6 +16,12 @@
   --mood-link-color: rgba(211, 211, 211, 1);
   --mood-link-hover-color: rgba(186, 24, 27, 1);
 
+ 
+  --wine-background-start: #020202;
+  --wine-background-middle: #080202;
+  --wine-background-end: #3d080a;
+ 
+
   --wine-glow-gradient: radial-gradient(
     circle,
     rgba(var(--wine-glow-rgb), 0.7) 0%,

@@ -99,7 +99,7 @@ export const WriteReviewPage = () => {
 
   return (
     <ReviewStepLayout
-      wineId="39"
+      wineId={id || ""}
       step={step}
       canGoNext={canGoNext}
       onPrevious={handlePreviousStep}
@@ -116,6 +116,7 @@ export const WriteReviewPage = () => {
             onMouseLeave={() => setHoverRating(0)}
             aria-label={`Rating ${currentRating} out of 5`}
           >
+
             {STARS.map((star) => {
               const fillPercent =
                 Math.min(Math.max(currentRating - (star - 1), 0), 1) * 100;
@@ -143,6 +144,12 @@ export const WriteReviewPage = () => {
           </div>
         </div>
       )}
+
+          
+            <p className="write-review-page__rating-value">
+              {currentRating ? currentRating.toFixed(2) : "0.00"}
+            </p>
+            
 
       {step === 2 && (
         <div className="write-review-page__step">
@@ -210,15 +217,19 @@ export const WriteReviewPage = () => {
             </button>
 
             {isSubmitted ? (
-              <>
-                <h3 className="write-review-page__modal-title">
-                  Thank you!
-                </h3>
+             <>
+              <div className="write-review-page__success-icon">
+                ✓
+              </div>
 
-                <p className="write-review-page__modal-text">
-                  Your review has been submitted.
-                </p>
-              </>
+              <h3 className="write-review-page__modal-title">
+                Review submitted
+              </h3>
+
+              <p className="write-review-page__modal-success-text">
+                Thank you for sharing your experience with the community.
+              </p>
+            </>
             ) : (
               <>
                 <h3 className="write-review-page__modal-title">
@@ -226,21 +237,21 @@ export const WriteReviewPage = () => {
                 </h3>
 
                 <div className="write-review-page__modal-summary">
-  <div className="write-review-page__modal-row">
-    <span className="write-review-page__modal-label">Rating</span>
-    <strong className="write-review-page__modal-value">{rating}</strong>
-  </div>
+                  <div className="write-review-page__modal-row">
+                    <span className="write-review-page__modal-label">Rating</span>
+                    <strong className="write-review-page__modal-value">{rating}</strong>
+                  </div>
 
-  <div className="write-review-page__modal-row">
-    <span className="write-review-page__modal-label">Review</span>
-    <p className="write-review-page__modal-review">{reviewText}</p>
-  </div>
+                  <div className="write-review-page__modal-row">
+                    <span className="write-review-page__modal-label">Review</span>
+                    <p className="write-review-page__modal-review">{reviewText}</p>
+                  </div>
 
-  <div className="write-review-page__modal-row">
-    <span className="write-review-page__modal-label">Name</span>
-    <strong className="write-review-page__modal-value">{authorName}</strong>
-  </div>
-</div>
+                  <div className="write-review-page__modal-row">
+                    <span className="write-review-page__modal-label">Name</span>
+                    <strong className="write-review-page__modal-value">{authorName}</strong>
+                  </div>
+                </div>
 
                 <button
                   className="button-primary write-review-page__modal-button"

@@ -1,0 +1,156 @@
+@import "@/styles/mixins";
+@import "@/styles/variables";
+
+.write-review-page {
+
+  .section-title {
+    align-self: center;
+  }
+
+  &__step {
+    width: 100%;
+    margin-top: 80px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__subtitle {
+    margin: 0;
+
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 1.5;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: center;
+
+    color: rgba(177, 167, 166, 1);
+  }
+
+  &__stars {
+    margin-top: 80px;
+    margin-bottom: 160px;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  &__star {
+    position: relative;
+
+    width: 54px;
+    height: 54px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+    border: none;
+    background: transparent;
+
+    cursor: pointer;
+
+    font-size: 54px;
+    line-height: 1;
+
+    transition:
+      transform 0.3s ease,
+      filter 0.3s ease;
+
+      &:hover {
+        transform: scale(1.08);
+      
+        filter:
+          drop-shadow(0 0 14px rgba(var(--wine-glow-rgb), 0.55))
+          drop-shadow(0 0 30px rgba(var(--wine-glow-rgb), 0.3));
+      }
+  }
+
+  &__star-bg {
+    position: absolute;
+    inset: 0;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    color: rgba(var(--wine-glow-rgb), 0.35);
+  
+    transition:
+      color 0.35s ease,
+      filter 0.35s ease;
+  }
+  
+  &__star-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+  
+    display: flex;
+    align-items: center;
+  
+    overflow: hidden;
+    white-space: nowrap;
+  
+    color: rgba(var(--wine-glow-rgb), 1);
+  
+    pointer-events: none;
+  
+    transition:
+      color 0.35s ease,
+      filter 0.35s ease;
+  
+    filter:
+      drop-shadow(0 0 10px rgba(var(--wine-glow-rgb), 0.45))
+      drop-shadow(0 0 22px rgba(var(--wine-glow-rgb), 0.25));
+  }
+
+  @include on-tablet {
+    &__step {
+      margin-top: 120px;
+    }
+
+    &__subtitle {
+      font-size: 18px;
+    }
+
+    &__stars {
+      margin-top: 20px;
+      gap: 56px;
+    }
+
+    &__star {
+      width: 56px;
+      height: 56px;
+      font-size: 56px;
+    }
+  }
+
+  @include on-desktop {
+    &__step {
+      margin-top: 140px;
+    }
+
+    &__subtitle {
+      font-size: 18px;
+    }
+
+    &__stars {
+      margin-top: 32px;
+      gap: 90px;
+    }
+
+    &__star {
+      width: 64px;
+      height: 64px;
+      font-size: 64px;
+    }
+  }
+}

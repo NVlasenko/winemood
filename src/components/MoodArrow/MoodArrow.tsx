@@ -10,12 +10,15 @@ type Props = {
 export const MoodArrow = ({ className = "" }: Props) => {
   const { moodTheme } = useMoodTheme();
 
+  const arrowSrc = moodArrows[moodTheme] || moodArrows.default;
+
   return (
     <img
       key={moodTheme}
       className={`mood-arrow ${className}`}
-      src={moodArrows[moodTheme]}
-      alt="arrow"
+      src={arrowSrc}
+      alt=""
+      aria-hidden="true"
     />
   );
 };

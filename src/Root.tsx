@@ -7,6 +7,7 @@ import { ScrollToTop } from "./components/ScrollToTop/ScrollToTop";
 import { CatalogPage } from "./pages/CatalogPage";
 import { FavoritesProvider } from "./context/FavoritesContext";
 import { WineDetailsPage } from "./pages/WineDetailsPage";
+import { WriteReviewPage } from "./pages/WriteReviewPage";
 
 export const Root: React.FC = () => {
   return (
@@ -18,6 +19,7 @@ export const Root: React.FC = () => {
           <Route index element={<HomePage />} />
           <Route path="/catalog" element={<CatalogPage />} />
           <Route path="/catalog/:id" element={<WineDetailsPage />} />
+          <Route path="/catalog/:id/review" element={<WriteReviewPage />} />
         </Route>
       </Routes>
     </HashRouter>

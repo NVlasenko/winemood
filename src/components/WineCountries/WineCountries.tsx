@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { SectionTitle } from "../SectionTitle";
@@ -11,14 +11,18 @@ import { cardVariants } from "../../animations/cardVariants";
 
 import "./WineCountries.scss";
 
+const INITIAL_VISIBLE_COUNT = 2;
+
 export const WineCountries = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(2);
+
   const [countries, setCountries] = useState<CountryWine[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
+    let isMounted = true;
+
     const loadCountries = async () => {
       try {
         setLoading(true);
@@ -30,8 +34,14 @@ export const WineCountries = () => {
           throw new Error("Invalid countries data");
         }
 
-        setCountries(data);
+        if (isMounted) {
+          setCountries(data);
+        }
       } catch (error) {
+        if (!isMounted) {
+          return;
+        }
+
         console.error("Failed to load countries:", error);
 
         if (error instanceof TypeError) {
@@ -61,87 +71,62 @@ export const WineCountries = () => {
 
         setError("Something went wrong.");
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     loadCountries();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setVisibleCount((prev) => {
-        if (isOpen && prev < countries.length) {
-          return prev + 1;
-        }
+  const visibleCountries = useMemo(() => {
+    return isOpen
+      ? countries
+      : countries.slice(0, INITIAL_VISIBLE_COUNT);
+  }, [countries, isOpen]);
 
-        if (!isOpen && prev > 2) {
-          return prev - 1;
-        }
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <p className="wine-countries__state">
+          Loading countries...
+        </p>
+      );
+    }
 
-        clearInterval(timer);
-        return prev;
-      });
-    }, 480);
+    if (error) {
+      return (
+        <p className="wine-countries__state wine-countries__state--error">
+          {error}
+        </p>
+      );
+    }
 
-    return () => clearInterval(timer);
-  }, [isOpen, countries.length]);
+    if (!countries.length) {
+      return (
+        <p className="wine-countries__state">
+          No countries found.
+        </p>
+      );
+    }
 
-  const visibleCountries = countries.slice(0, visibleCount);
-
-  if (loading) {
     return (
-      <section className="wine-countries">
-        <div className="container">
-          <SectionTitle title="Explore Wine Countries" />
-
-          <p className="wine-countries__state">Loading countries...</p>
-        </div>
-      </section>
-    );
-  }
-
-  if (error) {
-    return (
-      <section className="wine-countries">
-        <div className="container">
-          <SectionTitle title="Explore Wine Countries" />
-
-          <p className="wine-countries__state wine-countries__state--error">
-            {error}
-          </p>
-        </div>
-      </section>
-    );
-  }
-
-  if (!countries.length) {
-    return (
-      <section className="wine-countries">
-        <div className="container">
-          <SectionTitle title="Explore Wine Countries" />
-
-          <p className="wine-countries__state">No countries found.</p>
-        </div>
-      </section>
-    );
-  }
-
-  return (
-    <section className="wine-countries">
-      <div className="container">
-        <SectionTitle title="Explore Wine Countries" />
-
+      <>
         <motion.div
           className="wine-countries__grid-wrap"
-          layout={!isOpen}
+          layout
           transition={{
             duration: 0.8,
             ease: [0.22, 1, 0.36, 1],
           }}
         >
           <div className="wine-countries__grid">
-            <AnimatePresence>
+            <AnimatePresence mode="popLayout">
               {visibleCountries.map((country) => (
                 <motion.article
                   key={country.id}
@@ -153,6 +138,7 @@ export const WineCountries = () => {
                   initial="hidden"
                   animate="visible"
                   exit="exit"
+                  layout
                 >
                   <div className="wine-countries__content">
                     <h3 className="wine-countries__card-title">
@@ -173,13 +159,27 @@ export const WineCountries = () => {
           </div>
         </motion.div>
 
-        {countries.length > 2 && (
+        {countries.length > INITIAL_VISIBLE_COUNT && (
           <MoodLinkButton
             className="wine-countries__view-all"
-            text={isOpen ? "Hide Countries" : "View All Countries"}
+            text={
+              isOpen
+                ? "Hide Countries"
+                : "View All Countries"
+            }
             onClick={() => setIsOpen((prev) => !prev)}
           />
         )}
+      </>
+    );
+  };
+
+  return (
+    <section className="wine-countries">
+      <div className="container">
+        <SectionTitle title="Explore Wine Countries" />
+
+        {renderContent()}
       </div>
     </section>
   );

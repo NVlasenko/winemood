@@ -26,29 +26,36 @@ export const WineHero = ({ wine }: Props) => {
 
   const isFavorite = favorites.includes(wine.id);
 
-  const currentBottleIcon = wineBottleIcons[moodTheme];
-  const currentSweetnessIcon = wineSweetnessIcons[moodTheme];
-  const currentVintageIcon = wineVintageIcons[moodTheme];
+  const currentBottleIcon = wineBottleIcons[moodTheme] || wineBottleIcons.default;
+  const currentSweetnessIcon =
+    wineSweetnessIcons[moodTheme] || wineSweetnessIcons.default;
+  const currentVintageIcon = wineVintageIcons[moodTheme] || wineVintageIcons.default;
+
+  const isLargeImage = wine.name === "Mateus Rosé";
 
   return (
     <div className="wine-hero">
-      <img className="wine-hero__pattern" src={winePattern} alt="" />
+      <img
+        className="wine-hero__pattern"
+        src={winePattern}
+        alt=""
+        aria-hidden="true"
+      />
 
       <div className="container">
         <div className="wine-hero__top">
           <Link to="/catalog" className="wine-hero__back">
-            <img src={backArrowIcon} alt="Back" />
+            <img src={backArrowIcon} alt="" aria-hidden="true" />
             <span>Catalog</span>
           </Link>
 
           <button
-            className={
-              isFavorite
-                ? "wine-hero__favorite wine-hero__favorite--active"
-                : "wine-hero__favorite"
-            }
+            className={`wine-hero__favorite ${
+              isFavorite ? "wine-hero__favorite--active" : ""
+            }`}
             type="button"
-            aria-label="Toggle favorite"
+            aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+            aria-pressed={isFavorite}
             onClick={() => toggleFavorite(wine.id)}
           >
             ♥
@@ -59,13 +66,13 @@ export const WineHero = ({ wine }: Props) => {
           <div className="wine-hero__left">
             <SectionTitle title={wine.name} />
 
-            <div className="wine-hero__rating">
+            <div className="wine-hero__rating" aria-label={`Rating ${wine.rating} out of 5`}>
               {[1, 2, 3, 4, 5].map((star) => {
                 const fillPercent =
                   Math.min(Math.max(wine.rating - (star - 1), 0), 1) * 100;
 
                 return (
-                  <span className="wine-hero__star" key={star}>
+                  <span className="wine-hero__star" key={star} aria-hidden="true">
                     <span className="wine-hero__star-bg">★</span>
 
                     <span
@@ -100,17 +107,17 @@ export const WineHero = ({ wine }: Props) => {
 
             <div className="wine-hero__meta">
               <div className="wine-hero__meta-item">
-                <img src={currentSweetnessIcon} alt="" />
+                <img src={currentSweetnessIcon} alt="" aria-hidden="true" />
                 <span>{wine.sweetnessLevel.replace("_", " ")}</span>
               </div>
 
               <div className="wine-hero__meta-item">
-                <img src={currentBottleIcon} alt="" />
+                <img src={currentBottleIcon} alt="" aria-hidden="true" />
                 <span>{wine.volumeMl} ML</span>
               </div>
 
               <div className="wine-hero__meta-item">
-                <img src={currentVintageIcon} alt="" />
+                <img src={currentVintageIcon} alt="" aria-hidden="true" />
                 <span>{wine.vintage}</span>
               </div>
             </div>
@@ -122,7 +129,9 @@ export const WineHero = ({ wine }: Props) => {
             <div className="wine-hero__wine-glow" />
 
             <img
-              className="wine-hero__image"
+              className={`wine-hero__image ${
+                isLargeImage ? "wine-hero__image--large" : ""
+              }`}
               src={wine.imageUrl}
               alt={wine.name}
             />

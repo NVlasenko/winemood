@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import type { Wine } from "@/types/wine";
 
 import { useMoodTheme } from "@/context/MoodThemeContext";
@@ -18,38 +19,45 @@ type Props = {
 export const WineDetailsInfo = ({ wine }: Props) => {
   const { moodTheme } = useMoodTheme();
 
-  const details = [
-    {
-      title: "Grape variety",
-      value: `100% ${wine.grapeVariety}`,
-      icon: grapeIcons[moodTheme],
-    },
-    {
-      title: "Producer",
-      value: wine.producerName,
-      icon: producerIcons[moodTheme],
-    },
-    {
-      title: "Aging",
-      value: `${wine.agingMonths * 12} months total`,
-      icon: agingIcons[moodTheme],
-    },
-    {
-      title: "Ecological attributes",
-      value: wine.environmentalAttributes.join(" / "),
-      icon: ecoIcons[moodTheme],
-    },
-    {
-      title: "Fermentation",
-      value: wine.fermentationType,
-      icon: fermentationIcons[moodTheme],
-    },
-    {
-      title: "Appellation",
-      value: wine.appellation,
-      icon: appellationIcons[moodTheme],
-    },
-  ];
+  const details = useMemo(
+    () => [
+      {
+        title: "Grape variety",
+        value: wine.grapeVariety ? `100% ${wine.grapeVariety}` : "Unknown",
+        icon: grapeIcons[moodTheme] || grapeIcons.default,
+      },
+      {
+        title: "Producer",
+        value: wine.producerName || "Unknown",
+        icon: producerIcons[moodTheme] || producerIcons.default,
+      },
+      {
+        title: "Aging",
+        value: wine.agingMonths
+          ? `${wine.agingMonths} months total`
+          : "Not specified",
+        icon: agingIcons[moodTheme] || agingIcons.default,
+      },
+      {
+        title: "Ecological attributes",
+        value: wine.environmentalAttributes?.length
+          ? wine.environmentalAttributes.join(" / ")
+          : "Not specified",
+        icon: ecoIcons[moodTheme] || ecoIcons.default,
+      },
+      {
+        title: "Fermentation",
+        value: wine.fermentationType || "Not specified",
+        icon: fermentationIcons[moodTheme] || fermentationIcons.default,
+      },
+      {
+        title: "Appellation",
+        value: wine.appellation || "Not specified",
+        icon: appellationIcons[moodTheme] || appellationIcons.default,
+      },
+    ],
+    [wine, moodTheme],
+  );
 
   return (
     <section className="wine-details-info">
@@ -61,11 +69,11 @@ export const WineDetailsInfo = ({ wine }: Props) => {
                 className="wine-details-info__icon"
                 src={item.icon}
                 alt=""
+                aria-hidden="true"
               />
 
               <div className="wine-details-info__content">
                 <h3 className="wine-details-info__title">{item.title}</h3>
-
                 <p className="wine-details-info__value">{item.value}</p>
               </div>
             </article>

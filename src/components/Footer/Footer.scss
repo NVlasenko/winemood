@@ -3,7 +3,7 @@
 
 .footer {
   position: relative;
-  padding: 100px 0 40px;
+  padding: 50px 0 40px;
   overflow: hidden;
 
   &__wrapper {
@@ -152,7 +152,7 @@
     pointer-events: none;
   }
   @include on-tablet {
-    padding: 140px 0 50px;
+    padding: 80px 0 50px;
 
     &__wrapper {
       padding: 60px 40px 40px;

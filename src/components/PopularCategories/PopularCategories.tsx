@@ -1,41 +1,36 @@
 import { useEffect, useState } from "react";
+
 import "./PopularCategories.scss";
+
 import { SectionTitle } from "../SectionTitle";
 import type { Category } from "../../types/categories";
 import { getCategories } from "../../shared/api/categoryApi";
 
 const getCardClassName = (type: string) => {
-  switch (type.toLowerCase()) {
-    case "red":
-      return "popular-categories__card--red";
+  const normalizedType = type.toLowerCase();
 
-    case "rosé":
-    case "rose":
-      return "popular-categories__card--rose";
+  const classByType: Record<string, string> = {
+    red: "popular-categories__card--red",
+    rosé: "popular-categories__card--rose",
+    rose: "popular-categories__card--rose",
+    sparkling: "popular-categories__card--sparkling",
+    premium: "popular-categories__card--premium",
+  };
 
-    case "sparkling":
-      return "popular-categories__card--sparkling";
-
-    case "premium":
-      return "popular-categories__card--premium";
-
-    default:
-      return "";
-  }
+  return classByType[normalizedType] || "";
 };
 
 export const PopularCategories = () => {
   const [categories, setCategories] = useState<Category[]>([]);
-
   const [loading, setLoading] = useState(true);
-
   const [error, setError] = useState("");
 
   useEffect(() => {
+    let isMounted = true;
+
     const loadCategories = async () => {
       try {
         setLoading(true);
-
         setError("");
 
         const data = await getCategories();
@@ -44,100 +39,90 @@ export const PopularCategories = () => {
           throw new Error("Invalid categories data");
         }
 
-        setCategories(data);
+        if (isMounted) {
+          setCategories(data);
+        }
       } catch (error) {
+        if (!isMounted) {
+          return;
+        }
+
         console.error("Failed to load categories:", error);
 
         if (error instanceof TypeError) {
           setError("Network error. Please check your internet connection.");
-
           return;
         }
 
         if (error instanceof Error) {
           if (error.message.includes("404")) {
             setError("Categories endpoint not found.");
-
             return;
           }
 
           if (error.message.includes("500")) {
             setError("Server error. Please try again later.");
-
             return;
           }
 
           if (error.message.includes("Failed to fetch")) {
             setError("Unable to connect to the server.");
-
             return;
           }
 
           setError(error.message);
-
           return;
         }
 
         setError("Something went wrong.");
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     loadCategories();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  if (loading) {
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <p className="popular-categories__state">
+          Loading categories...
+        </p>
+      );
+    }
+
+    if (error) {
+      return (
+        <p className="popular-categories__state popular-categories__state--error">
+          {error}
+        </p>
+      );
+    }
+
+    if (!categories.length) {
+      return (
+        <p className="popular-categories__state">
+          No categories found.
+        </p>
+      );
+    }
+
     return (
-      <section className="popular-categories">
-        <div className="container">
-          <SectionTitle title="Popular Categories" />
+      <div className="popular-categories__grid">
+        {categories.map((category) => {
+          const cardModifier = getCardClassName(category.type);
 
-          <p className="popular-categories__state">Loading categories...</p>
-        </div>
-      </section>
-    );
-  }
-
-  if (error) {
-    return (
-      <section className="popular-categories">
-        <div className="container">
-          <SectionTitle title="Popular Categories" />
-
-          <p className="popular-categories__state popular-categories__state--error">
-            {error}
-          </p>
-        </div>
-      </section>
-    );
-  }
-
-  if (!categories.length) {
-    return (
-      <section className="popular-categories">
-        <div className="container">
-          <SectionTitle title="Popular Categories" />
-
-          <p className="popular-categories__state">No categories found.</p>
-        </div>
-      </section>
-    );
-  }
-
-  return (
-    <section className="popular-categories">
-      <div className="container">
-        <SectionTitle title="Popular Categories" />
-
-        <div className="popular-categories__grid">
-          {categories.map((category) => (
+          return (
             <article
               key={category.id}
-              className={`
-                popular-categories__card
-                ${getCardClassName(category.type)}
-              `}
+              className={`popular-categories__card ${cardModifier}`}
             >
               <h3 className="popular-categories__card-title">
                 {category.title}
@@ -149,8 +134,18 @@ export const PopularCategories = () => {
                 alt={category.title}
               />
             </article>
-          ))}
-        </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  return (
+    <section className="popular-categories">
+      <div className="container">
+        <SectionTitle title="Popular Categories" />
+
+        {renderContent()}
       </div>
     </section>
   );

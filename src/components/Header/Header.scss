@@ -32,7 +32,9 @@
     line-height: 1;
     color: #fff;
     text-decoration: none;
-
+    outline: none;
+    box-shadow: none;
+    -webkit-tap-highlight-color: transparent;
     transition: transform 0.35s ease, text-shadow 0.35s ease;
 
     &:hover {

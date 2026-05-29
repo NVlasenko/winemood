@@ -7,6 +7,7 @@ type Props = {
   onClick?: () => void;
   className?: string;
   type?: "button" | "submit";
+  disabled?: boolean;
 };
 
 export const MoodLinkButton = ({
@@ -14,16 +15,20 @@ export const MoodLinkButton = ({
   onClick,
   className = "",
   type = "button",
+  disabled = false,
 }: Props) => {
   return (
     <button
       className={`mood-link-button ${className}`}
       type={type}
       onClick={onClick}
+      disabled={disabled}
     >
       <MoodArrow className="mood-link-button__arrow" />
 
-      <span className="mood-link-button__text">{text}</span>
+      <span className="mood-link-button__text">
+        {text}
+      </span>
     </button>
   );
 };

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useMoodTheme } from "../../context/MoodThemeContext";
 import { arrowByMood } from "./config/filterArrows";
 import { filterIcons } from "./config/filterIcons";
@@ -14,15 +14,26 @@ type Props = {
 
 export const CatalogFilters = ({ isOpen, onClose }: Props) => {
   const { moodTheme } = useMoodTheme();
+
   const [openedFilter, setOpenedFilter] = useState("");
   const [openedSubFilter, setOpenedSubFilter] = useState("");
-  const [selectedOptions, setSelectedOptions] = useState<string[]>(["Italy"]);
+  const [selectedOptions, setSelectedOptions] = useState<Set<string>>(
+    () => new Set(["Italy"]),
+  );
 
-  const moodArrowIcon =
-    arrowByMood[moodTheme as keyof typeof arrowByMood] || arrowByMood.default;
+  const moodArrowIcon = useMemo(
+    () =>
+      arrowByMood[moodTheme as keyof typeof arrowByMood] ||
+      arrowByMood.default,
+    [moodTheme],
+  );
 
-  const resetIcon =
-    resetByMood[moodTheme as keyof typeof resetByMood] || resetByMood.default;
+  const resetIcon = useMemo(
+    () =>
+      resetByMood[moodTheme as keyof typeof resetByMood] ||
+      resetByMood.default,
+    [moodTheme],
+  );
 
   const handleClose = () => {
     setOpenedFilter("");
@@ -31,13 +42,8 @@ export const CatalogFilters = ({ isOpen, onClose }: Props) => {
   };
 
   const toggleFilter = (id: string) => {
-    setOpenedFilter((prev) => {
-      const nextFilter = prev === id ? "" : id;
-
-      setOpenedSubFilter("");
-
-      return nextFilter;
-    });
+    setOpenedSubFilter("");
+    setOpenedFilter((prev) => (prev === id ? "" : id));
   };
 
   const toggleSubFilter = (title: string) => {
@@ -45,26 +51,51 @@ export const CatalogFilters = ({ isOpen, onClose }: Props) => {
   };
 
   const toggleOption = (option: string) => {
-    setSelectedOptions((prev) =>
-      prev.includes(option)
-        ? prev.filter((item) => item !== option)
-        : [...prev, option],
-    );
+    setSelectedOptions((prev) => {
+      const next = new Set(prev);
+
+      if (next.has(option)) {
+        next.delete(option);
+      } else {
+        next.add(option);
+      }
+
+      return next;
+    });
   };
 
   const resetFilters = () => {
-    setSelectedOptions([]);
+    setSelectedOptions(new Set());
     setOpenedFilter("");
     setOpenedSubFilter("");
   };
 
+  const renderOption = (option: string) => {
+    const isSelected = selectedOptions.has(option);
+
+    return (
+      <button
+        key={option}
+        type="button"
+        className={`catalog-filters__option ${
+          isSelected ? "catalog-filters__option--active" : ""
+        }`}
+        onClick={() => toggleOption(option)}
+      >
+        <span className="catalog-filters__checkbox">
+          {isSelected && "✓"}
+        </span>
+
+        <span className="catalog-filters__option-name">{option}</span>
+      </button>
+    );
+  };
+
   return (
     <div
-      className={
-        isOpen
-          ? "catalog-filters catalog-filters--open"
-          : "catalog-filters"
-      }
+      className={`catalog-filters ${
+        isOpen ? "catalog-filters--open" : ""
+      }`}
     >
       <button
         className="catalog-filters__backdrop"
@@ -115,13 +146,14 @@ export const CatalogFilters = ({ isOpen, onClose }: Props) => {
                 <button
                   className="catalog-filters__group-header"
                   type="button"
+                  aria-expanded={isExpanded}
                   onClick={() => toggleFilter(filter.id)}
                 >
                   <span className="catalog-filters__group-left">
                     {filterIcon && (
                       <img
                         src={filterIcon}
-                        alt={filter.title}
+                        alt=""
                         className="catalog-filters__icon"
                       />
                     )}
@@ -130,112 +162,63 @@ export const CatalogFilters = ({ isOpen, onClose }: Props) => {
                   </span>
 
                   <img
-                    className={
-                      isExpanded
-                        ? "catalog-filters__arrow catalog-filters__arrow--open"
-                        : "catalog-filters__arrow"
-                    }
+                    className={`catalog-filters__arrow ${
+                      isExpanded ? "catalog-filters__arrow--open" : ""
+                    }`}
                     src={isExpanded ? moodArrowIcon : arrowDown}
                     alt=""
                   />
                 </button>
 
                 <div
-                  className={
-                    isExpanded
-                      ? "catalog-filters__options catalog-filters__options--open"
-                      : "catalog-filters__options"
-                  }
+                  className={`catalog-filters__options ${
+                    isExpanded ? "catalog-filters__options--open" : ""
+                  }`}
                 >
-                  {"groups" in filter && filter.groups ? (
-                    filter.groups.map((group) => {
-                      const isSubExpanded = openedSubFilter === group.title;
+                  {"groups" in filter && filter.groups
+                    ? filter.groups.map((group) => {
+                        const isSubExpanded =
+                          openedSubFilter === group.title;
 
-                      return (
-                        <div
-                          className="catalog-filters__subgroup"
-                          key={group.title}
-                        >
-                          <button
-                            type="button"
-                            className="catalog-filters__subgroup-header"
-                            onClick={() => toggleSubFilter(group.title)}
-                          >
-                            <span>{group.title}</span>
-
-                            <img
-                              className={
-                                isSubExpanded
-                                  ? "catalog-filters__sub-arrow catalog-filters__sub-arrow--open"
-                                  : "catalog-filters__sub-arrow"
-                              }
-                              src={isSubExpanded ? moodArrowIcon : arrowDown}
-                              alt=""
-                            />
-                          </button>
-
+                        return (
                           <div
-                            className={
-                              isSubExpanded
-                                ? "catalog-filters__sub-options catalog-filters__sub-options--open"
-                                : "catalog-filters__sub-options"
-                            }
+                            className="catalog-filters__subgroup"
+                            key={group.title}
                           >
-                            {group.options.map((option) => {
-                              const isSelected =
-                                selectedOptions.includes(option);
+                            <button
+                              type="button"
+                              className="catalog-filters__subgroup-header"
+                              aria-expanded={isSubExpanded}
+                              onClick={() => toggleSubFilter(group.title)}
+                            >
+                              <span>{group.title}</span>
 
-                              return (
-                                <button
-                                  key={option}
-                                  type="button"
-                                  className={
-                                    isSelected
-                                      ? "catalog-filters__option catalog-filters__option--active"
-                                      : "catalog-filters__option"
-                                  }
-                                  onClick={() => toggleOption(option)}
-                                >
-                                  <span className="catalog-filters__checkbox">
-                                    {isSelected && "✓"}
-                                  </span>
+                              <img
+                                className={`catalog-filters__sub-arrow ${
+                                  isSubExpanded
+                                    ? "catalog-filters__sub-arrow--open"
+                                    : ""
+                                }`}
+                                src={
+                                  isSubExpanded ? moodArrowIcon : arrowDown
+                                }
+                                alt=""
+                              />
+                            </button>
 
-                                  <span className="catalog-filters__option-name">
-                                    {option}
-                                  </span>
-                                </button>
-                              );
-                            })}
+                            <div
+                              className={`catalog-filters__sub-options ${
+                                isSubExpanded
+                                  ? "catalog-filters__sub-options--open"
+                                  : ""
+                              }`}
+                            >
+                              {group.options.map(renderOption)}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })
-                  ) : (
-                    filter.options?.map((option) => {
-                      const isSelected = selectedOptions.includes(option);
-
-                      return (
-                        <button
-                          key={option}
-                          type="button"
-                          className={
-                            isSelected
-                              ? "catalog-filters__option catalog-filters__option--active"
-                              : "catalog-filters__option"
-                          }
-                          onClick={() => toggleOption(option)}
-                        >
-                          <span className="catalog-filters__checkbox">
-                            {isSelected && "✓"}
-                          </span>
-
-                          <span className="catalog-filters__option-name">
-                            {option}
-                          </span>
-                        </button>
-                      );
-                    })
-                  )}
+                        );
+                      })
+                    : filter.options?.map(renderOption)}
                 </div>
               </div>
             );

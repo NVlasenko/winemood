@@ -1,100 +1,176 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { SectionTitle } from "../SectionTitle";
-import type { CountryWine } from "../../types/countryWine";
-import wineImage from "../../assets/images/wine.png";
-import countryBg from "../../assets/images/countryBg.png";
-import "./WineCountries.scss";
-import { cardVariants } from "../../animations/cardVariants";
 import { MoodLinkButton } from "../MoodLinkButton";
 
-const countries: CountryWine[] = [
-  { id: 1, title: "Italian Red", backgroundImage: countryBg, wineImage },
-  { id: 2, title: "Californian White", backgroundImage: countryBg, wineImage },
-  { id: 3, title: "French Rosé", backgroundImage: countryBg, wineImage },
-  { id: 4, title: "Spanish Red", backgroundImage: countryBg, wineImage },
-  { id: 5, title: "Georgian Amber", backgroundImage: countryBg, wineImage },
-  { id: 6, title: "Portuguese Port", backgroundImage: countryBg, wineImage },
-  { id: 7, title: "Chilean Merlot", backgroundImage: countryBg, wineImage },
-  { id: 8, title: "German Riesling", backgroundImage: countryBg, wineImage },
-];
+import type { CountryWine } from "../../types/countryWine";
+import { getCountries } from "../../shared/api/countryApi";
+
+import { cardVariants } from "../../animations/cardVariants";
+
+import "./WineCountries.scss";
+
+const INITIAL_VISIBLE_COUNT = 2;
 
 export const WineCountries = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(2);
+  const navigate = useNavigate();
+  const [countries, setCountries] = useState<CountryWine[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const handleCountryClick = (countryName: string) => {
+    navigate(`/catalog?countries=${countryName}`);
+  };
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setVisibleCount((prev) => {
-        if (isOpen && prev < countries.length) {
-          return prev + 1;
+    let isMounted = true;
+
+    const loadCountries = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const data = await getCountries();
+
+        if (!Array.isArray(data)) {
+          throw new Error("Invalid countries data");
         }
 
-        if (!isOpen && prev > 2) {
-          return prev - 1;
+        if (isMounted) {
+          setCountries(data);
+        }
+      } catch (error) {
+        if (!isMounted) {
+          return;
         }
 
-        clearInterval(timer);
-        return prev;
-      });
-    }, 480);
+        console.error("Failed to load countries:", error);
 
-    return () => clearInterval(timer);
-  }, [isOpen]);
+        if (error instanceof TypeError) {
+          setError("Network error. Please check your internet connection.");
+          return;
+        }
 
-  const visibleCountries = countries.slice(0, visibleCount);
+        if (error instanceof Error) {
+          if (error.message.includes("404")) {
+            setError("Countries endpoint not found.");
+            return;
+          }
 
-  return (
-    <section className="wine-countries">
-      <div className="container">
-        <SectionTitle title="Explore Wine Countries" />
+          if (error.message.includes("500")) {
+            setError("Server error. Please try again later.");
+            return;
+          }
 
+          if (error.message.includes("Failed to fetch")) {
+            setError("Unable to connect to the server.");
+            return;
+          }
+
+          setError(error.message);
+          return;
+        }
+
+        setError("Something went wrong.");
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadCountries();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const visibleCountries = useMemo(() => {
+    return isOpen ? countries : countries.slice(0, INITIAL_VISIBLE_COUNT);
+  }, [countries, isOpen]);
+
+  const renderContent = () => {
+    if (loading) {
+      return <p className="wine-countries__state">Loading countries...</p>;
+    }
+
+    if (error) {
+      return (
+        <p className="wine-countries__state wine-countries__state--error">
+          {error}
+        </p>
+      );
+    }
+
+    if (!countries.length) {
+      return <p className="wine-countries__state">No countries found.</p>;
+    }
+
+    return (
+      <>
         <motion.div
           className="wine-countries__grid-wrap"
-          layout={!isOpen}
+          layout
           transition={{
             duration: 0.8,
             ease: [0.22, 1, 0.36, 1],
           }}
         >
           <div className="wine-countries__grid">
-            <AnimatePresence>
+            <AnimatePresence mode="popLayout">
               {visibleCountries.map((country) => (
-                <motion.article
+                <motion.button
                   key={country.id}
                   className="wine-countries__card"
+                  type="button"
                   style={{
-                    backgroundImage: `url(${country.backgroundImage})`,
+                    backgroundImage: `url(${country.flagImageUrl})`,
                   }}
                   variants={cardVariants}
                   initial="hidden"
                   animate="visible"
                   exit="exit"
+                  layout
+                  onClick={() => handleCountryClick(country.name)}
                 >
                   <div className="wine-countries__content">
                     <h3 className="wine-countries__card-title">
-                      {country.title}
+                      {country.nationality}
                     </h3>
                   </div>
 
                   <div className="wine-countries__image-wrap">
                     <img
                       className="wine-countries__card-image"
-                      src={country.wineImage}
-                      alt={country.title}
+                      src={country.bottleImageUrl}
+                      alt={country.nationality}
                     />
                   </div>
-                </motion.article>
+                </motion.button>
               ))}
             </AnimatePresence>
           </div>
         </motion.div>
 
-        <MoodLinkButton
-          className="wine-countries__view-all"
-          text={isOpen ? "Hide Countries" : "View All Countries"}
-          onClick={() => setIsOpen((prev) => !prev)}
-        />
+        {countries.length > INITIAL_VISIBLE_COUNT && (
+          <MoodLinkButton
+            className="wine-countries__view-all"
+            text={isOpen ? "Hide Countries" : "View All Countries"}
+            onClick={() => setIsOpen((prev) => !prev)}
+          />
+        )}
+      </>
+    );
+  };
+
+  return (
+    <section className="wine-countries">
+      <div className="container">
+        <SectionTitle title="Explore Wine Countries" />
+
+        {renderContent()}
       </div>
     </section>
   );

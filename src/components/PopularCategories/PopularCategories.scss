@@ -4,32 +4,17 @@
 .popular-categories {
   position: relative;
   padding-top: 50px;
-  overflow: hidden;
-  &::before {
-    content: "";
-    position: absolute;
-    top: -50px;
-    left: 8%;
-    width: 300px;
-    height: 300px;
-    background: var(--wine-glow-gradient);
-    filter: blur($wine-glow-blur);
-    opacity: 0.75;
-    z-index: 0;
-    pointer-events: none;
-    transition: opacity 0.5s ease, transform 0.5s ease, filter 0.5s ease;
-  }
+  overflow: visible;
 
-  &:hover::before {
-    opacity: 1;
-    transform: scale(1.12);
-    filter: blur($wine-glow-blur-hover);
+  .container {
+    position: relative;
+    z-index: 2;
   }
 
   &__grid {
     position: relative;
     z-index: 2;
-    margin-top: 150px;
+    margin-top: 115px;
     display: grid;
     grid-template-columns: 1fr;
     gap: 100px;
@@ -71,37 +56,37 @@
     }
 
     &--red::before {
+      z-index: 1;
       background: linear-gradient(
         90deg,
         rgba(255, 0, 0, 0.85) 0%,
-        rgba(120, 0, 0, 0.55) 32%,
         rgba(11, 11, 11, 0.55) 72%
       );
     }
-
+    
     &--rose::before {
+      z-index: 1;
       background: linear-gradient(
         90deg,
         rgba(247, 170, 251, 1) 0%,
-        rgba(120, 70, 125, 0.5) 32%,
         rgba(11, 11, 11, 0.55) 72%
       );
     }
-
+    
     &--sparkling::before {
+      z-index: 1;
       background: linear-gradient(
         90deg,
         rgba(83, 255, 53, 1) 0%,
-        rgba(35, 110, 25, 0.5) 32%,
         rgba(11, 11, 11, 0.55) 72%
       );
     }
-
+    
     &--premium::before {
+      z-index: 1;
       background: linear-gradient(
         90deg,
-        rgba(124, 75, 12, 0.85) 0%,
-        rgba(70, 42, 8, 0.55) 32%,
+        rgba(171, 97, 13, 1) 0%,
         rgba(11, 11, 11, 0.55) 72%
       );
     }
@@ -141,17 +126,10 @@
   @include on-tablet {
     padding-top: 80px;
 
-    &::before {
-      top: 30px;
-      left: -2%;
-      width: 900px;
-      height: 200px;
-    }
-
     &__grid {
       grid-template-columns: repeat(2, 1fr);
       gap: 100px 30px;
-      margin-top: 220px;
+      margin-top: 140px;
     }
 
     &__card {
@@ -164,27 +142,32 @@
     }
 
     &__card-image {
-      right: -6px;
+      right: 44px;
       top: -86px;
       width: 190px;
       height: 245px;
     }
+
+    &__state {
+      margin: 48px 0 0;
+      font-family: "Poppins", sans-serif;
+      font-size: 18px;
+      text-align: start;
+      color: rgba(211, 211, 211, 0.75);
+    }
+  
+    &__state--error {
+      color: var(--mood-link-hover-color);
+    }
   }
 
   @include on-desktop {
-    padding-top: 108px;
-
-    &::before {
-      top: 30px;
-      left: 13%;
-      width: 900px;
-      height: 200px;
-    }
+    padding-top: 87px;
 
     &__grid {
       grid-template-columns: repeat(4, 1fr);
       gap: 20px;
-      margin-top: 320px;
+      margin-top: 200px;
     }
 
     &__card {

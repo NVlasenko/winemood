@@ -1,0 +1,81 @@
+@import "../../styles/mixins";
+
+.wine-details-page {
+  min-height: 100vh;
+  background: #050505;
+
+  &__empty {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+  }
+
+  &__title {
+    margin: 0 0 18px;
+    font-family: "Marcellus", serif;
+    font-weight: 400;
+    font-size: 42px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 1);
+  }
+
+  &__text {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.7;
+    color: rgba(178, 178, 178, 1);
+  }
+
+  &__loader-wrapper {
+    @include page-loader-layout;
+  }
+
+  &__loader-glow {
+    position: absolute;
+
+    width: 260px;
+    height: 260px;
+
+    border-radius: 50%;
+
+    background: rgba(var(--wine-glow-rgb), 0.18);
+    filter: blur(80px);
+
+    pointer-events: none;
+  }
+  
+}
+
+@keyframes wineLoaderSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes wineLoaderGlow {
+  0% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+}

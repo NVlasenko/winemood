@@ -4,16 +4,25 @@ import { HashRouter, Route, Routes } from "react-router-dom";
 import { App } from "./App";
 import { HomePage } from "./pages/HomePage";
 import { ScrollToTop } from "./components/ScrollToTop/ScrollToTop";
+import { CatalogPage } from "./pages/CatalogPage";
+import { FavoritesProvider } from "./context/FavoritesContext";
+import { WineDetailsPage } from "./pages/WineDetailsPage";
+import { WriteReviewPage } from "./pages/WriteReviewPage";
 
 export const Root: React.FC = () => {
   return (
+    <FavoritesProvider>
     <HashRouter>
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<App />}>
           <Route index element={<HomePage />} />
+          <Route path="/catalog" element={<CatalogPage />} />
+          <Route path="/catalog/:id" element={<WineDetailsPage />} />
+          <Route path="/catalog/:id/review" element={<WriteReviewPage />} />
         </Route>
       </Routes>
     </HashRouter>
+    </FavoritesProvider>
   );
 };

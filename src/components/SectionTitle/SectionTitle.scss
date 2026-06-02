@@ -6,10 +6,12 @@
   z-index: 2;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 14px;
 
   &__line {
+    position: relative;
+    z-index: 2;
     width: 48px;
     height: 1px;
     flex-shrink: 0;
@@ -21,7 +23,8 @@
         var(--line-gradient-start) 100%
       );
 
-      box-shadow: 0 0 10px var(--line-shadow);
+      box-shadow: 0 0 10px var(--line-shadow),
+        0 0 22px rgba(var(--wine-glow-rgb), 0.4);
     }
 
     &--left {
@@ -31,15 +34,61 @@
         var(--line-gradient-end) 100%
       );
 
-      box-shadow: 0 0 10px var(--line-shadow);
+      box-shadow: 0 0 10px var(--line-shadow),
+        0 0 22px rgba(var(--wine-glow-rgb), 0.4);
+    }
+  }
+
+  &__text-wrap {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    isolation: isolate;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: -1;
+      width: 220px;
+      height: 180px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+
+      background: radial-gradient(
+        circle,
+        rgba(var(--wine-glow-rgb), 0.75) 0%,
+        rgba(var(--wine-glow-rgb), 0.52) 18%,
+        rgba(var(--wine-glow-rgb), 0.32) 42%,
+        rgba(var(--wine-glow-rgb), 0.06) 66%,
+        transparent 84%
+      );
+
+      filter: blur(38px);
+      opacity: 0.8;
+      pointer-events: none;
+
+      transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+        filter 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease;
+    }
+
+    &:hover::before {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.08);
+      filter: blur(72px);
     }
   }
 
   &__text {
+    position: relative;
+    z-index: 2;
     margin: 0;
     font-family: "Marcellus", serif;
     font-weight: 400;
-    font-size: 23px;
+    font-size: 20px;
     line-height: 1.2;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -49,14 +98,28 @@
 
   @include on-tablet {
     gap: 20px;
+    justify-content: flex-start;
 
     &__line {
       width: 120px;
     }
 
+    &__text-wrap {
+      &::before {
+        width: 520px;
+        height: 240px;
+        filter: blur(74px);
+      }
+
+      &::after {
+        width: 640px;
+        height: 300px;
+        filter: blur(120px);
+      }
+    }
+
     &__text {
       font-size: 38px;
-      white-space: nowrap;
     }
   }
 
@@ -67,8 +130,23 @@
       width: 240px;
     }
 
+    &__text-wrap {
+      &::before {
+        width: 760px;
+        height: 320px;
+        filter: blur(96px);
+      }
+
+      &::after {
+        width: 980px;
+        height: 420px;
+        filter: blur(160px);
+      }
+    }
+
     &__text {
       font-size: 42px;
+      white-space: nowrap;
     }
   }
 }

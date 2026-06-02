@@ -1,8 +1,17 @@
+import { useNavigate } from "react-router-dom";
+
 import "./HeroSection.scss";
-import bgHero from "../../assets/images/bg-pictures/bgHero.png";
+
+import bgHero from "../../assets/images/bg-pictures/bgHero.svg";
 import arrowRight from "../../assets/images/icons/arrow-right.svg";
 
 export const HeroSection = () => {
+  const navigate = useNavigate();
+
+  const handleExploreClick = () => {
+    navigate("/catalog");
+  };
+
   return (
     <section className="hero-section">
       <div className="container">
@@ -15,18 +24,23 @@ export const HeroSection = () => {
             <span />
           </div>
 
-          <button className="button-primary hero-section__button" type="button">
-            Explore Collection
+          <button
+            className="button-primary hero-section__button"
+            type="button"
+            onClick={handleExploreClick}
+          >
+            <span>Explore Collection</span>
+
             <img
               src={arrowRight}
-              alt="Arrow right"
+              alt=""
               className="hero-section__button-arrow"
             />
           </button>
         </div>
 
         <div className="hero-section__image">
-          <img src={bgHero} alt="Wine" />
+          <img src={bgHero} alt="Elegant wine bottle composition" />
         </div>
       </div>
     </section>

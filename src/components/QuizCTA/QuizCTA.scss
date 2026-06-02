@@ -3,7 +3,7 @@
 
 .quiz-cta {
   position: relative;
-  padding: 100px 0 50px;
+  padding: 100px 0 0;
   overflow: hidden;
 
   &__box {
@@ -15,25 +15,16 @@
     overflow: hidden;
 
     &::before {
-      content: "";
-      position: absolute;
+      @include mood-glow;
       top: -120px;
       left: -120px;
       width: 380px;
       height: 380px;
-      background: var(--wine-glow-gradient);
-      filter: blur($wine-glow-blur);
-      opacity: 0.8;
-      z-index: -1;
-      pointer-events: none;
-
-      transition: opacity 0.5s ease, transform 0.5s ease, filter 0.5s ease;
+      z-index: 1;
     }
 
     &:hover::before {
-      opacity: 1;
-      transform: scale(1.12);
-      filter: blur($wine-glow-blur-hover);
+      @include mood-glow-hover;
     }
   }
 
@@ -81,7 +72,7 @@
   }
 
   @include on-tablet {
-    padding: 150px 0 70px;
+    padding: 150px 0 0;
 
     &__box {
       padding: 60px 48px;
@@ -105,8 +96,14 @@
   }
 
   @include on-desktop {
-    padding: 250px 0 100px;
+    padding: 220px 0 0;
 
+    &::before {
+      top: 140px;
+      left: 14%;
+      width: 900px;
+      height: 160px;
+    }
     &__box {
       padding: 50px 40px;
     }

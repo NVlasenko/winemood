@@ -5,6 +5,21 @@ import {
 } from "../../data/footerLinks";
 import "./Footer.scss";
 
+const footerColumns = [
+  {
+    title: "Discovery",
+    links: discoveryLinks,
+  },
+  {
+    title: "Resources",
+    links: resourceLinks,
+  },
+  {
+    title: "Social",
+    links: socialLinks,
+  },
+];
+
 export const Footer = () => {
   return (
     <footer className="footer">
@@ -14,41 +29,19 @@ export const Footer = () => {
             <h2 className="footer__logo">Vinoteca</h2>
 
             <div className="footer__content">
-              <div className="footer__column">
-                <h3 className="footer__title">Discovery</h3>
+              {footerColumns.map((column) => (
+                <div className="footer__column" key={column.title}>
+                  <h3 className="footer__title">{column.title}</h3>
 
-                <div className="footer__links">
-                  {discoveryLinks.map((link) => (
-                    <a key={link} href="/" className="footer__link">
-                      {link}
-                    </a>
-                  ))}
+                  <div className="footer__links">
+                    {column.links.map((link) => (
+                      <a key={link} href="/" className="footer__link">
+                        {link}
+                      </a>
+                    ))}
+                  </div>
                 </div>
-              </div>
-
-              <div className="footer__column">
-                <h3 className="footer__title">Resources</h3>
-
-                <div className="footer__links">
-                  {resourceLinks.map((link) => (
-                    <a key={link} href="/" className="footer__link">
-                      {link}
-                    </a>
-                  ))}
-                </div>
-              </div>
-
-              <div className="footer__column">
-                <h3 className="footer__title">Social</h3>
-
-                <div className="footer__links">
-                  {socialLinks.map((link) => (
-                    <a key={link} href="/" className="footer__link">
-                      {link}
-                    </a>
-                  ))}
-                </div>
-              </div>
+              ))}
             </div>
           </div>
 
@@ -59,12 +52,16 @@ export const Footer = () => {
               Online wine store | All rights reserved
             </p>
 
-            <p className="footer__privacy">Privacy & Cookie Policies</p>
+            <a href="/" className="footer__privacy">
+              Privacy & Cookie Policies
+            </a>
           </div>
         </div>
       </div>
 
-      <h2 className="footer__background-text">Vinoteca</h2>
+      <h2 className="footer__background-text" aria-hidden="true">
+        Vinoteca
+      </h2>
     </footer>
   );
 };

@@ -1,6 +1,7 @@
 export type CountryWine = {
   id: number;
-  title: string;
-  backgroundImage: string;
-  wineImage: string;
+  name: string,
+  nationality: string;
+  flagImageUrl: string;
+  bottleImageUrl: string;
 };

@@ -4,6 +4,7 @@
 .about-hero {
   position: relative;
   min-height: 760px;
+
   overflow: hidden;
 
   background:
@@ -75,7 +76,7 @@
       40px,
       0,
       600px,
-      600px,
+      700px,
       0.96,
       cover,
       right top
@@ -85,7 +86,7 @@
   &__brand {
     @include vinoteca-text(
       rgba(var(--wine-glow-rgb), 1),
-      clamp(58px, 18vw, 88px),
+      clamp(74px, 22vw, 104px),
       0.02em,
       0.8
     );
@@ -97,7 +98,7 @@
     z-index: 2;
     max-width: 100%;
     overflow: hidden;
-    transform: translateX(-50%) scaleX(1);
+    transform: translateX(-50%) scaleX(1.02);
     filter: brightness(0.48);
   }
 
@@ -194,7 +195,7 @@
   }
 
   @include on-desktop {
-    min-height: 100vh;
+    min-height: 900px;
 
     &::after {
       left: 30%;
@@ -204,7 +205,7 @@
     }
 
     &__content {
-      min-height: 100vh;
+      min-height: 1000px;
     }
 
     &__pattern--left {
@@ -241,6 +242,34 @@
       width: 557px;
       font-size: 18px;
       line-height: 1.55;
+    }
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1040px) {
+  .about-hero {
+    &__text {
+      left: 50%;
+      right: auto;
+      bottom: 30px;
+
+      width: min(100%, 520px);
+
+      transform: translateX(-50%);
+
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    &__bottle {
+      top: 100px;
+      left: 50%;
+
+      width: 200px;
+      height: 600px;
+
+      transform: translateX(-50%);
     }
   }
 }

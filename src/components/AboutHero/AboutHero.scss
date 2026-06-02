@@ -85,8 +85,8 @@
   &__brand {
     @include vinoteca-text(
       rgba(var(--wine-glow-rgb), 1),
-      clamp(86px, 24vw, 140px),
-      0.03em,
+      clamp(74px, 22vw, 104px),
+      0.02em,
       0.8
     );
 
@@ -169,11 +169,11 @@
     }
 
     &__brand {
-      top: 285px;
+      top: 200px;
       left: 50%;
       right: auto;
-      font-size: clamp(140px, 23vw, 190px);
-      letter-spacing: 0.08em;
+      font-size: clamp(120px, 20vw, 170px);
+      letter-spacing: 0.05em;
       transform: translateX(-50%) scaleX(1.02);
     }
     &__bottle {

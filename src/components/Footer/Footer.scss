@@ -4,7 +4,29 @@
 .footer {
   position: relative;
   padding: 50px 0 40px;
-  overflow: hidden;
+  overflow: visible;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: -120px;
+    left: -140px;
+    z-index: 5;
+    width: 340px;
+    height: 340px;
+    border-radius: 50%;
+
+    background: radial-gradient(
+      circle,
+      rgba(var(--wine-glow-rgb), 0.48) 0%,
+      rgba(var(--wine-glow-rgb), 0.24) 26%,
+      rgba(var(--wine-glow-rgb), 0.1) 46%,
+      transparent 76%
+    );
+
+    filter: blur(70px);
+    pointer-events: none;
+  }
 
   &__wrapper {
     position: relative;
@@ -18,7 +40,7 @@
       rgba(11, 11, 11, 0.85) 0%,
       rgba(11, 11, 11, 0.55) 100%
     );
-
+    overflow: visible;
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
   }
@@ -113,19 +135,18 @@
     font-size: 16px;
     line-height: 1.2;
     text-transform: uppercase;
-
     color: rgba(177, 167, 166, 1);
+  }
+
+  &__background-wrap {
+    overflow: hidden;
   }
 
   &__background-text {
     @include vinoteca-text(rgba(41, 43, 44, 1), clamp(90px, 30vw, 520px), 0);
-
     margin-top: 20px;
-
     position: relative;
-
-    transform: translateX(-5%) scaleX(1.04);
-
+    transform: translateX(-5%) scaleX(1.03);
     text-shadow: 0 4px 60px rgba(0, 0, 0, 1);
 
     -webkit-mask-image: linear-gradient(
@@ -144,8 +165,28 @@
 
     transform-origin: center;
   }
+
+
   @include on-tablet {
     padding: 80px 0 50px;
+
+    &::before {
+      top: -160px;
+      left: -180px;
+      width: 520px;
+      height: 520px;
+
+      background: radial-gradient(
+        circle,
+        rgba(var(--wine-glow-rgb), 0.54) 0%,
+        rgba(var(--wine-glow-rgb), 0.3) 24%,
+        rgba(var(--wine-glow-rgb), 0.14) 44%,
+        rgba(var(--wine-glow-rgb), 0.06) 60%,
+        transparent 80%
+      );
+
+      filter: blur(90px);
+    }
 
     &__wrapper {
       padding: 60px 40px 40px;
@@ -182,6 +223,24 @@
 
   @include on-desktop {
     padding: 180px 0 50px;
+
+    &::before {
+      top: -200px;
+      left: -260px;
+      width: 720px;
+      height: 720px;
+
+      background: radial-gradient(
+        circle,
+        rgba(var(--wine-glow-rgb), 0.62) 0%,
+        rgba(var(--wine-glow-rgb), 0.38) 22%,
+        rgba(var(--wine-glow-rgb), 0.18) 42%,
+        rgba(var(--wine-glow-rgb), 0.08) 58%,
+        transparent 78%
+      );
+
+      filter: blur(120px);
+    }
 
     &__wrapper {
       padding: 44px 40px 32px;

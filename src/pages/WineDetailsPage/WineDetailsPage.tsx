@@ -6,7 +6,7 @@ import { WineCard } from "../../components/WineCard/WineCard";
 import type { Wine } from "../../types/wine";
 
 import "./WineDetailsPage.scss";
-import { WineGlassLoader } from "@/components/WineCard/components/WineGlassLoader";
+import { WineGlassLoader } from "@/components/WineCard/sections/WineGlassLoader";
 
 export const WineDetailsPage = () => {
   const { id } = useParams();

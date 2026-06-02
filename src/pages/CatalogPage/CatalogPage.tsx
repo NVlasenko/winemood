@@ -14,7 +14,7 @@ import { getWines } from "@/shared/api/wineApi";
 import "./CatalogPage.scss";
 import { filterWines } from "@/shared/api/wineFilterApi";
 import type { WineCatalogCard } from "@/types/wineCatalogCard";
-import { WineGlassLoader } from "@/components/WineCard/components/WineGlassLoader";
+import { WineGlassLoader } from "@/components/WineCard/sections/WineGlassLoader";
 
 const SORT_OPTIONS = ["Popularity", "Top Rated", "Alphabetical"] as const;
 const STARS = [1, 2, 3, 4, 5];

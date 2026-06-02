@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { ReviewStepLayout } from "@/components/WineCard/components/ReviewStepLayout";
+import { ReviewStepLayout } from "@/components/WineCard/sections/ReviewStepLayout";
 import { useNavigate, useParams } from "react-router-dom";
 import messageIcon from "@/assets/images/icons/message.svg";
 import personIcon from "@/assets/images/icons/person.svg";

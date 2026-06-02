@@ -59,9 +59,11 @@ export const Footer = () => {
         </div>
       </div>
 
+      <div className="footer__background-wrap">
       <h2 className="footer__background-text" aria-hidden="true">
         Vinoteca
       </h2>
+    </div>
     </footer>
   );
 };

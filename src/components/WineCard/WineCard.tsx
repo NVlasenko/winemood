@@ -1,8 +1,8 @@
-import { WineHero } from "./components/WineHero/WineHero";
-import { WineDetailsInfo } from "./components/WineDetailsInfo/WineDetailsInfo";
+import { WineHero } from "./sections/WineHero/WineHero";
+import { WineDetailsInfo } from "./sections/WineDetailsInfo/WineDetailsInfo";
 import type { Wine } from "../../types/wine";
 import "./WineCard.scss";
-import { WineReviews } from "./components/WineReviews/WineReviews";
+import { WineReviews } from "./sections/WineReviews/WineReviews";
 
 type Props = {
   wine: Wine;

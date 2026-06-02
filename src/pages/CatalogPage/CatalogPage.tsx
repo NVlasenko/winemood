@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 import wineDropIcon from "../../assets/images/wine/sweet.svg";
 import bottleIcon from "../../assets/images/wine/bottle.svg";
@@ -9,10 +9,12 @@ import { CatalogFilters } from "../../components/CatalogFilters/CatalogFilters";
 
 import { useFavorites } from "../../context/FavoritesContext";
 
-import type { Wine } from "@/types/wine";
 import { getWines } from "@/shared/api/wineApi";
 
 import "./CatalogPage.scss";
+import { filterWines } from "@/shared/api/wineFilterApi";
+import type { WineCatalogCard } from "@/types/wineCatalogCard";
+import { WineGlassLoader } from "@/components/WineCard/components/WineGlassLoader";
 
 const SORT_OPTIONS = ["Popularity", "Top Rated", "Alphabetical"] as const;
 const STARS = [1, 2, 3, 4, 5];
@@ -23,14 +25,21 @@ export const CatalogPage = () => {
   const [activeSort, setActiveSort] = useState<SortOption>("Popularity");
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-  const [wines, setWines] = useState<Wine[]>([]);
+  const [wines, setWines] = useState<WineCatalogCard[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
   const { favorites, toggleFavorite } = useFavorites();
 
   const sortRef = useRef<HTMLDivElement | null>(null);
+  const [searchParams] = useSearchParams();
 
+  const wineTypesParam = searchParams.get("wineTypes") || "";
+  const countriesParam = searchParams.get("countries") || "";
+
+  const wineTypesFromUrl = wineTypesParam ? wineTypesParam.split(",") : [];
+
+  const countriesFromUrl = countriesParam ? countriesParam.split(",") : [];
   const favoriteIds = useMemo(() => new Set(favorites), [favorites]);
 
   const visibleWines = useMemo(() => {
@@ -73,11 +82,7 @@ export const CatalogPage = () => {
             Math.min(Math.max(rating - (star - 1), 0), 1) * 100;
 
           return (
-            <span
-              className="catalog-page__star"
-              key={star}
-              aria-hidden="true"
-            >
+            <span className="catalog-page__star" key={star} aria-hidden="true">
               <span className="catalog-page__star-bg">★</span>
 
               <span
@@ -98,7 +103,7 @@ export const CatalogPage = () => {
   const renderLoader = () => (
     <div className="catalog-page__loader-wrapper">
       <div className="catalog-page__loader-glow" />
-      <div className="catalog-page__loader" />
+      <WineGlassLoader />
     </div>
   );
 
@@ -106,13 +111,9 @@ export const CatalogPage = () => {
     <div className="catalog-page__empty">
       <div className="catalog-page__empty-glow" />
 
-      <h3 className="catalog-page__empty-title">
-        Failed to load wines
-      </h3>
+      <h3 className="catalog-page__empty-title">Failed to load wines</h3>
 
-      <p className="catalog-page__empty-text">
-        {error}
-      </p>
+      <p className="catalog-page__empty-text">{error}</p>
     </div>
   );
 
@@ -120,9 +121,7 @@ export const CatalogPage = () => {
     <div className="catalog-page__empty">
       <div className="catalog-page__empty-glow" />
 
-      <h3 className="catalog-page__empty-title">
-        No wines found
-      </h3>
+      <h3 className="catalog-page__empty-title">No wines found</h3>
 
       <p className="catalog-page__empty-text">
         Try changing filters or reset your selection.
@@ -171,7 +170,7 @@ export const CatalogPage = () => {
     </div>
   );
 
-  const renderWineCard = (wine: Wine) => {
+  const renderWineCard = (wine: WineCatalogCard) => {
     const isFavorite = favoriteIds.has(wine.id);
 
     return (
@@ -253,7 +252,14 @@ export const CatalogPage = () => {
         setIsLoading(true);
         setError("");
 
-        const data = await getWines();
+        const hasFilters = wineTypesFromUrl.length || countriesFromUrl.length;
+
+        const data = hasFilters
+          ? await filterWines({
+              wineTypes: wineTypesFromUrl,
+              countries: countriesFromUrl,
+            })
+          : await getWines();
 
         if (!Array.isArray(data)) {
           throw new Error("Invalid wines data");
@@ -292,7 +298,7 @@ export const CatalogPage = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [wineTypesParam, countriesParam]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

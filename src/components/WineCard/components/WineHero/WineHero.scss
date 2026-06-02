@@ -15,15 +15,15 @@
   );
 
   &__pattern {
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 2;
-    width: 820px;
-    height: 100%;
-    opacity: 0.96;
-    object-fit: cover;
-    pointer-events: none;
+    @include pattern-position(
+      0,
+      0,
+      820px,
+      100%,
+      0.96,
+      cover,
+      right top
+    );
   }
 
   &__top {
@@ -44,7 +44,6 @@
     img {
       width: 18px;
       height: 18px;
-
       transform: rotate(180deg);
     }
 
@@ -253,12 +252,15 @@
     );
 
     &__pattern {
-      top: 0;
-      right: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0.86;
-      object-fit: cover;
+      @include pattern-position(
+        0,
+        0,
+        100%,
+        100%,
+        0.86,
+        cover,
+        right top
+      );
     }
 
     &__top {
@@ -276,7 +278,6 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-
       text-align: center;
     }
 
@@ -341,14 +342,15 @@
     padding: 162px 0 100px;
 
     &__pattern {
-      top: 0;
-      right: 0;
-      bottom: 0;
-      width: 1000px;
-      height: 100%;
-      object-fit: contain;
-      object-position: right top;
-      opacity: 0.85;
+      @include pattern-position(
+        0,
+        0,
+        1000px,
+        100%,
+        0.85,
+        contain,
+        right top
+      );
     }
 
     &__top {
@@ -480,7 +482,7 @@
     &__wine-glow {
       top: 50%;
       width: 320px;
-      height: 320px;
+      height: 720px;
       filter: blur(78px);
     }
   }

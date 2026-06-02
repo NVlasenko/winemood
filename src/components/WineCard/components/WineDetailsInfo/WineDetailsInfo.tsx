@@ -56,7 +56,7 @@ export const WineDetailsInfo = ({ wine }: Props) => {
         icon: appellationIcons[moodTheme] || appellationIcons.default,
       },
     ],
-    [wine, moodTheme],
+    [wine, moodTheme]
   );
 
   return (

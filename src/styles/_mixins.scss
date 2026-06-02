@@ -35,3 +35,54 @@
   transform: scale(1);
   filter: blur($wine-glow-blur-hover);
 }
+
+@mixin page-loader-layout {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #050505;
+}
+
+@mixin pattern-position(
+  $top,
+  $right,
+  $width,
+  $height,
+  $opacity,
+  $object-fit: cover,
+  $object-position: right top
+) {
+  position: absolute;
+  top: $top;
+  right: $right;
+  z-index: 2;
+  width: $width;
+  height: $height;
+  opacity: $opacity;
+  object-fit: $object-fit;
+  object-position: $object-position;
+  pointer-events: none;
+}
+
+@mixin vinoteca-text(
+  $color,
+  $font-size,
+  $letter-spacing: 0,
+  $line-height: 0.8
+) {
+
+  width: max-content;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: $font-size;
+  line-height: $line-height;
+  letter-spacing: $letter-spacing;
+  white-space: nowrap;
+  color: $color;
+  user-select: none;
+  pointer-events: none;
+}

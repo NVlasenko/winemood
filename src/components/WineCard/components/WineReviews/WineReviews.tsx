@@ -22,13 +22,13 @@ export const WineReviews = ({ wine }: Props) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const navigate = useNavigate();
 
-const handleWriteReviewClick = () => {
-  navigate(`/catalog/${wine.id}/review`);
-};
+  const handleWriteReviewClick = () => {
+    navigate(`/catalog/${wine.id}/review`);
+  };
 
   const wineReviews = useMemo(
     () => reviews.filter((review) => review.wineId === wine.id),
-    [wine.id],
+    [wine.id]
   );
 
   const visibleReviews = isExpanded ? wineReviews : wineReviews.slice(0, 2);
@@ -117,20 +117,20 @@ const handleWriteReviewClick = () => {
               </div>
 
               <div className="wine-reviews__actions">
-              <button
-                className="button-primary wine-reviews__write-button"
-                type="button"
-                onClick={handleWriteReviewClick}
-              >
-                <span>Write a review</span>
+                <button
+                  className="button-primary wine-reviews__write-button"
+                  type="button"
+                  onClick={handleWriteReviewClick}
+                >
+                  <span>Write a review</span>
 
-                <img
-                  className="wine-reviews__write-icon"
-                  src={reviewIcon}
-                  alt=""
-                  aria-hidden="true"
-                />
-              </button>
+                  <img
+                    className="wine-reviews__write-icon"
+                    src={reviewIcon}
+                    alt=""
+                    aria-hidden="true"
+                  />
+                </button>
 
                 {hasMoreReviews && (
                   <button
@@ -153,6 +153,7 @@ const handleWriteReviewClick = () => {
             <button
               className="button-primary wine-reviews__write-button"
               type="button"
+              onClick={handleWriteReviewClick}
             >
               <span>Write a review</span>
             </button>

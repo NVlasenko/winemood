@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-
+import { getWineById } from "@/shared/api/wineApi";
 import { WineCard } from "../../components/WineCard/WineCard";
 
 import type { Wine } from "../../types/wine";
 
-import { getWineById } from "@/shared/api/wineApi";
-
 import "./WineDetailsPage.scss";
+import { WineGlassLoader } from "@/components/WineCard/components/WineGlassLoader";
 
 export const WineDetailsPage = () => {
   const { id } = useParams();
@@ -56,9 +55,7 @@ export const WineDetailsPage = () => {
         setWine(null);
 
         if (error instanceof TypeError) {
-          setError(
-            "Network error. Please check your internet connection.",
-          );
+          setError("Network error. Please check your internet connection.");
 
           return;
         }
@@ -106,27 +103,21 @@ export const WineDetailsPage = () => {
     <div className="wine-details-page__loader-wrapper">
       <div className="wine-details-page__loader-glow" />
 
-      <div className="wine-details-page__loader" />
+      <WineGlassLoader />
     </div>
   );
 
   const renderError = () => (
     <div className="wine-details-page__empty">
-      <h1 className="wine-details-page__title">
-        Failed to load wine
-      </h1>
+      <h1 className="wine-details-page__title">Failed to load wine</h1>
 
-      <p className="wine-details-page__text">
-        {error}
-      </p>
+      <p className="wine-details-page__text">{error}</p>
     </div>
   );
 
   const renderNotFound = () => (
     <div className="wine-details-page__empty">
-      <h1 className="wine-details-page__title">
-        Wine not found
-      </h1>
+      <h1 className="wine-details-page__title">Wine not found</h1>
 
       <p className="wine-details-page__text">
         This wine does not exist or has been removed.
@@ -150,9 +141,5 @@ export const WineDetailsPage = () => {
     return <WineCard wine={wine} />;
   };
 
-  return (
-    <main className="wine-details-page">
-      {renderContent()}
-    </main>
-  );
+  return <main className="wine-details-page">{renderContent()}</main>;
 };

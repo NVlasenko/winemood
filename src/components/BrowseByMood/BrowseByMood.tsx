@@ -85,7 +85,7 @@ export const BrowseByMood = () => {
         particleTimeoutRef.current = null;
       }, 2600);
     },
-    [clearParticleTimeout],
+    [clearParticleTimeout]
   );
 
   const handleMoodClick = useCallback(
@@ -102,7 +102,7 @@ export const BrowseByMood = () => {
 
       fireParticleEffect(theme);
     },
-    [clearParticleTimeout, fireParticleEffect, setMoodTheme],
+    [clearParticleTimeout, fireParticleEffect, setMoodTheme]
   );
 
   return (
@@ -136,9 +136,7 @@ export const BrowseByMood = () => {
 
                 <div className="browse-by-mood__card-overlay" />
 
-                <h3 className="browse-by-mood__card-title">
-                  {mood.title}
-                </h3>
+                <h3 className="browse-by-mood__card-title">{mood.title}</h3>
               </div>
             </button>
           ))}
@@ -147,7 +145,6 @@ export const BrowseByMood = () => {
         <div className="browse-by-mood__button-wrapper">
           <Link to="/catalog" className="button-primary browse-by-mood__button">
             Find My Wine
-
             <img
               src={arrowRight}
               alt=""

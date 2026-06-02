@@ -1,18 +1,32 @@
 import { useEffect, useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 import "./PopularCategories.scss";
 
 import { SectionTitle } from "../SectionTitle";
 import type { Category } from "../../types/categories";
 import { getCategories } from "../../shared/api/categoryApi";
 
+const getWineTypeByCategory = (type: string) => {
+  const normalizedType = type.toLowerCase();
+
+  const wineTypeByCategory: Record<string, string> = {
+    red: "RED",
+    rose: "ROSE",
+    rosé: "ROSE",
+    sparkling: "SPARKLING",
+    premium: "PREMIUM",
+  };
+
+  return wineTypeByCategory[normalizedType] || "";
+};
+
 const getCardClassName = (type: string) => {
   const normalizedType = type.toLowerCase();
 
   const classByType: Record<string, string> = {
     red: "popular-categories__card--red",
-    rosé: "popular-categories__card--rose",
     rose: "popular-categories__card--rose",
+    rosé: "popular-categories__card--rose",
     sparkling: "popular-categories__card--sparkling",
     premium: "popular-categories__card--premium",
   };
@@ -21,6 +35,8 @@ const getCardClassName = (type: string) => {
 };
 
 export const PopularCategories = () => {
+  const navigate = useNavigate();
+
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -55,21 +71,6 @@ export const PopularCategories = () => {
         }
 
         if (error instanceof Error) {
-          if (error.message.includes("404")) {
-            setError("Categories endpoint not found.");
-            return;
-          }
-
-          if (error.message.includes("500")) {
-            setError("Server error. Please try again later.");
-            return;
-          }
-
-          if (error.message.includes("Failed to fetch")) {
-            setError("Unable to connect to the server.");
-            return;
-          }
-
           setError(error.message);
           return;
         }
@@ -89,13 +90,20 @@ export const PopularCategories = () => {
     };
   }, []);
 
+  const handleCategoryClick = (type: string) => {
+    const wineType = getWineTypeByCategory(type);
+
+    if (!wineType) {
+      navigate("/catalog");
+      return;
+    }
+
+    navigate(`/catalog?wineTypes=${wineType}`);
+  };
+
   const renderContent = () => {
     if (loading) {
-      return (
-        <p className="popular-categories__state">
-          Loading categories...
-        </p>
-      );
+      return <p className="popular-categories__state">Loading categories...</p>;
     }
 
     if (error) {
@@ -107,11 +115,7 @@ export const PopularCategories = () => {
     }
 
     if (!categories.length) {
-      return (
-        <p className="popular-categories__state">
-          No categories found.
-        </p>
-      );
+      return <p className="popular-categories__state">No categories found.</p>;
     }
 
     return (
@@ -120,9 +124,11 @@ export const PopularCategories = () => {
           const cardModifier = getCardClassName(category.type);
 
           return (
-            <article
+            <button
               key={category.id}
               className={`popular-categories__card ${cardModifier}`}
+              type="button"
+              onClick={() => handleCategoryClick(category.type)}
             >
               <h3 className="popular-categories__card-title">
                 {category.title}
@@ -133,7 +139,7 @@ export const PopularCategories = () => {
                 src={category.image}
                 alt={category.title}
               />
-            </article>
+            </button>
           );
         })}
       </div>
@@ -144,7 +150,6 @@ export const PopularCategories = () => {
     <section className="popular-categories">
       <div className="container">
         <SectionTitle title="Popular Categories" />
-
         {renderContent()}
       </div>
     </section>

@@ -16,9 +16,7 @@ export const HeroSection = () => {
     <section className="hero-section">
       <div className="container">
         <div className="hero-section__content">
-          <h1 className="hero-section__title">
-            Your Personal Sommelier
-          </h1>
+          <h1 className="hero-section__title">Your Personal Sommelier</h1>
 
           <div className="hero-section__subtitle">
             <span />

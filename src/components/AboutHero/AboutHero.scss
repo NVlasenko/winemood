@@ -85,7 +85,7 @@
   &__brand {
     @include vinoteca-text(
       rgba(var(--wine-glow-rgb), 1),
-      clamp(74px, 22vw, 104px),
+      clamp(58px, 18vw, 88px),
       0.02em,
       0.8
     );
@@ -97,7 +97,7 @@
     z-index: 2;
     max-width: 100%;
     overflow: hidden;
-    transform: translateX(-50%) scaleX(1.02);
+    transform: translateX(-50%) scaleX(1);
     filter: brightness(0.48);
   }
 

@@ -1,0 +1,190 @@
+@import "@/styles/mixins";
+@import "@/styles/variables";
+
+.about-advantages {
+  position: relative;
+  padding: 90px 0;
+  overflow: hidden;
+
+  &::after {
+    display: none;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  &__grid {
+    margin-top: 40px;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  &__card {
+    @include animated-info-card;
+
+    min-height: 190px;
+    padding: 28px 20px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+
+    border: 1px solid rgba(217, 217, 217, 0.16);
+    border-radius: 8px;
+
+    background: rgba(0, 0, 0, 0.16);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    &:hover {
+      .about-advantages__number {
+        transform: scale(1.08) translateX(4px);
+        text-shadow: 0 0 18px var(--line-shadow);
+      }
+    }
+  }
+
+  &__number {
+    width: 53px;
+    height: 53px;
+  
+    object-fit: contain;
+    flex-shrink: 0;
+  
+    display: block;
+  
+    transition:
+      transform 0.35s ease,
+      filter 0.35s ease;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  &__title {
+    margin: 0;
+
+    font-family: "Marcellus", serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.25;
+
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+
+    color: $text-primary;
+  }
+
+  &__text {
+    margin: 0;
+
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1.7;
+
+    color: rgba(177, 167, 166, 1);
+  }
+
+  @include on-tablet {
+    padding: 110px 0;
+
+    &::after {
+      display: block;
+    
+      content: "";
+    
+      position: absolute;
+      top: 14%;
+      right: 0;
+    
+      width: 620px;
+      height: 420px;
+    
+      border-radius: 50%;
+    
+      background: radial-gradient(
+        circle,
+        rgba(var(--wine-glow-rgb), 0.92) 0%,
+        rgba(var(--wine-glow-rgb), 0.68) 16%,
+        rgba(var(--wine-glow-rgb), 0.42) 34%,
+        rgba(var(--wine-glow-rgb), 0.2) 52%,
+        rgba(var(--wine-glow-rgb), 0.08) 66%,
+        transparent 82%
+      );
+    
+      filter: blur(190px);
+    
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    &__grid {
+      margin-top: 56px;
+
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    &__card {
+      min-height: 220px;
+      padding: 28px 22px;
+      gap: 24px;
+    }
+
+
+    &__title {
+      font-size: 18px;
+    }
+
+    &__text {
+      font-size: 13px;
+    }
+  }
+
+  @include on-desktop {
+  
+    padding: 164px 0;
+
+    &::after {
+      top: 30%;
+      right: 0;
+  
+      width: 500px;
+      height: 300px;
+  
+      filter: blur(120px);
+    }
+  
+
+    &__grid {
+      margin-top: 64px;
+
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    &__card {
+      min-height: 229px;
+      padding: 16px;
+      gap: 24px;
+    }
+
+    &__title {
+      font-size: 20px;
+    }
+
+    &__text {
+      font-size: 14px;
+      line-height: 1.7;
+    }
+  }
+}

@@ -28,7 +28,9 @@ export const Header = () => {
             Vinoteca
           </NavLink>
 
-          <nav className={`header__nav ${isMenuOpen ? "header__nav--open" : ""}`}>
+          <nav
+            className={`header__nav ${isMenuOpen ? "header__nav--open" : ""}`}
+          >
             {navLinks.map(({ to, label }) => (
               <NavLink
                 key={to}

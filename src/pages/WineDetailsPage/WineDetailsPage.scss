@@ -1,3 +1,5 @@
+@import "../../styles/mixins";
+
 .wine-details-page {
   min-height: 100vh;
   background: #050505;
@@ -32,45 +34,23 @@
   }
 
   &__loader-wrapper {
-    position: relative;
-  
-    min-height: 100vh;
-  
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include page-loader-layout;
   }
-  
+
   &__loader-glow {
     position: absolute;
-  
+
     width: 260px;
     height: 260px;
-  
+
     border-radius: 50%;
-  
-    background: rgba(var(--wine-glow-rgb), 0.32);
-  
-    filter: blur(100px);
-  
-    animation: wineLoaderGlow 3s ease-in-out infinite;
+
+    background: rgba(var(--wine-glow-rgb), 0.18);
+    filter: blur(80px);
+
+    pointer-events: none;
   }
   
-  &__loader {
-    position: relative;
-    z-index: 2;
-  
-    width: 84px;
-    height: 84px;
-  
-    border-radius: 50%;
-  
-    border: 3px solid rgba(255, 255, 255, 0.12);
-  
-    border-top: 3px solid rgba(var(--wine-glow-rgb), 1);
-  
-    animation: wineLoaderSpin 0.9s linear infinite;
-  }
 }
 
 @keyframes wineLoaderSpin {

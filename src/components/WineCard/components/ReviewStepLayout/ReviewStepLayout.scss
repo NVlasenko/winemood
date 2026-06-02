@@ -33,12 +33,9 @@
     display: flex;
     align-items: center;
     gap: 10px;
-
     text-decoration: none;
 
-    transition:
-      opacity 0.3s ease,
-      transform 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease;
 
     &:hover {
       opacity: 0.75;
@@ -65,7 +62,6 @@
   &__content {
     min-height: calc(100vh - 150px);
     padding-top: 36px;
-
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -74,8 +70,6 @@
   &__navigation {
     width: 100%;
     margin-top: auto;
-  
-
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
@@ -89,15 +83,12 @@
     display: flex;
     align-items: center;
     gap: 14px;
-
     padding: 0;
     border: none;
     background: transparent;
     cursor: pointer;
 
-    transition:
-      opacity 0.3s ease,
-      transform 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease;
 
     span {
       font-family: "Poppins", sans-serif;
@@ -141,7 +132,6 @@
   &__nav-arrow {
     width: 48px;
     height: auto;
-
     display: block;
     object-fit: contain;
     flex-shrink: 0;
@@ -154,7 +144,6 @@
   &__pagination {
     grid-area: pagination;
     justify-self: center;
-
     display: flex;
     align-items: center;
     gap: 0;
@@ -163,27 +152,20 @@
   &__page {
     width: 42px;
     height: 42px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     border: 1px solid rgba(217, 217, 217, 0.16);
     border-radius: 8px;
-
     background: rgba(11, 11, 11, 0.55);
     color: rgba(211, 211, 211, 0.65);
-
     font-family: "Poppins", sans-serif;
     font-weight: 500;
     font-size: 16px;
     line-height: 1;
 
-    transition:
-      background 0.3s ease,
-      border-color 0.3s ease,
-      box-shadow 0.3s ease,
-      color 0.3s ease;
+    transition: background 0.3s ease, border-color 0.3s ease,
+      box-shadow 0.3s ease, color 0.3s ease;
   }
 
   &__page--active {
@@ -197,8 +179,7 @@
 
     color: rgba(211, 211, 211, 1);
 
-    box-shadow:
-      0 0 18px var(--button-shadow),
+    box-shadow: 0 0 18px var(--button-shadow),
       inset 0 0 12px rgba(255, 255, 255, 0.04);
   }
 
@@ -245,8 +226,6 @@
     }
 
     &__navigation {
-      // padding-top: 100px;
-
       display: flex;
       flex-direction: row;
       justify-content: space-between;

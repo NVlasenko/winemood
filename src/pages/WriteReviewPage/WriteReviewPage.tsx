@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { ReviewStepLayout } from "@/components/WineCard/components/review";
+import { ReviewStepLayout } from "@/components/WineCard/components/ReviewStepLayout";
 import { useNavigate, useParams } from "react-router-dom";
 import messageIcon from "@/assets/images/icons/message.svg";
 import personIcon from "@/assets/images/icons/person.svg";
@@ -25,12 +25,12 @@ export const WriteReviewPage = () => {
     step === 1
       ? !!rating
       : step === 2
-        ? reviewText.trim().length >= 5
-        : authorName.trim().length >= 2;
+      ? reviewText.trim().length >= 5
+      : authorName.trim().length >= 2;
 
   const getRatingFromPointer = (
     event: React.MouseEvent<HTMLButtonElement>,
-    star: number,
+    star: number
   ) => {
     const rect = event.currentTarget.getBoundingClientRect();
     const pointerX = event.clientX - rect.left;
@@ -42,14 +42,14 @@ export const WriteReviewPage = () => {
 
   const handleStarClick = (
     event: React.MouseEvent<HTMLButtonElement>,
-    star: number,
+    star: number
   ) => {
     setRating(getRatingFromPointer(event, star));
   };
 
   const handleStarMove = (
     event: React.MouseEvent<HTMLButtonElement>,
-    star: number,
+    star: number
   ) => {
     setHoverRating(getRatingFromPointer(event, star));
   };
@@ -82,17 +82,17 @@ export const WriteReviewPage = () => {
 
   const handleSubmitReview = async () => {
     setIsSubmitted(true);
-  
+
     setTimeout(() => {
       setRating(0);
       setHoverRating(0);
       setReviewText("");
       setAuthorName("");
       setStep(1);
-  
+
       setIsConfirmOpen(false);
       setIsSubmitted(false);
-  
+
       navigate(`/catalog/${id}`);
     }, 2000);
   };
@@ -116,7 +116,6 @@ export const WriteReviewPage = () => {
             onMouseLeave={() => setHoverRating(0)}
             aria-label={`Rating ${currentRating} out of 5`}
           >
-
             {STARS.map((star) => {
               const fillPercent =
                 Math.min(Math.max(currentRating - (star - 1), 0), 1) * 100;
@@ -145,11 +144,9 @@ export const WriteReviewPage = () => {
         </div>
       )}
 
-          
-            <p className="write-review-page__rating-value">
-              {currentRating ? currentRating.toFixed(2) : "0.00"}
-            </p>
-            
+      <p className="write-review-page__rating-value">
+        {currentRating ? currentRating.toFixed(2) : "0.00"}
+      </p>
 
       {step === 2 && (
         <div className="write-review-page__step">
@@ -217,19 +214,17 @@ export const WriteReviewPage = () => {
             </button>
 
             {isSubmitted ? (
-             <>
-              <div className="write-review-page__success-icon">
-                ✓
-              </div>
+              <>
+                <div className="write-review-page__success-icon">✓</div>
 
-              <h3 className="write-review-page__modal-title">
-                Review submitted
-              </h3>
+                <h3 className="write-review-page__modal-title">
+                  Review submitted
+                </h3>
 
-              <p className="write-review-page__modal-success-text">
-                Thank you for sharing your experience with the community.
-              </p>
-            </>
+                <p className="write-review-page__modal-success-text">
+                  Thank you for sharing your experience with the community.
+                </p>
+              </>
             ) : (
               <>
                 <h3 className="write-review-page__modal-title">
@@ -238,18 +233,28 @@ export const WriteReviewPage = () => {
 
                 <div className="write-review-page__modal-summary">
                   <div className="write-review-page__modal-row">
-                    <span className="write-review-page__modal-label">Rating</span>
-                    <strong className="write-review-page__modal-value">{rating}</strong>
+                    <span className="write-review-page__modal-label">
+                      Rating
+                    </span>
+                    <strong className="write-review-page__modal-value">
+                      {rating}
+                    </strong>
                   </div>
 
                   <div className="write-review-page__modal-row">
-                    <span className="write-review-page__modal-label">Review</span>
-                    <p className="write-review-page__modal-review">{reviewText}</p>
+                    <span className="write-review-page__modal-label">
+                      Review
+                    </span>
+                    <p className="write-review-page__modal-review">
+                      {reviewText}
+                    </p>
                   </div>
 
                   <div className="write-review-page__modal-row">
                     <span className="write-review-page__modal-label">Name</span>
-                    <strong className="write-review-page__modal-value">{authorName}</strong>
+                    <strong className="write-review-page__modal-value">
+                      {authorName}
+                    </strong>
                   </div>
                 </div>
 

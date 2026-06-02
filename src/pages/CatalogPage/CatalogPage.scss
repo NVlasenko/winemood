@@ -1,23 +1,10 @@
-@import '../../styles/mixins';
-@import '../../styles/variables';
+@import "../../styles/mixins";
+@import "../../styles/variables";
 
 .catalog-page {
   padding: 160px 0 0;
   position: relative;
   overflow: hidden;
-  &::before {
-    @include mood-glow;
-  
-    top: 120px;
-    left: 12%;
-    width: 220px;
-    height: 220px;
-    z-index: 1;
-  }
-  
-  &:hover::before {
-    @include mood-glow-hover;
-  }
 
   &__controls {
     margin-top: 56px;
@@ -30,7 +17,7 @@
 
   &__sort-label {
     margin: 0;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     font-weight: 500;
     font-size: 13px;
     text-transform: uppercase;
@@ -49,7 +36,7 @@
     border: none;
     border-radius: 8px;
     background: var(--button-gradient-start);
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     font-weight: 500;
     font-size: 13px;
     text-transform: uppercase;
@@ -57,9 +44,7 @@
     color: $text-primary;
     cursor: pointer;
 
-    transition:
-      box-shadow 0.3s ease,
-      transform 0.3s ease;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
 
     &:hover {
       transform: translateY(-1px);
@@ -99,7 +84,7 @@
     border-bottom: 0.4px solid rgba(217, 217, 217, 0.16);
     border-radius: 8px;
     background: transparent;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     font-weight: 500;
     font-size: 13px;
     text-align: left;
@@ -107,12 +92,9 @@
     letter-spacing: 0.04em;
     color: rgba(211, 211, 211, 0.72);
     cursor: pointer;
-  
-    transition:
-      color 0.3s ease,
-      text-shadow 0.3s ease,
-      transform 0.3s ease;
-  
+
+    transition: color 0.3s ease, text-shadow 0.3s ease, transform 0.3s ease;
+
     &::before {
       content: "";
       position: absolute;
@@ -122,42 +104,38 @@
       height: 120px;
       transform: translate(-50%, -50%) scale(0.6);
       border-radius: 50%;
-  
+
       background: radial-gradient(
         circle,
         rgba(var(--wine-glow-rgb), 0.42) 0%,
         rgba(var(--wine-glow-rgb), 0.12) 45%,
         transparent 72%
       );
-  
+
       opacity: 0;
       filter: blur(28px);
-  
-      transition:
-        opacity 0.35s ease,
-        transform 0.35s ease;
-  
+      transition: opacity 0.35s ease, transform 0.35s ease;
       pointer-events: none;
     }
-  
+
     &:last-child {
       border-bottom: none;
     }
-  
+
     &:hover {
       color: var(--mood-link-hover-color);
       text-shadow: 0 0 18px var(--button-shadow);
-  
+
       &::before {
         opacity: 1;
         transform: translate(-50%, -50%) scale(1);
       }
     }
-  
+
     &--active {
       color: var(--mood-link-hover-color);
       text-shadow: 0 0 18px var(--button-shadow);
-  
+
       &::before {
         opacity: 1;
         transform: translate(-50%, -50%) scale(1);
@@ -180,114 +158,106 @@
     background: transparent;
     cursor: pointer;
 
-    transition:
-      transform 0.3s ease,
-      filter 0.3s ease;
-  
-      &::before {
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 50px;
-        height: 50px;
-        transform: translate(-50%, -50%);
-        border-radius: 14px;
-        background: linear-gradient(
+    transition: transform 0.3s ease, filter 0.3s ease;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 50px;
+      height: 50px;
+      transform: translate(-50%, -50%);
+      border-radius: 14px;
+      background: linear-gradient(
         135deg,
         var(--button-gradient-start) 0%,
         var(--button-gradient-end) 55%,
         transparent 100%
-        );
-        opacity: 0;
-        filter: blur(18px);
-        pointer-events: none;
-        z-index: -1;
-      
-        transition:
-          opacity 0.35s ease,
-          transform 0.35s ease,
-          filter 0.35s ease;
-      }
-  
+      );
+      opacity: 0;
+      filter: blur(18px);
+      pointer-events: none;
+      z-index: -1;
+
+      transition: opacity 0.35s ease, transform 0.35s ease, filter 0.35s ease;
+    }
+
     span {
       height: 2px;
       border-radius: 12px;
       background: $text-primary;
-  
-      transition:
-        width 0.35s ease,
-        transform 0.35s ease,
-        background 0.35s ease,
+
+      transition: width 0.35s ease, transform 0.35s ease, background 0.35s ease,
         opacity 0.35s ease;
     }
-  
+
     span:nth-child(1) {
       width: 30px;
     }
-  
+
     span:nth-child(2) {
       width: 22px;
     }
-  
+
     span:nth-child(3) {
       width: 14px;
     }
-  
+
     span:nth-child(4) {
       width: 8px;
     }
-  
+
     &:hover {
       transform: translateY(-2px);
       filter: drop-shadow(0 0 12px var(--line-shadow));
-  
+
       &::before {
         opacity: 1;
         transform: translate(-50%, -50%) scale(0.8);
         filter: blur(22px);
       }
-  
+
       span {
         background: var(--mood-link-hover-color);
       }
-  
+
       span:nth-child(1) {
         width: 22px;
         transform: translateX(8px);
       }
-  
+
       span:nth-child(2) {
         width: 30px;
         transform: translateX(0);
       }
-  
+
       span:nth-child(3) {
         width: 18px;
         transform: translateX(4px);
       }
-  
+
       span:nth-child(4) {
         width: 12px;
         transform: translateX(6px);
       }
     }
-  
+
     &:active {
       transform: scale(0.94);
-  
+
       span:nth-child(1) {
         transform: translateX(3px);
       }
-  
+
       span:nth-child(2) {
         transform: translateX(-2px);
       }
-  
+
       span:nth-child(3) {
         transform: translateX(2px);
       }
-  
+
       span:nth-child(4) {
         transform: translateX(1px);
       }
@@ -311,18 +281,14 @@
     background: rgba(5, 5, 5, 0.78);
     overflow: hidden;
 
-    transition:
-      transform 0.35s ease,
-      border-color 0.35s ease,
+    transition: transform 0.35s ease, border-color 0.35s ease,
       box-shadow 0.35s ease;
 
     &:hover {
       transform: translateY(-6px);
       border-color: var(--border-color);
 
-      box-shadow:
-        0 28px 60px rgba(0, 0, 0, 0.45),
-        0 0 36px var(--line-shadow);
+      box-shadow: 0 28px 60px rgba(0, 0, 0, 0.45), 0 0 36px var(--line-shadow);
     }
   }
 
@@ -339,39 +305,34 @@
     border: 0.4px solid rgba(217, 217, 217, 0.16);
     border-radius: 12px;
     background: rgba(70, 70, 70, 0.22);
-  
+
     backdrop-filter: blur(40px);
     -webkit-backdrop-filter: blur(40px);
     color: rgba(255, 255, 255, 0.28);
     font-size: 26px;
     line-height: 1;
     cursor: pointer;
-  
-    transition:
-      transform 0.3s ease,
-      box-shadow 0.3s ease,
-      border-color 0.3s ease,
-      background 0.3s ease,
-      color 0.3s ease;
-  
+
+    transition: transform 0.3s ease, box-shadow 0.3s ease,
+      border-color 0.3s ease, background 0.3s ease, color 0.3s ease;
+
     &:hover {
       transform: scale(1.06);
       border-color: var(--border-color);
       color: rgba(255, 255, 255, 0.7);
       box-shadow: 0 0 24px var(--button-shadow);
     }
-  
+
     &--active {
       background: linear-gradient(
         135deg,
         rgba(70, 70, 70, 0.85) 0%,
         rgba(236, 153, 153, 0.55) 100%
       );
-  
+
       color: var(--mood-link-hover-color);
-  
-      box-shadow:
-        0 0 24px var(--button-shadow),
+
+      box-shadow: 0 0 24px var(--button-shadow),
         0 0 40px rgba(236, 153, 153, 0.35);
     }
   }
@@ -402,7 +363,7 @@
       rgba(var(--wine-glow-rgb), 0.28) 55%,
       transparent 78%
     );
-    
+
     filter: blur(30px);
     pointer-events: none;
   }
@@ -423,20 +384,16 @@
   &__info {
     position: relative;
     z-index: 3;
-  
     margin-top: 65px;
-  
     display: flex;
     flex-direction: column;
-  
     flex: 1;
-  
     gap: 12px;
   }
 
   &__country {
     margin: 0;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     font-weight: 500;
     font-size: 18px;
     line-height: 1;
@@ -447,73 +404,59 @@
 
   &__name {
     margin: 0;
-  
     min-height: 58px;
-  
-    font-family: 'Marcellus', serif;
+    font-family: "Marcellus", serif;
     font-weight: 400;
     font-size: 20px;
     line-height: 1.2;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-  
     color: $text-primary;
   }
-  
+
   &__rating {
     min-height: 24px;
-  
     display: flex;
     align-items: center;
     gap: 12px;
-  
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     font-weight: 400;
     font-size: 14px;
-  
     color: rgba(211, 211, 211, 0.75);
   }
-  
+
   &__stars {
     height: 24px;
-  
     display: flex;
     align-items: center;
     gap: 12px;
-  
     white-space: nowrap;
   }
-  
+
   &__star {
     position: relative;
-  
     width: 24px;
     height: 24px;
-  
     display: inline-flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-  
     font-size: 24px;
     line-height: 1;
   }
-  
+
   &__star-bg {
     color: rgba(255, 255, 255, 0.06);
   }
-  
+
   &__star-fill {
     position: absolute;
     top: 0;
     left: 0;
-  
     width: 100%;
     height: 100%;
-  
     overflow: hidden;
     white-space: nowrap;
-  
     color: var(--mood-link-hover-color);
   }
 
@@ -523,7 +466,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 20px;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     font-weight: 400;
     font-size: 14px;
     text-transform: uppercase;
@@ -533,13 +476,13 @@
       display: flex;
       align-items: center;
       gap: 8px;
-    
+
       img {
         width: 28px;
         height: 28px;
         object-fit: contain;
       }
-    
+
       span {
         white-space: nowrap;
       }
@@ -563,10 +506,7 @@
       color: $text-primary;
       cursor: pointer;
 
-      transition:
-        border-color 0.3s ease,
-        color 0.3s ease,
-        box-shadow 0.3s ease;
+      transition: border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 
       &:hover {
         border-color: var(--border-color);
@@ -602,16 +542,13 @@
     border: 0.4px solid rgba(217, 217, 217, 0.16);
     border-radius: 8px;
     background: transparent;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     font-weight: 500;
     font-size: 14px;
     color: $text-primary;
     cursor: pointer;
 
-    transition:
-      color 0.3s ease,
-      border-color 0.3s ease,
-      box-shadow 0.3s ease;
+    transition: color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   }
 
   &__pagination-item:hover,
@@ -629,144 +566,97 @@
   }
 
   &__pagination-dots {
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     font-weight: 500;
     font-size: 14px;
     color: $text-primary;
   }
 
   &__loader-wrapper {
-    position: relative;
-  
-    min-height: 420px;
-  
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include page-loader-layout;
   }
-  
+
   &__loader-glow {
     position: absolute;
-  
     width: 220px;
     height: 220px;
-  
     border-radius: 50%;
-  
     background: rgba(var(--wine-glow-rgb), 0.28);
-  
     filter: blur(90px);
-  
     animation: loaderGlow 3s ease-in-out infinite;
   }
-  
+
   &__loader {
     position: relative;
     z-index: 2;
-  
     width: 74px;
     height: 74px;
-  
     border-radius: 50%;
-  
-    border:
-      3px solid rgba(255, 255, 255, 0.12);
-  
-    border-top:
-      3px solid rgba(var(--wine-glow-rgb), 1);
-  
+    border: 3px solid rgba(255, 255, 255, 0.12);
+    border-top: 3px solid rgba(var(--wine-glow-rgb), 1);
     animation: catalogSpin 0.9s linear infinite;
   }
 
   .catalog-page {
     &__empty {
       position: relative;
-  
       margin-top: 80px;
       padding: 80px 24px;
-  
       display: flex;
       flex-direction: column;
       align-items: center;
-  
       overflow: hidden;
-  
       border: 0.4px solid rgba(217, 217, 217, 0.16);
       border-radius: 18px;
-  
       background: rgba(5, 5, 5, 0.78);
       backdrop-filter: blur(30px);
       -webkit-backdrop-filter: blur(30px);
-  
       text-align: center;
     }
-  
+
     &__empty-glow {
       position: absolute;
-  
       width: 320px;
       height: 320px;
-  
       border-radius: 50%;
-  
       background: var(--button-gradient-start);
-  
       opacity: 0.14;
-  
       filter: blur(110px);
-  
       pointer-events: none;
     }
-  
+
     &__empty-title {
       position: relative;
       z-index: 2;
-  
       margin: 0;
-  
       font-family: "Marcellus", serif;
       font-weight: 400;
       font-size: 34px;
-  
       letter-spacing: 0.08em;
       text-transform: uppercase;
-  
       color: $text-primary;
     }
-  
+
     &__empty-text {
       position: relative;
       z-index: 2;
-  
       margin: 18px 0 0;
-  
       font-family: "Poppins", sans-serif;
       font-size: 14px;
-  
       color: rgba(211, 211, 211, 0.7);
     }
-  
+
     &__empty-button {
       position: relative;
       z-index: 2;
-  
       width: 220px;
       height: 54px;
-  
       margin-top: 34px;
     }
   }
-  
+
   @include on-tablet {
     padding: 210px 0 0;
-
-    &::before {
-      top: 90px;
-      left: 5%;
-      width: 420px;
-      height: 320px;
-  
-    }
 
     &__controls {
       margin-top: 80px;
@@ -814,13 +704,6 @@
   @include on-desktop {
     padding: 254px 0 0;
 
-    &::before {
-      top: 120px;
-      left: 18%;
-      width: 420px;
-      height: 320px;
-  
-    }
     &__sort-label {
       font-size: 16px;
     }

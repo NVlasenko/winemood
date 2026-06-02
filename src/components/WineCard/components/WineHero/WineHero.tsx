@@ -26,10 +26,12 @@ export const WineHero = ({ wine }: Props) => {
 
   const isFavorite = favorites.includes(wine.id);
 
-  const currentBottleIcon = wineBottleIcons[moodTheme] || wineBottleIcons.default;
+  const currentBottleIcon =
+    wineBottleIcons[moodTheme] || wineBottleIcons.default;
   const currentSweetnessIcon =
     wineSweetnessIcons[moodTheme] || wineSweetnessIcons.default;
-  const currentVintageIcon = wineVintageIcons[moodTheme] || wineVintageIcons.default;
+  const currentVintageIcon =
+    wineVintageIcons[moodTheme] || wineVintageIcons.default;
 
   const isLargeImage = wine.name === "Mateus Rosé";
 
@@ -54,7 +56,9 @@ export const WineHero = ({ wine }: Props) => {
               isFavorite ? "wine-hero__favorite--active" : ""
             }`}
             type="button"
-            aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+            aria-label={
+              isFavorite ? "Remove from favorites" : "Add to favorites"
+            }
             aria-pressed={isFavorite}
             onClick={() => toggleFavorite(wine.id)}
           >
@@ -66,13 +70,20 @@ export const WineHero = ({ wine }: Props) => {
           <div className="wine-hero__left">
             <SectionTitle title={wine.name} />
 
-            <div className="wine-hero__rating" aria-label={`Rating ${wine.rating} out of 5`}>
+            <div
+              className="wine-hero__rating"
+              aria-label={`Rating ${wine.rating} out of 5`}
+            >
               {[1, 2, 3, 4, 5].map((star) => {
                 const fillPercent =
                   Math.min(Math.max(wine.rating - (star - 1), 0), 1) * 100;
 
                 return (
-                  <span className="wine-hero__star" key={star} aria-hidden="true">
+                  <span
+                    className="wine-hero__star"
+                    key={star}
+                    aria-hidden="true"
+                  >
                     <span className="wine-hero__star-bg">★</span>
 
                     <span

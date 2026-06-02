@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-
+import { useNavigate } from "react-router-dom";
 import { SectionTitle } from "../SectionTitle";
 import { MoodLinkButton } from "../MoodLinkButton";
 
@@ -15,10 +15,13 @@ const INITIAL_VISIBLE_COUNT = 2;
 
 export const WineCountries = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const navigate = useNavigate();
   const [countries, setCountries] = useState<CountryWine[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const handleCountryClick = (countryName: string) => {
+    navigate(`/catalog?countries=${countryName}`);
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -85,18 +88,12 @@ export const WineCountries = () => {
   }, []);
 
   const visibleCountries = useMemo(() => {
-    return isOpen
-      ? countries
-      : countries.slice(0, INITIAL_VISIBLE_COUNT);
+    return isOpen ? countries : countries.slice(0, INITIAL_VISIBLE_COUNT);
   }, [countries, isOpen]);
 
   const renderContent = () => {
     if (loading) {
-      return (
-        <p className="wine-countries__state">
-          Loading countries...
-        </p>
-      );
+      return <p className="wine-countries__state">Loading countries...</p>;
     }
 
     if (error) {
@@ -108,11 +105,7 @@ export const WineCountries = () => {
     }
 
     if (!countries.length) {
-      return (
-        <p className="wine-countries__state">
-          No countries found.
-        </p>
-      );
+      return <p className="wine-countries__state">No countries found.</p>;
     }
 
     return (
@@ -128,9 +121,10 @@ export const WineCountries = () => {
           <div className="wine-countries__grid">
             <AnimatePresence mode="popLayout">
               {visibleCountries.map((country) => (
-                <motion.article
+                <motion.button
                   key={country.id}
                   className="wine-countries__card"
+                  type="button"
                   style={{
                     backgroundImage: `url(${country.flagImageUrl})`,
                   }}
@@ -139,6 +133,7 @@ export const WineCountries = () => {
                   animate="visible"
                   exit="exit"
                   layout
+                  onClick={() => handleCountryClick(country.name)}
                 >
                   <div className="wine-countries__content">
                     <h3 className="wine-countries__card-title">
@@ -153,7 +148,7 @@ export const WineCountries = () => {
                       alt={country.nationality}
                     />
                   </div>
-                </motion.article>
+                </motion.button>
               ))}
             </AnimatePresence>
           </div>
@@ -162,11 +157,7 @@ export const WineCountries = () => {
         {countries.length > INITIAL_VISIBLE_COUNT && (
           <MoodLinkButton
             className="wine-countries__view-all"
-            text={
-              isOpen
-                ? "Hide Countries"
-                : "View All Countries"
-            }
+            text={isOpen ? "Hide Countries" : "View All Countries"}
             onClick={() => setIsOpen((prev) => !prev)}
           />
         )}

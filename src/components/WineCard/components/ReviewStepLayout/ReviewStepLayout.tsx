@@ -32,8 +32,7 @@ export const ReviewStepLayout = ({
 }: Props) => {
   const { moodTheme } = useMoodTheme();
 
-  const nextArrow =
-    nextArrowByMood[moodTheme] || nextArrowByMood.default;
+  const nextArrow = nextArrowByMood[moodTheme] || nextArrowByMood.default;
 
   const previousArrow =
     previousArrowByMood[moodTheme] || previousArrowByMood.default;
@@ -41,19 +40,16 @@ export const ReviewStepLayout = ({
   return (
     <main className="write-review-page">
       <div className="container">
-          <Link
-      to={`/catalog/${wineId}`}
-      className="write-review-page__back"
-    >
-      <img
-        className="write-review-page__back-icon"
-        src={backArrowIcon}
-        alt=""
-        aria-hidden="true"
-      />
+        <Link to={`/catalog/${wineId}`} className="write-review-page__back">
+          <img
+            className="write-review-page__back-icon"
+            src={backArrowIcon}
+            alt=""
+            aria-hidden="true"
+          />
 
-      <span>Wine</span>
-    </Link>
+          <span>Wine</span>
+        </Link>
 
         <section className="write-review-page__content">
           <SectionTitle title="Review" />
@@ -78,45 +74,45 @@ export const ReviewStepLayout = ({
             </button>
 
             <div className="write-review-page__pagination">
-  <button
-    className={`write-review-page__page ${
-      step >= 1 ? "write-review-page__page--active" : ""
-    }`}
-    type="button"
-  >
-    1
-  </button>
+              <button
+                className={`write-review-page__page ${
+                  step >= 1 ? "write-review-page__page--active" : ""
+                }`}
+                type="button"
+              >
+                1
+              </button>
 
-  <span
-    className={`write-review-page__pagination-line ${
-      step >= 1 ? "write-review-page__pagination-line--active" : ""
-    }`}
-  />
+              <span
+                className={`write-review-page__pagination-line ${
+                  step >= 1 ? "write-review-page__pagination-line--active" : ""
+                }`}
+              />
 
-  <button
-    className={`write-review-page__page ${
-      step >= 2 ? "write-review-page__page--active" : ""
-    }`}
-    type="button"
-  >
-    2
-  </button>
+              <button
+                className={`write-review-page__page ${
+                  step >= 2 ? "write-review-page__page--active" : ""
+                }`}
+                type="button"
+              >
+                2
+              </button>
 
-  <span
-    className={`write-review-page__pagination-line ${
-      step >= 2 ? "write-review-page__pagination-line--active" : ""
-    }`}
-  />
+              <span
+                className={`write-review-page__pagination-line ${
+                  step >= 2 ? "write-review-page__pagination-line--active" : ""
+                }`}
+              />
 
-  <button
-    className={`write-review-page__page ${
-      step >= 3 ? "write-review-page__page--active" : ""
-    }`}
-    type="button"
-  >
-    3
-  </button>
-</div>
+              <button
+                className={`write-review-page__page ${
+                  step >= 3 ? "write-review-page__page--active" : ""
+                }`}
+                type="button"
+              >
+                3
+              </button>
+            </div>
 
             <button
               className="write-review-page__nav-button write-review-page__nav-button--next"

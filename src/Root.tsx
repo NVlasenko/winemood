@@ -9,6 +9,7 @@ import { FavoritesProvider } from "./context/FavoritesContext";
 import { WineDetailsPage } from "./pages/WineDetailsPage";
 import { WriteReviewPage } from "./pages/WriteReviewPage";
 import { AboutPage } from "./pages/AboutPage";
+import { HistoryPage } from "./pages/HistoryPage";
 
 export const Root: React.FC = () => {
   return (
@@ -22,6 +23,7 @@ export const Root: React.FC = () => {
             <Route path="/catalog/:id" element={<WineDetailsPage />} />
             <Route path="/catalog/:id/review" element={<WriteReviewPage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/history" element={<HistoryPage />} />
           </Route>
         </Routes>
       </HashRouter>

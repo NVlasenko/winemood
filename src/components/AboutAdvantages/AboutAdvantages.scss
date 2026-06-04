@@ -3,7 +3,7 @@
 
 .about-advantages {
   position: relative;
-  padding: 90px 0;
+  padding: 90px 0 0;
   overflow: hidden;
 
   &::after {
@@ -25,26 +25,31 @@
 
   &__card {
     @include animated-info-card;
-
+  
     min-height: 190px;
     padding: 28px 20px;
-
+  
     display: flex;
     flex-direction: column;
     gap: 22px;
-
+  
     border: 1px solid rgba(217, 217, 217, 0.16);
     border-radius: 8px;
-
+  
     background: rgba(0, 0, 0, 0.16);
-
+  
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-
+  
     &:hover {
       .about-advantages__number {
         transform: scale(1.08) translateX(4px);
-        text-shadow: 0 0 18px var(--line-shadow);
+        filter: drop-shadow(0 0 16px var(--line-shadow));
+      }
+  
+      .about-advantages__title {
+        color: var(--mood-link-hover-color);
+        text-shadow: 0 0 14px rgba(var(--wine-glow-rgb), 0.35);
       }
     }
   }
@@ -71,16 +76,20 @@
 
   &__title {
     margin: 0;
-
+  
     font-family: "Marcellus", serif;
     font-weight: 400;
     font-size: 18px;
     line-height: 1.25;
-
+  
     letter-spacing: 0.08em;
     text-transform: uppercase;
-
+  
     color: $text-primary;
+  
+    transition:
+      color 0.35s ease,
+      text-shadow 0.35s ease;
   }
 
   &__text {
@@ -95,7 +104,7 @@
   }
 
   @include on-tablet {
-    padding: 110px 0;
+    padding: 110px 0 0;
 
     &::after {
       display: block;
@@ -152,7 +161,7 @@
 
   @include on-desktop {
   
-    padding: 164px 0;
+    padding: 164px 0 0;
 
     &::after {
       top: 30%;

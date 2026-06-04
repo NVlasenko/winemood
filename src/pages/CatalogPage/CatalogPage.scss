@@ -270,6 +270,77 @@
     gap: 32px;
   }
 
+  &__curation {
+    position: relative;
+  }
+  
+  &__curation-overlay {
+    position: absolute;
+    inset: 32px 0 auto;
+    z-index: 20;
+  
+    min-height: 220px;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    pointer-events: none;
+  }
+  
+  &__curation-glow {
+    position: absolute;
+  
+    width: 360px;
+    height: 180px;
+  
+    border-radius: 50%;
+  
+    background: radial-gradient(
+      circle,
+      rgba(var(--wine-glow-rgb), 0.48) 0%,
+      rgba(var(--wine-glow-rgb), 0.2) 42%,
+      transparent 72%
+    );
+  
+    filter: blur(60px);
+  
+    animation: curationGlowPulse 0.85s ease-in-out both;
+  }
+  
+  &__curation-text {
+    position: relative;
+    z-index: 2;
+  
+    margin: 0;
+  
+    font-family: "Marcellus", serif;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 1.2;
+  
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  
+    color: $text-primary;
+  
+    text-shadow: 0 0 24px var(--button-shadow);
+  
+    animation: curationTextReveal 0.85s ease-in-out both;
+  }
+  
+  &__grid--curating {
+    .catalog-page__card {
+      animation: catalogCurationCard 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-delay: calc(var(--card-index) * 45ms);
+    }
+  
+    .catalog-page__image {
+      animation: catalogBottleFloat 0.85s ease-in-out both;
+      animation-delay: calc(var(--card-index) * 45ms);
+    }
+  }
+
   &__card {
     display: flex;
     flex-direction: column;
@@ -776,5 +847,79 @@
   100% {
     opacity: 0.5;
     transform: scale(1);
+  }
+}
+
+@keyframes catalogCurationCard {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+
+  35% {
+    opacity: 0.45;
+    transform: translateY(18px) scale(0.96);
+    filter: blur(8px);
+  }
+
+  70% {
+    opacity: 0.85;
+    transform: translateY(-8px) scale(1.02);
+    filter: blur(2px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes catalogBottleFloat {
+  0% {
+    transform: scale(1);
+  }
+
+  45% {
+    transform: translateY(-18px) scale(1.08) rotate(-2deg);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes curationGlowPulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+
+  45% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.25);
+  }
+}
+
+@keyframes curationTextReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  30% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-8px);
   }
 }

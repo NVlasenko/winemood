@@ -29,7 +29,7 @@
 
     &:hover::before {
       opacity: 1;
-      transform: translateX(-50%) scale(1.12);
+      transform: translateX(-50%) scale(1);
       filter: blur($wine-glow-blur-hover);
     }
   }
@@ -150,7 +150,7 @@
       &::before {
         top: -180px;
         width: 600px;
-        height: 500px;
+        height: 450px;
       }
     }
 

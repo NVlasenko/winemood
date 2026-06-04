@@ -1,7 +1,9 @@
+import { HistoryHero } from "@/components/HistoryHero";
+
 export const HistoryPage = () => {
   return (
     <main>
-      {/* History Hero */}
+     <HistoryHero />
 
       {/* History Origins */}
 

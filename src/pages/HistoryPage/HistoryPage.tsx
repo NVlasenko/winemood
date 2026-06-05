@@ -1,4 +1,5 @@
 import { HistoryHero } from "@/components/HistoryHero";
+import { HistoryOrigins } from "@/components/HistoryOrigins";
 import { HistoryVideoSection } from "@/components/HistoryVideoSection";
 
 export const HistoryPage = () => {
@@ -8,9 +9,7 @@ export const HistoryPage = () => {
 
      <HistoryVideoSection />
 
-      {/* History Origins */}
-
-      {/* History Timeline */}
+     <HistoryOrigins />
     </main>
   );
 };

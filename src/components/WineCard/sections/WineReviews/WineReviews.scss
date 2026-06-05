@@ -110,7 +110,7 @@
     letter-spacing: 0.08em;
     text-transform: uppercase;
 
-    color: rgba(211, 211, 211, 1);
+    color: $text-primary;
   }
 
   &__stars {
@@ -155,7 +155,7 @@
       letter-spacing: 0.04em;
       text-transform: uppercase;
 
-      color: rgba(211, 211, 211, 1);
+      color: $text-primary;
     }
   }
 
@@ -243,7 +243,7 @@
     align-items: center;
     justify-content: center;
     gap: 16px;
-    border: 2px solid rgba(211, 211, 211, 1);
+    border: 2px solid $text-primary;
     border-radius: 4px;
     background: transparent;
     outline: none;
@@ -271,7 +271,7 @@
       line-height: 1;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: rgba(211, 211, 211, 1);
+      color: $text-primary;
     }
 
     img {

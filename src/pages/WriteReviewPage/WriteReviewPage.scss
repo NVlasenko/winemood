@@ -154,7 +154,7 @@
     font-size: 14px;
     line-height: 1.6;
 
-    color: rgba(211, 211, 211, 1);
+    color: $text-primary;
     caret-color: rgba(var(--wine-glow-rgb), 1);
 
     &::placeholder {
@@ -206,7 +206,7 @@
     font-size: 14px;
     line-height: 1;
 
-    color: rgba(211, 211, 211, 1);
+    color: $text-primary;
 
     &::placeholder {
       color: rgba(177, 167, 166, 1);
@@ -315,7 +315,7 @@
     &:hover {
       transform: rotate(90deg) scale(1.08);
       border-color: var(--border-color);
-      color: rgba(211, 211, 211, 1);
+      color: $text-primary;
       background: rgba(var(--wine-glow-rgb), 0.14);
     }
   }
@@ -331,7 +331,7 @@
     letter-spacing: 0.08em;
     text-transform: uppercase;
     text-align: center;
-    color: rgba(211, 211, 211, 1);
+    color: $text-primary;
   }
 
   &__modal-summary {
@@ -375,7 +375,7 @@
     font-weight: 500;
     font-size: 16px;
     line-height: 1.5;
-    color: rgba(211, 211, 211, 1);
+    color: $text-primary;
   }
 
   &__modal-review {

@@ -31,7 +31,7 @@
 //     </section>
 //   );
 // };
-import winePattern from "@/assets/images/history/historyHeroBg.png";
+import winePattern from "@/assets/images/history/historyHero/historyHeroBg.png";
 
 import { useMoodTheme } from "@/context/MoodThemeContext";
 

@@ -6,12 +6,13 @@ import {
   CatalogControls,
   type CatalogSortOption,
 } from "@/components/catalog/CatalogControls";
-import { CatalogFilters } from "@/components/catalogFilters/CatalogFilters";
+
 import { SectionTitle } from "@/components/ui/SectionTitle";
 
 import { useFavorites } from "@/context/FavoritesContext";
 import { useCatalogSort, useCatalogWines } from "@/hooks/catalog";
 
+import { CatalogFilters } from "@/components/catalogFilters";
 import "./CatalogPage.scss";
 
 export const CatalogPage = () => {

@@ -1,14 +1,25 @@
+
 import type { Wine } from "@/types/wine";
 import { formatLabel } from "@/utils/formatLabel";
-
 import { agingIcons } from "./agingIcons";
 import { appellationIcons } from "./appellationIcons";
 import { ecoIcons } from "./ecoIcons";
 import { fermentationIcons } from "./fermentationIcons";
 import { grapeIcons } from "./grapeIcons";
 import { producerIcons } from "./producerIcons";
+import type { MoodTheme } from "@/types/mood";
 
-export const getWineDetails = (wine: Wine, moodTheme: string) => [
+type WineDetailsItem = {
+  id: string;
+  title: string;
+  value: string;
+  icon: string;
+};
+
+export const getWineDetails = (
+  wine: Wine,
+  moodTheme: MoodTheme,
+): WineDetailsItem[] => [
   {
     id: "grape-variety",
     title: "Grape variety",

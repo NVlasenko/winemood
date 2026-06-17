@@ -1,9 +1,5 @@
 import type { Wine } from "@/types/wine";
-
 import { useMoodTheme } from "@/context/MoodThemeContext";
-
-
-
 import "./WineDetailsInfo.scss";
 import { getWineDetails } from "./config/wineDetailsConfig";
 

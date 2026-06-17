@@ -24,7 +24,7 @@ export const getWineDetails = (
     id: "grape-variety",
     title: "Grape variety",
     value: wine.grapeVariety
-      ? `100% ${formatLabel(wine.grapeVariety)}`
+      ? `100% ${formatLabel(wine.grapeVariety.name)}`
       : "Unknown",
     icon: grapeIcons[moodTheme] || grapeIcons.default,
   },

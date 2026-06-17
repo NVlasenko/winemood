@@ -1,3 +1,5 @@
+import type { FoodPairing } from "./food";
+
 export type Wine = {
   id: number;
   name: string;
@@ -17,4 +19,5 @@ export type Wine = {
   producerName: string;
   countryName: string;
   region: string;
+  foodPairings: FoodPairing[];
 };

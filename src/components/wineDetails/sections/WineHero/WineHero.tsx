@@ -11,8 +11,6 @@ import { formatLabel } from "@/utils/formatLabel";
 import backArrowIcon from "@/assets/images/icons/arrow-right.svg";
 import winePattern from "@/assets/images/wineCard/bg/wine-pattern.png";
 
-
-
 import "./WineHero.scss";
 import { wineBottleIcons } from "../../config/wineBottleIcons";
 import { wineSweetnessIcons } from "../../config/wineSweetnessIcons";
@@ -142,7 +140,7 @@ export const WineHero = ({ wine }: Props) => {
                 </div>
               ))}
             </div>
-
+        
             <p className="wine-hero__description">{wine.description}</p>
           </div>
 

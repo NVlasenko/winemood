@@ -1,4 +1,6 @@
-import { API_BASE_URL } from "./config";
+import { httpClient } from "@/shared/api/httpClient";
+
+import type { WineCatalogCard } from "@/types/wineCatalogCard";
 
 export type WineFilterRequest = {
   wineTypes?: string[];
@@ -12,18 +14,11 @@ export type WineFilterRequest = {
   foodTypes?: string[];
 };
 
-export const filterWines = async (filters: WineFilterRequest) => {
-  const response = await fetch(`${API_BASE_URL}/api/wines/filter`, {
+export const filterWines = (
+  filters: WineFilterRequest,
+): Promise<WineCatalogCard[]> => {
+  return httpClient<WineCatalogCard[]>("/api/wines/filter", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify(filters),
   });
-
-  if (!response.ok) {
-    throw new Error(`Failed to filter wines: ${response.status}`);
-  }
-
-  return response.json();
 };

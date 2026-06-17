@@ -17,7 +17,7 @@ export const Header = () => {
   
   const handleSearchClick = useCallback(() => {
     closeMenu();
-    navigate("/catalog", { state: { openSearch: true } });
+    navigate("/catalog?searchOpen=true");
   }, [closeMenu, navigate]);
 
   const toggleMenu = useCallback(() => {
@@ -58,11 +58,11 @@ export const Header = () => {
               aria-label="Search"
               onClick={handleSearchClick}
             >
-              <img src={searchIcon} alt="" />
+              <img src={searchIcon} alt="" aria-hidden="true" />
             </button>
 
             <button className="header__icon" type="button" aria-label="Profile">
-              <img src={iconProfile} alt="" />
+              <img src={iconProfile} alt="" aria-hidden="true" />
             </button>
           </div>
 

@@ -14,6 +14,7 @@ import { useCatalogSort, useCatalogWines } from "@/hooks/catalog";
 import { CatalogFilters } from "@/components/catalog-filters";
 
 import "./CatalogPage.scss";
+import { CatalogSearch } from "@/components/catalog/CatalogSearch";
 
 
 export const CatalogPage = () => {
@@ -21,7 +22,9 @@ export const CatalogPage = () => {
 
   const { favorites, toggleFavorite } = useFavorites();
 
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const isSearchOpen = searchParams.get("searchOpen") === "true";
   const wineTypesParam = searchParams.get("wineTypes") || "";
   const countriesParam = searchParams.get("countries") || "";
 
@@ -66,6 +69,14 @@ export const CatalogPage = () => {
     [startCuratingAnimation, setActiveSort],
   );
 
+  const handleCloseSearch = useCallback(() => {
+    const nextParams = new URLSearchParams(searchParams);
+  
+    nextParams.delete("searchOpen");
+  
+    setSearchParams(nextParams);
+  }, [searchParams, setSearchParams]);
+
   return (
     <main className="catalog-page">
       <div className="container">
@@ -75,6 +86,13 @@ export const CatalogPage = () => {
           activeSort={activeSort}
           onSortSelect={handleSortSelect}
           onOpenFilters={handleOpenFilters}
+        />
+
+        <CatalogSearch
+          isOpen={isSearchOpen}
+          isSearching={false}
+          hasNoResults={false}
+          onClose={handleCloseSearch}
         />
 
         <CatalogContent

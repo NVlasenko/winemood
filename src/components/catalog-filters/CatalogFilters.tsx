@@ -5,7 +5,7 @@ import { getCategories } from "@/shared/api/categoryApi";
 import { getCountries } from "@/shared/api/countryApi";
 import { getWines } from "@/shared/api/wineApi";
 import { filterWines } from "@/shared/api/wineFilterApi";
-import { getFoods, type FoodPairing } from "@/shared/api/foodApi";
+import { getFoods } from "@/shared/api/foodApi";
 
 import { arrowByMood } from "./config/filterArrows";
 import { resetByMood } from "./config/filterResetIcons";
@@ -18,6 +18,7 @@ import { useMoodTheme } from "@/context/MoodThemeContext";
 
 import { CatalogFilterGroup } from "./sections/CatalogFilterGroup";
 import "./CatalogFilters.scss";
+import type { FoodPairing } from "@/types/food";
 
 
 type Props = {

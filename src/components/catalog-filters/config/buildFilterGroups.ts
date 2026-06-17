@@ -2,8 +2,8 @@ import { formatLabel } from "@/utils/formatLabel";
 
 import type { Category } from "@/types/categories";
 import type { CountryWine } from "@/types/countryWine";
-import type { FoodPairing } from "@/shared/api/foodApi";
 import type { FilterGroup } from "@/types/filters";
+import type { FoodPairing } from "@/types/food";
 
 type Params = {
   categories: Category[];

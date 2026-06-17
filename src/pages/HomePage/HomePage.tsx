@@ -1,15 +1,17 @@
-import React from "react";
-import "./HomePage.scss";
-import { HeroSection } from "../../components/HeroSection";
-import { RevealOnScroll } from "../RevealOnScroll/RevealOnScroll";
-import { PopularCategories } from "../../components/PopularCategories/PopularCategories";
-import { QuizCTA } from "../../components/QuizCTA/QuizCTA";
-import { WineCountries } from "../../components/WineCountries/WineCountries";
-import { BrowseByMood } from "../../components/BrowseByMood";
+import { BrowseByMood } from "@/components/home/BrowseByMood";
+import { HeroSection } from "@/components/home/HeroSection";
 
-export const HomePage: React.FC = () => {
+import { WineCountries } from "@/components/home/WineCountries";
+
+
+import "./HomePage.scss";
+import { RevealOnScroll } from "../../components/ui/RevealOnScroll/RevealOnScroll";
+import { PopularCategories } from "@/components/home/PopularCategories/PopularCategories";
+import { QuizCTA } from "@/components/QuizCTA/QuizCTA";
+
+export const HomePage = () => {
   return (
-    <section className="home__page">
+    <main className="home-page">
       <RevealOnScroll>
         <HeroSection />
       </RevealOnScroll>
@@ -29,6 +31,6 @@ export const HomePage: React.FC = () => {
       <RevealOnScroll>
         <BrowseByMood />
       </RevealOnScroll>
-    </section>
+    </main>
   );
 };

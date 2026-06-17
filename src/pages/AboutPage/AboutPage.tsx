@@ -1,8 +1,10 @@
-import { AboutHero } from "@/components/AboutHero/AboutHero";
+import { AboutHero } from "@/components/about/AboutHero";
+import { AboutFeatures } from "@/components/about/AboutFeatures";
+import { AboutAdvantages } from "@/components/about/AboutAdvantages";
+import { AboutHowItWorks } from "@/components/about/AboutHowItWorks";
+
+
 import "./AboutPage.scss";
-import { AboutFeatures } from "@/components/AboutFeatures";
-import { AboutAdvantages } from "@/components/AboutAdvantages";
-import { AboutHowItWorks } from "@/components/AboutHowItWorks";
 import { QuizCTA } from "@/components/QuizCTA/QuizCTA";
 
 export const AboutPage = () => {

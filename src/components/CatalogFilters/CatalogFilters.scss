@@ -1,5 +1,5 @@
-@import "../../styles/mixins";
-@import "../../styles/variables";
+@import "@/styles/mixins";
+@import "@/styles/variables";
 
 .catalog-filters {
   position: fixed;
@@ -38,8 +38,8 @@
     border-bottom: 0.4px solid rgba(217, 217, 217, 0.35);
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     overflow-y: auto;
     transform: translateX(-100%);
     background: rgba(8, 8, 8, 0.82);
@@ -441,12 +441,9 @@
   }
 
   @include on-desktop {
-    &__panel {
-      max-width: 500px;
-    }
 
     &__options {
-      padding: 0 0 0 185px;
+      padding: 0 0 0 85px;
     }
 
     &__options--open {

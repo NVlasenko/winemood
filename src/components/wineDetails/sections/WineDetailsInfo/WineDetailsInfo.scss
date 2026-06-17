@@ -1,0 +1,135 @@
+@import "@/styles/mixins";
+@import "@/styles/variables";
+
+.wine-details-info {
+  position: relative;
+  padding: 32px 0 50px;
+
+  &::before {
+    @include mood-glow;
+    top: -10%;
+    width: 220px;
+    height: 820px;
+    z-index: 0;
+  }
+
+  &::after {
+    @include mood-glow;
+
+    bottom: -5%;
+    right: 80px;
+    width: 220px;
+    height: 820px;
+    opacity: 0.6;
+    z-index: 0;
+  }
+
+  &:hover::before,
+  &:hover::after {
+    @include mood-glow-hover;
+  }
+
+  &__grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  &__card {
+    @include animated-info-card;
+    @include animated-card-icon(".wine-details-info__icon");
+  
+    min-height: 220px;
+    padding: 56px 28px;
+  
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  
+    border: 0.5px solid rgba(217, 217, 217, 0.16);
+    border-radius: 8px;
+  
+    background: rgba(0, 0, 0, 0.18);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  &__icon {
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+  &__title {
+    margin: 0 0 22px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--mood-link-hover-color);
+  }
+
+  &__value {
+    margin: 0;
+    font-family: "Marcellus", serif;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 1.5;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $text-primary;
+    overflow-wrap: anywhere;
+  }
+
+  @include on-tablet {
+    padding: 32px 0 100px;
+    &__grid {
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: 20px;
+      row-gap: 32px;
+    }
+
+    &__card {
+      min-height: 200px;
+      padding: 64px 32px;
+    }
+
+    &::before {
+
+      top: -10%;
+      left: -5%;
+      width: 720px;
+      height: 520px;
+      z-index: 0;
+    }
+
+    &::after {
+  
+
+      bottom: -20%;
+      right: 10%;
+    }
+  }
+
+  @include on-desktop {
+    &__card {
+      min-height: 212px;
+      padding: 88px 32px;
+    }
+
+    &::before {
+
+
+      top: -30%;
+      left: -9%;
+      width: 520px;
+      height: 1000px;
+      z-index: 0;
+    }
+  }
+}

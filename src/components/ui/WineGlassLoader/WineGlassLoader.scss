@@ -1,0 +1,55 @@
+.wine-glass-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__svg {
+    width: 85px;
+    height: 120px;
+    overflow: visible;
+
+    filter:
+      drop-shadow(0 0 16px rgba(var(--wine-glow-rgb), 0.45))
+      drop-shadow(0 0 36px rgba(var(--wine-glow-rgb), 0.22));
+  }
+
+  &__glass {
+    fill: none;
+    stroke: rgba(var(--wine-glow-rgb), 1);
+    stroke-width: 5.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  &__wine-fill {
+    transform-origin: center bottom;
+    animation: wineGlassFill 2.4s ease-in-out infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wine-glass-loader {
+    &__wine-fill {
+      animation: none;
+      transform: translateY(32px);
+    }
+  }
+}
+
+@keyframes wineGlassFill {
+  0% {
+    transform: translateY(100px);
+  }
+
+  45% {
+    transform: translateY(32px);
+  }
+
+  65% {
+    transform: translateY(32px);
+  }
+
+  100% {
+    transform: translateY(100px);
+  }
+}

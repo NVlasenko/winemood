@@ -1,7 +1,15 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import type { MoodTheme } from "../types/mood";
 import { moodThemeValues } from "../data/moodThemes";
+
+const MOOD_THEME_STORAGE_KEY = "moodTheme";
 
 type MoodThemeContextType = {
   moodTheme: MoodTheme;
@@ -9,88 +17,58 @@ type MoodThemeContextType = {
 };
 
 const MoodThemeContext = createContext<MoodThemeContextType | undefined>(
-  undefined
+  undefined,
 );
 
+const getInitialMoodTheme = (): MoodTheme => {
+  const savedTheme = localStorage.getItem(MOOD_THEME_STORAGE_KEY);
+
+  if (savedTheme && savedTheme in moodThemeValues) {
+    return savedTheme as MoodTheme;
+  }
+
+  return "default";
+};
+
 export const MoodThemeProvider = ({ children }: React.PropsWithChildren) => {
-  const [moodTheme, setMoodTheme] = useState<MoodTheme>("default");
+  const [moodTheme, setMoodTheme] = useState<MoodTheme>(getInitialMoodTheme);
 
   useEffect(() => {
     const theme = moodThemeValues[moodTheme];
+    const root = document.documentElement;
 
-    document.documentElement.style.setProperty(
-      "--background",
-      theme.background
-    );
+    Object.entries({
+      "--background": theme.background,
+      "--wine-glow-rgb": theme.glowRgb,
+      "--button-gradient-start": theme.buttonGradientStart,
+      "--button-gradient-end": theme.buttonGradientEnd,
+      "--button-shadow": theme.buttonShadow,
+      "--line-gradient-start": theme.lineGradientStart,
+      "--line-gradient-end": theme.lineGradientEnd,
+      "--line-shadow": theme.lineShadow,
+      "--border-color": theme.borderColor,
+      "--mood-link-color": theme.linkColor,
+      "--mood-link-hover-color": theme.linkHoverColor,
+      "--wine-background-start": theme.wineBackgroundStart,
+      "--wine-background-middle": theme.wineBackgroundMiddle,
+      "--wine-background-end": theme.wineBackgroundEnd,
+    }).forEach(([key, value]) => {
+      root.style.setProperty(key, value);
+    });
 
-    document.documentElement.style.setProperty(
-      "--wine-glow-rgb",
-      theme.glowRgb
-    );
-
-    document.documentElement.style.setProperty(
-      "--button-gradient-start",
-      theme.buttonGradientStart
-    );
-
-    document.documentElement.style.setProperty(
-      "--button-gradient-end",
-      theme.buttonGradientEnd
-    );
-
-    document.documentElement.style.setProperty(
-      "--button-shadow",
-      theme.buttonShadow
-    );
-
-    document.documentElement.style.setProperty(
-      "--line-gradient-start",
-      theme.lineGradientStart
-    );
-
-    document.documentElement.style.setProperty(
-      "--line-gradient-end",
-      theme.lineGradientEnd
-    );
-
-    document.documentElement.style.setProperty(
-      "--line-shadow",
-      theme.lineShadow
-    );
-
-    document.documentElement.style.setProperty(
-      "--border-color",
-      theme.borderColor
-    );
-
-    document.documentElement.style.setProperty(
-      "--mood-link-color",
-      theme.linkColor
-    );
-
-    document.documentElement.style.setProperty(
-      "--mood-link-hover-color",
-      theme.linkHoverColor
-    );
-
-    document.documentElement.style.setProperty(
-      "--wine-background-start",
-      theme.wineBackgroundStart,
-    );
-    
-    document.documentElement.style.setProperty(
-      "--wine-background-middle",
-      theme.wineBackgroundMiddle,
-    );
-    
-    document.documentElement.style.setProperty(
-      "--wine-background-end",
-      theme.wineBackgroundEnd,
-    );
+    localStorage.setItem(MOOD_THEME_STORAGE_KEY, moodTheme);
   }, [moodTheme]);
 
+  const value = useMemo(
+    () => ({
+      moodTheme,
+      setMoodTheme,
+    }),
+    [moodTheme],
+  );
+
   return (
-    <MoodThemeContext.Provider value={{ moodTheme, setMoodTheme }}>
+    <MoodThemeContext.Provider value={value}>
       {children}
     </MoodThemeContext.Provider>
   );

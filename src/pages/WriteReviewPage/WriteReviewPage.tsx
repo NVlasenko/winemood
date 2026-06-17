@@ -1,36 +1,87 @@
-import { useState } from "react";
-
-import { ReviewStepLayout } from "@/components/WineCard/sections/ReviewStepLayout";
+import { useCallback, useMemo, useRef, useState } from "react";
+import type { MouseEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+
 import messageIcon from "@/assets/images/icons/message.svg";
 import personIcon from "@/assets/images/icons/person.svg";
+import {
+  ReviewStepLayout,
+  type ReviewStep,
+} from "@/components/wineDetails/sections/ReviewStepLayout";
 
 import "./WriteReviewPage.scss";
 
-const STARS = [1, 2, 3, 4, 5];
+const STARS = [1, 2, 3, 4, 5] as const;
+const SUBMIT_DELAY_MS = 2000;
+
+const getPreviousStep = (step: ReviewStep): ReviewStep => {
+  switch (step) {
+    case 1:
+      return 1;
+
+    case 2:
+      return 1;
+
+    case 3:
+      return 2;
+
+    default:
+      return 1;
+  }
+};
+
+const getNextStep = (step: ReviewStep): ReviewStep => {
+  switch (step) {
+    case 1:
+      return 2;
+
+    case 2:
+      return 3;
+
+    case 3:
+      return 3;
+
+    default:
+      return 1;
+  }
+};
 
 export const WriteReviewPage = () => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState<ReviewStep>(1);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const [authorName, setAuthorName] = useState("");
+
+  const submitTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const navigate = useNavigate();
   const { id } = useParams();
-  const currentRating = hoverRating || rating;
 
-  const canGoNext =
-    step === 1
-      ? !!rating
-      : step === 2
-      ? reviewText.trim().length >= 5
-      : authorName.trim().length >= 2;
+  const currentRating = hoverRating || rating;
+  const wineId = id || "";
+
+  const canGoNext = useMemo(() => {
+    switch (step) {
+      case 1:
+        return rating > 0;
+
+      case 2:
+        return reviewText.trim().length >= 5;
+
+      case 3:
+        return authorName.trim().length >= 2;
+
+      default:
+        return false;
+    }
+  }, [step, rating, reviewText, authorName]);
 
   const getRatingFromPointer = (
-    event: React.MouseEvent<HTMLButtonElement>,
-    star: number
+    event: MouseEvent<HTMLButtonElement>,
+    star: number,
   ) => {
     const rect = event.currentTarget.getBoundingClientRect();
     const pointerX = event.clientX - rect.left;
@@ -41,28 +92,24 @@ export const WriteReviewPage = () => {
   };
 
   const handleStarClick = (
-    event: React.MouseEvent<HTMLButtonElement>,
-    star: number
+    event: MouseEvent<HTMLButtonElement>,
+    star: number,
   ) => {
     setRating(getRatingFromPointer(event, star));
   };
 
   const handleStarMove = (
-    event: React.MouseEvent<HTMLButtonElement>,
-    star: number
+    event: MouseEvent<HTMLButtonElement>,
+    star: number,
   ) => {
     setHoverRating(getRatingFromPointer(event, star));
   };
 
-  const handlePreviousStep = () => {
-    if (step === 1) {
-      return;
-    }
+  const handlePreviousStep = useCallback(() => {
+    setStep((prev) => getPreviousStep(prev));
+  }, []);
 
-    setStep((prev) => prev - 1);
-  };
-
-  const handleNextStep = () => {
+  const handleNextStep = useCallback(() => {
     if (!canGoNext) {
       return;
     }
@@ -72,34 +119,36 @@ export const WriteReviewPage = () => {
       return;
     }
 
-    setStep((prev) => prev + 1);
-  };
+    setStep((prev) => getNextStep(prev));
+  }, [canGoNext, step]);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
+    if (isSubmitted) {
+      return;
+    }
+
     setIsConfirmOpen(false);
-    setIsSubmitted(false);
-  };
+  }, [isSubmitted]);
 
-  const handleSubmitReview = async () => {
+  const handleSubmitReview = useCallback(async () => {
     setIsSubmitted(true);
 
-    setTimeout(() => {
+    submitTimeoutRef.current = setTimeout(() => {
       setRating(0);
       setHoverRating(0);
       setReviewText("");
       setAuthorName("");
       setStep(1);
-
       setIsConfirmOpen(false);
       setIsSubmitted(false);
 
-      navigate(`/catalog/${id}`);
-    }, 2000);
-  };
+      navigate(wineId ? `/catalog/${wineId}` : "/catalog");
+    }, SUBMIT_DELAY_MS);
+  }, [navigate, wineId]);
 
   return (
     <ReviewStepLayout
-      wineId={id || ""}
+      wineId={wineId}
       step={step}
       canGoNext={canGoNext}
       onPrevious={handlePreviousStep}
@@ -114,7 +163,7 @@ export const WriteReviewPage = () => {
           <div
             className="write-review-page__stars"
             onMouseLeave={() => setHoverRating(0)}
-            aria-label={`Rating ${currentRating} out of 5`}
+            aria-label={`Rating ${currentRating.toFixed(2)} out of 5`}
           >
             {STARS.map((star) => {
               const fillPercent =
@@ -141,12 +190,12 @@ export const WriteReviewPage = () => {
               );
             })}
           </div>
+
+          <p className="write-review-page__rating-value">
+            {currentRating ? currentRating.toFixed(2) : "0.00"}
+          </p>
         </div>
       )}
-
-      <p className="write-review-page__rating-value">
-        {currentRating ? currentRating.toFixed(2) : "0.00"}
-      </p>
 
       {step === 2 && (
         <div className="write-review-page__step">
@@ -194,8 +243,8 @@ export const WriteReviewPage = () => {
               type="text"
               placeholder="Your name"
               value={authorName}
-              onChange={(event) => setAuthorName(event.target.value)}
               maxLength={40}
+              onChange={(event) => setAuthorName(event.target.value)}
             />
           </div>
         </div>
@@ -208,6 +257,7 @@ export const WriteReviewPage = () => {
               className="write-review-page__modal-close"
               type="button"
               onClick={handleCloseModal}
+              disabled={isSubmitted}
               aria-label="Close modal"
             >
               ×
@@ -236,8 +286,9 @@ export const WriteReviewPage = () => {
                     <span className="write-review-page__modal-label">
                       Rating
                     </span>
+
                     <strong className="write-review-page__modal-value">
-                      {rating}
+                      {rating.toFixed(2)}
                     </strong>
                   </div>
 
@@ -245,6 +296,7 @@ export const WriteReviewPage = () => {
                     <span className="write-review-page__modal-label">
                       Review
                     </span>
+
                     <p className="write-review-page__modal-review">
                       {reviewText}
                     </p>
@@ -252,6 +304,7 @@ export const WriteReviewPage = () => {
 
                   <div className="write-review-page__modal-row">
                     <span className="write-review-page__modal-label">Name</span>
+
                     <strong className="write-review-page__modal-value">
                       {authorName}
                     </strong>

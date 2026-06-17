@@ -1,16 +1,10 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-import arrowRight from "../../assets/images/icons/arrow-right.svg";
+import arrowRight from "@/assets/images/icons/arrow-right.svg";
 
 import "./QuizCTA.scss";
 
 export const QuizCTA = () => {
-  const navigate = useNavigate();
-
-  const handleExploreClick = () => {
-    navigate("/catalog");
-  };
-
   return (
     <section className="quiz-cta">
       <div className="container">
@@ -23,10 +17,9 @@ export const QuizCTA = () => {
             Take a 1-minute quiz to discover the wine that suits your palate.
           </p>
 
-          <button
+          <Link
+            to="/catalog"
             className="button-primary quiz-cta__button"
-            type="button"
-            onClick={handleExploreClick}
           >
             <span>Explore Collection</span>
 
@@ -36,7 +29,7 @@ export const QuizCTA = () => {
               alt=""
               aria-hidden="true"
             />
-          </button>
+          </Link>
         </div>
       </div>
     </section>

@@ -15,6 +15,13 @@ type Props = {
   onToggleFavorite: (id: number) => void;
 };
 
+const formatWineValue = (value: string) => {
+  return value
+    .replaceAll("_", " ")
+    .toLowerCase()
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+};
+
 export const WineCatalogCard = ({
   wine,
   index,
@@ -58,7 +65,7 @@ export const WineCatalogCard = ({
         <div className="catalog-page__meta">
           <div className="catalog-page__meta-item">
             <img src={wineDropIcon} alt="" aria-hidden="true" />
-            <span>{wine.sweetnessLevel.replace("_", " ")}</span>
+            <span>{formatWineValue(wine.sweetnessLevel.name)}</span>
           </div>
 
           <div className="catalog-page__meta-item">

@@ -42,7 +42,7 @@ export const WineHero = ({ wine }: Props) => {
     {
       id: "sweetness",
       icon: sweetnessIcon,
-      value: formatLabel(wine.sweetnessLevel),
+      value: formatLabel(wine.sweetnessLevel.name),
     },
     {
       id: "volume",

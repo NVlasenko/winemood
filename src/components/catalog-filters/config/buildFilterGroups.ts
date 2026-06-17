@@ -1,5 +1,3 @@
-import { formatLabel } from "@/utils/formatLabel";
-
 import type { Category } from "@/types/categories";
 import type { CountryWine } from "@/types/countryWine";
 import type { FilterGroup } from "@/types/filters";
@@ -39,8 +37,8 @@ export const buildFilterGroups = ({
     title: "Food Pairing",
     options: foods.map((food) => ({
       id: food.id,
-      label: formatLabel(food.foodType),
-      value: food.foodType,
+      label: food.name,
+      value: food.name,
     })),
   },
 ];

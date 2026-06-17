@@ -1,13 +1,24 @@
 import { createRoot } from "react-dom/client";
-import { Root } from "./Root";
-import "./index.scss";
-import { MoodThemeProvider } from "./context/MoodThemeContext";
 
-window.history.scrollRestoration = "manual";
+import { MoodThemeProvider } from "@/context/MoodThemeContext";
+import { Root } from "@/Root";
+
+import "@/index.scss";
+
+if ("scrollRestoration" in window.history) {
+  window.history.scrollRestoration = "manual";
+}
+
 window.scrollTo(0, 0);
 
-createRoot(document.getElementById("root")!).render(
+const rootElement = document.getElementById("root");
+
+if (!rootElement) {
+  throw new Error("Root element was not found.");
+}
+
+createRoot(rootElement).render(
   <MoodThemeProvider>
-      <Root />
-  </MoodThemeProvider>
+    <Root />
+  </MoodThemeProvider>,
 );

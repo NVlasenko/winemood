@@ -1,0 +1,1 @@
+export { useWineDetails } from "./useWineDetails";

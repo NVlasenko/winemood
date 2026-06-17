@@ -1,6 +1,8 @@
 import {
   createContext,
+  useCallback,
   useContext,
+  useMemo,
   useState,
   type ReactNode,
 } from "react";
@@ -19,23 +21,24 @@ type Props = {
 export const FavoritesProvider = ({ children }: Props) => {
   const [favorites, setFavorites] = useState<number[]>([]);
 
-  const toggleFavorite = (id: number) => {
-    setFavorites((prev) => {
-      if (prev.includes(id)) {
-        return prev.filter((item) => item !== id);
-      }
+  const toggleFavorite = useCallback((id: number) => {
+    setFavorites((prev) =>
+      prev.includes(id)
+        ? prev.filter((item) => item !== id)
+        : [...prev, id],
+    );
+  }, []);
 
-      return [...prev, id];
-    });
-  };
+  const value = useMemo(
+    () => ({
+      favorites,
+      toggleFavorite,
+    }),
+    [favorites, toggleFavorite],
+  );
 
   return (
-    <FavoritesContext.Provider
-      value={{
-        favorites,
-        toggleFavorite,
-      }}
-    >
+    <FavoritesContext.Provider value={value}>
       {children}
     </FavoritesContext.Provider>
   );
@@ -45,9 +48,7 @@ export const useFavorites = () => {
   const context = useContext(FavoritesContext);
 
   if (!context) {
-    throw new Error(
-      "useFavorites must be used inside FavoritesProvider",
-    );
+    throw new Error("useFavorites must be used inside FavoritesProvider");
   }
 
   return context;

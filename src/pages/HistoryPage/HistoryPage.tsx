@@ -1,18 +1,17 @@
-import { HistoryHero } from "@/components/HistoryHero";
-import { HistoryOrigins } from "@/components/HistoryOrigins";
-import { HistoryTimeline } from "@/components/HistoryTimeline";
-import { HistoryVideoSection } from "@/components/HistoryVideoSection";
+import { HistoryHero } from "@/components/history/HistoryHero";
+import { HistoryOrigins } from "@/components/history/HistoryOrigins";
+import { HistoryTimeline } from "@/components/history/HistoryTimeline";
+import { HistoryVideoSection } from "@/components/history/HistoryVideoSection";
+
+import "./HistoryPage.scss";
 
 export const HistoryPage = () => {
   return (
-    <main>
-     <HistoryHero />
-
-     <HistoryVideoSection />
-
-     <HistoryOrigins />
-
-     <HistoryTimeline />
+    <main className="history-page">
+      <HistoryHero />
+      <HistoryVideoSection />
+      <HistoryOrigins />
+      <HistoryTimeline />
     </main>
   );
 };

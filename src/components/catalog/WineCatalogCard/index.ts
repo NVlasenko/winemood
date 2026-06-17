@@ -1,0 +1,1 @@
+export { WineCatalogCard } from "./WineCatalogCard";

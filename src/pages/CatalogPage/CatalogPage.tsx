@@ -11,9 +11,10 @@ import { SectionTitle } from "@/components/ui/SectionTitle";
 
 import { useFavorites } from "@/context/FavoritesContext";
 import { useCatalogSort, useCatalogWines } from "@/hooks/catalog";
+import { CatalogFilters } from "@/components/catalog-filters";
 
 import "./CatalogPage.scss";
-import { CatalogFilters } from "@/components/catalogFilters";
+
 
 export const CatalogPage = () => {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
@@ -21,7 +22,6 @@ export const CatalogPage = () => {
   const { favorites, toggleFavorite } = useFavorites();
 
   const [searchParams] = useSearchParams();
-
   const wineTypesParam = searchParams.get("wineTypes") || "";
   const countriesParam = searchParams.get("countries") || "";
 

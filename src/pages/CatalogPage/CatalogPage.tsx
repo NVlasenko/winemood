@@ -12,8 +12,8 @@ import { SectionTitle } from "@/components/ui/SectionTitle";
 import { useFavorites } from "@/context/FavoritesContext";
 import { useCatalogSort, useCatalogWines } from "@/hooks/catalog";
 
-import { CatalogFilters } from "@/components/catalogFilters";
 import "./CatalogPage.scss";
+import { CatalogFilters } from "@/components/catalogFilters";
 
 export const CatalogPage = () => {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);

@@ -53,7 +53,7 @@ export const CatalogPage = () => {
   const { favorites, toggleFavorite } = useFavorites();
 
   const [searchParams, setSearchParams] = useSearchParams();
-
+  const searchQuery = searchParams.get("search") || "";
   const isSearchOpen = searchParams.get("searchOpen") === "true";
   const pageParam = searchParams.get("page") || "1";
 
@@ -132,6 +132,7 @@ export const CatalogPage = () => {
     setCurrentPage,
     startCuratingAnimation,
   } = useCatalogWines({
+    searchQuery,
     wineTypes: wineTypesFromUrl,
     countries: countriesFromUrl,
     sweetnessLevels: sweetnessLevelsFromUrl,
@@ -210,8 +211,9 @@ export const CatalogPage = () => {
 
         <CatalogSearch
           isOpen={isSearchOpen}
-          isSearching={false}
-          hasNoResults={false}
+          hasNoResults={
+            Boolean(searchQuery.trim()) && !isInitialLoading && wines.length === 0
+          }
           onClose={handleCloseSearch}
         />
 

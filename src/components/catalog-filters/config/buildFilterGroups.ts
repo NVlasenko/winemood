@@ -47,28 +47,46 @@ const getOptionValue = (filterKey: string, value: string) => {
   return value;
 };
 
+const isRecord = (value: unknown): value is Record<string, unknown> => {
+  return value !== null && typeof value === "object";
+};
+
+const isMetadataOption = (option: unknown): option is MetadataOption => {
+  return (
+    isRecord(option) &&
+    typeof option.name === "string"
+  );
+};
+
 const isMetadataOptionArray = (
   options: unknown,
 ): options is MetadataOption[] => {
-  return Array.isArray(options) && options.every((option) => "name" in option);
+  return Array.isArray(options) && options.every(isMetadataOption);
+};
+
+const isFoodGroup = (group: unknown): group is MetadataFoodGroup => {
+  return (
+    isRecord(group) &&
+    typeof group.category === "string" &&
+    isMetadataOptionArray(group.foods)
+  );
 };
 
 const isFoodGroupArray = (
   options: unknown,
 ): options is MetadataFoodGroup[] => {
-  return (
-    Array.isArray(options) &&
-    options.every((option) => "category" in option && "foods" in option)
-  );
+  return Array.isArray(options) && options.every(isFoodGroup);
 };
 
 const isMoodOptions = (options: unknown): options is MetadataMoodOptions => {
+  if (!isRecord(options)) {
+    return false;
+  }
+
   return (
-    Boolean(options) &&
-    typeof options === "object" &&
-    "moods" in options &&
-    "events" in options &&
-    "seasons" in options
+    isMetadataOptionArray(options.moods) &&
+    isMetadataOptionArray(options.events) &&
+    isMetadataOptionArray(options.seasons)
   );
 };
 

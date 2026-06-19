@@ -1,0 +1,44 @@
+@import "@/styles/mixins";
+@import "@/styles/variables";
+
+.similar-wines {
+  position: relative;
+  padding: 90px 0 0;
+
+  &__grid {
+    margin-top: 76px;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  &__state {
+    margin: 48px 0 0;
+
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.5;
+
+    color: rgba(211, 211, 211, 0.72);
+  }
+
+  @include on-tablet {
+    &__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 30px;
+    }
+  }
+
+  @include on-desktop {
+    padding-top: 220px;
+
+    &__grid {
+      margin-top: 120px;
+
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 26px;
+    }
+  }
+}

@@ -1,1 +1,1 @@
-export { WineDetailsLoader } from "./WineDetailsLoader";
+export * from "./WineDetailsLoader";

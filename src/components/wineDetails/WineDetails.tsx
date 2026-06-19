@@ -4,6 +4,7 @@ import { WineHero } from "./sections/WineHero";
 import { WineDetailsInfo } from "./sections/WineDetailsInfo";
 import { WineReviews } from "./sections/WineReviews";
 import { WineFoodPairings } from "./sections/WineFoodPairings";
+import { SimilarWines } from "./sections/SimilarWines";
 
 type Props = {
   wine: Wine;
@@ -15,6 +16,7 @@ export const WineDetails = ({ wine }: Props) => {
       <WineHero wine={wine} />
       <WineDetailsInfo wine={wine} />
       <WineFoodPairings foodPairings={wine.foodPairings} />
+      <SimilarWines wineId={wine.id} />
       <WineReviews wine={wine} />
     </section>
   );

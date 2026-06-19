@@ -1,13 +1,8 @@
 import { useCallback, useMemo, useState } from "react";
-
 import type { Wine } from "@/types/wine";
-
 import { reviews } from "@/data/reviews";
 import { SectionTitle } from "@/components/ui/SectionTitle";
-
 import reviewsBg from "@/assets/images/wineDetailsInfo/wineReviews/reviews-bg.png";
-
-
 import "./WineReviews.scss";
 import { ReviewCard } from "./config/ReviewCard";
 import { WineReviewsActions } from "./config/WineReviewsActions";

@@ -1,1 +1,1 @@
-export { WineDetailsNotFoundState } from "./WineDetailsNotFoundState";
+export * from "./WineDetailsNotFoundState";

@@ -18,13 +18,30 @@
     z-index: 1;
 
     border: none;
+    background: rgba(0, 0, 0, 0.48);
 
-    background: rgba(0, 0, 0, 0.42);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    opacity: 1;
+    cursor: pointer;
 
-    animation: catalogSearchBackdropIn 0.28s ease both;
+    transition:
+      opacity 0.45s ease,
+      background 0.45s ease;
+  }
+
+  &--has-query {
+    pointer-events: none;
+
+    .catalog-search__backdrop {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .catalog-search__panel {
+      pointer-events: auto;
+    }
   }
 
   &__panel {
@@ -40,7 +57,7 @@
   &__bar {
     height: 60px;
     padding: 0 18px;
-
+    margin-top: 20px;
     display: flex;
     align-items: center;
     gap: 14px;
@@ -243,10 +260,26 @@
     color: rgba(211, 211, 211, 0.72);
   }
 
+  &--has-query {
+    pointer-events: none;
+
+    .catalog-search__backdrop {
+      background: transparent;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      pointer-events: none;
+    }
+
+    .catalog-search__panel {
+      pointer-events: auto;
+    }
+  }
+
   @include on-tablet {
     padding: 92px 32px 40px;
 
     &__bar {
+      margin-top: 35px;
       height: 60px;
       padding: 0 22px;
       gap: 18px;
@@ -303,6 +336,7 @@
     }
 
     &__bar {
+      margin-top: 50px;
       height: 60px;
       padding: 0 24px;
       gap: 24px;

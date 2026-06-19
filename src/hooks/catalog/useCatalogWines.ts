@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { filterWines, type WineFilterRequest } from "@/shared/api/wineFilterApi";
+import { searchWines } from "@/shared/api/wineSearchApi";
 
 import type { WineCatalogCard as WineCatalogCardType } from "@/types/wineCatalogCard";
 
 type UseCatalogWinesParams = {
+  searchQuery: string;
   wineTypes: string[];
   countries: string[];
   sweetnessLevels: string[];
@@ -83,6 +85,7 @@ const buildWineFilters = ({
 };
 
 export const useCatalogWines = ({
+  searchQuery,
   wineTypes,
   countries,
   sweetnessLevels,
@@ -104,6 +107,8 @@ export const useCatalogWines = ({
 
   const hasLoadedRef = useRef(false);
   const curatingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const normalizedSearchQuery = searchQuery.trim();
 
   const startCuratingAnimation = useCallback(() => {
     setIsCurating(true);
@@ -128,23 +133,30 @@ export const useCatalogWines = ({
 
         setError("");
 
-        const response = await filterWines({
-          filters: buildWineFilters({
-            wineTypes,
-            countries,
-            sweetnessLevels,
-            grapeVarieties,
-            wineStyles,
-            acidityLevels,
-            aromaNotes,
-            moods,
-            events,
-            seasons,
-            foodName,
-          }),
-          page: currentPage,
-          size: CATALOG_PAGE_SIZE,
-        });
+        const response = normalizedSearchQuery
+          ? await searchWines({
+              query: normalizedSearchQuery,
+              page: currentPage,
+              size: CATALOG_PAGE_SIZE,
+            })
+          : await filterWines({
+              filters: buildWineFilters({
+                searchQuery,
+                wineTypes,
+                countries,
+                sweetnessLevels,
+                grapeVarieties,
+                wineStyles,
+                acidityLevels,
+                aromaNotes,
+                moods,
+                events,
+                seasons,
+                foodName,
+              }),
+              page: currentPage,
+              size: CATALOG_PAGE_SIZE,
+            });
 
         if (!Array.isArray(response.data)) {
           throw new Error("Invalid wines data");
@@ -186,6 +198,8 @@ export const useCatalogWines = ({
       isMounted = false;
     };
   }, [
+    normalizedSearchQuery,
+    searchQuery,
     wineTypes,
     countries,
     sweetnessLevels,
@@ -215,6 +229,7 @@ export const useCatalogWines = ({
     totalPages,
     isInitialLoading,
     isCurating,
+    isSearching: Boolean(normalizedSearchQuery) && isCurating,
     error,
     setCurrentPage,
     startCuratingAnimation,

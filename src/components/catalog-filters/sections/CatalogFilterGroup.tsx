@@ -1,7 +1,8 @@
 import { memo } from "react";
+
 import arrowDown from "@/assets/images/filters/arrows/arrow-down.svg";
-import type { FilterGroup } from "@/types/filters";
-import { filterIcons } from "../config/filterIcons";
+
+import type { FilterGroup, FilterOption } from "@/types/filters";
 
 type Props = {
   filter: FilterGroup;
@@ -10,6 +11,34 @@ type Props = {
   moodArrowIcon: string;
   onToggleFilter: (id: string) => void;
   onToggleOption: (filterId: string, value: string) => void;
+};
+
+type FilterOptionButtonProps = {
+  filterId: string;
+  option: FilterOption;
+  isSelected: boolean;
+  onToggleOption: (filterId: string, value: string) => void;
+};
+
+const FilterOptionButton = ({
+  filterId,
+  option,
+  isSelected,
+  onToggleOption,
+}: FilterOptionButtonProps) => {
+  return (
+    <button
+      type="button"
+      className={`catalog-filters__option ${
+        isSelected ? "catalog-filters__option--active" : ""
+      }`}
+      onClick={() => onToggleOption(filterId, option.value)}
+    >
+      <span className="catalog-filters__checkbox">{isSelected && "✓"}</span>
+
+      <span className="catalog-filters__option-name">{option.label}</span>
+    </button>
+  );
 };
 
 export const CatalogFilterGroup = memo(
@@ -22,7 +51,6 @@ export const CatalogFilterGroup = memo(
     onToggleOption,
   }: Props) => {
     const isExpanded = openedFilter === filter.id;
-    const filterIcon = filterIcons[filter.id as keyof typeof filterIcons];
 
     return (
       <div className="catalog-filters__group">
@@ -33,11 +61,12 @@ export const CatalogFilterGroup = memo(
           onClick={() => onToggleFilter(filter.id)}
         >
           <span className="catalog-filters__group-left">
-            {filterIcon && (
+            {filter.iconUrl && (
               <img
-                src={filterIcon}
+                src={filter.iconUrl}
                 alt=""
                 className="catalog-filters__icon"
+                aria-hidden="true"
               />
             )}
 
@@ -50,6 +79,7 @@ export const CatalogFilterGroup = memo(
             }`}
             src={isExpanded ? moodArrowIcon : arrowDown}
             alt=""
+            aria-hidden="true"
           />
         </button>
 
@@ -58,34 +88,51 @@ export const CatalogFilterGroup = memo(
             isExpanded ? "catalog-filters__options--open" : ""
           }`}
         >
-          {filter.options.map((option) => {
-            const isSelected = selectedFilters[filter.id]?.includes(
-              option.value
-            );
+          {filter.options?.map((option) => {
+            const isSelected =
+              selectedFilters[filter.id]?.includes(option.value) ?? false;
 
             return (
-              <button
+              <FilterOptionButton
                 key={option.id}
-                type="button"
-                className={`catalog-filters__option ${
-                  isSelected ? "catalog-filters__option--active" : ""
-                }`}
-                onClick={() => onToggleOption(filter.id, option.value)}
-              >
-                <span className="catalog-filters__checkbox">
-                  {isSelected && "✓"}
-                </span>
-
-                <span className="catalog-filters__option-name">
-                  {option.label}
-                </span>
-              </button>
+                filterId={filter.id}
+                option={option}
+                isSelected={isSelected}
+                onToggleOption={onToggleOption}
+              />
             );
           })}
+
+          {filter.subgroups?.map((subgroup) => (
+            <div className="catalog-filters__subgroup" key={subgroup.id}>
+              <h4 className="catalog-filters__subgroup-title">
+                {subgroup.title}
+              </h4>
+
+              <div className="catalog-filters__subgroup-options">
+                {subgroup.options.map((option) => {
+                  const isSelected =
+                    selectedFilters[subgroup.filterId]?.includes(
+                      option.value,
+                    ) ?? false;
+
+                  return (
+                    <FilterOptionButton
+                      key={option.id}
+                      filterId={subgroup.filterId}
+                      option={option}
+                      isSelected={isSelected}
+                      onToggleOption={onToggleOption}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     );
-  }
+  },
 );
 
 CatalogFilterGroup.displayName = "CatalogFilterGroup";

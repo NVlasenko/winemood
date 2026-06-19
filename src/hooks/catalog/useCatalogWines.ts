@@ -1,20 +1,103 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { filterWines } from "@/shared/api/wineFilterApi";
-import { getWines } from "@/shared/api/wineApi";
+import { filterWines, type WineFilterRequest } from "@/shared/api/wineFilterApi";
 
 import type { WineCatalogCard as WineCatalogCardType } from "@/types/wineCatalogCard";
 
 type UseCatalogWinesParams = {
   wineTypes: string[];
   countries: string[];
+  sweetnessLevels: string[];
+  grapeVarieties: string[];
+  wineStyles: string[];
+  acidityLevels: string[];
+  aromaNotes: string[];
+  moods: string[];
+  events: string[];
+  seasons: string[];
+  foodName: string[];
+};
+
+const CATALOG_PAGE_SIZE = 8;
+
+const buildWineFilters = ({
+  wineTypes,
+  countries,
+  sweetnessLevels,
+  grapeVarieties,
+  wineStyles,
+  acidityLevels,
+  aromaNotes,
+  moods,
+  events,
+  seasons,
+  foodName,
+}: UseCatalogWinesParams): WineFilterRequest => {
+  const filters: WineFilterRequest = {};
+
+  if (wineTypes.length > 0) {
+    filters.wineTypes = wineTypes;
+  }
+
+  if (countries.length > 0) {
+    filters.countries = countries;
+  }
+
+  if (sweetnessLevels.length > 0) {
+    filters.sweetnessLevels = sweetnessLevels;
+  }
+
+  if (grapeVarieties.length > 0) {
+    filters.grapeVarieties = grapeVarieties;
+  }
+
+  if (wineStyles.length > 0) {
+    filters.wineStyles = wineStyles;
+  }
+
+  if (acidityLevels.length > 0) {
+    filters.acidityLevels = acidityLevels;
+  }
+
+  if (aromaNotes.length > 0) {
+    filters.aromaNotes = aromaNotes;
+  }
+
+  if (moods.length > 0) {
+    filters.moods = moods;
+  }
+
+  if (events.length > 0) {
+    filters.events = events;
+  }
+
+  if (seasons.length > 0) {
+    filters.seasons = seasons;
+  }
+
+  if (foodName.length > 0) {
+    filters.foodName = foodName;
+  }
+
+  return filters;
 };
 
 export const useCatalogWines = ({
   wineTypes,
   countries,
+  sweetnessLevels,
+  grapeVarieties,
+  wineStyles,
+  acidityLevels,
+  aromaNotes,
+  moods,
+  events,
+  seasons,
+  foodName,
 }: UseCatalogWinesParams) => {
   const [wines, setWines] = useState<WineCatalogCardType[]>([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [isCurating, setIsCurating] = useState(false);
   const [error, setError] = useState("");
@@ -45,21 +128,31 @@ export const useCatalogWines = ({
 
         setError("");
 
-        const hasFilters = wineTypes.length > 0 || countries.length > 0;
+        const response = await filterWines({
+          filters: buildWineFilters({
+            wineTypes,
+            countries,
+            sweetnessLevels,
+            grapeVarieties,
+            wineStyles,
+            acidityLevels,
+            aromaNotes,
+            moods,
+            events,
+            seasons,
+            foodName,
+          }),
+          page: currentPage,
+          size: CATALOG_PAGE_SIZE,
+        });
 
-        const data = hasFilters
-          ? await filterWines({
-              wineTypes,
-              countries,
-            })
-          : await getWines();
-
-        if (!Array.isArray(data)) {
+        if (!Array.isArray(response.data)) {
           throw new Error("Invalid wines data");
         }
 
         if (isMounted) {
-          setWines(data);
+          setWines(response.data);
+          setTotalPages(response.meta.totalPages);
         }
       } catch (error) {
         if (!isMounted) {
@@ -92,7 +185,21 @@ export const useCatalogWines = ({
     return () => {
       isMounted = false;
     };
-  }, [wineTypes, countries, startCuratingAnimation]);
+  }, [
+    wineTypes,
+    countries,
+    sweetnessLevels,
+    grapeVarieties,
+    wineStyles,
+    acidityLevels,
+    aromaNotes,
+    moods,
+    events,
+    seasons,
+    foodName,
+    currentPage,
+    startCuratingAnimation,
+  ]);
 
   useEffect(() => {
     return () => {
@@ -104,9 +211,12 @@ export const useCatalogWines = ({
 
   return {
     wines,
+    currentPage,
+    totalPages,
     isInitialLoading,
     isCurating,
     error,
+    setCurrentPage,
     startCuratingAnimation,
   };
 };

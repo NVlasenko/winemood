@@ -87,7 +87,7 @@
   }
 
   @include on-tablet {
-    padding: 32px 0 100px;
+    padding: 32px 0;
     &__grid {
       grid-template-columns: repeat(2, 1fr);
       column-gap: 20px;

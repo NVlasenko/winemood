@@ -1,25 +1,20 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-import { getCategories } from "@/shared/api/categoryApi";
-import { getCountries } from "@/shared/api/countryApi";
-import { getWines } from "@/shared/api/wineApi";
-import { filterWines } from "@/shared/api/wineFilterApi";
-import { getFoods } from "@/shared/api/foodApi";
+import { getMetadata } from "@/shared/api/metadataApi";
+import { filterWines, type WineFilterRequest } from "@/shared/api/wineFilterApi";
+
+import { useMoodTheme } from "@/context/MoodThemeContext";
+
+import type { MetadataFilter } from "@/types/metadata";
 
 import { arrowByMood } from "./config/filterArrows";
 import { resetByMood } from "./config/filterResetIcons";
 import { buildFilterGroups } from "./config/buildFilterGroups";
 
-import type { Category } from "@/types/categories";
-import type { CountryWine } from "@/types/countryWine";
-
-import { useMoodTheme } from "@/context/MoodThemeContext";
-
 import { CatalogFilterGroup } from "./sections/CatalogFilterGroup";
-import "./CatalogFilters.scss";
-import type { FoodPairing } from "@/types/food";
 
+import "./CatalogFilters.scss";
 
 type Props = {
   isOpen: boolean;
@@ -28,26 +23,62 @@ type Props = {
 
 type SelectedFilters = Record<string, string[]>;
 
+const PREVIEW_PAGE = 0;
+const PREVIEW_PAGE_SIZE = 1;
+
+const FILTER_PARAM_KEYS = [
+  "wineTypes",
+  "countries",
+  "sweetnessLevels",
+  "grapeVarieties",
+  "wineStyles",
+  "acidityLevels",
+  "aromaNotes",
+  "moods",
+  "events",
+  "seasons",
+  "foodName",
+] as const;
+
+const buildSelectedFiltersFromUrl = (
+  searchParams: URLSearchParams,
+): SelectedFilters => {
+  return FILTER_PARAM_KEYS.reduce<SelectedFilters>((acc, key) => {
+    const param = searchParams.get(key) || "";
+
+    acc[key] = param ? param.split(",") : [];
+
+    return acc;
+  }, {});
+};
+
+const buildWineFilters = (
+  selectedFilters: SelectedFilters,
+): WineFilterRequest => {
+  const filters: WineFilterRequest = {};
+
+  Object.entries(selectedFilters).forEach(([key, values]) => {
+    if (values.length > 0) {
+      filters[key as keyof WineFilterRequest] = values;
+    }
+  });
+
+  return filters;
+};
+
 export const CatalogFilters = ({ isOpen, onClose }: Props) => {
   const { moodTheme } = useMoodTheme();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+
   const previewDebounceRef = useRef<number | null>(null);
-  const wineTypesParam = searchParams.get("wineTypes") || "";
-  const countriesParam = searchParams.get("countries") || "";
-  const foodTypesParam = searchParams.get("foodTypes") || "";
 
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [countries, setCountries] = useState<CountryWine[]>([]);
-  const [foods, setFoods] = useState<FoodPairing[]>([]);
-
+  const [metadataFilters, setMetadataFilters] = useState<MetadataFilter[]>([]);
   const [openedFilter, setOpenedFilter] = useState("");
 
-  const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>({
-    wineTypes: [],
-    countries: [],
-    foodTypes: [],
-  });
+  const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>(() =>
+    buildSelectedFiltersFromUrl(searchParams),
+  );
 
   const [previewCount, setPreviewCount] = useState(0);
   const [isPreviewLoading, setIsPreviewLoading] = useState(false);
@@ -58,85 +89,64 @@ export const CatalogFilters = ({ isOpen, onClose }: Props) => {
   const resetIcon =
     resetByMood[moodTheme as keyof typeof resetByMood] || resetByMood.default;
 
-    const filterGroups = useMemo(
-      () =>
-        buildFilterGroups({
-          categories,
-          countries,
-          foods,
-        }),
-      [categories, countries, foods]
-    );
+  const filterGroups = useMemo(
+    () => buildFilterGroups(metadataFilters),
+    [metadataFilters],
+  );
 
   useEffect(() => {
     let isMounted = true;
-  
-    const loadFiltersData = async () => {
+
+    const loadMetadata = async () => {
       try {
-        const [categoriesData, countriesData, foodsData] = await Promise.all([
-          getCategories(),
-          getCountries(),
-          getFoods(),
-        ]);
-  
+        const metadata = await getMetadata();
+
         if (isMounted) {
-          setCategories(categoriesData);
-          setCountries(countriesData);
-          setFoods(foodsData);
+          setMetadataFilters(metadata);
         }
       } catch (error) {
-        console.error("Failed to load filters data:", error);
+        console.error("Failed to load metadata filters:", error);
       }
     };
-  
-    loadFiltersData();
-  
+
+    loadMetadata();
+
     return () => {
       isMounted = false;
     };
   }, []);
 
+  useEffect(() => {
+    setSelectedFilters(buildSelectedFiltersFromUrl(searchParams));
+  }, [searchParams]);
 
   useEffect(() => {
-    setSelectedFilters({
-      wineTypes: wineTypesParam ? wineTypesParam.split(",") : [],
-      countries: countriesParam ? countriesParam.split(",") : [],
-      foodTypes: foodTypesParam ? foodTypesParam.split(",") : [],
-    });
-  }, [wineTypesParam, countriesParam, foodTypesParam]);
+    if (!isOpen) {
+      return;
+    }
 
-  useEffect(() => {
     let isMounted = true;
-  
+
     if (previewDebounceRef.current) {
       clearTimeout(previewDebounceRef.current);
     }
-  
+
     previewDebounceRef.current = window.setTimeout(async () => {
       try {
         setIsPreviewLoading(true);
-  
-        const { wineTypes, countries, foodTypes } = selectedFilters;
-  
-        const hasFilters =
-          wineTypes.length ||
-          countries.length ||
-          foodTypes.length;
-  
-        const data = hasFilters
-          ? await filterWines({
-              wineTypes,
-              countries,
-              foodTypes,
-            })
-          : await getWines();
-  
+
+        const response = await filterWines({
+          filters: buildWineFilters(selectedFilters),
+          page: PREVIEW_PAGE,
+          size: PREVIEW_PAGE_SIZE,
+        });
+
         if (isMounted) {
-          setPreviewCount(Array.isArray(data) ? data.length : 0);
+          setPreviewCount(response.meta.totalElements);
         }
       } catch (error) {
         console.error("Failed to load preview count:", error);
-  
+
         if (isMounted) {
           setPreviewCount(0);
         }
@@ -146,15 +156,15 @@ export const CatalogFilters = ({ isOpen, onClose }: Props) => {
         }
       }
     }, 350);
-  
+
     return () => {
       isMounted = false;
-  
+
       if (previewDebounceRef.current) {
         clearTimeout(previewDebounceRef.current);
       }
     };
-  }, [selectedFilters]);
+  }, [isOpen, selectedFilters]);
 
   const handleClose = useCallback(() => {
     setOpenedFilter("");
@@ -164,12 +174,12 @@ export const CatalogFilters = ({ isOpen, onClose }: Props) => {
   const toggleFilter = useCallback((id: string) => {
     setOpenedFilter((prev) => (prev === id ? "" : id));
   }, []);
-  
+
   const toggleOption = useCallback((filterId: string, value: string) => {
     setSelectedFilters((prev) => {
       const currentValues = prev[filterId] || [];
       const isSelected = currentValues.includes(value);
-  
+
       return {
         ...prev,
         [filterId]: isSelected
@@ -180,27 +190,25 @@ export const CatalogFilters = ({ isOpen, onClose }: Props) => {
   }, []);
 
   const resetFilters = useCallback(() => {
-    setSelectedFilters({
-      wineTypes: [],
-      countries: [],
-      foodTypes: [],
-    });
-  
+    setSelectedFilters({});
+
     setOpenedFilter("");
     navigate("/catalog");
   }, [navigate]);
 
   const handleShowWines = useCallback(() => {
     const params = new URLSearchParams();
-  
+
     Object.entries(selectedFilters).forEach(([filterId, values]) => {
       if (values.length) {
         params.set(filterId, values.join(","));
       }
     });
-  
+
+    params.delete("page");
+
     const query = params.toString();
-  
+
     navigate(query ? `/catalog?${query}` : "/catalog");
     onClose();
   }, [navigate, onClose, selectedFilters]);

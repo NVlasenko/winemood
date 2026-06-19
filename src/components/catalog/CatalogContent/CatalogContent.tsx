@@ -1,7 +1,6 @@
 import { CatalogEmptyState } from "@/components/catalog/CatalogEmptyState";
 import { CatalogErrorState } from "@/components/catalog/CatalogErrorState";
 import { CatalogLoader } from "@/components/catalog/CatalogLoader";
-import { CatalogPagination } from "@/components/catalog/CatalogPagination";
 import { WineCatalogCard } from "@/components/catalog/WineCatalogCard";
 
 import type { WineCatalogCard as WineCatalogCardType } from "@/types/wineCatalogCard";
@@ -45,7 +44,7 @@ export const CatalogContent = ({
             <div className="catalog-page__curation-glow" />
 
             <p className="catalog-page__curation-text">
-              Curating your selection...
+              Finding the best matches...
             </p>
           </div>
         )}
@@ -66,8 +65,6 @@ export const CatalogContent = ({
           ))}
         </div>
       </div>
-
-      <CatalogPagination />
     </>
   );
 };

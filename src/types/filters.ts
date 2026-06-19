@@ -1,12 +1,20 @@
 export type FilterOption = {
-  id: number;
+  id: string;
   label: string;
   value: string;
-  image?: string;
+};
+
+export type FilterSubgroup = {
+  id: string;
+  title: string;
+  filterId: string;
+  options: FilterOption[];
 };
 
 export type FilterGroup = {
   id: string;
   title: string;
-  options: FilterOption[];
+  iconUrl: string;
+  options?: FilterOption[];
+  subgroups?: FilterSubgroup[];
 };

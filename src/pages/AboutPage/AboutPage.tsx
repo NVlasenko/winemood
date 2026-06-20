@@ -5,7 +5,7 @@ import { AboutHowItWorks } from "@/components/about/AboutHowItWorks";
 
 
 import "./AboutPage.scss";
-import { QuizCTA } from "@/components/QuizCTA/QuizCTA";
+import { QuizCTA } from "@/components/quiz/QuizCTA/QuizCTA";
 
 export const AboutPage = () => {
   return (

@@ -1,0 +1,1 @@
+export { QuizPreparingResults } from "./QuizPreparingResults";

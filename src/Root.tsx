@@ -10,6 +10,7 @@ import { WriteReviewPage } from "@/pages/WriteReviewPage";
 
 import { FavoritesProvider } from "@/context/FavoritesContext";
 import { ScrollToTop } from "./components/layout/ScrollToTop/ScrollToTop";
+import { QuizPage } from "./pages/QuizPage";
 
 const ROUTES = {
   home: "/",
@@ -18,6 +19,7 @@ const ROUTES = {
   writeReview: "/catalog/:id/review",
   about: "/about",
   history: "/history",
+  quiz: "/quiz",
 } as const;
 
 export const Root = () => {
@@ -34,6 +36,7 @@ export const Root = () => {
             <Route path={ROUTES.writeReview} element={<WriteReviewPage />} />
             <Route path={ROUTES.about} element={<AboutPage />} />
             <Route path={ROUTES.history} element={<HistoryPage />} />
+            <Route path={ROUTES.quiz} element={<QuizPage />} />
           </Route>
         </Routes>
       </HashRouter>

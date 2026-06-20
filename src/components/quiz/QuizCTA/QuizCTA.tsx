@@ -18,7 +18,7 @@ export const QuizCTA = () => {
           </p>
 
           <Link
-            to="/catalog"
+            to="/quiz"
             className="button-primary quiz-cta__button"
           >
             <span>Explore Collection</span>

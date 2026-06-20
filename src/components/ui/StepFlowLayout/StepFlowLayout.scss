@@ -73,8 +73,10 @@
 
   &__navigation {
     width: 100%;
+    max-width: 100%;
     margin-top: auto;
-    padding-bottom: 70px;
+    padding-top: 50px;
+    padding-bottom: 50px;
 
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -82,15 +84,16 @@
       "pagination pagination"
       "previous next";
     row-gap: 34px;
-    column-gap: 20px;
+    column-gap: 16px;
   }
 
   &__nav-button {
+    min-width: 0;
     padding: 0;
 
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 10px;
 
     border: none;
     background: transparent;
@@ -102,10 +105,12 @@
       transform 0.3s ease;
 
     span {
+      max-width: 110px;
+
       font-family: "Poppins", sans-serif;
       font-weight: 500;
-      font-size: 14px;
-      line-height: 1;
+      font-size: 12px;
+      line-height: 1.25;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: $text-primary;
@@ -137,11 +142,12 @@
     &--next {
       grid-area: next;
       justify-self: end;
+      text-align: right;
     }
   }
 
   &__nav-arrow {
-    width: 48px;
+    width: 36px;
     height: auto;
 
     display: block;
@@ -153,19 +159,50 @@
       transform: rotate(180deg);
     }
   }
+  &__finish-button {
+    grid-area: next;
+    justify-self: end;
+  
+    min-width: 180px;
+    height: 52px;
+    padding-inline: 28px;
+  
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+  
+    &:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+  }
+  
+  &__finish-arrow {
+    width: 20px;
+    height: auto;
+  
+    flex-shrink: 0;
+    object-fit: contain;
+  }
 
   &__pagination {
     grid-area: pagination;
     justify-self: center;
 
+    width: 100%;
+    max-width: 100%;
+
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0;
   }
 
   &__page {
-    width: 42px;
-    height: 42px;
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
 
     display: flex;
     align-items: center;
@@ -178,7 +215,7 @@
 
     font-family: "Poppins", sans-serif;
     font-weight: 500;
-    font-size: 16px;
+    font-size: 13px;
     line-height: 1;
 
     color: rgba(211, 211, 211, 0.65);
@@ -207,8 +244,9 @@
   }
 
   &__pagination-line {
-    width: 48px;
+    width: clamp(12px, 4vw, 22px);
     height: 1px;
+    flex: 0 1 clamp(12px, 4vw, 22px);
 
     background: rgba(217, 217, 217, 0.16);
 
@@ -251,39 +289,66 @@
     }
 
     &__navigation {
-      padding-bottom: 100px;
+      padding-top: 70px;
+      padding-bottom: 70px;
 
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      gap: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas:
+        "pagination pagination"
+        "previous next";
+      row-gap: 34px;
+      column-gap: 24px;
     }
 
     &__nav-button {
-      gap: 18px;
+      gap: 14px;
 
       span {
-        font-size: 15px;
+        max-width: 150px;
+        font-size: 14px;
+        line-height: 1.25;
       }
 
-      &--previous,
+      &--previous {
+        justify-self: start;
+      }
+
       &--next {
-        justify-self: auto;
+        justify-self: end;
       }
     }
 
     &__nav-arrow {
-      width: 56px;
+      width: 48px;
+    }
+
+    &__finish-button {
+      min-width: 240px;
+      height: 60px;
+      padding-inline: 40px;
+    }
+    
+    &__finish-arrow {
+      width: 25px;
+    }
+
+    &__pagination {
+      width: 100%;
+      max-width: 100%;
     }
 
     &__pagination-line {
-      width: 72px;
+      width: clamp(26px, 6vw, 42px);
+      flex: 0 1 clamp(26px, 6vw, 42px);
     }
 
     &__page {
-      width: 48px;
-      height: 48px;
+      width: 40px;
+      height: 40px;
+      flex: 0 0 40px;
+
+      font-size: 15px;
     }
   }
 
@@ -316,14 +381,28 @@
     }
 
     &__navigation {
-      padding-bottom: 142px;
+      padding-top: 110px;
+      padding-bottom: 100px;
+
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0;
     }
 
     &__nav-button {
       gap: 18px;
 
       span {
+        max-width: none;
         font-size: 16px;
+        line-height: 1;
+      }
+
+      &--previous,
+      &--next {
+        justify-self: auto;
       }
     }
 
@@ -331,8 +410,32 @@
       width: 64px;
     }
 
+    &__finish-button {
+      min-width: 280px;
+      height: 64px;
+      padding-inline: 48px;
+    }
+    
+    &__finish-arrow {
+      width: 30px;
+    }
+
+    &__pagination {
+      width: auto;
+      max-width: none;
+    }
+
     &__pagination-line {
       width: 74px;
+      flex: 0 0 74px;
+    }
+
+    &__page {
+      width: 48px;
+      height: 48px;
+      flex: 0 0 48px;
+
+      font-size: 16px;
     }
   }
 }

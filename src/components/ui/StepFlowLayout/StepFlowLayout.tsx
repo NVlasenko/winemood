@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
 
+import arrowRight from "@/assets/images/icons/arrow-right.svg";
 import backArrowIcon from "@/assets/images/icons/arrow-right.svg";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { useMoodTheme } from "@/context/MoodThemeContext";
@@ -60,8 +61,7 @@ export const StepFlowLayout = ({
 
   const steps = buildSteps(totalSteps);
   const isLastStep = currentStep === totalSteps;
-  const displayedNextLabel =
-    isLastStep && completedNextLabel ? completedNextLabel : nextLabel;
+  const finishLabel = completedNextLabel || nextLabel;
 
   return (
     <main className={`step-flow-layout ${className}`.trim()}>
@@ -126,21 +126,39 @@ export const StepFlowLayout = ({
               ))}
             </div>
 
-            <button
-              className="step-flow-layout__nav-button step-flow-layout__nav-button--next"
-              type="button"
-              disabled={!canGoNext}
-              onClick={onNext}
-            >
-              <img
-                className="step-flow-layout__nav-arrow"
-                src={nextArrow}
-                alt=""
-                aria-hidden="true"
-              />
+            {isLastStep ? (
+              <button
+                className="button-primary step-flow-layout__finish-button"
+                type="button"
+                disabled={!canGoNext}
+                onClick={onNext}
+              >
+                <span>{finishLabel}</span>
 
-              <span>{displayedNextLabel}</span>
-            </button>
+                <img
+                  className="step-flow-layout__finish-arrow"
+                  src={arrowRight}
+                  alt=""
+                  aria-hidden="true"
+                />
+              </button>
+            ) : (
+              <button
+                className="step-flow-layout__nav-button step-flow-layout__nav-button--next"
+                type="button"
+                disabled={!canGoNext}
+                onClick={onNext}
+              >
+                <img
+                  className="step-flow-layout__nav-arrow"
+                  src={nextArrow}
+                  alt=""
+                  aria-hidden="true"
+                />
+
+                <span>{nextLabel}</span>
+              </button>
+            )}
           </div>
         </section>
       </div>

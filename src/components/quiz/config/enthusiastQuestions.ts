@@ -28,32 +28,32 @@ export const enthusiastQuestions: QuizQuestionConfig[] = [
     question: "Which wine styles do you usually choose?",
     options: [
       {
-        id: "dry-white",
-        title: "Dry White",
+        id: "dry",
+        title: "Dry",
         description: "",
         images: budgetImages,
       },
       {
-        id: "aromatic-white",
-        title: "Aromatic White",
+        id: "semi-dry",
+        title: "Semi Dry",
         description: "",
         images: midRangeImages,
       },
       {
-        id: "light-red",
-        title: "Light Red",
+        id: "semi-sweet",
+        title: "Semi Sweet",
         description: "",
         images: higherTierImages,
       },
       {
-        id: "full-bodied-red",
-        title: "Full-Bodied Red",
+        id: "sweet",
+        title: "Sweet",
         description: "",
         images: neutralWineLevelImages,
       },
       {
-        id: "sparkling",
-        title: "Sparkling",
+        id: "brut",
+        title: "Brut",
         description: "",
         images: fruityFlavorImages,
       },
@@ -91,7 +91,7 @@ export const enthusiastQuestions: QuizQuestionConfig[] = [
         id: "portugal",
         title: "Portugal",
         description: "",
-        images: spicyFlavorImages,
+        images: neutralWineLevelImages,
       },
       {
         id: "australia",
@@ -139,7 +139,7 @@ export const enthusiastQuestions: QuizQuestionConfig[] = [
         id: "muscat",
         title: "Muscat",
         description: "",
-        images: spicyFlavorImages,
+        images: fruityFlavorImages,
       },
       {
         id: "grenache",
@@ -183,6 +183,18 @@ export const enthusiastQuestions: QuizQuestionConfig[] = [
         description: "",
         images: spicyFlavorImages,
       },
+      {
+        id: "floral",
+        title: "Floral",
+        description: "",
+        images: higherTierImages,
+      },
+      {
+        id: "nutty-honey",
+        title: "Nutty Honey",
+        description: "",
+        images: higherTierImages,
+      },
     ],
   },
   {
@@ -190,10 +202,10 @@ export const enthusiastQuestions: QuizQuestionConfig[] = [
     question: "What are you planning to eat?",
     options: [
       {
-        id: "steak",
-        title: "Steak",
+        id: "light-dishes",
+        title: "Light Dishes",
         description: "",
-        images: meatImages,
+        images: midRangeImages,
       },
       {
         id: "fish-seafood",
@@ -202,8 +214,8 @@ export const enthusiastQuestions: QuizQuestionConfig[] = [
         images: fishImages,
       },
       {
-        id: "pasta",
-        title: "Pasta",
+        id: "pasta-pizza",
+        title: "Pasta / Pizza",
         description: "",
         images: pastaImages,
       },
@@ -224,6 +236,12 @@ export const enthusiastQuestions: QuizQuestionConfig[] = [
         title: "Dessert",
         description: "",
         images: dessertImages,
+      },
+      {
+        id: "meat",
+        title: "Meat",
+        description: "",
+        images: meatImages,
       },
       {
         id: "universal",

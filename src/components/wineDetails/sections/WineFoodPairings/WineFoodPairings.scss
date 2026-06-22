@@ -1,0 +1,404 @@
+@import "@/styles/mixins";
+@import "@/styles/variables";
+
+.wine-food-pairings {
+  position: relative;
+  padding: 80px 0 0;
+
+  &__grid {
+    margin-top: 48px;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  &__card {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    width: 100%;
+    min-height: 356px;
+    padding: 28px 24px 30px;
+
+    display: grid;
+    grid-template-rows: 1fr 58px;
+    align-items: center;
+    justify-items: center;
+
+    border: 0.5px solid var(--food-pairing-border-color);
+    border-radius: 12px;
+
+    background:
+      linear-gradient(
+        180deg,
+        rgba(11, 11, 11, 0.08) 0%,
+        rgba(11, 11, 11, 0.38) 100%
+      ),
+      linear-gradient(
+        180deg,
+        var(--food-pairing-bg-start) 0%,
+        var(--food-pairing-bg-end) 100%
+      );
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    transition:
+      transform 0.35s ease,
+      border-color 0.35s ease,
+      box-shadow 0.35s ease;
+
+    &::before {
+      content: "";
+
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+
+      background: radial-gradient(
+        circle at 50% 30%,
+        rgba(255, 255, 255, 0.12) 0%,
+        transparent 42%
+      );
+
+      opacity: 0.65;
+      pointer-events: none;
+    }
+
+    &::after {
+      content: "";
+
+      position: absolute;
+      left: 50%;
+      bottom: -70px;
+      z-index: 1;
+
+      width: 210px;
+      height: 120px;
+
+      transform: translateX(-50%);
+
+      background: radial-gradient(
+        ellipse,
+        rgba(var(--wine-glow-rgb), 0.22) 0%,
+        transparent 72%
+      );
+
+      filter: blur(32px);
+      opacity: 0;
+
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+    }
+
+    &:hover {
+      transform: translateY(-6px);
+
+      border-color: var(--food-pairing-border-color);
+
+      box-shadow:
+        0 22px 60px rgba(0, 0, 0, 0.42),
+        0 0 32px var(--food-pairing-shadow-color);
+
+      &::after {
+        opacity: 1;
+      }
+
+      .wine-food-pairings__image {
+        transform: scale(1.06);
+        filter: brightness(1.05) saturate(1.08);
+      }
+
+      .wine-food-pairings__title {
+        color: $text-primary;
+        text-shadow: 0 0 18px var(--food-pairing-shadow-color);
+      }
+    }
+
+    &--tone-wood {
+      --food-pairing-bg-start: rgba(142, 108, 81, 1);
+      --food-pairing-bg-end: rgba(125, 124, 124, 0.55);
+      --food-pairing-border-color: rgba(142, 108, 81, 0.75);
+      --food-pairing-shadow-color: rgba(142, 108, 81, 0.28);
+    }
+
+    &--tone-honey {
+      --food-pairing-bg-start: rgba(247, 202, 114, 1);
+      --food-pairing-bg-end: rgba(125, 124, 124, 0.55);
+      --food-pairing-border-color: rgba(247, 202, 114, 0.75);
+      --food-pairing-shadow-color: rgba(247, 202, 114, 0.28);
+    }
+
+    &--tone-clay {
+      --food-pairing-bg-start: rgba(198, 66, 34, 1);
+      --food-pairing-bg-end: rgba(11, 11, 11, 0.55);
+      --food-pairing-border-color: rgba(198, 66, 34, 0.75);
+      --food-pairing-shadow-color: rgba(198, 66, 34, 0.28);
+    }
+
+    &--tone-olive {
+      --food-pairing-bg-start: rgba(117, 146, 11, 1);
+      --food-pairing-bg-end: rgba(11, 11, 11, 0.55);
+      --food-pairing-border-color: rgba(117, 146, 11, 0.75);
+      --food-pairing-shadow-color: rgba(117, 146, 11, 0.28);
+    }
+
+    &--tone-berry {
+      --food-pairing-bg-start: rgba(214, 45, 67, 1);
+      --food-pairing-bg-end: rgba(11, 11, 11, 0.55);
+      --food-pairing-border-color: rgba(214, 45, 67, 0.75);
+      --food-pairing-shadow-color: rgba(214, 45, 67, 0.28);
+    }
+
+    &--tone-cream {
+      --food-pairing-bg-start: rgba(203, 173, 147, 1);
+      --food-pairing-bg-end: rgba(11, 11, 11, 0.55);
+      --food-pairing-border-color: rgba(203, 173, 147, 0.75);
+      --food-pairing-shadow-color: rgba(203, 173, 147, 0.28);
+    }
+
+    &--tone-orange-dark {
+      --food-pairing-bg-start: rgba(219, 102, 9, 1);
+      --food-pairing-bg-end: rgba(11, 11, 11, 0.55);
+      --food-pairing-border-color: rgba(219, 102, 9, 0.75);
+      --food-pairing-shadow-color: rgba(219, 102, 9, 0.28);
+    }
+
+    &--tone-sand {
+      --food-pairing-bg-start: rgba(186, 173, 129, 1);
+      --food-pairing-bg-end: rgba(11, 11, 11, 0.55);
+      --food-pairing-border-color: rgba(186, 173, 129, 0.75);
+      --food-pairing-shadow-color: rgba(186, 173, 129, 0.28);
+    }
+
+    &--tone-orange {
+      --food-pairing-bg-start: rgba(249, 132, 12, 1);
+      --food-pairing-bg-end: rgba(11, 11, 11, 0.55);
+      --food-pairing-border-color: rgba(249, 132, 12, 0.75);
+      --food-pairing-shadow-color: rgba(249, 132, 12, 0.28);
+    }
+
+    &--tone-salmon {
+      --food-pairing-bg-start: rgba(230, 138, 132, 1);
+      --food-pairing-bg-end: rgba(11, 11, 11, 0.55);
+      --food-pairing-border-color: rgba(230, 138, 132, 0.75);
+      --food-pairing-shadow-color: rgba(230, 138, 132, 0.28);
+    }
+
+    &--tone-lemon {
+      --food-pairing-bg-start: rgba(255, 253, 153, 1);
+      --food-pairing-bg-end: rgba(11, 11, 11, 0.55);
+      --food-pairing-border-color: rgba(255, 253, 153, 0.75);
+      --food-pairing-shadow-color: rgba(255, 253, 153, 0.28);
+    }
+
+    &--tone-moss {
+      --food-pairing-bg-start: rgba(86, 99, 25, 1);
+      --food-pairing-bg-end: rgba(11, 11, 11, 0.55);
+      --food-pairing-border-color: rgba(86, 99, 25, 0.75);
+      --food-pairing-shadow-color: rgba(86, 99, 25, 0.28);
+    }
+
+    &--tone-peach {
+      --food-pairing-bg-start: rgba(255, 161, 96, 1);
+      --food-pairing-bg-end: rgba(11, 11, 11, 0.55);
+      --food-pairing-border-color: rgba(255, 161, 96, 0.75);
+      --food-pairing-shadow-color: rgba(255, 161, 96, 0.28);
+    }
+
+    &--tone-caramel {
+      --food-pairing-bg-start: rgba(152, 70, 13, 1);
+      --food-pairing-bg-end: rgba(11, 11, 11, 0.55);
+      --food-pairing-border-color: rgba(152, 70, 13, 0.75);
+      --food-pairing-shadow-color: rgba(152, 70, 13, 0.28);
+    }
+
+    &--tone-red {
+      --food-pairing-bg-start: rgba(227, 1, 2, 1);
+      --food-pairing-bg-end: rgba(11, 11, 11, 0.55);
+      --food-pairing-border-color: rgba(227, 1, 2, 0.75);
+      --food-pairing-shadow-color: rgba(227, 1, 2, 0.28);
+    }
+
+    &--tone-brass {
+      --food-pairing-bg-start: rgba(193, 155, 67, 1);
+      --food-pairing-bg-end: rgba(11, 11, 11, 0.55);
+      --food-pairing-border-color: rgba(193, 155, 67, 0.75);
+      --food-pairing-shadow-color: rgba(193, 155, 67, 0.28);
+    }
+
+    &--tone-beige {
+      --food-pairing-bg-start: rgba(203, 178, 127, 1);
+      --food-pairing-bg-end: rgba(11, 11, 11, 0.55);
+      --food-pairing-border-color: rgba(203, 178, 127, 0.75);
+      --food-pairing-shadow-color: rgba(203, 178, 127, 0.28);
+    }
+
+    &--tone-coral {
+      --food-pairing-bg-start: rgba(255, 64, 32, 1);
+      --food-pairing-bg-end: rgba(11, 11, 11, 0.55);
+      --food-pairing-border-color: rgba(255, 64, 32, 0.75);
+      --food-pairing-shadow-color: rgba(255, 64, 32, 0.28);
+    }
+
+    &--tone-yellow {
+      --food-pairing-bg-start: rgba(255, 253, 118, 1);
+      --food-pairing-bg-end: rgba(11, 11, 11, 0.55);
+      --food-pairing-border-color: rgba(255, 253, 118, 0.75);
+      --food-pairing-shadow-color: rgba(255, 253, 118, 0.28);
+    }
+
+    &--tone-sky {
+      --food-pairing-bg-start: rgba(156, 192, 255, 1);
+      --food-pairing-bg-end: rgba(11, 11, 11, 0.55);
+      --food-pairing-border-color: rgba(156, 192, 255, 0.75);
+      --food-pairing-shadow-color: rgba(156, 192, 255, 0.28);
+    }
+
+    &--tone-pumpkin {
+      --food-pairing-bg-start: rgba(246, 154, 0, 1);
+      --food-pairing-bg-end: rgba(11, 11, 11, 0.55);
+      --food-pairing-border-color: rgba(246, 154, 0, 0.75);
+      --food-pairing-shadow-color: rgba(246, 154, 0, 0.28);
+    }
+  }
+
+  &__image-wrap {
+    position: relative;
+    z-index: 2;
+
+    width: 220px;
+    height: 220px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    align-self: center;
+  }
+
+  &__image {
+    max-width: 100%;
+    max-height: 100%;
+
+    display: block;
+
+    object-fit: contain;
+
+    filter: brightness(0.96);
+    transition:
+      transform 0.45s ease,
+      filter 0.45s ease;
+  }
+
+  &__image-placeholder {
+    width: 170px;
+    height: 170px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 0.5px solid rgba(217, 217, 217, 0.16);
+    border-radius: 50%;
+
+    background: rgba(11, 11, 11, 0.28);
+
+    font-family: "Poppins", sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+
+    letter-spacing: 0.08em;
+    text-align: center;
+    text-transform: uppercase;
+
+    color: rgba(211, 211, 211, 0.78);
+  }
+
+  &__title {
+    position: relative;
+    z-index: 2;
+
+    align-self: end;
+
+    min-height: 48px;
+    max-width: 260px;
+    margin: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: "Marcellus", serif;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 1.22;
+
+    letter-spacing: 0.08em;
+    text-align: center;
+    text-transform: uppercase;
+
+    color: rgba(211, 211, 211, 0.92);
+
+    transition:
+      color 0.35s ease,
+      text-shadow 0.35s ease;
+  }
+
+  @include on-tablet {
+    padding: 110px 0 0;
+
+    &__grid {
+      margin-top: 56px;
+
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 28px;
+    }
+
+    &__card {
+      min-height: 356px;
+      padding: 30px 24px;
+      grid-template-rows: 1fr 58px;
+    }
+
+    &__image-wrap {
+      width: 240px;
+      height: 220px;
+    }
+
+    &__title {
+      font-size: 20px;
+    }
+  }
+
+  @include on-desktop {
+    padding: 220px 0 0;
+
+    &__grid {
+      margin-top: 120px;
+
+      grid-template-columns: repeat(4, 329px);
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    &__card {
+      width: 329px;
+      height: 356px;
+      min-height: 356px;
+      padding: 32px 28px 30px;
+      grid-template-rows: 1fr 58px;
+    }
+
+    &__image-wrap {
+      width: 250px;
+      height: 220px;
+    }
+
+    &__title {
+      font-size: 20px;
+    }
+  }
+}

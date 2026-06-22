@@ -1,0 +1,404 @@
+@import "@/styles/mixins";
+@import "@/styles/variables";
+
+.catalog-search {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+
+  padding: 86px 16px 32px;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+
+  &__backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+
+    border: none;
+    background: rgba(0, 0, 0, 0.48);
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    opacity: 1;
+    cursor: pointer;
+
+    transition:
+      opacity 0.45s ease,
+      background 0.45s ease;
+  }
+
+  &--has-query {
+    pointer-events: none;
+
+    .catalog-search__backdrop {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .catalog-search__panel {
+      pointer-events: auto;
+    }
+  }
+
+  &__panel {
+    position: relative;
+    z-index: 2;
+
+    width: 100%;
+    max-width: 1000px;
+
+    animation: catalogSearchPanelIn 0.35s ease both;
+  }
+
+  &__bar {
+    height: 60px;
+    padding: 0 18px;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    border: 0.5px solid rgba(217, 217, 217, 0.16);
+    border-radius: 12px;
+
+    background: linear-gradient(
+      180deg,
+      rgba(11, 11, 11, 0.85) 0%,
+      rgba(11, 11, 11, 0.55) 100%
+    );
+
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  &__search-icon {
+    width: 22px;
+    height: 22px;
+
+    flex-shrink: 0;
+
+    opacity: 0.78;
+  }
+
+  &__input {
+    flex: 1;
+    min-width: 0;
+
+    border: none;
+    outline: none;
+    background: transparent;
+
+    font-family: "Poppins", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+
+    color: $text-primary;
+
+    &::placeholder {
+      text-transform: uppercase;
+      color: rgba(211, 211, 211, 0.58);
+    }
+  }
+
+  &__action,
+  &__history-remove {
+    width: 32px;
+    height: 32px;
+
+    flex-shrink: 0;
+
+    border: none;
+    background: transparent;
+
+    color: rgba(211, 211, 211, 0.68);
+
+    font-size: 32px;
+    font-weight: 200;
+    line-height: 1;
+
+    transition:
+      color 0.25s ease,
+      transform 0.25s ease;
+
+    &:hover {
+      color: $text-primary;
+      transform: scale(1.08);
+    }
+  }
+
+  &__dropdown {
+    margin-top: 18px;
+    padding: 24px 20px;
+
+    border: 0.5px solid rgba(217, 217, 217, 0.16);
+    border-radius: 12px;
+
+    background: linear-gradient(
+      180deg,
+      rgba(11, 11, 11, 0.85) 0%,
+      rgba(11, 11, 11, 0.55) 100%
+    );
+
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    animation: catalogSearchDropdownIn 0.35s ease both;
+  }
+
+  &__title {
+    margin: 0 0 18px;
+
+    font-family: "Poppins", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+
+    color: rgba(211, 211, 211, 0.72);
+  }
+
+  &__history-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__history-item {
+    min-height: 56px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+
+    border-bottom: 1px solid rgba(217, 217, 217, 0.13);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__history-button {
+    flex: 1;
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    border: none;
+    background: transparent;
+
+    font-family: "Poppins", sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    text-align: left;
+
+    color: $text-primary;
+
+    transition: color 0.25s ease;
+
+    &:hover {
+      color: rgba(211, 211, 211, 0.78);
+    }
+  }
+
+  &__history-icon {
+    width: 20px;
+    height: 20px;
+
+    flex-shrink: 0;
+
+    object-fit: contain;
+    opacity: 0.76;
+  }
+
+  &__history-remove {
+    font-size: 30px;
+  }
+
+  &__state {
+    padding: 8px 0 2px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__state-title {
+    margin: 0;
+
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.4;
+
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+
+    color: var(--mood-link-hover-color);
+  }
+
+  &__state-text {
+    margin: 0;
+
+    font-family: "Poppins", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.65;
+
+    color: rgba(211, 211, 211, 0.72);
+  }
+
+  &--has-query {
+    pointer-events: none;
+
+    .catalog-search__backdrop {
+      background: transparent;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      pointer-events: none;
+    }
+
+    .catalog-search__panel {
+      pointer-events: auto;
+    }
+  }
+
+  @include on-tablet {
+    padding: 92px 32px 40px;
+
+    &__bar {
+      margin-top: 35px;
+      height: 60px;
+      padding: 0 22px;
+      gap: 18px;
+    }
+
+    &__search-icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    &__input {
+      font-size: 15px;
+    }
+
+    &__dropdown {
+      margin-top: 22px;
+      padding: 28px 2px;
+    }
+
+    &__title {
+      margin-bottom: 12px;
+      font-size: 15px;
+    }
+
+    &__history-item {
+      min-height: 58px;
+      gap: 22px;
+    }
+
+    &__history-button {
+      gap: 12px;
+      font-size: 14px;
+    }
+
+    &__history-icon {
+      width: 22px;
+      height: 22px;
+    }
+
+    &__state-title {
+      font-size: 17px;
+    }
+
+    &__state-text {
+      font-size: 15px;
+    }
+  }
+
+  @include on-desktop {
+    padding: 104px 40px 40px;
+
+    &__panel {
+      max-width: 1000px;
+    }
+
+    &__bar {
+      margin-top: 50px;
+      height: 60px;
+      padding: 0 24px;
+      gap: 24px;
+    }
+
+    &__search-icon {
+      width: 28px;
+      height: 28px;
+    }
+
+    &__input {
+      font-size: 15px;
+      letter-spacing: 0.08em;
+    }
+
+    &__dropdown {
+      margin-top: 24px;
+      padding: 28px 22px;
+    }
+
+    &__title {
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    &__history-item {
+      min-height: 60px;
+      gap: 24px;
+    }
+  }
+}
+
+@keyframes catalogSearchBackdropIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes catalogSearchPanelIn {
+  from {
+    opacity: 0;
+    transform: translateY(-22px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes catalogSearchDropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

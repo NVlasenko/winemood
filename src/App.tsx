@@ -1,16 +1,17 @@
 import React from "react";
 import { Outlet, useLocation } from "react-router-dom";
 
-import { Header } from "./components/Header";
-import { Footer } from "./components/Footer";
+import { Header } from "./components/layout/Header";
+import { Footer } from "./components/layout/Footer";
 
 import "./App.scss";
 
 export const App: React.FC = () => {
   const location = useLocation();
 
-  const isWriteReviewPage =
-    location.pathname.includes("/review");
+  const shouldHideFooter =
+    location.pathname.includes("/review") ||
+    location.pathname.startsWith("/quiz");
 
   return (
     <div className="App">
@@ -20,7 +21,7 @@ export const App: React.FC = () => {
         <Outlet />
       </main>
 
-      {!isWriteReviewPage && <Footer />}
+      {!shouldHideFooter && <Footer />}
     </div>
   );
 };

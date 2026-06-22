@@ -1,3 +1,5 @@
+import type { FoodPairing } from "./food";
+
 export type Wine = {
   id: number;
   name: string;
@@ -7,8 +9,27 @@ export type Wine = {
   imageUrl: string;
   rating: number;
   alcoholPercentage: number;
-  sweetnessLevel: string;
-  grapeVariety: string;
+
+  sweetnessLevel: {
+    id: number;
+    name: string;
+  };
+
+  grapeVariety: {
+    id: number;
+    name: string;
+  };
+
+  acidity: {
+    id: number;
+    name: string;
+  };
+
+  wineStyle: {
+    id: number;
+    name: string;
+  };
+
   agingMonths: number;
   environmentalAttributes: string[];
   fermentationType: string;
@@ -17,4 +38,6 @@ export type Wine = {
   producerName: string;
   countryName: string;
   region: string;
+
+  foodPairings: FoodPairing[];
 };

@@ -3,7 +3,6 @@ import type { QuizQuestionOption } from "@/components/quiz/QuizQuestion";
 import {
   freshLightImages,
   fruityImages,
-  neutralImages,
   slightlySweetImages,
   slightlyTartImages,
 } from "@/components/quiz/QuizQuestion/config/beginner/taste-profile";
@@ -33,6 +32,10 @@ import {
   neutralWineLevelImages,
 } from "@/components/quiz/QuizQuestion/config/beginner/wine-level";
 
+import {
+  spicyFlavorImages,
+} from "@/components/quiz/QuizQuestion/config/enthusiast/flavor-profile";
+
 export type QuizQuestionConfig = {
   step: number;
   question: string;
@@ -40,39 +43,40 @@ export type QuizQuestionConfig = {
 };
 
 export const beginnerQuestions: QuizQuestionConfig[] = [
+
   {
     step: 2,
-    question: "Which taste profile feels closest to you?",
+    question: "What type of wine do you prefer?",
     options: [
       {
-        id: "slightly-sweet",
-        title: "Slightly Sweet",
-        description: "I like my wine soft and pleasant",
-        images: slightlySweetImages,
+        id: "premium",
+        title: "Premium",
+        description: "",
+        images: budgetImages,
       },
       {
-        id: "fruity",
-        title: "Fruity",
-        description: "I want to taste berries and fruit",
-        images: fruityImages,
+        id: "red",
+        title: "Red",
+        description: "",
+        images: midRangeImages,
       },
       {
-        id: "fresh-light",
-        title: "Fresh and Light",
-        description: "Something refreshing",
-        images: freshLightImages,
+        id: "rose",
+        title: "Rosé",
+        description: "",
+        images: higherTierImages,
       },
       {
-        id: "slightly-tart",
-        title: "Slightly Tart",
-        description: "I enjoy a bright acidity",
-        images: slightlyTartImages,
+        id: "sparkling",
+        title: "Sparkling",
+        description: "",
+        images: neutralWineLevelImages,
       },
       {
-        id: "neutral",
-        title: "Neutral",
-        description: "I want something balanced",
-        images: neutralImages,
+        id: "not-sure",
+        title: "Recommend something",
+        description: "",
+        images: neutralWineLevelImages,
       },
     ],
   },
@@ -93,8 +97,8 @@ export const beginnerQuestions: QuizQuestionConfig[] = [
         images: eveningWithFriendsImages,
       },
       {
-        id: "dinner-at-home",
-        title: "Dinner At Home",
+        id: "picnic",
+        title: "Picnic",
         description: "",
         images: dinnerAtHomeImages,
       },
@@ -183,47 +187,61 @@ export const beginnerQuestions: QuizQuestionConfig[] = [
         images: higherTierImages,
       },
       {
-        id: "neutral-wine-level",
-        title: "Neutral",
+        id: "no-Preference",
+        title: "No Preference",
         description: "Doesn’t matter, as long as it tastes good",
         images: neutralWineLevelImages,
       },
     ],
   },
-  {
-  step: 6,
-  question: "What type of wine do you prefer?",
-  options: [
-    {
-      id: "premium",
-      title: "Premium",
-      description: "",
-      images: budgetImages,
+
+   {
+      step: 6,
+      question: "Which aroma notes do you prefer?",
+      options: [
+        {
+          id: "fruity",
+          title: "Fruity",
+          description: "",
+          images: fruityImages,
+        },
+        {
+          id: "mineral",
+          title: "Mineral",
+          description: "",
+          images: freshLightImages,
+        },
+        {
+          id: "oaky-vanilla",
+          title: "Oaky / Vanilla",
+          description: "",
+          images: slightlySweetImages,
+        },
+        {
+          id: "spicy",
+          title: "Spicy",
+          description: "",
+          images: spicyFlavorImages,
+        },
+        {
+          id: "floral",
+          title: "Floral",
+          description: "",
+          images: slightlyTartImages,
+        },
+        {
+          id: "nutty-honey",
+          title: "Nutty / Honey",
+          description: "",
+          images: higherTierImages,
+        },
+        {
+          id: "no-preference",
+          title: "No Preference",
+          description: "I’m open to recommendations",
+          images: neutralWineLevelImages,
+        },
+      ],
     },
-    {
-      id: "red",
-      title: "Red",
-      description: "",
-      images: midRangeImages,
-    },
-    {
-      id: "rose",
-      title: "Rosé",
-      description: "",
-      images: higherTierImages,
-    },
-    {
-      id: "sparkling",
-      title: "Sparkling",
-      description: "",
-      images: neutralWineLevelImages,
-    },
-    {
-      id: "not-sure",
-      title: "Recommend something",
-      description: "",
-      images: neutralWineLevelImages,
-    },
-  ],
-},
+
 ];

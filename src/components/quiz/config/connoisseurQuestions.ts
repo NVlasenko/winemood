@@ -1,12 +1,10 @@
 import {
   freshLightImages,
-  fruityImages,
   neutralImages,
   slightlyTartImages,
 } from "@/components/quiz/QuizQuestion/config/beginner/taste-profile";
 
 import {
-  dinnerAtHomeImages,
   eveningWithFriendsImages,
   somethingTastyImages,
 } from "@/components/quiz/QuizQuestion/config/beginner/occasion";
@@ -21,6 +19,10 @@ import {
   midRangeImages,
   neutralWineLevelImages,
 } from "@/components/quiz/QuizQuestion/config/beginner/wine-level";
+
+import {
+  fruityFlavorImages,
+} from "@/components/quiz/QuizQuestion/config/enthusiast/flavor-profile";
 
 import type { QuizQuestionConfig } from "./beginnerQuestions";
 
@@ -59,33 +61,51 @@ export const connoisseurQuestions: QuizQuestionConfig[] = [
         description: "",
         images: somethingTastyImages,
       },
-    ],
-  },
-  {
-    step: 3,
-    question: "What type of aging do you prefer?",
-    options: [
       {
-        id: "french-oak",
-        title: "French Oak",
+        id: "provence",
+        title: "Provence",
         description: "",
         images: higherTierImages,
       },
       {
-        id: "american-oak",
-        title: "American Oak",
+        id: "ribera-del-duero",
+        title: "Ribera del Duero",
         description: "",
         images: midRangeImages,
       },
       {
-        id: "stainless-steel",
-        title: "Stainless Steel",
+        id: "open-to-experiment-region",
+        title: "Open To Experiment",
+        description: "",
+        images: neutralWineLevelImages,
+      },
+    ],
+  },
+  {
+    step: 3,
+    question: "Do you have any wine values preferences?",
+    options: [
+      {
+        id: "vegan",
+        title: "Vegan",
+        description: "",
+        images: higherTierImages,
+      },
+      {
+        id: "organic",
+        title: "Organic",
+        description: "",
+        images: midRangeImages,
+      },
+      {
+        id: "sustainable",
+        title: "Sustainable",
         description: "",
         images: freshLightImages,
       },
       {
-        id: "amphora-concrete",
-        title: "Amphora / Concrete",
+        id: "no-preference",
+        title: "No preference",
         description: "",
         images: neutralImages,
       },
@@ -93,109 +113,115 @@ export const connoisseurQuestions: QuizQuestionConfig[] = [
   },
   {
     step: 4,
-    question: "Which characteristics matter most to you?",
+    question: "Which wine style do you prefer?",
     options: [
       {
-        id: "tannins",
-        title: "Tannins",
+        id: "light-bodied",
+        title: "Light Bodied",
         description: "",
         images: freshLightImages,
       },
       {
-        id: "acidity",
-        title: "Acidity",
+        id: "medium-bodied",
+        title: "Medium Bodied",
         description: "",
         images: slightlyTartImages,
       },
       {
-        id: "body",
-        title: "Body",
+        id: "full-bodied",
+        title: "Full Bodied",
         description: "",
         images: higherTierImages,
       },
       {
-        id: "long-finish",
-        title: "Long Finish",
-        description: "",
-        images: neutralWineLevelImages,
-      },
-      {
-        id: "balance",
-        title: "Balance",
+        id: "no-preference",
+        title: "No preference",
         description: "",
         images: universalImages,
       },
     ],
   },
-  {
-    step: 5,
-    question: "Which varieties do you want to explore?",
-    options: [
-      {
-        id: "nebbiolo",
-        title: "Nebbiolo",
-        description: "",
-        images: freshLightImages,
-      },
-      {
-        id: "sangiovese",
-        title: "Sangiovese",
-        description: "",
-        images: dinnerAtHomeImages,
-      },
-      {
-        id: "syrah-shiraz",
-        title: "Syrah / Shiraz",
-        description: "",
-        images: higherTierImages,
-      },
-      {
-        id: "gewurztraminer",
-        title: "Gewürztraminer",
-        description: "",
-        images: fruityImages,
-      },
-      {
-        id: "chenin-blanc",
-        title: "Chenin Blanc",
-        description: "",
-        images: freshLightImages,
-      },
-    ],
-  },
+ {
+     step: 5,
+     question: "Which grape varieties do you like?",
+     options: [
+       {
+         id: "cabernet-sauvignon",
+         title: "Cabernet Sauvignon",
+         description: "",
+         images: budgetImages,
+       },
+       {
+         id: "merlot",
+         title: "Merlot",
+         description: "",
+         images: midRangeImages,
+       },
+       {
+         id: "pinot-noir",
+         title: "Pinot Noir",
+         description: "",
+         images: higherTierImages,
+       },
+       {
+         id: "chardonnay",
+         title: "Chardonnay",
+         description: "",
+         images: fruityFlavorImages,
+       },
+       {
+         id: "muscat",
+         title: "Muscat",
+         description: "",
+         images: fruityFlavorImages,
+       },
+       {
+         id: "grenache",
+         title: "Grenache",
+         description: "",
+         images: neutralWineLevelImages,
+       },
+       {
+         id: "blend",
+         title: "Blend",
+         description: "",
+         images: midRangeImages,
+       },
+       {
+         id: "open-to-experiment-grape",
+         title: "Open To Experiment",
+         description: "",
+         images: midRangeImages,
+       },
+     ],
+   },
   {
     step: 6,
-    question: "What kind of experience are you looking for?",
+    question: "What aging potential are you looking for?",
     options: [
       {
-        id: "niche-rare",
-        title: "Niche / Rare",
-        description: "",
+        id: "drink-now",
+        title: "Drink Now",
+        description: "I want a wine that is ready to enjoy now",
         images: budgetImages,
       },
       {
-        id: "high-quality-classics",
-        title: "High-Quality Classics",
-        description: "",
+        id: "short-term-aging",
+        title: "Short-Term Aging",
+        description: "I want a wine that can improve over the next few years",
         images: higherTierImages,
       },
       {
-        id: "wines-for-comparative-tasting",
-        title: "Wines For Comparative Tasting",
-        description: "",
+        id: "long-term-aging",
+        title: "Long-Term Aging",
+        description: "I want a wine that can develop over time",
         images: eveningWithFriendsImages,
       },
       {
-        id: "wines-for-deep-analysis",
-        title: "Wines For Deep Analysis",
-        description: "",
+        id: "no-preference",
+        title: "No Preference",
+        description: "I’m open to recommendations",
         images: neutralWineLevelImages,
-      },
-      {
-        id: "wines-with-aging-potential",
-        title: "Wines With Aging Potential",
-        description: "",
-        images: somethingTastyImages,
       },
     ],
   },

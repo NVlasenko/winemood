@@ -25,7 +25,7 @@ import type { QuizQuestionConfig } from "./beginnerQuestions";
 export const enthusiastQuestions: QuizQuestionConfig[] = [
   {
     step: 2,
-    question: "Which wine styles do you usually choose?",
+    question: "Which sweetness level do you prefer?",
     options: [
       {
         id: "dry",
@@ -35,13 +35,13 @@ export const enthusiastQuestions: QuizQuestionConfig[] = [
       },
       {
         id: "semi-dry",
-        title: "Semi Dry",
+        title: "Semi-Dry",
         description: "",
         images: midRangeImages,
       },
       {
         id: "semi-sweet",
-        title: "Semi Sweet",
+        title: "Semi-Sweet",
         description: "",
         images: higherTierImages,
       },
@@ -61,7 +61,7 @@ export const enthusiastQuestions: QuizQuestionConfig[] = [
   },
   {
     step: 3,
-    question: "Which countries do you enjoy?",
+    question: "Which wine countries do you prefer?",
     options: [
       {
         id: "italy",
@@ -100,8 +100,8 @@ export const enthusiastQuestions: QuizQuestionConfig[] = [
         images: budgetImages,
       },
       {
-        id: "experiment",
-        title: "I Want To Experiment",
+        id: "open-to-experiment",
+        title: "Open To Experiment",
         description: "",
         images: neutralWineLevelImages,
       },
@@ -148,16 +148,23 @@ export const enthusiastQuestions: QuizQuestionConfig[] = [
         images: neutralWineLevelImages,
       },
       {
-        id: "experiment-grape",
-        title: "I Want To Experiment",
+        id: "blend",
+        title: "Blend",
+        description: "",
+        images: midRangeImages,
+      },
+      {
+        id: "open-to-experiment-grape",
+        title: "Open To Experiment",
         description: "",
         images: midRangeImages,
       },
     ],
   },
+
   {
     step: 5,
-    question: "What flavor profile are you looking for?",
+    question: "Which aroma notes do you prefer?",
     options: [
       {
         id: "fruity",
@@ -191,9 +198,15 @@ export const enthusiastQuestions: QuizQuestionConfig[] = [
       },
       {
         id: "nutty-honey",
-        title: "Nutty Honey",
+        title: "Nutty / Honey",
         description: "",
         images: higherTierImages,
+      },
+      {
+        id: "no-preference",
+        title: "No Preference",
+        description: "",
+        images: neutralWineLevelImages,
       },
     ],
   },

@@ -1,30 +1,18 @@
-import {
-  freshLightImages,
-  neutralImages,
-  slightlyTartImages,
-} from "@/components/quiz/QuizQuestion/config/beginner/taste-profile";
+import type { QuizQuestionConfig } from "@/types/quiz";
 
 import {
-  eveningWithFriendsImages,
-  somethingTastyImages,
-} from "@/components/quiz/QuizQuestion/config/beginner/occasion";
-
-import {
-  universalImages,
-} from "@/components/quiz/QuizQuestion/config/beginner/food-pairing";
-
-import {
-  budgetImages,
-  higherTierImages,
-  midRangeImages,
-  neutralWineLevelImages,
-} from "@/components/quiz/QuizQuestion/config/beginner/wine-level";
-
-import {
-  fruityFlavorImages,
-} from "@/components/quiz/QuizQuestion/config/enthusiast/flavor-profile";
-
-import type { QuizQuestionConfig } from "./beginnerQuestions";
+  BudgetIcon,
+  EveningWithFriendsIcon,
+  FreshLightIcon,
+  FruityFlavorIcon,
+  HigherTierIcon,
+  MidRangeIcon,
+  NeutralIcon,
+  NeutralWineLevelIcon,
+  SlightlyTartIcon,
+  SomethingTastyIcon,
+  UniversalIcon,
+} from "@/components/quiz/QuizQuestion/config/quizIcons";
 
 export const connoisseurQuestions: QuizQuestionConfig[] = [
   {
@@ -35,49 +23,49 @@ export const connoisseurQuestions: QuizQuestionConfig[] = [
         id: "burgundy",
         title: "Burgundy",
         description: "",
-        images: higherTierImages,
+        Icon: HigherTierIcon,
       },
       {
         id: "bordeaux",
         title: "Bordeaux",
         description: "",
-        images: midRangeImages,
+        Icon: MidRangeIcon,
       },
       {
         id: "piedmont",
         title: "Piedmont",
         description: "",
-        images: neutralImages,
+        Icon: NeutralIcon,
       },
       {
         id: "rioja",
         title: "Rioja",
         description: "",
-        images: higherTierImages,
+        Icon: HigherTierIcon,
       },
       {
         id: "niche-regions",
         title: "Niche Regions",
         description: "",
-        images: somethingTastyImages,
+        Icon: SomethingTastyIcon,
       },
       {
         id: "provence",
         title: "Provence",
         description: "",
-        images: higherTierImages,
+        Icon: HigherTierIcon,
       },
       {
         id: "ribera-del-duero",
         title: "Ribera del Duero",
         description: "",
-        images: midRangeImages,
+        Icon: MidRangeIcon,
       },
       {
         id: "open-to-experiment-region",
         title: "Open To Experiment",
         description: "",
-        images: neutralWineLevelImages,
+        Icon: NeutralWineLevelIcon,
       },
     ],
   },
@@ -89,25 +77,25 @@ export const connoisseurQuestions: QuizQuestionConfig[] = [
         id: "vegan",
         title: "Vegan",
         description: "",
-        images: higherTierImages,
+        Icon: HigherTierIcon,
       },
       {
         id: "organic",
         title: "Organic",
         description: "",
-        images: midRangeImages,
+        Icon: MidRangeIcon,
       },
       {
         id: "sustainable",
         title: "Sustainable",
         description: "",
-        images: freshLightImages,
+        Icon: FreshLightIcon,
       },
       {
         id: "no-preference",
-        title: "No preference",
+        title: "No Preference",
         description: "",
-        images: neutralImages,
+        Icon: NeutralIcon,
       },
     ],
   },
@@ -119,82 +107,82 @@ export const connoisseurQuestions: QuizQuestionConfig[] = [
         id: "light-bodied",
         title: "Light Bodied",
         description: "",
-        images: freshLightImages,
+        Icon: FreshLightIcon,
       },
       {
         id: "medium-bodied",
         title: "Medium Bodied",
         description: "",
-        images: slightlyTartImages,
+        Icon: SlightlyTartIcon,
       },
       {
         id: "full-bodied",
         title: "Full Bodied",
         description: "",
-        images: higherTierImages,
+        Icon: HigherTierIcon,
       },
       {
         id: "no-preference",
-        title: "No preference",
+        title: "No Preference",
         description: "",
-        images: universalImages,
+        Icon: UniversalIcon,
       },
     ],
   },
- {
-     step: 5,
-     question: "Which grape varieties do you like?",
-     options: [
-       {
-         id: "cabernet-sauvignon",
-         title: "Cabernet Sauvignon",
-         description: "",
-         images: budgetImages,
-       },
-       {
-         id: "merlot",
-         title: "Merlot",
-         description: "",
-         images: midRangeImages,
-       },
-       {
-         id: "pinot-noir",
-         title: "Pinot Noir",
-         description: "",
-         images: higherTierImages,
-       },
-       {
-         id: "chardonnay",
-         title: "Chardonnay",
-         description: "",
-         images: fruityFlavorImages,
-       },
-       {
-         id: "muscat",
-         title: "Muscat",
-         description: "",
-         images: fruityFlavorImages,
-       },
-       {
-         id: "grenache",
-         title: "Grenache",
-         description: "",
-         images: neutralWineLevelImages,
-       },
-       {
-         id: "blend",
-         title: "Blend",
-         description: "",
-         images: midRangeImages,
-       },
-       {
-         id: "open-to-experiment-grape",
-         title: "Open To Experiment",
-         description: "",
-         images: midRangeImages,
-       },
-     ],
-   },
+  {
+    step: 5,
+    question: "Which grape varieties do you like?",
+    options: [
+      {
+        id: "cabernet-sauvignon",
+        title: "Cabernet Sauvignon",
+        description: "",
+        Icon: BudgetIcon,
+      },
+      {
+        id: "merlot",
+        title: "Merlot",
+        description: "",
+        Icon: MidRangeIcon,
+      },
+      {
+        id: "pinot-noir",
+        title: "Pinot Noir",
+        description: "",
+        Icon: HigherTierIcon,
+      },
+      {
+        id: "chardonnay",
+        title: "Chardonnay",
+        description: "",
+        Icon: FruityFlavorIcon,
+      },
+      {
+        id: "muscat",
+        title: "Muscat",
+        description: "",
+        Icon: FruityFlavorIcon,
+      },
+      {
+        id: "grenache",
+        title: "Grenache",
+        description: "",
+        Icon: NeutralWineLevelIcon,
+      },
+      {
+        id: "blend",
+        title: "Blend",
+        description: "",
+        Icon: MidRangeIcon,
+      },
+      {
+        id: "open-to-experiment-grape",
+        title: "Open To Experiment",
+        description: "",
+        Icon: MidRangeIcon,
+      },
+    ],
+  },
   {
     step: 6,
     question: "What aging potential are you looking for?",
@@ -203,25 +191,25 @@ export const connoisseurQuestions: QuizQuestionConfig[] = [
         id: "drink-now",
         title: "Drink Now",
         description: "I want a wine that is ready to enjoy now",
-        images: budgetImages,
+        Icon: BudgetIcon,
       },
       {
         id: "short-term-aging",
         title: "Short-Term Aging",
         description: "I want a wine that can improve over the next few years",
-        images: higherTierImages,
+        Icon: HigherTierIcon,
       },
       {
         id: "long-term-aging",
         title: "Long-Term Aging",
         description: "I want a wine that can develop over time",
-        images: eveningWithFriendsImages,
+        Icon: EveningWithFriendsIcon,
       },
       {
         id: "no-preference",
         title: "No Preference",
         description: "I’m open to recommendations",
-        images: neutralWineLevelImages,
+        Icon: NeutralWineLevelIcon,
       },
     ],
   },

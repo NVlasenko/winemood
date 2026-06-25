@@ -5,16 +5,16 @@ import type { Wine } from "@/types/wine";
 
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { useFavorites } from "@/context/FavoritesContext";
-import { useMoodTheme } from "@/context/MoodThemeContext";
 import { formatLabel } from "@/utils/formatLabel";
 
 import backArrowIcon from "@/assets/images/icons/arrow-right.svg";
 import winePattern from "@/assets/images/wineCard/bg/wine-pattern.png";
 
+import BottleIcon from "@/assets/images/wineCard/icons/bottle-default.svg?react";
+import VintageIcon from "@/assets/images/wineCard/icons/vintage-default.svg?react";
+import SweetnessIcon from "@/assets/images/wineCard/icons/sweet-default.svg?react";
+
 import "./WineHero.scss";
-import { wineBottleIcons } from "../../config/wineBottleIcons";
-import { wineSweetnessIcons } from "../../config/wineSweetnessIcons";
-import { wineVintageIcons } from "../../config/wineVintageIcons";
 
 type Props = {
   wine: Wine;
@@ -24,15 +24,9 @@ const STARS = [1, 2, 3, 4, 5] as const;
 
 export const WineHero = ({ wine }: Props) => {
   const { favorites, toggleFavorite } = useFavorites();
-  const { moodTheme } = useMoodTheme();
 
   const isFavorite = favorites.includes(wine.id);
   const isMateusRose = wine.name === "Mateus Rosé";
-
-  const bottleIcon = wineBottleIcons[moodTheme] || wineBottleIcons.default;
-  const sweetnessIcon =
-    wineSweetnessIcons[moodTheme] || wineSweetnessIcons.default;
-  const vintageIcon = wineVintageIcons[moodTheme] || wineVintageIcons.default;
 
   const handleFavoriteClick = useCallback(() => {
     toggleFavorite(wine.id);
@@ -41,17 +35,17 @@ export const WineHero = ({ wine }: Props) => {
   const metaItems = [
     {
       id: "sweetness",
-      icon: sweetnessIcon,
+      Icon: SweetnessIcon,
       value: formatLabel(wine.sweetnessLevel.name),
     },
     {
       id: "volume",
-      icon: bottleIcon,
+      Icon: BottleIcon,
       value: `${wine.volumeMl} ML`,
     },
     {
       id: "vintage",
-      icon: vintageIcon,
+      Icon: VintageIcon,
       value: wine.vintage,
     },
   ];
@@ -133,14 +127,23 @@ export const WineHero = ({ wine }: Props) => {
             </div>
 
             <div className="wine-hero__meta">
-              {metaItems.map((item) => (
-                <div className="wine-hero__meta-item" key={item.id}>
-                  <img src={item.icon} alt="" />
-                  <span>{item.value}</span>
-                </div>
-              ))}
+              {metaItems.map((item) => {
+                const Icon = item.Icon;
+
+                return (
+                  <div className="wine-hero__meta-item" key={item.id}>
+                    <Icon
+                      className="wine-hero__meta-icon"
+                      aria-hidden="true"
+                      focusable="false"
+                    />
+
+                    <span>{item.value}</span>
+                  </div>
+                );
+              })}
             </div>
-        
+
             <p className="wine-hero__description">{wine.description}</p>
           </div>
 

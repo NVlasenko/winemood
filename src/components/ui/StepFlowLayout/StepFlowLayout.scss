@@ -137,12 +137,14 @@
     &--previous {
       grid-area: previous;
       justify-self: start;
+      text-decoration: none;
     }
 
     &--next {
       grid-area: next;
       justify-self: end;
       text-align: right;
+      text-decoration: none;
     }
   }
 

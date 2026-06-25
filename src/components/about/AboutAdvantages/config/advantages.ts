@@ -1,24 +1,24 @@
-import { number01Icons } from "./number01Icons";
-import { number02Icons } from "./number02Icons";
-import { number03Icons } from "./number03Icons";
+import Number01Icon from "@/assets/images/about-advantages/icons/01-default.svg?react";
+import Number02Icon from "@/assets/images/about-advantages/icons/02-default.svg?react";
+import Number03Icon from "@/assets/images/about-advantages/icons/03-default.svg?react";
 
 export const ADVANTAGES = [
   {
     id: "01",
     title: "Smart Recommendations",
     text: "Personalized wine suggestions based on your taste profile and preferences.",
-    icons: number01Icons,
+    Icon: Number01Icon,
   },
   {
     id: "02",
     title: "Wine Knowledge",
     text: "Learn about grape varieties, regions, tasting notes, and food pairings in a simple visual way.",
-    icons: number02Icons,
+    Icon: Number02Icon,
   },
   {
     id: "03",
     title: "Curated Collections",
     text: "Explore handpicked selections organized by mood, season, flavor, and occasion.",
-    icons: number03Icons,
+    Icon: Number03Icon,
   },
 ] as const;

@@ -1,5 +1,7 @@
 export { quizIntroOptions } from "./quizIntroOptions";
 
-export { beginnerImages } from "./beginner";
-export { enthusiastImages } from "./enthusiast";
-export { connoisseurImages } from "./connoisseur";
+import BeginnerIcon from "@/assets/images/quiz/intro/beginner-default.svg?react";
+import EnthusiastIcon from "@/assets/images/quiz/intro/enthusiast-default.svg?react";
+import ConnoisseurIcon from "@/assets/images/quiz/intro/connoisseur-default.svg?react";
+
+export { BeginnerIcon, EnthusiastIcon, ConnoisseurIcon };

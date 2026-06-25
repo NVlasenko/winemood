@@ -8,8 +8,8 @@
       y2="7.5"
       gradientUnits="userSpaceOnUse"
     >
-      <stop offset="0%" stop-color="#3D0203" />
-      <stop offset="100%" stop-color="#660708" />
+      <stop stop-color="var(--theme-icon-gradient-start)" />
+      <stop offset="1" stop-color="var(--theme-icon-gradient-end)" />
     </linearGradient>
   </defs>
 

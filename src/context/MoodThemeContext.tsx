@@ -52,6 +52,8 @@ export const MoodThemeProvider = ({ children }: React.PropsWithChildren) => {
       "--wine-background-start": theme.wineBackgroundStart,
       "--wine-background-middle": theme.wineBackgroundMiddle,
       "--wine-background-end": theme.wineBackgroundEnd,
+      "--theme-icon-gradient-start": theme.themeIconGradientStart,
+      "--theme-icon-gradient-end": theme.themeIconGradientEnd,
     }).forEach(([key, value]) => {
       root.style.setProperty(key, value);
     });

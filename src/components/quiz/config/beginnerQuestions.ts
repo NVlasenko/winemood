@@ -1,49 +1,30 @@
-import type { QuizQuestionOption } from "@/components/quiz/QuizQuestion";
+import type { QuizQuestionConfig } from "@/types/quiz";
 
 import {
-  freshLightImages,
-  fruityImages,
-  slightlySweetImages,
-  slightlyTartImages,
-} from "@/components/quiz/QuizQuestion/config/beginner/taste-profile";
-
-import {
-  dateNightImages,
-  dinnerAtHomeImages,
-  eveningWithFriendsImages,
-  giftImages,
-  somethingTastyImages,
-} from "@/components/quiz/QuizQuestion/config/beginner/occasion";
-
-import {
-  appetizersImages,
-  cheeseImages,
-  dessertImages,
-  fishImages,
-  meatImages,
-  pastaImages,
-  universalImages,
-} from "@/components/quiz/QuizQuestion/config/beginner/food-pairing";
-
-import {
-  budgetImages,
-  higherTierImages,
-  midRangeImages,
-  neutralWineLevelImages,
-} from "@/components/quiz/QuizQuestion/config/beginner/wine-level";
-
-import {
-  spicyFlavorImages,
-} from "@/components/quiz/QuizQuestion/config/enthusiast/flavor-profile";
-
-export type QuizQuestionConfig = {
-  step: number;
-  question: string;
-  options: QuizQuestionOption[];
-};
+  AppetizersIcon,
+  BudgetIcon,
+  CheeseIcon,
+  DateNightIcon,
+  DessertIcon,
+  DinnerAtHomeIcon,
+  EveningWithFriendsIcon,
+  FishIcon,
+  FreshLightIcon,
+  FruityIcon,
+  GiftIcon,
+  HigherTierIcon,
+  MeatIcon,
+  MidRangeIcon,
+  NeutralWineLevelIcon,
+  PastaIcon,
+  SlightlySweetIcon,
+  SlightlyTartIcon,
+  SomethingTastyIcon,
+  SpicyFlavorIcon,
+  UniversalIcon,
+} from "@/components/quiz/QuizQuestion/config/quizIcons";
 
 export const beginnerQuestions: QuizQuestionConfig[] = [
-
   {
     step: 2,
     question: "What type of wine do you prefer?",
@@ -52,31 +33,31 @@ export const beginnerQuestions: QuizQuestionConfig[] = [
         id: "premium",
         title: "Premium",
         description: "",
-        images: budgetImages,
+        Icon: BudgetIcon,
       },
       {
         id: "red",
         title: "Red",
         description: "",
-        images: midRangeImages,
+        Icon: MidRangeIcon,
       },
       {
         id: "rose",
         title: "Rosé",
         description: "",
-        images: higherTierImages,
+        Icon: HigherTierIcon,
       },
       {
         id: "sparkling",
         title: "Sparkling",
         description: "",
-        images: neutralWineLevelImages,
+        Icon: NeutralWineLevelIcon,
       },
       {
         id: "not-sure",
         title: "Recommend something",
         description: "",
-        images: neutralWineLevelImages,
+        Icon: NeutralWineLevelIcon,
       },
     ],
   },
@@ -88,31 +69,31 @@ export const beginnerQuestions: QuizQuestionConfig[] = [
         id: "date-night",
         title: "Date Night",
         description: "",
-        images: dateNightImages,
+        Icon: DateNightIcon,
       },
       {
         id: "evening-with-friends",
         title: "Evening With Friends",
         description: "",
-        images: eveningWithFriendsImages,
+        Icon: EveningWithFriendsIcon,
       },
       {
         id: "picnic",
         title: "Picnic",
         description: "",
-        images: dinnerAtHomeImages,
+        Icon: DinnerAtHomeIcon,
       },
       {
         id: "gift",
         title: "A Gift",
         description: "",
-        images: giftImages,
+        Icon: GiftIcon,
       },
       {
         id: "something-tasty",
         title: "I Just Want Something Tasty",
         description: "",
-        images: somethingTastyImages,
+        Icon: SomethingTastyIcon,
       },
     ],
   },
@@ -124,43 +105,43 @@ export const beginnerQuestions: QuizQuestionConfig[] = [
         id: "meat",
         title: "Meat",
         description: "",
-        images: meatImages,
+        Icon: MeatIcon,
       },
       {
         id: "fish",
         title: "Fish",
         description: "",
-        images: fishImages,
+        Icon: FishIcon,
       },
       {
         id: "pasta",
         title: "Pasta",
         description: "",
-        images: pastaImages,
+        Icon: PastaIcon,
       },
       {
         id: "cheese",
         title: "Cheese",
         description: "",
-        images: cheeseImages,
+        Icon: CheeseIcon,
       },
       {
         id: "appetizers",
         title: "Appetizers",
         description: "",
-        images: appetizersImages,
+        Icon: AppetizersIcon,
       },
       {
         id: "dessert",
         title: "Dessert",
         description: "",
-        images: dessertImages,
+        Icon: DessertIcon,
       },
       {
         id: "universal",
         title: "Universal / Not Sure",
         description: "",
-        images: universalImages,
+        Icon: UniversalIcon,
       },
     ],
   },
@@ -172,76 +153,74 @@ export const beginnerQuestions: QuizQuestionConfig[] = [
         id: "budget",
         title: "Budget",
         description: "Affordable but tasty",
-        images: budgetImages,
+        Icon: BudgetIcon,
       },
       {
         id: "mid-range",
         title: "Mid-Range",
         description: "Something quality without going overboard",
-        images: midRangeImages,
+        Icon: MidRangeIcon,
       },
       {
         id: "higher-tier",
         title: "Higher Tier",
         description: "I want something more interesting",
-        images: higherTierImages,
+        Icon: HigherTierIcon,
       },
       {
-        id: "no-Preference",
+        id: "no-preference",
         title: "No Preference",
         description: "Doesn’t matter, as long as it tastes good",
-        images: neutralWineLevelImages,
+        Icon: NeutralWineLevelIcon,
       },
     ],
   },
-
-   {
-      step: 6,
-      question: "Which aroma notes do you prefer?",
-      options: [
-        {
-          id: "fruity",
-          title: "Fruity",
-          description: "",
-          images: fruityImages,
-        },
-        {
-          id: "mineral",
-          title: "Mineral",
-          description: "",
-          images: freshLightImages,
-        },
-        {
-          id: "oaky-vanilla",
-          title: "Oaky / Vanilla",
-          description: "",
-          images: slightlySweetImages,
-        },
-        {
-          id: "spicy",
-          title: "Spicy",
-          description: "",
-          images: spicyFlavorImages,
-        },
-        {
-          id: "floral",
-          title: "Floral",
-          description: "",
-          images: slightlyTartImages,
-        },
-        {
-          id: "nutty-honey",
-          title: "Nutty / Honey",
-          description: "",
-          images: higherTierImages,
-        },
-        {
-          id: "no-preference",
-          title: "No Preference",
-          description: "I’m open to recommendations",
-          images: neutralWineLevelImages,
-        },
-      ],
-    },
-
+  {
+    step: 6,
+    question: "Which aroma notes do you prefer?",
+    options: [
+      {
+        id: "fruity",
+        title: "Fruity",
+        description: "",
+        Icon: FruityIcon,
+      },
+      {
+        id: "mineral",
+        title: "Mineral",
+        description: "",
+        Icon: FreshLightIcon,
+      },
+      {
+        id: "oaky-vanilla",
+        title: "Oaky / Vanilla",
+        description: "",
+        Icon: SlightlySweetIcon,
+      },
+      {
+        id: "spicy",
+        title: "Spicy",
+        description: "",
+        Icon: SpicyFlavorIcon,
+      },
+      {
+        id: "floral",
+        title: "Floral",
+        description: "",
+        Icon: SlightlyTartIcon,
+      },
+      {
+        id: "nutty-honey",
+        title: "Nutty / Honey",
+        description: "",
+        Icon: HigherTierIcon,
+      },
+      {
+        id: "no-preference",
+        title: "No Preference",
+        description: "I’m open to recommendations",
+        Icon: NeutralWineLevelIcon,
+      },
+    ],
+  },
 ];

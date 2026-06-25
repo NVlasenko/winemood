@@ -1,7 +1,7 @@
-import BarrelIcon from "@/assets/images/aboutUS/icons/barrel-default.svg?react";
-import PersonIcon from "@/assets/images/aboutUS/icons/person-default.svg?react";
-import LocationIcon from "@/assets/images/aboutUS/icons/location-default.svg?react";
-import LikeIcon from "@/assets/images/aboutUS/icons/like-default.svg?react";
+import BarrelIcon from "@/assets/images/aboutUs/icons/barrel-default.svg?react";
+import PersonIcon from "@/assets/images/aboutUs/icons/person-default.svg?react";
+import LocationIcon from "@/assets/images/aboutUs/icons/location-default.svg?react";
+import LikeIcon from "@/assets/images/aboutUs/icons/like-default.svg?react";
 
 export const FEATURES = [
   {

@@ -5,12 +5,9 @@ import { Link } from "react-router-dom";
 import arrowRight from "@/assets/images/icons/arrow-right.svg";
 import backArrowIcon from "@/assets/images/icons/arrow-right.svg";
 import { SectionTitle } from "@/components/ui/SectionTitle";
-import { useMoodTheme } from "@/context/MoodThemeContext";
 
-import {
-  nextArrowByMood,
-  previousArrowByMood,
-} from "./config/stepFlowArrows";
+import NextArrowIcon from "@/assets/images/moods/mood-arrows/arrow-default.svg?react";
+import PreviousArrowIcon from "@/assets/images/moods/mood-arrows/arrow-grey.svg?react";
 
 import "./StepFlowLayout.scss";
 
@@ -53,12 +50,6 @@ export const StepFlowLayout = ({
   onNext,
   children,
 }: Props) => {
-  const { moodTheme } = useMoodTheme();
-
-  const nextArrow = nextArrowByMood[moodTheme] || nextArrowByMood.default;
-  const previousArrow =
-    previousArrowByMood[moodTheme] || previousArrowByMood.default;
-
   const steps = buildSteps(totalSteps);
   const isLastStep = currentStep === totalSteps;
   const finishLabel = completedNextLabel || nextLabel;
@@ -91,11 +82,10 @@ export const StepFlowLayout = ({
             >
               <span>{previousLabel}</span>
 
-              <img
+              <PreviousArrowIcon
                 className="step-flow-layout__nav-arrow step-flow-layout__nav-arrow--previous"
-                src={previousArrow}
-                alt=""
                 aria-hidden="true"
+                focusable="false"
               />
             </button>
 
@@ -149,11 +139,10 @@ export const StepFlowLayout = ({
                 disabled={!canGoNext}
                 onClick={onNext}
               >
-                <img
+                <NextArrowIcon
                   className="step-flow-layout__nav-arrow"
-                  src={nextArrow}
-                  alt=""
                   aria-hidden="true"
+                  focusable="false"
                 />
 
                 <span>{nextLabel}</span>

@@ -1,27 +1,27 @@
-import { barrelIcons } from "./barrelIcons";
-import { personIcons } from "./personIcons";
-import { likeIcons } from "./likeIcons";
-import { locationIcons } from "./locationIcons";
+import BarrelIcon from "@/assets/images/aboutUS/icons/barrel-default.svg?react";
+import PersonIcon from "@/assets/images/aboutUS/icons/person-default.svg?react";
+import LocationIcon from "@/assets/images/aboutUS/icons/location-default.svg?react";
+import LikeIcon from "@/assets/images/aboutUS/icons/like-default.svg?react";
 
 export const FEATURES = [
   {
     id: 1,
     title: "UNDERSTAND WINE STYLES",
-    icons: barrelIcons,
+    Icon: BarrelIcon,
   },
   {
     id: 2,
     title: "BUILD PERSONAL TASTE PROFILES",
-    icons: personIcons,
+    Icon: PersonIcon,
   },
   {
     id: 3,
     title: "DISCOVER NEW REGIONS",
-    icons: locationIcons,
+    Icon: LocationIcon,
   },
   {
     id: 4,
     title: "RECEIVE INTELLIGENT RECOMMENDATIONS",
-    icons: likeIcons,
+    Icon: LikeIcon,
   },
 ] as const;

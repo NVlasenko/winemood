@@ -18,7 +18,7 @@ export const QuizQuestion = ({
   selectedOptionId,
   onSelectOption,
 }: Props) => {
-  const isCompact = options.length > 5;
+  const isCompact = options.length >= 5;
 
   return (
     <div className={`quiz-question ${isCompact ? "quiz-question--compact" : ""}`}>

@@ -365,7 +365,7 @@
 
     &__back {
       margin-top: 48px;
-      gap: 14px;
+      gap: 8px;
 
       span {
         font-size: 16px;
@@ -388,7 +388,7 @@
 
       display: flex;
       flex-direction: row;
-      justify-content: space-between;
+      justify-content: space-around;
       align-items: center;
       gap: 0;
     }
@@ -428,8 +428,8 @@
     }
 
     &__pagination-line {
-      width: 74px;
-      flex: 0 0 74px;
+      width: 60px;
+      flex: 0 0 60px;
     }
 
     &__page {

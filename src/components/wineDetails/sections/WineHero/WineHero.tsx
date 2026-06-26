@@ -1,10 +1,14 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
 
 import type { Wine } from "@/types/wine";
 
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { useFavorites } from "@/context/FavoritesContext";
+import {
+  clearWineDetailsBackTarget,
+  getWineDetailsBackTarget,
+} from "@/shared/navigation/wineDetailsBackTargetStorage";
 import { formatLabel } from "@/utils/formatLabel";
 
 import backArrowIcon from "@/assets/images/icons/arrow-right.svg";
@@ -25,8 +29,17 @@ const STARS = [1, 2, 3, 4, 5] as const;
 export const WineHero = ({ wine }: Props) => {
   const { favorites, toggleFavorite } = useFavorites();
 
+  const backTarget = useMemo(() => getWineDetailsBackTarget(), []);
+
+  const backTo = backTarget?.to ?? "/catalog";
+  const backLabel = backTarget?.label ?? "Catalog";
+
   const isFavorite = favorites.includes(wine.id);
   const isMateusRose = wine.name === "Mateus Rosé";
+
+  const handleBackClick = useCallback(() => {
+    clearWineDetailsBackTarget();
+  }, []);
 
   const handleFavoriteClick = useCallback(() => {
     toggleFavorite(wine.id);
@@ -56,9 +69,13 @@ export const WineHero = ({ wine }: Props) => {
 
       <div className="container">
         <div className="wine-hero__top">
-          <Link to="/catalog" className="wine-hero__back">
+          <Link
+            to={backTo}
+            className="wine-hero__back"
+            onClick={handleBackClick}
+          >
             <img src={backArrowIcon} alt="" />
-            <span>Catalog</span>
+            <span>{backLabel}</span>
           </Link>
 
           <button

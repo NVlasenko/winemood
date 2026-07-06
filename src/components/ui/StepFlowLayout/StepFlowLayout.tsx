@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Fragment } from "react";
+import { Fragment, useMemo } from "react";
 import { Link } from "react-router-dom";
 
 import arrowRight from "@/assets/images/icons/arrow-right.svg";
@@ -50,7 +50,7 @@ export const StepFlowLayout = ({
   onNext,
   children,
 }: Props) => {
-  const steps = buildSteps(totalSteps);
+  const steps = useMemo(() => buildSteps(totalSteps), [totalSteps]);
   const isLastStep = currentStep === totalSteps;
   const finishLabel = completedNextLabel || nextLabel;
 

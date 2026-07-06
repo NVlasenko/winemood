@@ -10,7 +10,7 @@ export const SectionTitle = ({ title }: Props) => {
       <span className="section-title__line section-title__line--left" />
 
       <span className="section-title__text-wrap">
-        <h2 className="section-title__text">{title}</h2>
+        <h1 className="section-title__text">{title}</h1>
       </span>
 
       <span className="section-title__line section-title__line--right" />

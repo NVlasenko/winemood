@@ -3,7 +3,7 @@ import { useId } from "react";
 import "./WineGlassLoader.scss";
 
 export const WineGlassLoader = () => {
-  const id = useId();
+  const id = useId().replace(/:/g, "");
 
   const clipPathId = `${id}-wine-bowl-clip`;
   const gradientId = `${id}-wine-gradient`;

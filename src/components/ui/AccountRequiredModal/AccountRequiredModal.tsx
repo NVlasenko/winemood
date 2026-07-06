@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import arrowRightIcon from "@/assets/images/icons/arrow-right.svg";
@@ -33,12 +34,36 @@ export const AccountRequiredModal = ({
   onContinue,
   onCancel,
 }: Props) => {
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) {
     return null;
   }
 
   return (
-    <div className="account-required-modal" role="dialog" aria-modal="true">
+    <div
+      className="account-required-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="account-required-modal-title"
+      aria-describedby="account-required-modal-description"
+    >
       <button
         className="account-required-modal__overlay"
         type="button"
@@ -52,9 +77,19 @@ export const AccountRequiredModal = ({
           <span className="account-required-modal__lock-body" />
         </div>
 
-        <h2 className="account-required-modal__title">{title}</h2>
+        <h2
+          id="account-required-modal-title"
+          className="account-required-modal__title"
+        >
+          {title}
+        </h2>
 
-        <p className="account-required-modal__text">{text}</p>
+        <p
+          id="account-required-modal-description"
+          className="account-required-modal__text"
+        >
+          {text}
+        </p>
 
         <div className="account-required-modal__actions">
           <Link to={primaryTo} className="account-required-modal__primary">

@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import type { Wine } from "@/types/wine";
-
 import {
   QuizIntro,
   type QuizExperienceLevel,
@@ -18,11 +16,11 @@ import {
 
 import { StepFlowLayout } from "@/components/ui/StepFlowLayout";
 
-import { buildQuizRequest } from "@/utils/buildQuizRequest";
 import { quizApi } from "@/shared/api/quizApi";
+import { buildQuizRequest } from "@/utils/buildQuizRequest";
 
 import "./QuizPage.scss";
-import { clearQuizResult, getSavedQuizResult, saveQuizResult } from "@/utils/quizResultStorage";
+import { useQuizSession } from "@/context/QuizSessionContext";
 
 const QUIZ_TOTAL_STEPS = 6;
 const FIRST_QUESTION_STEP = 1;
@@ -90,9 +88,20 @@ const getSavedQuizProgress = (): SavedQuizProgress | null => {
   }
 };
 
+const scrollToPageTop = () => {
+  requestAnimationFrame(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "auto",
+    });
+  });
+};
+
 export const QuizPage = () => {
+  const { quizResult, saveQuizResult, clearQuizResult } = useQuizSession();
+
   const savedProgress = useMemo(() => getSavedQuizProgress(), []);
-  const savedQuizResult = useMemo(() => getSavedQuizResult(), []);
 
   const [currentStep, setCurrentStep] = useState(
     savedProgress?.currentStep ?? FIRST_QUESTION_STEP,
@@ -108,7 +117,6 @@ export const QuizPage = () => {
 
   const [isFinishModalOpen, setIsFinishModalOpen] = useState(false);
   const [isPreparingResults, setIsPreparingResults] = useState(false);
-  const [quizResult, setQuizResult] = useState<Wine[] | null>(savedQuizResult);
   const [quizError, setQuizError] = useState<string | null>(null);
 
   const currentQuestions = useMemo(() => {
@@ -131,6 +139,10 @@ export const QuizPage = () => {
       : Boolean(selectedAnswerId);
 
   useEffect(() => {
+    scrollToPageTop();
+  }, [currentStep, quizResult]);
+
+  useEffect(() => {
     if (!selectedLevel) {
       return;
     }
@@ -144,15 +156,17 @@ export const QuizPage = () => {
     localStorage.setItem(QUIZ_PROGRESS_STORAGE_KEY, JSON.stringify(progress));
   }, [answers, currentStep, selectedLevel]);
 
-  const handleSelectLevel = useCallback((level: QuizExperienceLevel) => {
-    clearQuizResult();
+  const handleSelectLevel = useCallback(
+    (level: QuizExperienceLevel) => {
+      clearQuizResult();
 
-    setSelectedLevel(level);
-    setAnswers({});
-    setCurrentStep(FIRST_QUESTION_STEP);
-    setQuizError(null);
-    setQuizResult(null);
-  }, []);
+      setSelectedLevel(level);
+      setAnswers({});
+      setCurrentStep(FIRST_QUESTION_STEP);
+      setQuizError(null);
+    },
+    [clearQuizResult],
+  );
 
   const handleSelectAnswer = useCallback(
     (optionId: string) => {
@@ -201,8 +215,6 @@ export const QuizPage = () => {
 
       saveQuizResult(result);
       localStorage.removeItem(QUIZ_PROGRESS_STORAGE_KEY);
-
-      setQuizResult(result);
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Failed to get quiz results";
@@ -211,7 +223,7 @@ export const QuizPage = () => {
     } finally {
       setIsPreparingResults(false);
     }
-  }, [answers, currentQuestions, selectedLevel]);
+  }, [answers, currentQuestions, saveQuizResult, selectedLevel]);
 
   if (quizResult) {
     return <QuizResults wines={quizResult} />;

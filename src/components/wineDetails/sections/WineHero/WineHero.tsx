@@ -1,14 +1,10 @@
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { Link } from "react-router-dom";
 
 import type { Wine } from "@/types/wine";
 
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { useFavorites } from "@/context/FavoritesContext";
-import {
-  clearWineDetailsBackTarget,
-  getWineDetailsBackTarget,
-} from "@/shared/navigation/wineDetailsBackTargetStorage";
 import { formatLabel } from "@/utils/formatLabel";
 
 import backArrowIcon from "@/assets/images/icons/arrow-right.svg";
@@ -19,6 +15,7 @@ import VintageIcon from "@/assets/images/wineCard/icons/vintage-default.svg?reac
 import SweetnessIcon from "@/assets/images/wineCard/icons/sweet-default.svg?react";
 
 import "./WineHero.scss";
+import { useQuizSession } from "@/context/QuizSessionContext";
 
 type Props = {
   wine: Wine;
@@ -28,8 +25,7 @@ const STARS = [1, 2, 3, 4, 5] as const;
 
 export const WineHero = ({ wine }: Props) => {
   const { favorites, toggleFavorite } = useFavorites();
-
-  const backTarget = useMemo(() => getWineDetailsBackTarget(), []);
+  const { backTarget, clearWineDetailsBackTarget } = useQuizSession();
 
   const backTo = backTarget?.to ?? "/catalog";
   const backLabel = backTarget?.label ?? "Catalog";
@@ -39,7 +35,7 @@ export const WineHero = ({ wine }: Props) => {
 
   const handleBackClick = useCallback(() => {
     clearWineDetailsBackTarget();
-  }, []);
+  }, [clearWineDetailsBackTarget]);
 
   const handleFavoriteClick = useCallback(() => {
     toggleFavorite(wine.id);

@@ -5,12 +5,12 @@ import { AboutPage } from "@/pages/AboutPage";
 import { CatalogPage } from "@/pages/CatalogPage";
 import { HistoryPage } from "@/pages/HistoryPage";
 import { HomePage } from "@/pages/HomePage";
+import { QuizPage } from "@/pages/QuizPage";
 import { WineDetailsPage } from "@/pages/WineDetailsPage";
 import { WriteReviewPage } from "@/pages/WriteReviewPage";
-
+import { ScrollToTop } from "@/components/layout/ScrollToTop/ScrollToTop";
 import { FavoritesProvider } from "@/context/FavoritesContext";
-import { ScrollToTop } from "./components/layout/ScrollToTop/ScrollToTop";
-import { QuizPage } from "./pages/QuizPage";
+import { QuizSessionProvider } from "./context/QuizSessionContext";
 
 const ROUTES = {
   home: "/",
@@ -24,22 +24,24 @@ const ROUTES = {
 
 export const Root = () => {
   return (
-    <FavoritesProvider>
-      <HashRouter>
-        <ScrollToTop />
+    <HashRouter>
+      <FavoritesProvider>
+        <QuizSessionProvider>
+          <ScrollToTop />
 
-        <Routes>
-          <Route path={ROUTES.home} element={<App />}>
-            <Route index element={<HomePage />} />
-            <Route path={ROUTES.catalog} element={<CatalogPage />} />
-            <Route path={ROUTES.wineDetails} element={<WineDetailsPage />} />
-            <Route path={ROUTES.writeReview} element={<WriteReviewPage />} />
-            <Route path={ROUTES.about} element={<AboutPage />} />
-            <Route path={ROUTES.history} element={<HistoryPage />} />
-            <Route path={ROUTES.quiz} element={<QuizPage />} />
-          </Route>
-        </Routes>
-      </HashRouter>
-    </FavoritesProvider>
+          <Routes>
+            <Route path={ROUTES.home} element={<App />}>
+              <Route index element={<HomePage />} />
+              <Route path={ROUTES.catalog} element={<CatalogPage />} />
+              <Route path={ROUTES.wineDetails} element={<WineDetailsPage />} />
+              <Route path={ROUTES.writeReview} element={<WriteReviewPage />} />
+              <Route path={ROUTES.about} element={<AboutPage />} />
+              <Route path={ROUTES.history} element={<HistoryPage />} />
+              <Route path={ROUTES.quiz} element={<QuizPage />} />
+            </Route>
+          </Routes>
+        </QuizSessionProvider>
+      </FavoritesProvider>
+    </HashRouter>
   );
 };

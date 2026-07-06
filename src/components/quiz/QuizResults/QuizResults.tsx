@@ -8,15 +8,11 @@ import { WineCatalogCard } from "@/components/catalog/WineCatalogCard";
 import { AccountRequiredModal } from "@/components/ui/AccountRequiredModal";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { useFavorites } from "@/context/FavoritesContext";
-import {
-  clearWineDetailsBackTarget,
-  markWineDetailsOpenedFromQuizResults,
-} from "@/shared/navigation/wineDetailsBackTargetStorage";
 
 import arrowRightIcon from "@/assets/images/icons/arrow-right.svg";
 
 import "./QuizResults.scss";
-import { clearQuizResult } from "@/utils/quizResultStorage";
+import { useQuizSession } from "@/context/QuizSessionContext";
 
 type Props = {
   wines: Wine[];
@@ -46,6 +42,12 @@ export const QuizResults = ({ wines }: Props) => {
   const navigate = useNavigate();
   const { favorites, toggleFavorite } = useFavorites();
 
+  const {
+    clearQuizResult,
+    clearWineDetailsBackTarget,
+    markWineDetailsOpenedFromQuizResults,
+  } = useQuizSession();
+
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [pendingPath, setPendingPath] = useState<string | null>(null);
 
@@ -71,11 +73,11 @@ export const QuizResults = ({ wines }: Props) => {
     setPendingPath(null);
 
     navigate(pendingPath);
-  }, [navigate, pendingPath]);
+  }, [clearQuizResult, clearWineDetailsBackTarget, navigate, pendingPath]);
 
   useEffect(() => {
     clearWineDetailsBackTarget();
-  }, []);
+  }, [clearWineDetailsBackTarget]);
 
   useEffect(() => {
     if (!shouldShowAccountModal) {
@@ -139,7 +141,7 @@ export const QuizResults = ({ wines }: Props) => {
     return () => {
       document.removeEventListener("click", handleDocumentClick, true);
     };
-  }, [shouldShowAccountModal]);
+  }, [markWineDetailsOpenedFromQuizResults, shouldShowAccountModal]);
 
   return (
     <>

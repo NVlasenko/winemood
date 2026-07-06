@@ -1,15 +1,5 @@
-import { useMemo } from "react";
-
-import { useMoodTheme } from "@/context/MoodThemeContext";
-
+import type { QuizQuestionOption } from "@/types/quiz";
 import "./QuizQuestion.scss";
-
-export type QuizQuestionOption = {
-  id: string;
-  title: string;
-  description: string;
-  images: Record<string, string>;
-};
 
 type Props = {
   step: number;
@@ -28,25 +18,10 @@ export const QuizQuestion = ({
   selectedOptionId,
   onSelectOption,
 }: Props) => {
-  const { moodTheme } = useMoodTheme();
-
-  const preparedOptions = useMemo(
-    () =>
-      options.map((option) => ({
-        ...option,
-        image: option.images[moodTheme] || option.images.default,
-      })),
-    [moodTheme, options],
-  );
-
-  const isCompact = preparedOptions.length > 5;
+  const isCompact = options.length >= 5;
 
   return (
-    <div
-      className={`quiz-question ${
-        isCompact ? "quiz-question--compact" : ""
-      }`}
-    >
+    <div className={`quiz-question ${isCompact ? "quiz-question--compact" : ""}`}>
       <p className="quiz-question__step">
         Question {step} of {totalSteps}
       </p>
@@ -55,11 +30,12 @@ export const QuizQuestion = ({
 
       <div
         className={`quiz-question__options ${
-          preparedOptions.length <= 3 ? "quiz-question__options--stretch" : ""
+          options.length <= 3 ? "quiz-question__options--stretch" : ""
         }`}
       >
-        {preparedOptions.map((option) => {
+        {options.map((option) => {
           const isSelected = selectedOptionId === option.id;
+          const Icon = option.Icon;
 
           return (
             <button
@@ -77,11 +53,10 @@ export const QuizQuestion = ({
                 </span>
               )}
 
-              <img
+              <Icon
                 className="quiz-question__icon"
-                src={option.image}
-                alt=""
                 aria-hidden="true"
+                focusable="false"
               />
 
               <span className="quiz-question__title">{option.title}</span>

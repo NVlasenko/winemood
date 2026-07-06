@@ -1,11 +1,9 @@
-import { useMemo } from "react";
-
-import { useMoodTheme } from "@/context/MoodThemeContext";
+import type { ComponentType, SVGProps } from "react";
 
 import {
-  beginnerImages,
-  connoisseurImages,
-  enthusiastImages,
+  BeginnerIcon,
+  ConnoisseurIcon,
+  EnthusiastIcon,
 } from "./config";
 
 import "./QuizIntro.scss";
@@ -16,7 +14,7 @@ type QuizIntroOption = {
   id: QuizExperienceLevel;
   title: string;
   description: string;
-  images: Record<string, string>;
+  Icon: ComponentType<SVGProps<SVGSVGElement>>;
 };
 
 type Props = {
@@ -30,34 +28,23 @@ const QUIZ_INTRO_OPTIONS: QuizIntroOption[] = [
     title: "Beginner",
     description:
       "Just stepping into the bar. Recommend something simple and tasty",
-    images: beginnerImages,
+    Icon: BeginnerIcon,
   },
   {
     id: "enthusiast",
     title: "Enthusiast",
     description: "I already know what I like. I want something in my style",
-    images: enthusiastImages,
+    Icon: EnthusiastIcon,
   },
   {
     id: "connoisseur",
     title: "Connoisseur",
     description: "I’m basically a sommelier here. I need details and precision",
-    images: connoisseurImages,
+    Icon: ConnoisseurIcon,
   },
 ];
 
 export const QuizIntro = ({ selectedLevel, onSelectLevel }: Props) => {
-  const { moodTheme } = useMoodTheme();
-
-  const options = useMemo(
-    () =>
-      QUIZ_INTRO_OPTIONS.map((option) => ({
-        ...option,
-        image: option.images[moodTheme] || option.images.default,
-      })),
-    [moodTheme],
-  );
-
   return (
     <div className="quiz-intro">
       <p className="quiz-intro__step">Question 1 of 6</p>
@@ -67,8 +54,9 @@ export const QuizIntro = ({ selectedLevel, onSelectLevel }: Props) => {
       </h2>
 
       <div className="quiz-intro__options">
-        {options.map((option) => {
+        {QUIZ_INTRO_OPTIONS.map((option) => {
           const isSelected = selectedLevel === option.id;
+          const Icon = option.Icon;
 
           return (
             <button
@@ -86,11 +74,10 @@ export const QuizIntro = ({ selectedLevel, onSelectLevel }: Props) => {
                 </span>
               )}
 
-              <img
+              <Icon
                 className="quiz-intro__icon"
-                src={option.image}
-                alt=""
                 aria-hidden="true"
+                focusable="false"
               />
 
               <span className="quiz-intro__title">{option.title}</span>

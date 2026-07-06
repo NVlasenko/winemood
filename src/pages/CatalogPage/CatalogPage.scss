@@ -725,7 +725,7 @@
   }
 
   @include on-desktop {
-    padding: 254px 0 0;
+    padding: 200px 0 0;
 
     &__sort-label {
       font-size: 16px;
@@ -736,7 +736,7 @@
     }
 
     &__controls {
-      margin-top: 104px;
+      margin-top: 50px;
       gap: 25px;
     }
 

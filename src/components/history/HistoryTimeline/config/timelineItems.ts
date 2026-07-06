@@ -3,34 +3,34 @@ import timeline1950s from "@/assets/images/history/timeline/img/timeline-1950s.p
 import timeline1980s from "@/assets/images/history/timeline/img/timeline-1980s.png";
 import timelineToday from "@/assets/images/history/timeline/img/timeline-today.png";
 
-import { year1920sIcons } from "./year1920sIcons";
-import { year1950sIcons } from "./year1950sIcons";
-import { year1980sIcons } from "./year1980sIcons";
-import { todayIcons } from "./todayIcons";
+import Year1920sIcon from "@/assets/images/history/timeline/icons/1920s-default.svg?react";
+import Year1950sIcon from "@/assets/images/history/timeline/icons/1950s-default.svg?react";
+import Year1980sIcon from "@/assets/images/history/timeline/icons/1980s-default.svg?react";
+import TodayIcon from "@/assets/images/history/timeline/icons/today-default.svg?react";
 
 export const TIMELINE_ITEMS = [
   {
     id: "1920s",
     image: timeline1920s,
-    icons: year1920sIcons,
+    Icon: Year1920sIcon,
     text: "The first family winery and the beginning of a tradition.",
   },
   {
     id: "1950s",
     image: timeline1950s,
-    icons: year1950sIcons,
+    Icon: Year1950sIcon,
     text: "Expansion of vineyards and refinement of winemaking techniques.",
   },
   {
     id: "1980s",
     image: timeline1980s,
-    icons: year1980sIcons,
+    Icon: Year1980sIcon,
     text: "New technologies introduced while preserving classic methods.",
   },
   {
     id: "today",
     image: timelineToday,
-    icons: todayIcons,
+    Icon: TodayIcon,
     text: "Modern wine culture connects tradition, technology, and personal taste.",
   },
 ] as const;

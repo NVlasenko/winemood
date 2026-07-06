@@ -23,6 +23,9 @@ export const moodThemeValues: Record<
     wineBackgroundStart: string;
     wineBackgroundMiddle: string;
     wineBackgroundEnd: string;
+
+    themeIconGradientStart: string;
+    themeIconGradientEnd: string;
   }
 > = {
   default: {
@@ -50,6 +53,9 @@ export const moodThemeValues: Record<
     wineBackgroundStart: "#020202",
     wineBackgroundMiddle: "#080202",
     wineBackgroundEnd: "#3d080a",
+
+    themeIconGradientStart: "#660708",
+    themeIconGradientEnd: "#A4161A",
   },
 
   celebration: {
@@ -77,6 +83,9 @@ export const moodThemeValues: Record<
     wineBackgroundStart: "#1f081d",
     wineBackgroundMiddle: "#3d1038",
     wineBackgroundEnd: "#6b1e5e",
+
+    themeIconGradientStart: "#A838AE",
+    themeIconGradientEnd: "#F7AAFB",
   },
 
   cozy: {
@@ -104,6 +113,9 @@ export const moodThemeValues: Record<
     wineBackgroundStart: "#020611",
     wineBackgroundMiddle: "#0b1c36",
     wineBackgroundEnd: "#163f73",
+
+    themeIconGradientStart: "#043976",
+    themeIconGradientEnd: "#7DD3FC",
   },
 
   dateNight: {
@@ -131,6 +143,9 @@ export const moodThemeValues: Record<
     wineBackgroundStart: "#060206",
     wineBackgroundMiddle: "#220a1d",
     wineBackgroundEnd: "#5e103e",
+
+    themeIconGradientStart: "#8D0E67",
+    themeIconGradientEnd: "#FF4FA3",
   },
 
   culinary: {
@@ -158,5 +173,8 @@ export const moodThemeValues: Record<
     wineBackgroundStart: "#0b0502",
     wineBackgroundMiddle: "#2e1409",
     wineBackgroundEnd: "#6b2a12",
+
+    themeIconGradientStart: "#9A2A12",
+    themeIconGradientEnd: "#FF5E32",
   },
 };

@@ -1,5 +1,5 @@
-import { useCallback, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 import searchIcon from "@/assets/images/icons/search.svg";
 import iconProfile from "@/assets/images/icons/icon-account.svg";
@@ -9,15 +9,26 @@ import "./Header.scss";
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const location = useLocation();
   const navigate = useNavigate();
 
   const closeMenu = useCallback(() => {
     setIsMenuOpen(false);
   }, []);
-  
+
+  useEffect(() => {
+    closeMenu();
+  }, [closeMenu, location.pathname, location.search]);
+
   const handleSearchClick = useCallback(() => {
     closeMenu();
     navigate("/catalog?searchOpen=true");
+  }, [closeMenu, navigate]);
+
+  const handleProfileClick = useCallback(() => {
+    closeMenu();
+    navigate("/profile");
   }, [closeMenu, navigate]);
 
   const toggleMenu = useCallback(() => {
@@ -61,7 +72,12 @@ export const Header = () => {
               <img src={searchIcon} alt="" aria-hidden="true" />
             </button>
 
-            <button className="header__icon" type="button" aria-label="Profile">
+            <button
+              className="header__icon"
+              type="button"
+              aria-label="Profile"
+              onClick={handleProfileClick}
+            >
               <img src={iconProfile} alt="" aria-hidden="true" />
             </button>
           </div>

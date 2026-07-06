@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   QuizIntro,
@@ -7,19 +7,32 @@ import {
 import { QuizFinishModal } from "@/components/quiz/QuizFinishModal";
 import { QuizPreparingResults } from "@/components/quiz/QuizPreparingResults";
 import { QuizQuestion } from "@/components/quiz/QuizQuestion";
+import { QuizResults } from "@/components/quiz/QuizResults";
 import {
   beginnerQuestions,
   connoisseurQuestions,
   enthusiastQuestions,
 } from "@/components/quiz/config";
+
 import { StepFlowLayout } from "@/components/ui/StepFlowLayout";
 
+import { quizApi } from "@/shared/api/quizApi";
+import { buildQuizRequest } from "@/utils/buildQuizRequest";
+
 import "./QuizPage.scss";
+import { useQuizSession } from "@/context/QuizSessionContext";
 
 const QUIZ_TOTAL_STEPS = 6;
 const FIRST_QUESTION_STEP = 1;
+const QUIZ_PROGRESS_STORAGE_KEY = "quizProgress";
 
 type QuizAnswers = Record<number, string>;
+
+type SavedQuizProgress = {
+  currentStep: number;
+  selectedLevel: QuizExperienceLevel | null;
+  answers: QuizAnswers;
+};
 
 const questionsByLevel = {
   beginner: beginnerQuestions,
@@ -27,13 +40,84 @@ const questionsByLevel = {
   connoisseur: connoisseurQuestions,
 };
 
+const isQuizExperienceLevel = (
+  value: unknown,
+): value is QuizExperienceLevel => {
+  return (
+    value === "beginner" ||
+    value === "enthusiast" ||
+    value === "connoisseur"
+  );
+};
+
+const getSavedQuizProgress = (): SavedQuizProgress | null => {
+  try {
+    const savedProgress = localStorage.getItem(QUIZ_PROGRESS_STORAGE_KEY);
+
+    if (!savedProgress) {
+      return null;
+    }
+
+    const parsedProgress = JSON.parse(savedProgress) as SavedQuizProgress;
+
+    const isValidStep =
+      typeof parsedProgress.currentStep === "number" &&
+      parsedProgress.currentStep >= FIRST_QUESTION_STEP &&
+      parsedProgress.currentStep <= QUIZ_TOTAL_STEPS;
+
+    const isValidLevel =
+      parsedProgress.selectedLevel === null ||
+      isQuizExperienceLevel(parsedProgress.selectedLevel);
+
+    const isValidAnswers =
+      parsedProgress.answers &&
+      typeof parsedProgress.answers === "object" &&
+      !Array.isArray(parsedProgress.answers);
+
+    if (!isValidStep || !isValidLevel || !isValidAnswers) {
+      localStorage.removeItem(QUIZ_PROGRESS_STORAGE_KEY);
+
+      return null;
+    }
+
+    return parsedProgress;
+  } catch {
+    localStorage.removeItem(QUIZ_PROGRESS_STORAGE_KEY);
+
+    return null;
+  }
+};
+
+const scrollToPageTop = () => {
+  requestAnimationFrame(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "auto",
+    });
+  });
+};
+
 export const QuizPage = () => {
-  const [currentStep, setCurrentStep] = useState(FIRST_QUESTION_STEP);
-  const [selectedLevel, setSelectedLevel] =
-    useState<QuizExperienceLevel | null>(null);
-  const [answers, setAnswers] = useState<QuizAnswers>({});
+  const { quizResult, saveQuizResult, clearQuizResult } = useQuizSession();
+
+  const savedProgress = useMemo(() => getSavedQuizProgress(), []);
+
+  const [currentStep, setCurrentStep] = useState(
+    savedProgress?.currentStep ?? FIRST_QUESTION_STEP,
+  );
+
+  const [selectedLevel, setSelectedLevel] = useState<QuizExperienceLevel | null>(
+    savedProgress?.selectedLevel ?? null,
+  );
+
+  const [answers, setAnswers] = useState<QuizAnswers>(
+    savedProgress?.answers ?? {},
+  );
+
   const [isFinishModalOpen, setIsFinishModalOpen] = useState(false);
   const [isPreparingResults, setIsPreparingResults] = useState(false);
+  const [quizError, setQuizError] = useState<string | null>(null);
 
   const currentQuestions = useMemo(() => {
     if (!selectedLevel) {
@@ -54,11 +138,35 @@ export const QuizPage = () => {
       ? Boolean(selectedLevel)
       : Boolean(selectedAnswerId);
 
-  const handleSelectLevel = useCallback((level: QuizExperienceLevel) => {
-    setSelectedLevel(level);
-    setAnswers({});
-    setCurrentStep(FIRST_QUESTION_STEP);
-  }, []);
+  useEffect(() => {
+    scrollToPageTop();
+  }, [currentStep, quizResult]);
+
+  useEffect(() => {
+    if (!selectedLevel) {
+      return;
+    }
+
+    const progress: SavedQuizProgress = {
+      currentStep,
+      selectedLevel,
+      answers,
+    };
+
+    localStorage.setItem(QUIZ_PROGRESS_STORAGE_KEY, JSON.stringify(progress));
+  }, [answers, currentStep, selectedLevel]);
+
+  const handleSelectLevel = useCallback(
+    (level: QuizExperienceLevel) => {
+      clearQuizResult();
+
+      setSelectedLevel(level);
+      setAnswers({});
+      setCurrentStep(FIRST_QUESTION_STEP);
+      setQuizError(null);
+    },
+    [clearQuizResult],
+  );
 
   const handleSelectAnswer = useCallback(
     (optionId: string) => {
@@ -81,6 +189,7 @@ export const QuizPage = () => {
 
     if (currentStep === QUIZ_TOTAL_STEPS) {
       setIsFinishModalOpen(true);
+
       return;
     }
 
@@ -91,15 +200,34 @@ export const QuizPage = () => {
     setIsFinishModalOpen(false);
   }, []);
 
-  const handleFinishQuiz = useCallback(() => {
+  const handleFinishQuiz = useCallback(async () => {
+    if (!selectedLevel) {
+      return;
+    }
+
     setIsFinishModalOpen(false);
     setIsPreparingResults(true);
+    setQuizError(null);
 
-    console.log("Quiz finished", {
-      selectedLevel,
-      answers,
-    });
-  }, [answers, selectedLevel]);
+    try {
+      const payload = buildQuizRequest(selectedLevel, currentQuestions, answers);
+      const result = await quizApi.getResult(payload);
+
+      saveQuizResult(result);
+      localStorage.removeItem(QUIZ_PROGRESS_STORAGE_KEY);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to get quiz results";
+
+      setQuizError(message);
+    } finally {
+      setIsPreparingResults(false);
+    }
+  }, [answers, currentQuestions, saveQuizResult, selectedLevel]);
+
+  if (quizResult) {
+    return <QuizResults wines={quizResult} />;
+  }
 
   return (
     <>
@@ -151,6 +279,8 @@ export const QuizPage = () => {
             </p>
           </div>
         )}
+
+        {quizError && <p className="quiz-page__error">{quizError}</p>}
       </StepFlowLayout>
 
       <QuizFinishModal

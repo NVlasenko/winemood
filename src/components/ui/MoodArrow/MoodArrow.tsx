@@ -1,6 +1,4 @@
-import { useMoodTheme } from "@/context/MoodThemeContext";
-import { moodArrowIcons } from "./config/moodArrows";
-
+import MoodArrowIcon from "@/assets/images/moods/mood-arrows/arrow-default.svg?react";
 import "./MoodArrow.scss";
 
 type Props = {
@@ -8,14 +6,11 @@ type Props = {
 };
 
 export const MoodArrow = ({ className = "" }: Props) => {
-  const { moodTheme } = useMoodTheme();
-
   return (
-    <img
+    <MoodArrowIcon
       className={`mood-arrow ${className}`}
-      src={moodArrowIcons[moodTheme]}
-      alt=""
       aria-hidden="true"
+      focusable="false"
     />
   );
 };

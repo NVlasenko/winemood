@@ -1,38 +1,36 @@
+import type { ComponentType, SVGProps } from "react";
 
 import type { Wine } from "@/types/wine";
 import { formatLabel } from "@/utils/formatLabel";
-import { agingIcons } from "./agingIcons";
-import { appellationIcons } from "./appellationIcons";
-import { ecoIcons } from "./ecoIcons";
-import { fermentationIcons } from "./fermentationIcons";
-import { grapeIcons } from "./grapeIcons";
-import { producerIcons } from "./producerIcons";
-import type { MoodTheme } from "@/types/mood";
+
+import AgingIcon from "@/assets/images/wineDetailsInfo/images/aging-default.svg?react";
+import AppellationIcon from "@/assets/images/wineDetailsInfo/images/appellation-default.svg?react";
+import EcoIcon from "@/assets/images/wineDetailsInfo/images/eco-default.svg?react";
+import FermentationIcon from "@/assets/images/wineDetailsInfo/images/fermentation-default.svg?react";
+import GrapeIcon from "@/assets/images/wineDetailsInfo/images/grape-default.svg?react";
+import ProducerIcon from "@/assets/images/wineDetailsInfo/images/producer-default.svg?react";
 
 type WineDetailsItem = {
   id: string;
   title: string;
   value: string;
-  icon: string;
+  Icon: ComponentType<SVGProps<SVGSVGElement>>;
 };
 
-export const getWineDetails = (
-  wine: Wine,
-  moodTheme: MoodTheme,
-): WineDetailsItem[] => [
+export const getWineDetails = (wine: Wine): WineDetailsItem[] => [
   {
     id: "grape-variety",
     title: "Grape variety",
     value: wine.grapeVariety
       ? `100% ${formatLabel(wine.grapeVariety.name)}`
       : "Unknown",
-    icon: grapeIcons[moodTheme] || grapeIcons.default,
+    Icon: GrapeIcon,
   },
   {
     id: "producer",
     title: "Producer",
     value: wine.producerName || "Unknown",
-    icon: producerIcons[moodTheme] || producerIcons.default,
+    Icon: ProducerIcon,
   },
   {
     id: "aging",
@@ -40,7 +38,7 @@ export const getWineDetails = (
     value: wine.agingMonths
       ? `${wine.agingMonths} months total`
       : "Not specified",
-    icon: agingIcons[moodTheme] || agingIcons.default,
+    Icon: AgingIcon,
   },
   {
     id: "ecological-attributes",
@@ -48,7 +46,7 @@ export const getWineDetails = (
     value: wine.environmentalAttributes?.length
       ? wine.environmentalAttributes.map(formatLabel).join(" / ")
       : "Not specified",
-    icon: ecoIcons[moodTheme] || ecoIcons.default,
+    Icon: EcoIcon,
   },
   {
     id: "fermentation",
@@ -56,12 +54,12 @@ export const getWineDetails = (
     value: wine.fermentationType
       ? formatLabel(wine.fermentationType)
       : "Not specified",
-    icon: fermentationIcons[moodTheme] || fermentationIcons.default,
+    Icon: FermentationIcon,
   },
   {
     id: "appellation",
     title: "Appellation",
     value: wine.appellation || "Not specified",
-    icon: appellationIcons[moodTheme] || appellationIcons.default,
+    Icon: AppellationIcon,
   },
 ];

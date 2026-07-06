@@ -4,12 +4,9 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { getMetadata } from "@/shared/api/metadataApi";
 import { filterWines, type WineFilterRequest } from "@/shared/api/wineFilterApi";
 
-import { useMoodTheme } from "@/context/MoodThemeContext";
+import ResetIcon from "@/assets/images/filters/reset/reset-default.svg?react";
 
 import type { MetadataFilter } from "@/types/metadata";
-
-import { arrowByMood } from "./config/filterArrows";
-import { resetByMood } from "./config/filterResetIcons";
 import { buildFilterGroups } from "./config/buildFilterGroups";
 
 import { CatalogFilterGroup } from "./sections/CatalogFilterGroup";
@@ -67,7 +64,6 @@ const buildWineFilters = (
 };
 
 export const CatalogFilters = ({ isOpen, onClose }: Props) => {
-  const { moodTheme } = useMoodTheme();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -82,12 +78,6 @@ export const CatalogFilters = ({ isOpen, onClose }: Props) => {
 
   const [previewCount, setPreviewCount] = useState(0);
   const [isPreviewLoading, setIsPreviewLoading] = useState(false);
-
-  const moodArrowIcon =
-    arrowByMood[moodTheme as keyof typeof arrowByMood] || arrowByMood.default;
-
-  const resetIcon =
-    resetByMood[moodTheme as keyof typeof resetByMood] || resetByMood.default;
 
   const filterGroups = useMemo(
     () => buildFilterGroups(metadataFilters),
@@ -233,10 +223,10 @@ export const CatalogFilters = ({ isOpen, onClose }: Props) => {
               onClick={resetFilters}
             >
               Reset all
-              <img
-                src={resetIcon}
-                alt="Reset filters"
+              <ResetIcon
                 className="catalog-filters__reset-icon"
+                aria-hidden="true"
+                focusable="false"
               />
             </button>
           </div>
@@ -259,7 +249,6 @@ export const CatalogFilters = ({ isOpen, onClose }: Props) => {
               filter={filter}
               openedFilter={openedFilter}
               selectedFilters={selectedFilters}
-              moodArrowIcon={moodArrowIcon}
               onToggleFilter={toggleFilter}
               onToggleOption={toggleOption}
             />

@@ -92,7 +92,7 @@
     line-height: 1.2;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    text-align: left;
+    text-align: center;
     color: $text-primary;
   }
 
@@ -120,6 +120,7 @@
 
     &__text {
       font-size: 32px;
+      text-align: left;
     }
   }
 

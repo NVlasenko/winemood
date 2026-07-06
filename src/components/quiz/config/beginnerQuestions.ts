@@ -1,247 +1,259 @@
-import type { QuizQuestionOption } from "@/components/quiz/QuizQuestion";
+import type { QuizQuestionConfig } from "@/types/quiz";
 
 import {
-  freshLightImages,
-  fruityImages,
-  slightlySweetImages,
-  slightlyTartImages,
-} from "@/components/quiz/QuizQuestion/config/beginner/taste-profile";
-
-import {
-  dateNightImages,
-  dinnerAtHomeImages,
-  eveningWithFriendsImages,
-  giftImages,
-  somethingTastyImages,
-} from "@/components/quiz/QuizQuestion/config/beginner/occasion";
-
-import {
-  appetizersImages,
-  cheeseImages,
-  dessertImages,
-  fishImages,
-  meatImages,
-  pastaImages,
-  universalImages,
-} from "@/components/quiz/QuizQuestion/config/beginner/food-pairing";
-
-import {
-  budgetImages,
-  higherTierImages,
-  midRangeImages,
-  neutralWineLevelImages,
-} from "@/components/quiz/QuizQuestion/config/beginner/wine-level";
-
-import {
-  spicyFlavorImages,
-} from "@/components/quiz/QuizQuestion/config/enthusiast/flavor-profile";
-
-export type QuizQuestionConfig = {
-  step: number;
-  question: string;
-  options: QuizQuestionOption[];
-};
+  AppetizersIcon,
+  BudgetIcon,
+  CheeseIcon,
+  DateNightIcon,
+  DessertIcon,
+  DinnerAtHomeIcon,
+  EveningWithFriendsIcon,
+  FishIcon,
+  FreshLightIcon,
+  FruityIcon,
+  GiftIcon,
+  HigherTierIcon,
+  MeatIcon,
+  MidRangeIcon,
+  NeutralWineLevelIcon,
+  PastaIcon,
+  SlightlySweetIcon,
+  SlightlyTartIcon,
+  SomethingTastyIcon,
+  SpicyFlavorIcon,
+  UniversalIcon,
+} from "@/components/quiz/QuizQuestion/config/quizIcons";
 
 export const beginnerQuestions: QuizQuestionConfig[] = [
-
   {
     step: 2,
     question: "What type of wine do you prefer?",
+    apiField: "WINE_TYPE",
     options: [
       {
         id: "premium",
         title: "Premium",
         description: "",
-        images: budgetImages,
+        apiValue: "PREMIUM",
+        Icon: BudgetIcon,
       },
       {
         id: "red",
         title: "Red",
         description: "",
-        images: midRangeImages,
+        apiValue: "RED",
+        Icon: MidRangeIcon,
       },
       {
         id: "rose",
         title: "Rosé",
         description: "",
-        images: higherTierImages,
+        apiValue: "ROSE",
+        Icon: HigherTierIcon,
       },
       {
         id: "sparkling",
         title: "Sparkling",
         description: "",
-        images: neutralWineLevelImages,
+        apiValue: "SPARKLING",
+        Icon: NeutralWineLevelIcon,
       },
       {
-        id: "not-sure",
-        title: "Recommend something",
+        id: "not-preference",
+        title: "No preference",
         description: "",
-        images: neutralWineLevelImages,
+        apiValue: "NO_PREFERENCE",
+        Icon: NeutralWineLevelIcon,
       },
     ],
   },
   {
     step: 3,
     question: "What occasion are you choosing wine for?",
+    apiField: "EVENT",
     options: [
       {
         id: "date-night",
         title: "Date Night",
         description: "",
-        images: dateNightImages,
+        apiValue: "DATE",
+        Icon: DateNightIcon,
       },
       {
         id: "evening-with-friends",
         title: "Evening With Friends",
         description: "",
-        images: eveningWithFriendsImages,
+        apiValue: "DINNER_WITH_FRIENDS",
+        Icon: EveningWithFriendsIcon,
       },
       {
         id: "picnic",
         title: "Picnic",
         description: "",
-        images: dinnerAtHomeImages,
+        apiValue: "PICNIC",
+        Icon: DinnerAtHomeIcon,
       },
       {
         id: "gift",
         title: "A Gift",
         description: "",
-        images: giftImages,
+        apiValue: "GIFT",
+        Icon: GiftIcon,
       },
       {
-        id: "something-tasty",
-        title: "I Just Want Something Tasty",
+        id: "universal",
+        title: "Universal",
         description: "",
-        images: somethingTastyImages,
+        apiValue: "UNIVERSAL",
+        Icon: SomethingTastyIcon,
       },
     ],
   },
   {
     step: 4,
     question: "What are you planning to eat?",
+    apiField: "FOOD_CATEGORY",
     options: [
       {
         id: "meat",
         title: "Meat",
         description: "",
-        images: meatImages,
+        apiValue: "MEAT",
+        Icon: MeatIcon,
       },
       {
         id: "fish",
         title: "Fish",
         description: "",
-        images: fishImages,
+        apiValue: "FISH_SEAFOOD",
+        Icon: FishIcon,
       },
       {
         id: "pasta",
         title: "Pasta",
         description: "",
-        images: pastaImages,
+        apiValue: "PASTA_PIZZA",
+        Icon: PastaIcon,
       },
       {
         id: "cheese",
         title: "Cheese",
         description: "",
-        images: cheeseImages,
+        apiValue: "CHEESE",
+        Icon: CheeseIcon,
       },
       {
-        id: "appetizers",
-        title: "Appetizers",
+        id: "light-dishes",
+        title: "Light Dishes",
         description: "",
-        images: appetizersImages,
+        apiValue: "LIGHT_DISHES",
+        Icon: AppetizersIcon,
       },
       {
         id: "dessert",
         title: "Dessert",
         description: "",
-        images: dessertImages,
+        apiValue: "DESSERT",
+        Icon: DessertIcon,
       },
       {
         id: "universal",
-        title: "Universal / Not Sure",
+        title: "Universal",
         description: "",
-        images: universalImages,
+        apiValue: "UNIVERSAL",
+        Icon: UniversalIcon,
       },
     ],
   },
   {
     step: 5,
     question: "What wine level feels comfortable for you?",
+    apiField: "PRICE_LEVEL",
     options: [
       {
         id: "budget",
         title: "Budget",
         description: "Affordable but tasty",
-        images: budgetImages,
+        apiValue: "BUDGET",
+        Icon: BudgetIcon,
       },
       {
         id: "mid-range",
         title: "Mid-Range",
         description: "Something quality without going overboard",
-        images: midRangeImages,
+        apiValue: "MID_RANGE",
+        Icon: MidRangeIcon,
       },
       {
         id: "higher-tier",
         title: "Higher Tier",
         description: "I want something more interesting",
-        images: higherTierImages,
+        apiValue: "HIGHER_TIER",
+        Icon: HigherTierIcon,
       },
       {
-        id: "no-Preference",
+        id: "no-preference",
         title: "No Preference",
         description: "Doesn’t matter, as long as it tastes good",
-        images: neutralWineLevelImages,
+        apiValue: "NO-PREFERENCE",
+        Icon: NeutralWineLevelIcon,
       },
     ],
   },
-
-   {
-      step: 6,
-      question: "Which aroma notes do you prefer?",
-      options: [
-        {
-          id: "fruity",
-          title: "Fruity",
-          description: "",
-          images: fruityImages,
-        },
-        {
-          id: "mineral",
-          title: "Mineral",
-          description: "",
-          images: freshLightImages,
-        },
-        {
-          id: "oaky-vanilla",
-          title: "Oaky / Vanilla",
-          description: "",
-          images: slightlySweetImages,
-        },
-        {
-          id: "spicy",
-          title: "Spicy",
-          description: "",
-          images: spicyFlavorImages,
-        },
-        {
-          id: "floral",
-          title: "Floral",
-          description: "",
-          images: slightlyTartImages,
-        },
-        {
-          id: "nutty-honey",
-          title: "Nutty / Honey",
-          description: "",
-          images: higherTierImages,
-        },
-        {
-          id: "no-preference",
-          title: "No Preference",
-          description: "I’m open to recommendations",
-          images: neutralWineLevelImages,
-        },
-      ],
-    },
-
+  {
+    step: 6,
+    question: "Which aroma notes do you prefer?",
+    apiField: "AROMA_NOTES",
+    options: [
+      {
+        id: "fruity",
+        title: "Fruity",
+        description: "",
+        apiValue: "FRUITY",
+        Icon: FruityIcon,
+      },
+      {
+        id: "mineral",
+        title: "Mineral",
+        description: "",
+        apiValue: "MINERAL",
+        Icon: FreshLightIcon,
+      },
+      {
+        id: "oaky-vanilla",
+        title: "Oaky / Vanilla",
+        description: "",
+        apiValue: "OAKY",
+        Icon: SlightlySweetIcon,
+      },
+      {
+        id: "spicy",
+        title: "Spicy",
+        description: "",
+        apiValue: "SPICY",
+        Icon: SpicyFlavorIcon,
+      },
+      {
+        id: "floral",
+        title: "Floral",
+        description: "",
+        apiValue: "FLORAL",
+        Icon: SlightlyTartIcon,
+      },
+      {
+        id: "nutty-honey",
+        title: "Nutty / Honey",
+        description: "",
+        apiValue: "NUTTY_HONEY",
+        Icon: HigherTierIcon,
+      },
+      {
+        id: "no-preference",
+        title: "No Preference",
+        description: "",
+        apiValue: "NO-PREFERENCE",
+        Icon: NeutralWineLevelIcon,
+      },
+    ],
+  },
 ];

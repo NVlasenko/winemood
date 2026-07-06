@@ -1,16 +1,41 @@
 .wine-glass-loader {
+  position: relative;
+
   display: flex;
   align-items: center;
   justify-content: center;
 
+  width: 120px;
+  height: 150px;
+
+  &::before {
+    content: "";
+
+    position: absolute;
+    inset: 18px 8px 8px;
+
+    border-radius: 50%;
+
+    background: radial-gradient(
+      circle,
+      rgba(var(--wine-glow-rgb), 0.32) 0%,
+      rgba(var(--wine-glow-rgb), 0.18) 34%,
+      rgba(var(--wine-glow-rgb), 0) 72%
+    );
+
+    filter: blur(18px);
+
+    pointer-events: none;
+  }
+
   &__svg {
+    position: relative;
+    z-index: 1;
+
     width: 85px;
     height: 120px;
-    overflow: visible;
 
-    filter:
-      drop-shadow(0 0 16px rgba(var(--wine-glow-rgb), 0.45))
-      drop-shadow(0 0 36px rgba(var(--wine-glow-rgb), 0.22));
+    overflow: hidden;
   }
 
   &__glass {

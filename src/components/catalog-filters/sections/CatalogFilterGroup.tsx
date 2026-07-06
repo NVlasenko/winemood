@@ -1,14 +1,11 @@
 import { memo } from "react";
-
-import arrowDown from "@/assets/images/filters/arrows/arrow-down.svg";
-
+import ArrowDownIcon from "@/assets/images/filters/arrows/arrow-default.svg?react";
 import type { FilterGroup, FilterOption } from "@/types/filters";
 
 type Props = {
   filter: FilterGroup;
   openedFilter: string;
   selectedFilters: Record<string, string[]>;
-  moodArrowIcon: string;
   onToggleFilter: (id: string) => void;
   onToggleOption: (filterId: string, value: string) => void;
 };
@@ -46,7 +43,6 @@ export const CatalogFilterGroup = memo(
     filter,
     openedFilter,
     selectedFilters,
-    moodArrowIcon,
     onToggleFilter,
     onToggleOption,
   }: Props) => {
@@ -73,13 +69,12 @@ export const CatalogFilterGroup = memo(
             <span>{filter.title}</span>
           </span>
 
-          <img
+          <ArrowDownIcon
             className={`catalog-filters__arrow ${
               isExpanded ? "catalog-filters__arrow--open" : ""
             }`}
-            src={isExpanded ? moodArrowIcon : arrowDown}
-            alt=""
             aria-hidden="true"
+            focusable="false"
           />
         </button>
 

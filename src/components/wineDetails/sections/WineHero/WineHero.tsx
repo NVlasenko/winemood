@@ -16,6 +16,9 @@ import SweetnessIcon from "@/assets/images/wineCard/icons/sweet-default.svg?reac
 
 import "./WineHero.scss";
 import { useQuizSession } from "@/context/QuizSessionContext";
+import { FavoriteButton } from "@/components/ui/FavoriteButton";
+import { useAuth } from "@/context/AuthContext";
+import { useAuthRequired } from "@/context/AuthRequiredContext";
 
 type Props = {
   wine: Wine;
@@ -33,13 +36,26 @@ export const WineHero = ({ wine }: Props) => {
   const isFavorite = favorites.includes(wine.id);
   const isMateusRose = wine.name === "Mateus Rosé";
 
+  const { isAuthenticated } = useAuth();
+  const { openAuthRequired } = useAuthRequired();
+
+  const handleFavoriteClick = () => {
+    if (!isAuthenticated) {
+      openAuthRequired({
+        title: "Save your favorite wines",
+        text: "Please sign up or log in to add wines to your favorites and access them from your profile.",
+      });
+  
+      return;
+    }
+  
+    toggleFavorite(wine.id);
+  };
+
   const handleBackClick = useCallback(() => {
     clearWineDetailsBackTarget();
   }, [clearWineDetailsBackTarget]);
 
-  const handleFavoriteClick = useCallback(() => {
-    toggleFavorite(wine.id);
-  }, [toggleFavorite, wine.id]);
 
   const metaItems = [
     {
@@ -74,19 +90,11 @@ export const WineHero = ({ wine }: Props) => {
             <span>{backLabel}</span>
           </Link>
 
-          <button
-            className={`wine-hero__favorite ${
-              isFavorite ? "wine-hero__favorite--active" : ""
-            }`}
-            type="button"
-            aria-label={
-              isFavorite ? "Remove from favorites" : "Add to favorites"
-            }
-            aria-pressed={isFavorite}
+          <FavoriteButton
+            isFavorite={isFavorite}
+            className="wine-hero__favorite"
             onClick={handleFavoriteClick}
-          >
-            ♥
-          </button>
+          />
         </div>
 
         <div className="wine-hero__content">

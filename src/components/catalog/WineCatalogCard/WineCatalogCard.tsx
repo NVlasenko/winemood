@@ -7,6 +7,10 @@ import wineDropIcon from "@/assets/images/wine/sweet.svg";
 import bottleIcon from "@/assets/images/wine/bottle.svg";
 
 import type { WineCatalogCard as WineCatalogCardType } from "@/types/wineCatalogCard";
+import { FavoriteButton } from "@/components/ui/FavoriteButton";
+
+import { useAuth } from "@/context/AuthContext";
+import { useAuthRequired } from "@/context/AuthRequiredContext";
 
 type Props = {
   wine: WineCatalogCardType;
@@ -22,28 +26,40 @@ const formatWineValue = (value: string) => {
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
 };
 
+
+
 export const WineCatalogCard = ({
   wine,
   index,
   isFavorite,
   onToggleFavorite,
 }: Props) => {
+  
+  const { isAuthenticated } = useAuth();
+  const { openAuthRequired } = useAuthRequired();
+
+  const handleFavoriteClick = () => {
+    if (!isAuthenticated) {
+      openAuthRequired({
+        title: "Save your favorite wines",
+        text: "Please sign up or log in to add wines to your favorites and access them from your profile.",
+      });
+  
+      return;
+    }
+  
+    onToggleFavorite(wine.id);
+  };
   return (
     <article
       className="catalog-page__card"
       style={{ "--card-index": index } as CSSProperties}
     >
-      <button
-        className={`catalog-page__favorite ${
-          isFavorite ? "catalog-page__favorite--active" : ""
-        }`}
-        type="button"
-        aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
-        aria-pressed={isFavorite}
-        onClick={() => onToggleFavorite(wine.id)}
-      >
-        ♥
-      </button>
+     <FavoriteButton
+        isFavorite={isFavorite}
+        className="catalog-page__favorite"
+        onClick={handleFavoriteClick}
+      />
 
       <Link to={`/catalog/${wine.id}`} className="catalog-page__image-link">
         <span className="catalog-page__wine-glow" aria-hidden="true" />

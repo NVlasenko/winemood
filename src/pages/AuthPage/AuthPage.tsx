@@ -616,14 +616,7 @@ export const AuthPage = () => {
                           onBlur={() => handleRegisterBlur("password")}
                         />
 
-                        {isRegisterPasswordValid ? (
-                          <div
-                            className="auth-page__status"
-                            aria-hidden="true"
-                          >
-                            <span className="auth-page__status-mark">✓</span>
-                          </div>
-                        ) : (
+                        <div className="auth-page__input-actions">
                           <button
                             className="auth-page__visibility-toggle"
                             type="button"
@@ -634,7 +627,13 @@ export const AuthPage = () => {
                           >
                             {isRegisterPasswordVisible ? "Hide" : "Show"}
                           </button>
-                        )}
+
+                          {isRegisterPasswordValid && (
+                            <div className="auth-page__status">
+                              <span className="auth-page__status-mark">✓</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
 
                       {registerTouched.password && registerErrors.password && (
@@ -704,27 +703,24 @@ export const AuthPage = () => {
                           onBlur={() => handleRegisterBlur("confirmPassword")}
                         />
 
-                        {isConfirmPasswordValid ? (
-                          <div
-                            className="auth-page__status"
-                            aria-hidden="true"
-                          >
-                            <span className="auth-page__status-mark">✓</span>
+                          <div className="auth-page__input-actions">
+                            <button
+                              className="auth-page__visibility-toggle"
+                              type="button"
+                              disabled={isSubmitting}
+                              onClick={() =>
+                                setIsRegisterConfirmPasswordVisible((prev) => !prev)
+                              }
+                            >
+                              {isRegisterConfirmPasswordVisible ? "Hide" : "Show"}
+                            </button>
+
+                            {isConfirmPasswordValid && (
+                              <div className="auth-page__status">
+                                <span className="auth-page__status-mark">✓</span>
+                              </div>
+                            )}
                           </div>
-                        ) : (
-                          <button
-                            className="auth-page__visibility-toggle"
-                            type="button"
-                            disabled={isSubmitting}
-                            onClick={() =>
-                              setIsRegisterConfirmPasswordVisible(
-                                (prev) => !prev,
-                              )
-                            }
-                          >
-                            {isRegisterConfirmPasswordVisible ? "Hide" : "Show"}
-                          </button>
-                        )}
                       </div>
 
                       {registerTouched.confirmPassword &&

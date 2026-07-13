@@ -1,8 +1,6 @@
 import { createRoot } from "react-dom/client";
-
 import { MoodThemeProvider } from "@/context/MoodThemeContext";
 import { Root } from "@/Root";
-
 import "@/index.scss";
 
 if ("scrollRestoration" in window.history) {

@@ -4,7 +4,13 @@ import { Link } from "react-router-dom";
 import type { Wine } from "@/types/wine";
 
 import { SectionTitle } from "@/components/ui/SectionTitle";
+import { FavoriteButton } from "@/components/ui/FavoriteButton";
+
+import { useAuth } from "@/context/AuthContext";
+import { useAuthRequired } from "@/context/AuthRequiredContext";
 import { useFavorites } from "@/context/FavoritesContext";
+import { useQuizSession } from "@/context/QuizSessionContext";
+
 import { formatLabel } from "@/utils/formatLabel";
 
 import backArrowIcon from "@/assets/images/icons/arrow-right.svg";
@@ -15,10 +21,6 @@ import VintageIcon from "@/assets/images/wineCard/icons/vintage-default.svg?reac
 import SweetnessIcon from "@/assets/images/wineCard/icons/sweet-default.svg?react";
 
 import "./WineHero.scss";
-import { useQuizSession } from "@/context/QuizSessionContext";
-import { FavoriteButton } from "@/components/ui/FavoriteButton";
-import { useAuth } from "@/context/AuthContext";
-import { useAuthRequired } from "@/context/AuthRequiredContext";
 
 type Props = {
   wine: Wine;
@@ -29,6 +31,8 @@ const STARS = [1, 2, 3, 4, 5] as const;
 export const WineHero = ({ wine }: Props) => {
   const { favorites, toggleFavorite } = useFavorites();
   const { backTarget, clearWineDetailsBackTarget } = useQuizSession();
+  const { isAuthenticated } = useAuth();
+  const { openAuthRequired } = useAuthRequired();
 
   const backTo = backTarget?.to ?? "/catalog";
   const backLabel = backTarget?.label ?? "Catalog";
@@ -36,26 +40,26 @@ export const WineHero = ({ wine }: Props) => {
   const isFavorite = favorites.includes(wine.id);
   const isMateusRose = wine.name === "Mateus Rosé";
 
-  const { isAuthenticated } = useAuth();
-  const { openAuthRequired } = useAuthRequired();
-
   const handleFavoriteClick = () => {
     if (!isAuthenticated) {
       openAuthRequired({
-        title: "Save your favorite wines",
-        text: "Please sign up or log in to add wines to your favorites and access them from your profile.",
+        title: "Add wine to favorites",
+        text: "To add this wine to your favorites, please sign up or log in.",
+        primaryLabel: "Sign up",
+        primaryTo: "/auth?mode=register",
+        secondaryLabel: "Log in",
+        secondaryTo: "/auth?mode=login",
       });
-  
+
       return;
     }
-  
+
     toggleFavorite(wine.id);
   };
 
   const handleBackClick = useCallback(() => {
     clearWineDetailsBackTarget();
   }, [clearWineDetailsBackTarget]);
-
 
   const metaItems = [
     {

@@ -46,6 +46,54 @@
     text-align: center;
   }
 
+  &__close {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+  
+    width: 32px;
+    height: 32px;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    border: none;
+    padding: 0;
+  
+    background: transparent;
+  
+    cursor: pointer;
+  
+    transition:
+      transform 0.2s ease,
+      opacity 0.2s ease;
+  
+    span {
+      position: absolute;
+  
+      width: 20px;
+      height: 2px;
+  
+      border-radius: 999px;
+  
+      background: var(--mood-link-hover-color);
+    }
+  
+    span:first-child {
+      transform: rotate(45deg);
+    }
+  
+    span:last-child {
+      transform: rotate(-45deg);
+    }
+  
+    &:hover {
+      transform: scale(1.08);
+      opacity: 0.8;
+    }
+  }
+
   &__icon {
     position: relative;
 

@@ -1,4 +1,7 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+import { useAuth } from "@/context/AuthContext";
+import { useAuthRequired } from "@/context/AuthRequiredContext";
 
 import arrowIcon from "@/assets/images/icons/arrow-right.svg";
 import reviewIcon from "@/assets/images/icons/review.svg";
@@ -18,22 +21,50 @@ export const WineReviewsActions = ({
   onToggleExpanded,
   showReviewIcon = false,
 }: Props) => {
+  const navigate = useNavigate();
+
+  const { isAuthenticated } = useAuth();
+  const { openAuthRequired } = useAuthRequired();
+
+  const handleWriteReview = () => {
+    if (!isAuthenticated) {
+      openAuthRequired({
+        title: "Write a wine review",
+        text: "To write a review, please sign up or log in to your account.",
+        primaryLabel: "Sign up",
+        primaryTo: "/auth?mode=register",
+        secondaryLabel: "Log in",
+        secondaryTo: "/auth?mode=login",
+      });
+
+      return;
+    }
+
+    navigate(`/catalog/${wineId}/review`);
+  };
+
   return (
     <div
       className={`wine-reviews__actions ${
         isExpanded ? "wine-reviews__actions--expanded" : ""
       }`}
     >
-      <Link
-        to={`/catalog/${wineId}/review`}
+      <button
         className="button-primary wine-reviews__write-button"
+        type="button"
+        onClick={handleWriteReview}
       >
         <span>Write a review</span>
 
         {showReviewIcon && (
-          <img className="wine-reviews__write-icon" src={reviewIcon} alt="" />
+          <img
+            className="wine-reviews__write-icon"
+            src={reviewIcon}
+            alt=""
+            aria-hidden="true"
+          />
         )}
-      </Link>
+      </button>
 
       {hasMoreReviews && (
         <button
@@ -43,7 +74,8 @@ export const WineReviewsActions = ({
           aria-expanded={isExpanded}
         >
           <span>{isExpanded ? "Show less" : "See more"}</span>
-          <img src={arrowIcon} alt="" />
+
+          <img src={arrowIcon} alt="" aria-hidden="true" />
         </button>
       )}
     </div>

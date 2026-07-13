@@ -2,15 +2,15 @@ import type { CSSProperties } from "react";
 import { Link } from "react-router-dom";
 
 import { WineRating } from "@/components/catalog/WineRating";
+import { FavoriteButton } from "@/components/ui/FavoriteButton";
+
+import { useAuth } from "@/context/AuthContext";
+import { useAuthRequired } from "@/context/AuthRequiredContext";
 
 import wineDropIcon from "@/assets/images/wine/sweet.svg";
 import bottleIcon from "@/assets/images/wine/bottle.svg";
 
 import type { WineCatalogCard as WineCatalogCardType } from "@/types/wineCatalogCard";
-import { FavoriteButton } from "@/components/ui/FavoriteButton";
-
-import { useAuth } from "@/context/AuthContext";
-import { useAuthRequired } from "@/context/AuthRequiredContext";
 
 type Props = {
   wine: WineCatalogCardType;
@@ -26,36 +26,38 @@ const formatWineValue = (value: string) => {
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
 };
 
-
-
 export const WineCatalogCard = ({
   wine,
   index,
   isFavorite,
   onToggleFavorite,
 }: Props) => {
-  
   const { isAuthenticated } = useAuth();
   const { openAuthRequired } = useAuthRequired();
 
   const handleFavoriteClick = () => {
     if (!isAuthenticated) {
       openAuthRequired({
-        title: "Save your favorite wines",
-        text: "Please sign up or log in to add wines to your favorites and access them from your profile.",
+        title: "Add wine to favorites",
+        text: "To add this wine to your favorites, please sign up or log in.",
+        primaryLabel: "Sign up",
+        primaryTo: "/auth?mode=register",
+        secondaryLabel: "Log in",
+        secondaryTo: "/auth?mode=login",
       });
-  
+
       return;
     }
-  
+
     onToggleFavorite(wine.id);
   };
+
   return (
     <article
       className="catalog-page__card"
       style={{ "--card-index": index } as CSSProperties}
     >
-     <FavoriteButton
+      <FavoriteButton
         isFavorite={isFavorite}
         className="catalog-page__favorite"
         onClick={handleFavoriteClick}

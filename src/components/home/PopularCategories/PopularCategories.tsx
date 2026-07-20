@@ -141,7 +141,7 @@ export const PopularCategories = () => {
 
               <img
                 className="popular-categories__card-image"
-                src={category.image}
+                src={category.homeImage}
                 alt={category.title}
               />
             </button>

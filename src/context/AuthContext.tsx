@@ -1,11 +1,14 @@
 import { authApi } from "@/shared/api/authApi";
+import { userApi } from "@/shared/api/userApi";
 import type { AuthResponse, LoginRequest, RegisterRequest } from "@/types/auth";
+import type { User } from "@/types/user";
 import {
   createContext,
   useCallback,
   useContext,
   useMemo,
   useState,
+  useEffect,
   type ReactNode,
 } from "react";
 
@@ -13,20 +16,18 @@ const ACCESS_TOKEN_STORAGE_KEY = "accessToken";
 const TOKEN_TYPE_STORAGE_KEY = "tokenType";
 const USER_STORAGE_KEY = "user";
 
-type User = {
-  id: number;
-  name: string;
-  email: string;
-};
-
 type AuthContextType = {
   accessToken: string | null;
   tokenType: string | null;
   user: User | null;
   isAuthenticated: boolean;
+  isLoadingUser: boolean;
+
   register: (data: RegisterRequest) => Promise<AuthResponse>;
   login: (data: LoginRequest) => Promise<AuthResponse>;
   logout: () => void;
+
+  updateUser: (user: User) => void;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -35,17 +36,19 @@ type Props = {
   children: ReactNode;
 };
 
-const getSavedAccessToken = () => {
-  return localStorage.getItem(ACCESS_TOKEN_STORAGE_KEY);
-};
+const getSavedAccessToken = () =>
+  localStorage.getItem(ACCESS_TOKEN_STORAGE_KEY);
 
-const getSavedTokenType = () => {
-  return localStorage.getItem(TOKEN_TYPE_STORAGE_KEY);
-};
+const getSavedTokenType = () =>
+  localStorage.getItem(TOKEN_TYPE_STORAGE_KEY);
 
 const getSavedUser = (): User | null => {
-  const data = localStorage.getItem(USER_STORAGE_KEY);
-  return data ? JSON.parse(data) : null;
+  try {
+    const data = localStorage.getItem(USER_STORAGE_KEY);
+    return data ? JSON.parse(data) : null;
+  } catch {
+    return null;
+  }
 };
 
 export const AuthProvider = ({ children }: Props) => {
@@ -61,6 +64,8 @@ export const AuthProvider = ({ children }: Props) => {
     getSavedUser(),
   );
 
+  const [isLoadingUser, setIsLoadingUser] = useState(false);
+
   const saveAuthData = useCallback((data: AuthResponse) => {
     localStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, data.accessToken);
     localStorage.setItem(TOKEN_TYPE_STORAGE_KEY, data.tokenType);
@@ -72,6 +77,11 @@ export const AuthProvider = ({ children }: Props) => {
 
     setAccessToken(data.accessToken);
     setTokenType(data.tokenType);
+  }, []);
+
+  const updateUser = useCallback((updatedUser: User) => {
+    setUser(updatedUser);
+    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updatedUser));
   }, []);
 
   const register = useCallback(
@@ -102,20 +112,65 @@ export const AuthProvider = ({ children }: Props) => {
     setUser(null);
   }, []);
 
+  useEffect(() => {
+    if (!accessToken) return;
+
+    let isMounted = true;
+
+    setIsLoadingUser(true);
+
+    userApi
+      .getMe()
+      .then((userData) => {
+        if (isMounted) {
+          updateUser(userData);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          logout();
+        }
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsLoadingUser(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [accessToken]);
+
   const value = useMemo(
     () => ({
       accessToken,
       tokenType,
       user,
-      isAuthenticated: Boolean(accessToken),
+      isAuthenticated: Boolean(accessToken && user),
+      isLoadingUser,
       register,
       login,
       logout,
+      updateUser,
     }),
-    [accessToken, tokenType, user, register, login, logout],
+    [
+      accessToken,
+      tokenType,
+      user,
+      isLoadingUser,
+      register,
+      login,
+      logout,
+      updateUser,
+    ],
   );
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {

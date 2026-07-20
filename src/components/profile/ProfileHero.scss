@@ -1,0 +1,264 @@
+@import "@/styles/mixins";
+@import "@/styles/variables";
+
+.profile-hero {
+  margin-top: 20px;
+  padding: 32px;
+
+  border: 1px solid rgba(217, 217, 217, 0.16);
+  border-radius: 12px;
+  backdrop-filter: blur(40px);
+  &__avatar-wrapper {
+    position: relative;
+  }
+
+  &__avatar {
+    overflow: hidden;
+    cursor: pointer;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__avatar-edit {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+
+    width: 22px;
+    height: 22px;
+
+    border-radius: 50%;
+    border: 1px solid rgba(217, 217, 217, 0.2);
+
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+
+    font-size: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    padding: 0;
+    cursor: pointer;
+    outline: none;
+
+  &:focus-visible {
+    outline: 2px solid $active-color;
+    outline-offset: 2px;
+  }
+  }
+
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+
+  &__left {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    text-align: center;
+  }
+
+  &__avatar {
+    width: 64px;
+    height: 64px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: "Marcellus", serif;
+    font-size: 24px;
+    color: $text-primary;
+
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(217, 217, 217, 0.16);
+  }
+
+  &__user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__name {
+    font-family: "Marcellus", serif;
+    font-weight: 400;
+    font-size: 24px;
+    color: $text-primary;
+  }
+
+  &__subtitle {
+    margin-top: 4px;
+
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: rgba(177, 167, 166, 1);
+  }
+
+  &__stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  &__stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+
+    padding-left: 40px;
+
+    &:first-child {
+      padding-left: 0;
+    }
+
+    &:not(:first-child)::before {
+      content: "";
+      position: absolute;
+      left: 15px;
+      top: 10%;
+      bottom: 10%;
+      width: 1px;
+      background: rgba(177, 167, 166, 1);
+    }
+  }
+
+  &__value {
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-size: 28px;
+    color: $text-primary;
+  }
+
+  &__label {
+    margin-top: 6px;
+
+    font-family: "Marcellus", serif;
+    font-weight: 400;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+
+    color: #fff;
+    text-align: center;
+  }
+
+  @include on-tablet {
+    padding: 32px;
+
+    &__inner {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    &__left {
+      justify-content: flex-start;
+      text-align: left;
+      width: auto;
+    }
+
+    &__user {
+      align-items: flex-start;
+    }
+
+    &__stats {
+      justify-content: flex-start;
+      width: auto;
+    }
+
+    &__avatar {
+      width: 72px;
+      height: 72px;
+      font-size: 28px;
+    }
+
+    &__name {
+      font-size: 28px;
+    }
+
+    &__subtitle {
+      font-size: 16px;
+    }
+
+    &__stat {
+      padding-left: 60px;
+      &:not(:first-child)::before {
+     
+        left: 20px;
+    
+      }
+    }
+
+    &__value {
+      font-size: 34px;
+    }
+
+    &__label {
+      font-size: 14px;
+    }
+  }
+
+  @include on-desktop {
+    margin-top: 56px;
+    padding: 32px;
+    &__avatar-edit {
+      width: 26px;
+      height: 26px;
+      font-size: 16px;
+    }
+
+    &__left {
+      gap: 32px;
+    }
+
+    &__avatar {
+      width: 88px;
+      height: 88px;
+      font-size: 32px;
+    }
+
+    &__name {
+      font-size: 36px;
+    }
+
+    &__subtitle {
+      font-size: 18px;
+    }
+
+    &__stat {
+      padding-left: 71px;
+      &:not(:first-child)::before {
+     
+        left: 35px;
+    
+      }
+    }
+
+    &__value {
+      font-size: 42px;
+    }
+
+    &__label {
+      font-size: 20px;
+    }
+  }
+}

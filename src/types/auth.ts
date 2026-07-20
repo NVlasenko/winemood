@@ -11,5 +11,11 @@ export type LoginRequest = {
 
 export type AuthResponse = {
   accessToken: string;
-  tokenType: "Bearer";
+  tokenType: string;
+  user: {
+    id: number;
+    name: string;
+    email: string;
+  };
 };
+

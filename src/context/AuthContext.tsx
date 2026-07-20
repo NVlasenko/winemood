@@ -70,11 +70,6 @@ export const AuthProvider = ({ children }: Props) => {
     localStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, data.accessToken);
     localStorage.setItem(TOKEN_TYPE_STORAGE_KEY, data.tokenType);
 
-    if (data.user) {
-      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(data.user));
-      setUser(data.user);
-    }
-
     setAccessToken(data.accessToken);
     setTokenType(data.tokenType);
   }, []);
@@ -88,18 +83,26 @@ export const AuthProvider = ({ children }: Props) => {
     async (data: RegisterRequest) => {
       const response = await authApi.register(data);
       saveAuthData(response);
+
+      const userData = await userApi.getMe();
+      updateUser(userData);
+
       return response;
     },
-    [saveAuthData],
+    [saveAuthData, updateUser],
   );
 
   const login = useCallback(
     async (data: LoginRequest) => {
       const response = await authApi.login(data);
       saveAuthData(response);
+
+      const userData = await userApi.getMe();
+      updateUser(userData);
+
       return response;
     },
-    [saveAuthData],
+    [saveAuthData, updateUser],
   );
 
   const logout = useCallback(() => {
@@ -127,9 +130,7 @@ export const AuthProvider = ({ children }: Props) => {
         }
       })
       .catch(() => {
-        if (isMounted) {
-          logout();
-        }
+        console.error("Failed to fetch user");
       })
       .finally(() => {
         if (isMounted) {
@@ -140,7 +141,7 @@ export const AuthProvider = ({ children }: Props) => {
     return () => {
       isMounted = false;
     };
-  }, [accessToken]);
+  }, [accessToken, updateUser]);
 
   const value = useMemo(
     () => ({

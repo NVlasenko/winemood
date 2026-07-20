@@ -1,18 +1,18 @@
 import { useRef, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-
-import "./ProfileHero.scss";
 import { userApi } from "@/shared/api/userApi";
 
+
+import "./ProfileHero.scss";
+import { compressImage } from "@/utils/compressImage";
+
 type Props = {
-  name: string;
   favoritesCount: number;
   achievementsCount: number;
   reviewsCount: number;
 };
 
 export const ProfileHero = ({
-  name,
   favoritesCount,
   achievementsCount,
   reviewsCount,
@@ -20,10 +20,9 @@ export const ProfileHero = ({
   const { user, updateUser } = useAuth();
 
   const [preview, setPreview] = useState<string | null>(null);
-
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const firstLetter = (user?.name || name).charAt(0).toUpperCase();
+  const firstLetter = (user?.name || "").charAt(0).toUpperCase();
 
   const openFile = () => {
     inputRef.current?.click();
@@ -37,23 +36,15 @@ export const ProfileHero = ({
     setPreview(localPreview);
 
     try {
-      const response = await userApi.uploadAvatar(file);
+      const compressedFile = await compressImage(file);
+      const response = await userApi.uploadAvatar(compressedFile);
+
       updateUser(response);
       setPreview(null);
     } catch (e) {
       console.error(e);
     } finally {
       URL.revokeObjectURL(localPreview);
-    }
-  };
-
-  const handleDelete = async () => {
-    try {
-      const response = await userApi.deleteAvatar();
-      updateUser(response);
-      setPreview(null);
-    } catch (e) {
-      console.error(e);
     }
   };
 
@@ -64,10 +55,7 @@ export const ProfileHero = ({
       <div className="profile-hero__inner">
         <div className="profile-hero__left">
           <div className="profile-hero__avatar-wrapper">
-            <div
-              className="profile-hero__avatar"
-              onClick={openFile}
-            >
+            <div className="profile-hero__avatar" onClick={openFile}>
               {avatarSrc ? (
                 <img src={avatarSrc} alt="avatar" />
               ) : (
@@ -76,22 +64,12 @@ export const ProfileHero = ({
             </div>
 
             <button
-              className="profile-hero__avatar-edit"
+              className="profile-hero__avatar-action"
               onClick={openFile}
               type="button"
             >
-              +
+              {avatarSrc ? "×" : "+"}
             </button>
-
-            {user?.avatarUrl && (
-              <button
-                className="profile-hero__avatar-remove"
-                onClick={handleDelete}
-                type="button"
-              >
-                ×
-              </button>
-            )}
 
             <input
               ref={inputRef}
@@ -104,8 +82,9 @@ export const ProfileHero = ({
 
           <div className="profile-hero__user">
             <h2 className="profile-hero__name">
-              {user?.name || name}
+              {user?.name}
             </h2>
+
             <p className="profile-hero__subtitle">
               Your wine journey
             </p>

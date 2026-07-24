@@ -1,11 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { WineCatalogCard } from "@/components/catalog/WineCatalogCard";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 
 import { useFavorites } from "@/context/FavoritesContext";
-
-
 
 import type { WineCatalogCard as WineCatalogCardType } from "@/types/wineCatalogCard";
 
@@ -19,13 +17,11 @@ type Props = {
 const MAX_SIMILAR_WINES = 4;
 
 export const SimilarWines = ({ wineId }: Props) => {
-  const { favorites, toggleFavorite } = useFavorites();
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   const [similarWines, setSimilarWines] = useState<WineCatalogCardType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-
-  const favoriteIds = useMemo(() => new Set(favorites), [favorites]);
 
   useEffect(() => {
     let isMounted = true;
@@ -34,7 +30,6 @@ export const SimilarWines = ({ wineId }: Props) => {
       try {
         setIsLoading(true);
         setError("");
-        setSimilarWines([]);
 
         const wines = await getSimilarWines(wineId);
 
@@ -45,8 +40,8 @@ export const SimilarWines = ({ wineId }: Props) => {
         if (isMounted) {
           setSimilarWines(wines.slice(0, MAX_SIMILAR_WINES));
         }
-      } catch (error) {
-        console.error("Failed to load similar wines", error);
+      } catch (e) {
+        console.error("Failed to load similar wines", e);
 
         if (isMounted) {
           setError("Failed to load similar wines.");
@@ -70,16 +65,24 @@ export const SimilarWines = ({ wineId }: Props) => {
       <section className="similar-wines">
         <div className="container">
           <SectionTitle title="You May Also Like" />
-
           <p className="similar-wines__state">Loading similar wines...</p>
         </div>
       </section>
     );
   }
 
-  if (error || similarWines.length === 0) {
-    return null;
+  if (error) {
+    return (
+      <section className="similar-wines">
+        <div className="container">
+          <SectionTitle title="You May Also Like" />
+          <p className="similar-wines__state">{error}</p>
+        </div>
+      </section>
+    );
   }
+
+  if (!similarWines.length) return null;
 
   return (
     <section className="similar-wines">
@@ -92,7 +95,7 @@ export const SimilarWines = ({ wineId }: Props) => {
               key={wine.id}
               wine={wine}
               index={index}
-              isFavorite={favoriteIds.has(wine.id)}
+              isFavorite={isFavorite(wine.id)}
               onToggleFavorite={toggleFavorite}
             />
           ))}

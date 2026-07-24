@@ -29,7 +29,7 @@ export class ApiError extends Error {
     this.status = status;
     this.data = data;
   }
-};
+}
 
 const buildUrl = (endpoint: string) => {
   if (!BASE_URL) {
@@ -51,22 +51,24 @@ const parseResponseBody = async (response: Response) => {
 
 export const httpClient = async <T>(
   endpoint: string,
-  options: HttpClientOptions = {},
+  options: HttpClientOptions = {}
 ): Promise<T> => {
   const { skipJsonContentType, skipAuth, headers, body, ...rest } = options;
 
   const isFormData = body instanceof FormData;
 
   const token = localStorage.getItem("accessToken");
-  const tokenType = localStorage.getItem("tokenType") || "Bearer";
+
+  const isValidToken =
+    token && token !== "undefined" && token !== "null";
 
   const requestHeaders: HeadersInit = {
     ...(!isFormData && !skipJsonContentType
       ? { "Content-Type": "application/json" }
       : {}),
 
-    ...(token && !skipAuth
-      ? { Authorization: `${tokenType} ${token}` }
+    ...(isValidToken && !skipAuth
+      ? { Authorization: `Bearer ${token}` }
       : {}),
 
     ...headers,

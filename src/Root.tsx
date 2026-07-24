@@ -15,6 +15,9 @@ import { AuthPage } from "./pages/AuthPage";
 import { AuthProvider } from "./context/AuthContext";
 import { ProfilePage } from "./pages/ProfilePage";
 import { AuthRequiredProvider } from "@/context/AuthRequiredContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 const ROUTES = {
   home: "/",
@@ -28,31 +31,38 @@ const ROUTES = {
   profile: "/profile",
 } as const;
 
+
+
 export const Root = () => {
   return (
-    <HashRouter>
-      <AuthProvider>
-      <AuthRequiredProvider>
-      <FavoritesProvider>
-        <QuizSessionProvider>
-          <ScrollToTop />
-          <Routes>
-            <Route path={ROUTES.home} element={<App />}>
-              <Route index element={<HomePage />} />
-              <Route path={ROUTES.catalog} element={<CatalogPage />} />
-              <Route path={ROUTES.wineDetails} element={<WineDetailsPage />} />
-              <Route path={ROUTES.writeReview} element={<WriteReviewPage />} />
-              <Route path={ROUTES.about} element={<AboutPage />} />
-              <Route path={ROUTES.history} element={<HistoryPage />} />
-              <Route path={ROUTES.quiz} element={<QuizPage />} />
-              <Route path={ROUTES.auth} element={<AuthPage />} />
-              <Route path={ROUTES.profile} element={<ProfilePage />} />
-            </Route>
-          </Routes>
-        </QuizSessionProvider>
-      </FavoritesProvider>
-      </AuthRequiredProvider>
-      </AuthProvider>
-    </HashRouter>
+    <QueryClientProvider client={queryClient}>
+      <HashRouter>
+        <AuthProvider>
+          <AuthRequiredProvider>
+            <FavoritesProvider>
+              <QuizSessionProvider>
+
+                <ScrollToTop />
+
+                <Routes>
+                  <Route path={ROUTES.home} element={<App />}>
+                    <Route index element={<HomePage />} />
+                    <Route path={ROUTES.catalog} element={<CatalogPage />} />
+                    <Route path={ROUTES.wineDetails} element={<WineDetailsPage />} />
+                    <Route path={ROUTES.writeReview} element={<WriteReviewPage />} />
+                    <Route path={ROUTES.about} element={<AboutPage />} />
+                    <Route path={ROUTES.history} element={<HistoryPage />} />
+                    <Route path={ROUTES.quiz} element={<QuizPage />} />
+                    <Route path={ROUTES.auth} element={<AuthPage />} />
+                    <Route path={ROUTES.profile} element={<ProfilePage />} />
+                  </Route>
+                </Routes>
+
+              </QuizSessionProvider>
+            </FavoritesProvider>
+          </AuthRequiredProvider>
+        </AuthProvider>
+      </HashRouter>
+    </QueryClientProvider>
   );
 };

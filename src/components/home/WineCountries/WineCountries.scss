@@ -118,8 +118,13 @@
     transform-origin: center bottom;
   }
 
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+
   &__view-all {
-    margin: 56px 0 0 auto;
+    @include expandable-button;
   }
 
   @include on-tablet {

@@ -1,4 +1,5 @@
 import type { ComponentType, SVGProps } from "react";
+import type { WineCatalogCard } from "./wineCatalogCard";
 
 export type QuizExperienceLevel = "beginner" | "enthusiast" | "connoisseur";
 
@@ -36,4 +37,10 @@ export type QuizQuestionConfig = {
 export type QuizRequestDto = {
   experienceLevel: QuizApiExperienceLevel;
   answers: Partial<Record<QuizApiAnswerField, string>>;
+};
+
+export type QuizHistoryResponse = {
+  id: number;
+  createdAt: string;
+  wines: WineCatalogCard[];
 };

@@ -1,7 +1,9 @@
 import { authApi } from "@/shared/api/authApi";
 import { userApi } from "@/shared/api/userApi";
+import { queryClient } from "@/shared/lib/reactQuery";
 import type { AuthResponse, LoginRequest, RegisterRequest } from "@/types/auth";
-import type { User } from "@/types/user";
+import type { UserResponse } from "@/types/user";
+import type { Wine } from "@/types/wine";
 import {
   createContext,
   useCallback,
@@ -13,13 +15,11 @@ import {
 } from "react";
 
 const ACCESS_TOKEN_STORAGE_KEY = "accessToken";
-const TOKEN_TYPE_STORAGE_KEY = "tokenType";
 const USER_STORAGE_KEY = "user";
 
 type AuthContextType = {
   accessToken: string | null;
-  tokenType: string | null;
-  user: User | null;
+  user: UserResponse | null;
   isAuthenticated: boolean;
   isLoadingUser: boolean;
 
@@ -27,7 +27,7 @@ type AuthContextType = {
   login: (data: LoginRequest) => Promise<AuthResponse>;
   logout: () => void;
 
-  updateUser: (user: User) => void;
+  updateUser: (user: UserResponse) => void;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -36,84 +36,97 @@ type Props = {
   children: ReactNode;
 };
 
-const getSavedAccessToken = () =>
-  localStorage.getItem(ACCESS_TOKEN_STORAGE_KEY);
+const getSavedAccessToken = () => {
+  const token = localStorage.getItem(ACCESS_TOKEN_STORAGE_KEY);
 
-const getSavedTokenType = () =>
-  localStorage.getItem(TOKEN_TYPE_STORAGE_KEY);
+  if (!token || token === "undefined" || token === "null") {
+    return null;
+  }
 
-const getSavedUser = (): User | null => {
+  return token;
+};
+
+const getSavedUser = (): UserResponse | null => {
   try {
     const data = localStorage.getItem(USER_STORAGE_KEY);
-    return data ? JSON.parse(data) : null;
+    if (!data) return null;
+    return JSON.parse(data);
   } catch {
+    localStorage.removeItem(USER_STORAGE_KEY);
     return null;
   }
 };
 
 export const AuthProvider = ({ children }: Props) => {
   const [accessToken, setAccessToken] = useState<string | null>(() =>
-    getSavedAccessToken(),
+    getSavedAccessToken()
   );
 
-  const [tokenType, setTokenType] = useState<string | null>(() =>
-    getSavedTokenType(),
-  );
-
-  const [user, setUser] = useState<User | null>(() =>
-    getSavedUser(),
+  const [user, setUser] = useState<UserResponse | null>(() =>
+    getSavedUser()
   );
 
   const [isLoadingUser, setIsLoadingUser] = useState(false);
 
   const saveAuthData = useCallback((data: AuthResponse) => {
     localStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, data.accessToken);
-    localStorage.setItem(TOKEN_TYPE_STORAGE_KEY, data.tokenType);
-
     setAccessToken(data.accessToken);
-    setTokenType(data.tokenType);
   }, []);
 
-  const updateUser = useCallback((updatedUser: User) => {
+  const updateUser = useCallback((updatedUser: UserResponse) => {
     setUser(updatedUser);
     localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updatedUser));
+  }, []);
+
+  const logout = useCallback(() => {
+    localStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
+    localStorage.removeItem(USER_STORAGE_KEY);
+
+    setAccessToken(null);
+    setUser(null);
   }, []);
 
   const register = useCallback(
     async (data: RegisterRequest) => {
       const response = await authApi.register(data);
-      saveAuthData(response);
-
-      const userData = await userApi.getMe();
-      updateUser(userData);
-
+  
+      console.log("REGISTER RESPONSE:", response);
+  
       return response;
     },
-    [saveAuthData, updateUser],
+    []
   );
 
   const login = useCallback(
     async (data: LoginRequest) => {
       const response = await authApi.login(data);
+
       saveAuthData(response);
 
       const userData = await userApi.getMe();
       updateUser(userData);
 
+const savedQuiz = sessionStorage.getItem("quizResult");
+
+if (savedQuiz) {
+  try {
+    const wines: Wine[] = JSON.parse(savedQuiz);
+    const wineIds = wines.map((w) => w.id);
+
+    await userApi.saveQuizResult(wineIds);
+
+    queryClient.invalidateQueries({ queryKey: ["quiz-history"] });
+
+    sessionStorage.removeItem("quizResult"); 
+  } catch (e) {
+    console.error("Failed to send saved quiz", e);
+  }
+}
+
       return response;
     },
-    [saveAuthData, updateUser],
+    [saveAuthData, updateUser]
   );
-
-  const logout = useCallback(() => {
-    localStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
-    localStorage.removeItem(TOKEN_TYPE_STORAGE_KEY);
-    localStorage.removeItem(USER_STORAGE_KEY);
-
-    setAccessToken(null);
-    setTokenType(null);
-    setUser(null);
-  }, []);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -125,30 +138,26 @@ export const AuthProvider = ({ children }: Props) => {
     userApi
       .getMe()
       .then((userData) => {
-        if (isMounted) {
-          updateUser(userData);
-        }
+        if (isMounted) updateUser(userData);
       })
       .catch(() => {
-        console.error("Failed to fetch user");
+        console.error("Auth invalid → logout");
+        logout();
       })
       .finally(() => {
-        if (isMounted) {
-          setIsLoadingUser(false);
-        }
+        if (isMounted) setIsLoadingUser(false);
       });
 
     return () => {
       isMounted = false;
     };
-  }, [accessToken, updateUser]);
+  }, [accessToken, updateUser, logout]);
 
   const value = useMemo(
     () => ({
       accessToken,
-      tokenType,
       user,
-      isAuthenticated: Boolean(accessToken && user),
+      isAuthenticated: Boolean(accessToken),
       isLoadingUser,
       register,
       login,
@@ -157,14 +166,13 @@ export const AuthProvider = ({ children }: Props) => {
     }),
     [
       accessToken,
-      tokenType,
       user,
       isLoadingUser,
       register,
       login,
       logout,
       updateUser,
-    ],
+    ]
   );
 
   return (

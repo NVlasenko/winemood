@@ -50,7 +50,7 @@ const scrollToCatalogTop = () => {
 export const CatalogPage = () => {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
-  const { favorites, toggleFavorite } = useFavorites();
+  const { favoriteIds, toggleFavorite } = useFavorites(); 
 
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
@@ -152,7 +152,7 @@ export const CatalogPage = () => {
 
   const { activeSort, sortedWines, setActiveSort } = useCatalogSort(wines);
 
-  const favoriteIds = useMemo(() => new Set(favorites), [favorites]);
+  const favoriteIdsSet = useMemo(() => new Set(favoriteIds), [favoriteIds]);
 
   const handleOpenFilters = useCallback(() => {
     setIsFiltersOpen(true);
@@ -217,15 +217,15 @@ export const CatalogPage = () => {
           onClose={handleCloseSearch}
         />
 
-        <CatalogContent
-          wines={sortedWines}
-          favoriteIds={favoriteIds}
-          isInitialLoading={isInitialLoading}
-          isCurating={isCurating}
-          error={error}
-          onOpenFilters={handleOpenFilters}
-          onToggleFavorite={toggleFavorite}
-        />
+      <CatalogContent
+        wines={sortedWines}
+        favoriteIds={favoriteIdsSet}
+        isInitialLoading={isInitialLoading}
+        isCurating={isCurating}
+        error={error}
+        onOpenFilters={handleOpenFilters}
+        onToggleFavorite={toggleFavorite}
+      />
 
         <CatalogPagination
           currentPage={currentPage}

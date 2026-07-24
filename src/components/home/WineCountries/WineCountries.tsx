@@ -148,11 +148,13 @@ export const WineCountries = () => {
             </motion.div>
 
             {hasMoreCountries && (
-              <MoodLinkButton
-                className="wine-countries__view-all"
-                text={isOpen ? "Hide Countries" : "View All Countries"}
-                onClick={toggleOpen}
-              />
+              <div className="wine-countries__actions">
+                <MoodLinkButton
+                  className="wine-countries__view-all"
+                  text={isOpen ? "Hide Countries" : "View All Countries"}
+                  onClick={toggleOpen}
+                />
+            </div>
             )}
           </>
         )}

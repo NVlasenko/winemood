@@ -1,0 +1,63 @@
+@import "@/styles/mixins";
+@import "@/styles/variables";
+
+.profile-quiz-results {
+  margin-top: 80px;
+
+  &__top {
+    margin-top: 60px;
+  }
+
+  &__grid-wrap {
+    overflow-x: visible;
+    overflow-y: hidden;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+
+    margin-top: 40px;
+  }
+
+  &__empty {
+    margin-top: 20px;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  &__loader {
+    margin-top: 20px;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  @include on-tablet {
+    margin-top: 150px;
+
+    &__top {
+      margin-top: 80px;
+    }
+
+    &__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 28px;
+      margin-top: 80px;
+    }
+  }
+
+  @include on-desktop {
+    margin-top: 220px;
+
+    &__top {
+      margin-top: 100px;
+    }
+
+    &__grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      margin-top: 120px;
+    }
+  }
+}

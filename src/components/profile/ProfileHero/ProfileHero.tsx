@@ -5,20 +5,17 @@ import { userApi } from "@/shared/api/userApi";
 
 import "./ProfileHero.scss";
 import { compressImage } from "@/utils/compressImage";
+import { useFavorites } from "@/context/FavoritesContext";
 
 type Props = {
-  favoritesCount: number;
   achievementsCount: number;
-  reviewsCount: number;
 };
 
 export const ProfileHero = ({
-  favoritesCount,
   achievementsCount,
-  reviewsCount,
 }: Props) => {
   const { user, updateUser } = useAuth();
-
+  const { favoritesCount } = useFavorites();
   const [preview, setPreview] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -102,10 +99,6 @@ export const ProfileHero = ({
             <span className="profile-hero__label">Achievements</span>
           </div>
 
-          <div className="profile-hero__stat">
-            <span className="profile-hero__value">{reviewsCount}</span>
-            <span className="profile-hero__label">Reviews</span>
-          </div>
         </div>
       </div>
     </section>

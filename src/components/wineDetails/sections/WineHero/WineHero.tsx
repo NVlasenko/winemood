@@ -1,7 +1,8 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
 
 import type { Wine } from "@/types/wine";
+import type { WineCatalogCard as WineCatalogCardType } from "@/types/wineCatalogCard";
 
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { FavoriteButton } from "@/components/ui/FavoriteButton";
@@ -28,8 +29,21 @@ type Props = {
 
 const STARS = [1, 2, 3, 4, 5] as const;
 
+const mapWineToCard = (wine: Wine): WineCatalogCardType => ({
+  id: wine.id,
+  name: wine.name,
+  type: wine.type,
+  sweetnessLevel: {
+    name: wine.sweetnessLevel.name,
+  },
+  volumeMl: wine.volumeMl,
+  countryName: wine.countryName,
+  imageUrl: wine.imageUrl,
+  rating: wine.rating,
+});
+
 export const WineHero = ({ wine }: Props) => {
-  const { favorites, toggleFavorite } = useFavorites();
+  const { isFavorite, toggleFavorite } = useFavorites();
   const { backTarget, clearWineDetailsBackTarget } = useQuizSession();
   const { isAuthenticated } = useAuth();
   const { openAuthRequired } = useAuthRequired();
@@ -37,7 +51,7 @@ export const WineHero = ({ wine }: Props) => {
   const backTo = backTarget?.to ?? "/catalog";
   const backLabel = backTarget?.label ?? "Catalog";
 
-  const isFavorite = favorites.includes(wine.id);
+  const isFav = isFavorite(wine.id);
   const isMateusRose = wine.name === "Mateus Rosé";
 
   const handleFavoriteClick = () => {
@@ -54,30 +68,33 @@ export const WineHero = ({ wine }: Props) => {
       return;
     }
 
-    toggleFavorite(wine.id);
+    toggleFavorite(mapWineToCard(wine));
   };
 
   const handleBackClick = useCallback(() => {
     clearWineDetailsBackTarget();
   }, [clearWineDetailsBackTarget]);
 
-  const metaItems = [
-    {
-      id: "sweetness",
-      Icon: SweetnessIcon,
-      value: formatLabel(wine.sweetnessLevel.name),
-    },
-    {
-      id: "volume",
-      Icon: BottleIcon,
-      value: `${wine.volumeMl} ML`,
-    },
-    {
-      id: "vintage",
-      Icon: VintageIcon,
-      value: wine.vintage,
-    },
-  ];
+  const metaItems = useMemo(
+    () => [
+      {
+        id: "sweetness",
+        Icon: SweetnessIcon,
+        value: formatLabel(wine.sweetnessLevel.name),
+      },
+      {
+        id: "volume",
+        Icon: BottleIcon,
+        value: `${wine.volumeMl} ML`,
+      },
+      {
+        id: "vintage",
+        Icon: VintageIcon,
+        value: wine.vintage,
+      },
+    ],
+    [wine]
+  );
 
   return (
     <div className="wine-hero">
@@ -95,7 +112,7 @@ export const WineHero = ({ wine }: Props) => {
           </Link>
 
           <FavoriteButton
-            isFavorite={isFavorite}
+            isFavorite={isFav}
             className="wine-hero__favorite"
             onClick={handleFavoriteClick}
           />
@@ -114,13 +131,8 @@ export const WineHero = ({ wine }: Props) => {
                   Math.min(Math.max(wine.rating - (star - 1), 0), 1) * 100;
 
                 return (
-                  <span
-                    className="wine-hero__star"
-                    key={star}
-                    aria-hidden="true"
-                  >
+                  <span className="wine-hero__star" key={star}>
                     <span className="wine-hero__star-bg">★</span>
-
                     <span
                       className="wine-hero__star-fill"
                       style={{ width: `${fillPercent}%` }}
@@ -157,19 +169,16 @@ export const WineHero = ({ wine }: Props) => {
 
                 return (
                   <div className="wine-hero__meta-item" key={item.id}>
-                    <Icon
-                      className="wine-hero__meta-icon"
-                      aria-hidden="true"
-                      focusable="false"
-                    />
-
+                    <Icon className="wine-hero__meta-icon" />
                     <span>{item.value}</span>
                   </div>
                 );
               })}
             </div>
 
-            <p className="wine-hero__description">{wine.description}</p>
+            <p className="wine-hero__description">
+              {wine.description}
+            </p>
           </div>
 
           <div className="wine-hero__right">

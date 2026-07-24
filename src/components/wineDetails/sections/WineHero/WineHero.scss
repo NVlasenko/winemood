@@ -24,6 +24,7 @@
       cover,
       right top
     );
+    pointer-events: none;
   }
 
   &__top {
@@ -81,7 +82,7 @@
       color: var(--mood-link-hover-color);
     }
 
-    &--active {
+    &.favorite-button--active {
       color: var(--mood-link-hover-color);
       background: rgba(70, 70, 70, 0.36);
     }

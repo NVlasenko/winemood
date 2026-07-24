@@ -12,7 +12,7 @@ type Props = {
   isCurating: boolean;
   error: string;
   onOpenFilters: () => void;
-  onToggleFavorite: (id: number) => void;
+  onToggleFavorite: (wine: WineCatalogCardType) => Promise<void>; 
 };
 
 export const CatalogContent = ({
@@ -24,6 +24,7 @@ export const CatalogContent = ({
   onOpenFilters,
   onToggleFavorite,
 }: Props) => {
+
   if (isInitialLoading) {
     return <CatalogLoader />;
   }
@@ -37,34 +38,32 @@ export const CatalogContent = ({
   }
 
   return (
-    <>
-      <div className="catalog-page__curation">
-        {isCurating && (
-          <div className="catalog-page__curation-overlay">
-            <div className="catalog-page__curation-glow" />
+    <div className="catalog-page__curation">
 
-            <p className="catalog-page__curation-text">
-              Finding the best matches...
-            </p>
-          </div>
-        )}
-
-        <div
-          className={`catalog-page__grid ${
-            isCurating ? "catalog-page__grid--curating" : ""
-          }`}
-        >
-          {wines.map((wine, index) => (
-            <WineCatalogCard
-              key={wine.id}
-              wine={wine}
-              index={index}
-              isFavorite={favoriteIds.has(wine.id)}
-              onToggleFavorite={onToggleFavorite}
-            />
-          ))}
+      {isCurating && (
+        <div className="catalog-page__curation-overlay">
+          <div className="catalog-page__curation-glow" />
+          <p className="catalog-page__curation-text">
+            Finding the best matches...
+          </p>
         </div>
+      )}
+
+      <div
+        className={`catalog-page__grid ${
+          isCurating ? "catalog-page__grid--curating" : ""
+        }`}
+      >
+        {wines.map((wine, index) => (
+          <WineCatalogCard
+            key={wine.id}
+            wine={wine}
+            index={index}
+            isFavorite={favoriteIds.has(wine.id)}
+            onToggleFavorite={onToggleFavorite}
+          />
+        ))}
       </div>
-    </>
+    </div>
   );
 };

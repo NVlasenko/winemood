@@ -16,7 +16,7 @@ type Props = {
   wine: WineCatalogCardType;
   index: number;
   isFavorite: boolean;
-  onToggleFavorite: (id: number) => void;
+  onToggleFavorite: (wine: WineCatalogCardType) => Promise<void>;
 };
 
 const formatWineValue = (value: string) => {
@@ -49,7 +49,7 @@ export const WineCatalogCard = ({
       return;
     }
 
-    onToggleFavorite(wine.id);
+    onToggleFavorite(wine);
   };
 
   return (
@@ -64,7 +64,7 @@ export const WineCatalogCard = ({
       />
 
       <Link to={`/catalog/${wine.id}`} className="catalog-page__image-link">
-        <span className="catalog-page__wine-glow" aria-hidden="true" />
+        <span className="catalog-page__wine-glow" />
 
         <img
           className="catalog-page__image"
@@ -82,12 +82,12 @@ export const WineCatalogCard = ({
 
         <div className="catalog-page__meta">
           <div className="catalog-page__meta-item">
-            <img src={wineDropIcon} alt="" aria-hidden="true" />
+            <img src={wineDropIcon} alt="" />
             <span>{formatWineValue(wine.sweetnessLevel.name)}</span>
           </div>
 
           <div className="catalog-page__meta-item">
-            <img src={bottleIcon} alt="" aria-hidden="true" />
+            <img src={bottleIcon} alt="" />
             <span>{wine.volumeMl} ml</span>
           </div>
         </div>

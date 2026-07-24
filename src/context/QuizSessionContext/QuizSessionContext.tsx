@@ -20,6 +20,7 @@ type WineDetailsBackTarget = {
 type QuizSessionContextValue = {
   quizResult: Wine[] | null;
   backTarget: WineDetailsBackTarget | null;
+  hasQuizResult: boolean;
   saveQuizResult: (wines: Wine[]) => void;
   clearQuizResult: () => void;
   markWineDetailsOpenedFromQuizResults: () => void;
@@ -99,6 +100,8 @@ export const QuizSessionProvider = ({ children }: Props) => {
     () => getSavedWineDetailsBackTarget(),
   );
 
+  const hasQuizResult = Boolean(quizResult?.length);
+  
   const saveQuizResult = useCallback((wines: Wine[]) => {
     sessionStorage.setItem(QUIZ_RESULT_STORAGE_KEY, JSON.stringify(wines));
     setQuizResult(wines);
@@ -127,6 +130,7 @@ export const QuizSessionProvider = ({ children }: Props) => {
     () => ({
       quizResult,
       backTarget,
+      hasQuizResult,
       saveQuizResult,
       clearQuizResult,
       markWineDetailsOpenedFromQuizResults,
@@ -135,6 +139,7 @@ export const QuizSessionProvider = ({ children }: Props) => {
     [
       quizResult,
       backTarget,
+      hasQuizResult,
       saveQuizResult,
       clearQuizResult,
       markWineDetailsOpenedFromQuizResults,

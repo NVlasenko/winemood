@@ -14,3 +14,4 @@ export const getWineById = (id: number): Promise<Wine> => {
 
   return httpClient<Wine>(`/api/wines/${id}`);
 };
+

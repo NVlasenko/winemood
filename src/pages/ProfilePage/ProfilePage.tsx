@@ -5,6 +5,8 @@ import { ProfileHero } from "@/components/profile/ProfileHero";
 import { ProfileCategories } from "@/components/profile/ProfileCategories";
 
 import "./ProfilePage.scss";
+import { ProfileFavorites } from "@/components/profile/ProfileFavorites";
+import { ProfileQuizResults } from "@/components/profile/ProfileQuizResults/ProfileQuizResults";
 
 export const ProfilePage = () => {
   const navigate = useNavigate();
@@ -46,12 +48,14 @@ export const ProfilePage = () => {
         </div>
 
         <ProfileHero
-          favoritesCount={0}
           achievementsCount={0}
-          reviewsCount={0}
         />
 
         <ProfileCategories />
+
+        <ProfileFavorites />
+
+        <ProfileQuizResults />
       </div>
     </main>
   );

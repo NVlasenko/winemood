@@ -1,0 +1,55 @@
+@import "@/styles/mixins";
+@import "@/styles/variables";
+
+.profile-favorites {
+  margin-top: 80px;
+
+  &__top{
+    margin-top: 60px;
+  }
+
+  &__grid-wrap {
+    overflow-x: visible;
+    overflow-y: hidden;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+
+    margin-top: 40px;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &__view-all {
+    @include expandable-button;
+  }
+
+  @include on-tablet {
+    margin-top: 150px;
+
+    &__top{
+      margin-top: 80px;
+    }
+    &__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 28px;
+    }
+  }
+
+  @include on-desktop {
+    margin-top: 220px;
+    &__top{
+      margin-top: 100px;
+    }
+    &__grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+    }
+  }
+}

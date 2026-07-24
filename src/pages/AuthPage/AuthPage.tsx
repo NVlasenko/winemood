@@ -208,10 +208,17 @@ export const AuthPage = () => {
   const [isRegisterConfirmPasswordVisible, setIsRegisterConfirmPasswordVisible] =
     useState(false);
   const [isLoginPasswordVisible, setIsLoginPasswordVisible] = useState(false);
-
+  const emailFromQuery = searchParams.get("email");
   const [submitError, setSubmitError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const { isAuthenticated, isLoadingUser } = useAuth();
+
+useEffect(() => {
+  if (isAuthenticated && !isLoadingUser) {
+    navigate("/profile");
+  }
+}, [isAuthenticated, isLoadingUser, navigate]);
 
   useEffect(() => {
     if (!isSuccessModalOpen) {
@@ -226,6 +233,22 @@ export const AuthPage = () => {
       window.clearTimeout(timeoutId);
     };
   }, [isSuccessModalOpen]);
+
+  useEffect(() => {
+    if (mode === "login" && emailFromQuery) {
+      setLoginForm((prev) => ({
+        ...prev,
+        email: emailFromQuery,
+      }));
+    }
+  }, [mode, emailFromQuery]);
+
+  useEffect(() => {
+    if (mode === "login" && emailFromQuery) {
+      const input = document.getElementById("loginPassword");
+      input?.focus();
+    }
+  }, [mode, emailFromQuery]);
 
   const registerErrors = useMemo<RegisterErrors>(() => {
     return {
@@ -339,31 +362,36 @@ export const AuthPage = () => {
       setSubmitError("");
       setIsSubmitting(true);
 
+
       try {
+        const email = registerForm.email.trim();
+      
         await register({
           name: registerForm.name.trim(),
-          email: registerForm.email.trim(),
+          email: email.trim(),
           password: registerForm.password,
         });
-
-        setIsSuccessModalOpen(true);
-
-        setRegisterForm(DEFAULT_REGISTER_FORM);
+      
         setRegisterTouched({});
         setIsRegisterPasswordVisible(false);
         setIsRegisterConfirmPasswordVisible(false);
-
-        window.setTimeout(() => {
-          navigate("/profile");
+      
+        setTimeout(() => {
+          navigate(`/auth?mode=login&email=${encodeURIComponent(email)}`);
         }, PROFILE_NAVIGATION_DELAY_MS);
+      
+        setRegisterForm(DEFAULT_REGISTER_FORM);
+
       } catch (error) {
         if (error instanceof ApiError) {
-          setSubmitError(error.message);
-
-          return;
+          if (error.status === 409) {
+            setSubmitError("User already exists");
+          } else {
+            setSubmitError(error.message);
+          }
+        } else {
+          setSubmitError("Something went wrong. Please try again.");
         }
-
-        setSubmitError("Something went wrong. Please try again.");
       } finally {
         setIsSubmitting(false);
       }
@@ -925,12 +953,8 @@ export const AuthPage = () => {
 
       <AuthSuccessModal
         isOpen={isSuccessModalOpen}
-        title={mode === "register" ? "Account created" : "Login successful"}
-        text={
-          mode === "register"
-            ? "Your account has been created successfully"
-            : "You have successfully signed into your account"
-        }
+        title="Login successful"
+        text="You have successfully signed into your account"
       />
     </>
   );

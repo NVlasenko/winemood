@@ -1,18 +1,20 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { MouseEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
+import { useWineReviews } from "@/hooks/reviews/useWineReviews";
 import messageIcon from "@/assets/images/icons/message.svg";
 import personIcon from "@/assets/images/icons/person.svg";
 import {
   ReviewStepLayout,
   type ReviewStep,
 } from "@/components/wineDetails/sections/ReviewStepLayout";
+import { useAuth } from "@/context/AuthContext";
 
 import "./WriteReviewPage.scss";
+import { useCreateReview, useUpdateReview } from "@/hooks/reviews/useReviewMutations.ts";
 
 const STARS = [1, 2, 3, 4, 5] as const;
-const SUBMIT_DELAY_MS = 2000;
+
 
 const getPreviousStep = (step: ReviewStep): ReviewStep => {
   switch (step) {
@@ -53,15 +55,30 @@ export const WriteReviewPage = () => {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
-  const [authorName, setAuthorName] = useState("");
-
-  const submitTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
+  const [mode, setMode] = useState<"create" | "edit">("create");
+  const { user } = useAuth();
+  const authorName = user?.name || "";
   const navigate = useNavigate();
   const { id } = useParams();
-
+  if (!id) return null; 
   const currentRating = hoverRating || rating;
-  const wineId = id || "";
+  const wineId = Number(id);
+  const createReview = useCreateReview(wineId);
+  const { data: wineReviews = [] } = useWineReviews(wineId);
+ 
+  const updateReview = useUpdateReview();
+  const myReview = useMemo(() => {
+    if (!user) return null;
+    return wineReviews.find((r) => r.userId === Number(user.id));
+  }, [wineReviews, user]);
+
+  useEffect(() => {
+    if (!myReview || isSubmitted) return;
+  
+    setMode("edit");
+    setRating(myReview.rating);
+    setReviewText(myReview.reviewText);
+  }, [myReview, isSubmitted]);
 
   const canGoNext = useMemo(() => {
     switch (step) {
@@ -72,12 +89,12 @@ export const WriteReviewPage = () => {
         return reviewText.trim().length >= 5;
 
       case 3:
-        return authorName.trim().length >= 2;
+        return true;
 
       default:
         return false;
     }
-  }, [step, rating, reviewText, authorName]);
+  }, [step, rating, reviewText]);
 
   const getRatingFromPointer = (
     event: MouseEvent<HTMLButtonElement>,
@@ -90,6 +107,8 @@ export const WriteReviewPage = () => {
 
     return Number(preciseRating.toFixed(2));
   };
+
+
 
   const handleStarClick = (
     event: MouseEvent<HTMLButtonElement>,
@@ -130,21 +149,52 @@ export const WriteReviewPage = () => {
     setIsConfirmOpen(false);
   }, [isSubmitted]);
 
-  const handleSubmitReview = useCallback(async () => {
-    setIsSubmitted(true);
+  const handleSubmitReview = useCallback(() => {
+    if (mode === "edit" && myReview) {
 
-    submitTimeoutRef.current = setTimeout(() => {
-      setRating(0);
-      setHoverRating(0);
-      setReviewText("");
-      setAuthorName("");
-      setStep(1);
-      setIsConfirmOpen(false);
-      setIsSubmitted(false);
+      updateReview.mutate(
+        {
+          reviewId: myReview.id,
+          rating,
+          reviewText,
+        },
+        {
+          onSuccess: () => {
+            setIsSubmitted(true);
+  
+            setTimeout(() => {
+              navigate("/profile"); 
+            }, 1000);
+          },
+        }
+      );
+    } else {
 
-      navigate(wineId ? `/catalog/${wineId}` : "/catalog");
-    }, SUBMIT_DELAY_MS);
-  }, [navigate, wineId]);
+      createReview.mutate(
+        {
+          rating,
+          reviewText,
+        },
+        {
+          onSuccess: () => {
+            setIsSubmitted(true);
+  
+            setTimeout(() => {
+              navigate(`/catalog/${wineId}`)
+            }, 1200);
+          },
+        }
+      );
+    }
+  }, [
+    myReview,
+    rating,
+    reviewText,
+    updateReview,
+    createReview,
+    navigate,
+    wineId,
+  ]);
 
   return (
     <ReviewStepLayout
@@ -157,7 +207,7 @@ export const WriteReviewPage = () => {
       {step === 1 && (
         <div className="write-review-page__step">
           <h2 className="write-review-page__subtitle">
-            How would you rate this wine?
+          "How would you rate this wine?"
           </h2>
 
           <div
@@ -238,14 +288,9 @@ export const WriteReviewPage = () => {
               aria-hidden="true"
             />
 
-            <input
-              className="write-review-page__input"
-              type="text"
-              placeholder="Your name"
-              value={authorName}
-              maxLength={40}
-              onChange={(event) => setAuthorName(event.target.value)}
-            />
+          <div className="write-review-page__input">
+            {authorName}
+          </div>
           </div>
         </div>
       )}
@@ -264,21 +309,21 @@ export const WriteReviewPage = () => {
             </button>
 
             {isSubmitted ? (
-              <>
+              <div className="write-review-page__success">
                 <div className="write-review-page__success-icon">✓</div>
 
                 <h3 className="write-review-page__modal-title">
-                  Review submitted
+                {mode === "edit" ? "Review updated" : "Review submitted"}
                 </h3>
 
                 <p className="write-review-page__modal-success-text">
                   Thank you for sharing your experience with the community.
                 </p>
-              </>
+              </div>
             ) : (
               <>
-                <h3 className="write-review-page__modal-title">
-                  Confirm your review
+               <h3 className="write-review-page__modal-title">
+               {mode === "edit" ? "Update your review" : "Confirm your review"}
                 </h3>
 
                 <div className="write-review-page__modal-summary">
@@ -315,8 +360,15 @@ export const WriteReviewPage = () => {
                   className="button-primary write-review-page__modal-button"
                   type="button"
                   onClick={handleSubmitReview}
+                  disabled={mode === "edit" ? updateReview.isPending : createReview.isPending}
                 >
-                  Submit review
+                 {mode === "edit"
+                  ? updateReview.isPending
+                    ? "Updating..."
+                    : "Update review"
+                  : createReview.isPending
+                  ? "Sending..."
+                  : "Submit review"}
                 </button>
               </>
             )}
@@ -326,3 +378,4 @@ export const WriteReviewPage = () => {
     </ReviewStepLayout>
   );
 };
+

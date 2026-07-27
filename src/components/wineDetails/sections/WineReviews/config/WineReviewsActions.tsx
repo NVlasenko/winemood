@@ -10,6 +10,8 @@ type Props = {
   wineId: number;
   isExpanded: boolean;
   hasMoreReviews: boolean;
+  hasAnyReviews: boolean;
+  hasMyReview: boolean;
   onToggleExpanded: () => void;
   showReviewIcon?: boolean;
 };
@@ -18,6 +20,8 @@ export const WineReviewsActions = ({
   wineId,
   isExpanded,
   hasMoreReviews,
+  hasAnyReviews,
+  hasMyReview,
   onToggleExpanded,
   showReviewIcon = false,
 }: Props) => {
@@ -26,7 +30,7 @@ export const WineReviewsActions = ({
   const { isAuthenticated } = useAuth();
   const { openAuthRequired } = useAuthRequired();
 
-  const handleWriteReview = () => {
+  const handleAction = () => {
     if (!isAuthenticated) {
       openAuthRequired({
         title: "Write a wine review",
@@ -36,7 +40,11 @@ export const WineReviewsActions = ({
         secondaryLabel: "Log in",
         secondaryTo: "/auth?mode=login",
       });
+      return;
+    }
 
+    if (hasMyReview) {
+      navigate("/profile");
       return;
     }
 
@@ -52,30 +60,32 @@ export const WineReviewsActions = ({
       <button
         className="button-primary wine-reviews__write-button"
         type="button"
-        onClick={handleWriteReview}
+        onClick={handleAction}
       >
-        <span>Write a review</span>
+        <span>
+          {hasMyReview
+            ? "Go to profile to edit"
+            : "Write a review"}
+        </span>
 
         {showReviewIcon && (
           <img
             className="wine-reviews__write-icon"
             src={reviewIcon}
             alt=""
-            aria-hidden="true"
           />
         )}
       </button>
 
-      {hasMoreReviews && (
+      {hasAnyReviews && hasMoreReviews && (
         <button
           className="wine-reviews__button"
           type="button"
           onClick={onToggleExpanded}
-          aria-expanded={isExpanded}
         >
           <span>{isExpanded ? "Show less" : "See more"}</span>
 
-          <img src={arrowIcon} alt="" aria-hidden="true" />
+          <img src={arrowIcon} alt="" />
         </button>
       )}
     </div>

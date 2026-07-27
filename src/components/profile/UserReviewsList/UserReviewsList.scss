@@ -1,0 +1,286 @@
+@import "@/styles/mixins";
+@import "@/styles/variables";
+
+.user-reviews {
+  width: 100%;
+  margin-top: 80px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 50px;
+  }
+
+  &__card {
+    padding: 20px;
+
+    border-radius: 16px;
+    border: 1px solid rgba(217, 217, 217, 0.12);
+
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(40px);
+
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    transition: all 0.25s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateY(-2px);
+    }
+  }
+
+  &__wine {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    cursor: pointer;
+
+    img {
+      width: 64px;
+      height: 64px;
+
+      border-radius: 12px;
+
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+
+      transition: 0.3s;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  &__wine-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    h4 {
+      margin: 0;
+      font-family: "Marcellus", serif;
+      font-size: 16px;
+      color: $text-primary;
+    }
+
+    span {
+      font-size: 13px;
+      color: rgba(177, 167, 166, 1);
+    }
+  }
+
+  &__text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: $text-primary;
+  }
+
+  &__date {
+    font-size: 12px;
+    color: rgba(177, 167, 166, 1);
+  }
+
+  &__actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 6px;
+  }
+
+  &__btn {
+    padding: 8px 14px;
+
+    border-radius: 10px;
+    border: 1px solid rgba(217, 217, 217, 0.14);
+
+    background: rgba(255, 255, 255, 0.04);
+    color: $text-primary;
+
+    font-size: 12px;
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    &--danger {
+      color: #ff6b6b;
+      border-color: rgba(255, 107, 107, 0.3);
+
+      &:hover {
+        background: rgba(255, 107, 107, 0.12);
+      }
+    }
+  }
+
+  &__modal-overlay {
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(6px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 1000;
+
+    animation: fadeIn 0.2s ease;
+  }
+
+  &__modal {
+    width: 320px;
+    padding: 24px;
+
+    border-radius: 16px;
+    border: 1px solid rgba(217, 217, 217, 0.12);
+
+    background: rgba(20, 20, 20, 0.95);
+    backdrop-filter: blur(40px);
+
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    text-align: center;
+
+    animation: scaleIn 0.2s ease;
+
+    h3 {
+      margin: 0;
+      font-family: "Marcellus", serif;
+      font-size: 18px;
+      color: $text-primary;
+    }
+
+    p {
+      margin: 0;
+      font-size: 13px;
+      color: rgba(177, 167, 166, 1);
+    }
+  }
+
+  &__modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+  }
+  &__actions-bottom {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+  
+  &__view-all {
+    @include expandable-button;
+  }
+  &__loading {
+    padding: 40px 0;
+  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+  
+    animation: fadeIn 0.3s ease;
+  }
+  
+  &__loading-title {
+    margin: 0;
+  
+    font-family: "Marcellus", serif;
+    font-size: 18px;
+    color: $text-primary;
+  }
+  
+  &__loading-text {
+    margin: 0;
+  
+    font-size: 13px;
+    color: rgba(177, 167, 166, 1);
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @include on-tablet {
+    gap: 28px;
+    margin-top: 120px;
+
+    &__card {
+      padding: 24px;
+    }
+
+    &__wine img {
+      width: 72px;
+      height: 72px;
+    }
+    &__list {
+      margin-top: 80px;
+      gap: 25px;
+    }
+  }
+
+  @include on-desktop {
+    gap: 32px;
+    margin-top: 100px;
+
+    &__card {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    &__wine {
+      min-width: 240px;
+    }
+
+    &__text {
+      flex: 1;
+      max-width: 600px;
+    }
+
+    &__actions {
+      flex-shrink: 0;
+    }
+    &__list {
+      margin-top: 120px;
+      gap: 30px;
+    }
+
+    &__wine img {
+      width: 80px;
+      height: 80px;
+    }
+  }
+}

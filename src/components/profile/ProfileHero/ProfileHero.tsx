@@ -2,21 +2,24 @@ import { useRef, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { userApi } from "@/shared/api/userApi";
 
-
 import "./ProfileHero.scss";
 import { compressImage } from "@/utils/compressImage";
 import { useFavorites } from "@/context/FavoritesContext";
+
+import { CropAvatarModal } from "@/components/profile/CropAvatarModal";
+import { useUserReviews } from "@/hooks/reviews/useReviewMutations.ts";
 
 type Props = {
   achievementsCount: number;
 };
 
-export const ProfileHero = ({
-  achievementsCount,
-}: Props) => {
+export const ProfileHero = ({ achievementsCount }: Props) => {
   const { user, updateUser } = useAuth();
   const { favoritesCount } = useFavorites();
+  const { data: userReviews = [] } = useUserReviews();
   const [preview, setPreview] = useState<string | null>(null);
+  const [cropImage, setCropImage] = useState<string | null>(null);
+
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const firstLetter = (user?.name || "").charAt(0).toUpperCase();
@@ -25,24 +28,15 @@ export const ProfileHero = ({
     inputRef.current?.click();
   };
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
+  
     const localPreview = URL.createObjectURL(file);
-    setPreview(localPreview);
-
-    try {
-      const compressedFile = await compressImage(file);
-      const response = await userApi.uploadAvatar(compressedFile);
-
-      updateUser(response);
-      setPreview(null);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      URL.revokeObjectURL(localPreview);
-    }
+  
+    setCropImage(localPreview);
+ 
+    e.target.value = "";
   };
 
   const avatarSrc = preview || user?.avatarUrl || null;
@@ -78,9 +72,7 @@ export const ProfileHero = ({
           </div>
 
           <div className="profile-hero__user">
-            <h2 className="profile-hero__name">
-              {user?.name}
-            </h2>
+            <h2 className="profile-hero__name">{user?.name}</h2>
 
             <p className="profile-hero__subtitle">
               Your wine journey
@@ -95,12 +87,49 @@ export const ProfileHero = ({
           </div>
 
           <div className="profile-hero__stat">
-            <span className="profile-hero__value">{achievementsCount}</span>
+            <span className="profile-hero__value">
+              {achievementsCount}
+            </span>
             <span className="profile-hero__label">Achievements</span>
           </div>
 
+          <div className="profile-hero__stat">
+            <span className="profile-hero__value">
+            {userReviews.length}
+            </span>
+            <span className="profile-hero__label">Reviews</span>
+          </div>
         </div>
       </div>
+
+      {cropImage && (
+        <CropAvatarModal
+          image={cropImage}
+          onClose={() => setCropImage(null)}
+          onSave={async (blob) => {
+
+            const localPreview = URL.createObjectURL(blob);
+            setPreview(localPreview);
+          
+            setCropImage(null);
+          
+            try {
+              const file = new File([blob], "avatar.jpg", {
+                type: "image/jpeg",
+              });
+          
+              const compressedFile = await compressImage(file);
+              const response = await userApi.uploadAvatar(compressedFile);
+          
+              updateUser(response);
+          
+              URL.revokeObjectURL(localPreview);
+            } catch (e) {
+              console.error(e);
+            }
+          }}
+        />
+      )}
     </section>
   );
 };

@@ -1,0 +1,95 @@
+.avatar-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(6px);
+  }
+
+  &__card {
+    position: relative;
+    z-index: 2;
+
+    width: 340px;
+    padding: 20px;
+
+    border-radius: 16px;
+    background: #121212;
+
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &__title {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  &__viewport {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #000;
+  }
+
+  &__image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    user-select: none;
+  }
+
+  &__circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    width: 180px;
+    height: 180px;
+
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+
+    border: 2px solid rgba(255, 255, 255, 0.3);
+
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.6);
+    pointer-events: none;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 12px;
+  }
+
+  &__btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+
+    &.cancel {
+      background: #2a2a2a;
+      color: #fff;
+    }
+
+    &.save {
+      background: #fff;
+      color: #000;
+      font-weight: 600;
+    }
+  }
+}

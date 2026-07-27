@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import type { FormEventHandler } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-
 import { useAuth } from "@/context/AuthContext";
 
 import arrowRightIcon from "@/assets/images/icons/arrow-right.svg";
@@ -147,8 +145,8 @@ const getLoginFieldError = (
     case "email":
       return validateEmail(form.email);
 
-    case "password":
-      return form.password ? "" : "Password is required";
+      case "password":
+        return form.password.length === 0 ? "Password is required" : "";
 
     default:
       return "";
@@ -235,11 +233,11 @@ useEffect(() => {
   }, [isSuccessModalOpen]);
 
   useEffect(() => {
-    if (mode === "login" && emailFromQuery) {
-      setLoginForm((prev) => ({
-        ...prev,
-        email: emailFromQuery,
-      }));
+    if (mode === "login") {
+      setLoginForm({
+        email: emailFromQuery || "",
+        password: "",
+      });
     }
   }, [mode, emailFromQuery]);
 
@@ -261,10 +259,14 @@ useEffect(() => {
 
   const loginErrors = useMemo<LoginErrors>(() => {
     return {
-      email: getLoginFieldError("email", loginForm),
-      password: getLoginFieldError("password", loginForm),
+      email: loginTouched.email
+        ? getLoginFieldError("email", loginForm)
+        : "",
+      password: loginTouched.password
+        ? getLoginFieldError("password", loginForm)
+        : "",
     };
-  }, [loginForm]);
+  }, [loginForm, loginTouched]);
 
   const isRegisterFormValid =
     !registerErrors.name &&
@@ -338,8 +340,8 @@ useEffect(() => {
     }));
   }, []);
 
-  const handleRegisterSubmit = useCallback<FormEventHandler<HTMLFormElement>>(
-    async (event) => {
+  const handleRegisterSubmit = useCallback(
+    async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
       if (isSubmitting) {
@@ -399,8 +401,8 @@ useEffect(() => {
     [isRegisterFormValid, isSubmitting, navigate, register, registerForm],
   );
 
-  const handleLoginSubmit = useCallback<FormEventHandler<HTMLFormElement>>(
-    async (event) => {
+  const handleLoginSubmit = useCallback(
+    async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
       if (isSubmitting) {

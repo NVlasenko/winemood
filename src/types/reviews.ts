@@ -1,8 +1,19 @@
 export type WineReview = {
   id: number;
-  wineId: number;
-  author: string;
+  userId: number;
+  userName: string;
+  avatarUrl: string;
   rating: number;
-  text: string;
+  reviewText: string;
+  createdAt: string;
+};
+
+export type UserReview = {
+  reviewId: number;
+  wineId: number;
+  wineName: string;
+  wineImageUrl: string;
+  rating: number;
+  reviewText: string;
   createdAt: string;
 };

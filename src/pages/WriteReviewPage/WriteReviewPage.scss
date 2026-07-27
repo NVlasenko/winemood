@@ -380,33 +380,48 @@
     margin-top: 30px;
   }
 
-  &__success-icon {
-    width: 84px;
-    height: 84px;
-    margin: 0 auto 26px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background: linear-gradient(
-      135deg,
-      var(--button-gradient-start),
-      var(--button-gradient-end)
-    );
-    box-shadow: 0 0 40px rgba(var(--wine-glow-rgb), 0.45);
-    font-size: 42px;
-    color: $text-primary;
-  }
 
-  &__modal-success-text {
-    position: relative;
-    z-index: 2;
-    margin: 0;
-    font-family: "Poppins", sans-serif;
-    font-size: 15px;
-    line-height: 1.7;
-    text-align: center;
-    color: rgba(177, 167, 166, 1);
+    &__success {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+  
+      animation: fadeInScale 0.4s ease;
+    }
+  
+    &__success-icon {
+      width: 64px;
+      height: 64px;
+  
+      border-radius: 50%;
+  
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  
+      font-size: 28px;
+      color: #fff;
+  
+      background: linear-gradient(135deg, #d16ba5, #8a4baf);
+  
+      box-shadow: 0 0 30px rgba(209, 107, 165, 0.6);
+  
+      animation: popIn 0.4s ease;
+    }
+  
+    &__modal-title {
+      margin: 0;
+      font-family: "Marcellus", serif;
+      font-size: 18px;
+      color: #fff;
+    }
+  
+    &__modal-success-text {
+      margin: 0;
+      font-size: 13px;
+      text-align: center;
+      color: rgba(177, 167, 166, 1);
   }
 
   @include on-tablet {
@@ -473,5 +488,30 @@
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  80% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
   }
 }

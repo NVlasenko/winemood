@@ -4,6 +4,6 @@ export type Category = {
   id: number;
   title: string;
   type: CategoryType;
-  homeImageUrl: string;
-  profileImageUrl: string;
+  homeImage: string;
+  profileImage: string;
 };

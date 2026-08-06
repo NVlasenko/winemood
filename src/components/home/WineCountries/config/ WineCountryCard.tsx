@@ -1,12 +1,12 @@
 import { memo, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 
-import type { CountryWine } from "@/types/countryWine";
+import type { CountryWineDto } from "@/types/countryWine";
 
 import { cardVariants } from "@/animations/cardVariants";
 
 type Props = {
-  country: CountryWine;
+  country: CountryWineDto;
   onCountryClick: (countryName: string) => void;
 };
 

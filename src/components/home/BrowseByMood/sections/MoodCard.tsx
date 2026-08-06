@@ -22,7 +22,7 @@ export const MoodCard = memo(({ mood, onMoodClick }: MoodCardProps) => {
       <div className="browse-by-mood__card-inner">
         <img
           className="browse-by-mood__card-image"
-          src={mood.imageUrl}
+          src={mood.image}
           alt={mood.title}
         />
 

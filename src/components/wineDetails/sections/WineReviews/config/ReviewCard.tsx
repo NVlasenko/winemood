@@ -1,10 +1,10 @@
-import type { WineReview } from "@/types/reviews";
+import type { WineReviewDto} from "@/types/reviews";
 import { ReviewStars } from "./ReviewStars";
 
 import quoteIcon from "@/assets/images/wineDetailsInfo/wineReviews/quote.svg";
 
 type Props = {
-  review: WineReview;
+  review: WineReviewDto;
   isMine?: boolean;
 };
 

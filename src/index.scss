@@ -17,6 +17,7 @@ html {
   width: 100%;
   min-height: 100%;
   scroll-behavior: smooth;
+  scroll-padding-top: 80px;
 }
 
 body,
@@ -28,7 +29,7 @@ body,
 body {
   position: relative;
   margin: 0;
-  overflow-x: hidden;
+  overflow-x: clip;
   font-family: "Poppins", Arial, sans-serif;
   color: var(--text-primary);
   background: var(--background);
@@ -92,4 +93,15 @@ a {
 ul,
 ol {
   list-style: none;
+}
+
+::selection {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
 }

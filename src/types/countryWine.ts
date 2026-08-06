@@ -1,6 +1,6 @@
-export type CountryWine = {
+export type CountryWineDto = {
   id: number;
-  name: string,
+  name: string;
   nationality: string;
   flagImageUrl: string;
   bottleImageUrl: string;

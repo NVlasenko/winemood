@@ -1,6 +1,6 @@
-import type { CountryWine } from "../../types/countryWine";
+import type { CountryWineDto } from "../../types/countryWine";
 import { httpClient } from "./httpClient";
 
 export const getCountries = () => {
-  return httpClient<CountryWine[]>("/api/countries");
+  return httpClient<CountryWineDto[]>("/api/countries");
 };

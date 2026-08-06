@@ -1,9 +1,14 @@
+import { quizApi } from "@/shared/api/quizApi";
+import type { QuizHistoryItem } from "@/types/quizProfile";
 import { useQuery } from "@tanstack/react-query";
-import { userApi } from "@/shared/api/userApi";
 
-export const useQuizHistory = () => {
-  return useQuery({
+export const useQuizHistory = (enabled: boolean) => {
+  return useQuery<QuizHistoryItem[]>({
     queryKey: ["quiz-history"],
-    queryFn: userApi.getQuizHistory,
+    queryFn: quizApi.getHistory,
+    enabled,
+
+    staleTime: 0,
+    refetchOnMount: true,
   });
 };

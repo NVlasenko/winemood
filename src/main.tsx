@@ -1,6 +1,9 @@
 import { createRoot } from "react-dom/client";
+import { StrictMode } from "react";
+
 import { MoodThemeProvider } from "@/context/MoodThemeContext";
 import { Root } from "@/Root";
+
 import "@/index.scss";
 
 if ("scrollRestoration" in window.history) {
@@ -16,7 +19,9 @@ if (!rootElement) {
 }
 
 createRoot(rootElement).render(
-  <MoodThemeProvider>
-    <Root />
-  </MoodThemeProvider>,
+  <StrictMode>
+    <MoodThemeProvider>
+      <Root />
+    </MoodThemeProvider>
+  </StrictMode>,
 );

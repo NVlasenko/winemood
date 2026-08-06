@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { MoodLinkButton } from "@/components/ui/MoodLinkButton";
 import { getCountries } from "@/shared/api/countryApi";
-import type { CountryWine } from "@/types/countryWine";
+import type { CountryWineDto } from "@/types/countryWine";
 import "./WineCountries.scss";
 import { WineCountryCard } from "./config/ WineCountryCard";
 
@@ -13,7 +13,7 @@ const INITIAL_VISIBLE_COUNT = 2;
 
 export const WineCountries = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [countries, setCountries] = useState<CountryWine[]>([]);
+  const [countries, setCountries] = useState<CountryWineDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 

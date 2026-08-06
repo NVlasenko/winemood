@@ -1,6 +1,6 @@
-import type { UserResponse } from "@/types/user";
+import type { UserDto } from "@/types/user";
 import { httpClient } from "./httpClient";
-import type { FavoritesResponse } from "@/types/favorite";
+import type { FavoritesResponseDto } from "@/types/favorite";
 import type { WineCatalogCard } from "@/types/wineCatalogCard";
 import type { QuizHistoryResponse } from "@/types/quiz";
 
@@ -9,41 +9,36 @@ export const userApi = {
     const formData = new FormData();
     formData.append("image", file);
 
-    return httpClient<UserResponse>("/api/users/avatar", {
+    return httpClient<UserDto>("/api/users/avatar", {
       method: "PUT",
       body: formData,
     });
   },
 
   deleteAvatar: () => {
-    return httpClient<UserResponse>("/api/users/avatar", {
+    return httpClient<UserDto>("/api/users/avatar", {
       method: "DELETE",
     });
   },
 
   getMe: () => {
-    return httpClient<UserResponse>("/api/users/me", {
-      method: "GET",
-    });
+    return httpClient<UserDto>("/api/users/me");
   },
 
   getFavorites: async (): Promise<WineCatalogCard[]> => {
-    const response = await httpClient<FavoritesResponse>(
-      "/api/users/favorites",
-      {
-        method: "GET",
-      }
+    const response = await httpClient<FavoritesResponseDto>(
+      "/api/users/favorites"
     );
-  
-    return response.wines;
+
+    return response?.wines ?? [];
   },
-  
+
   addFavorite: (wineId: number) => {
     return httpClient<void>(`/api/users/favorites/${wineId}`, {
       method: "POST",
     });
   },
-  
+
   removeFavorite: (wineId: number) => {
     return httpClient<void>(`/api/users/favorites/${wineId}`, {
       method: "DELETE",
@@ -52,14 +47,15 @@ export const userApi = {
 
   getQuizHistory: async (): Promise<WineCatalogCard[]> => {
     const response = await httpClient<QuizHistoryResponse[]>(
-      "/api/users/quiz-history",
-      {
-        method: "GET",
-      }
+      "/api/users/quiz-history"
     );
-  
-    const latest = response[0];
-  
+
+    if (!Array.isArray(response) || response.length === 0) {
+      return [];
+    }
+
+    const latest = response[response.length - 1];
+
     return latest?.wines ?? [];
   },
 

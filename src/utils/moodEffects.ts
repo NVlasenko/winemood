@@ -4,8 +4,38 @@ import type { MoodCardTheme } from "../types/mood";
 
 type ParticleTheme = Exclude<MoodCardTheme, "celebration">;
 
+type ParticleConfig = {
+  values: string[];
+  colors: string[];
+  speed: number;
+  size: number;
+};
+
+const PARTICLE_CONFIG: Record<ParticleTheme, ParticleConfig> = {
+  cozy: {
+    values: ["✨", "☁️", "🌙", "⭐", "💫"],
+    colors: ["#ffffff", "#7dd3fc", "#b8d8ff"],
+    speed: 1.3,
+    size: 18,
+  },
+
+  dateNight: {
+    values: ["❤️", "💕", "💖", "✨", "💘"],
+    colors: ["#ff4fa3", "#ff8cc6", "#ffffff"],
+    speed: 1.7,
+    size: 22,
+  },
+
+  culinary: {
+    values: ["🍷", "✨", "🥂", "🍇", "⭐"],
+    colors: ["#ff5e32", "#ffb36b", "#ffd166", "#ffffff"],
+    speed: 1.5,
+    size: 20,
+  },
+};
+
 export const fireCelebrationConfetti = () => {
-  confetti({
+  return confetti({
     particleCount: 160,
     spread: 100,
     startVelocity: 50,
@@ -17,34 +47,26 @@ export const fireCelebrationConfetti = () => {
   });
 };
 
+const createEmitters = (): ISourceOptions["emitters"] => {
+  const positions = [30, 50, 70];
+
+  return positions.map((x) => ({
+    position: { x, y: 55 },
+    rate: { delay: 0.08, quantity: 2 },
+    life: { count: 1, duration: 0.8 },
+    size: { width: 30, height: 20 },
+  }));
+};
+
 export const getParticleOptions = (theme: ParticleTheme): ISourceOptions => {
-  const config = {
-    cozy: {
-      values: ["✨", "☁️", "🌙", "⭐", "💫"],
-      colors: ["#ffffff", "#7dd3fc", "#b8d8ff"],
-      speed: 1.3,
-      size: 18,
-    },
+  const config = PARTICLE_CONFIG[theme];
 
-    dateNight: {
-      values: ["❤️", "💕", "💖", "✨", "💘"],
-      colors: ["#ff4fa3", "#ff8cc6", "#ffffff"],
-      speed: 1.7,
-      size: 22,
-    },
-
-    culinary: {
-      values: ["🍷", "✨", "🥂", "🍇", "⭐"],
-      colors: ["#ff5e32", "#ffb36b", "#ffd166", "#ffffff"],
-      speed: 1.5,
-      size: 20,
-    },
-  }[theme];
+  if (!config) {
+    throw new Error(`Unsupported particle theme: ${theme}`);
+  }
 
   return {
-    fullScreen: {
-      enable: false,
-    },
+    fullScreen: { enable: false },
 
     detectRetina: true,
     fpsLimit: 60,
@@ -52,9 +74,7 @@ export const getParticleOptions = (theme: ParticleTheme): ISourceOptions => {
     particles: {
       number: {
         value: 20,
-        density: {
-          enable: false,
-        },
+        density: { enable: false },
       },
 
       color: {
@@ -74,10 +94,7 @@ export const getParticleOptions = (theme: ParticleTheme): ISourceOptions => {
       },
 
       opacity: {
-        value: {
-          min: 0.4,
-          max: 1,
-        },
+        value: { min: 0.4, max: 1 },
         animation: {
           enable: true,
           speed: 0.8,
@@ -113,25 +130,6 @@ export const getParticleOptions = (theme: ParticleTheme): ISourceOptions => {
       },
     },
 
-    emitters: [
-      {
-        position: { x: 30, y: 55 },
-        rate: { delay: 0.08, quantity: 2 },
-        life: { count: 1, duration: 0.8 },
-        size: { width: 30, height: 20 },
-      },
-      {
-        position: { x: 50, y: 55 },
-        rate: { delay: 0.08, quantity: 2 },
-        life: { count: 1, duration: 0.8 },
-        size: { width: 30, height: 20 },
-      },
-      {
-        position: { x: 70, y: 55 },
-        rate: { delay: 0.08, quantity: 2 },
-        life: { count: 1, duration: 0.8 },
-        size: { width: 30, height: 20 },
-      },
-    ],
+    emitters: createEmitters(),
   };
 };

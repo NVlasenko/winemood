@@ -1,6 +1,6 @@
 import type { Wine } from "@/types/wine";
 
-export type FavoritesResponse = {
+export type FavoritesResponseDto = {
   count: number;
   wines: Wine[];
 };

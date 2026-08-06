@@ -4,7 +4,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { useWineReviews } from "@/hooks/reviews/useWineReviews";
 
-
 import {
   ReviewStepLayout,
   type ReviewStep,
@@ -30,13 +29,12 @@ export const EditReviewPage = () => {
     );
   }, [wineReviews, user]);
 
-  const updateReview = useUpdateReview();
+  const updateReview = useUpdateReview(wineId);
 
   const [step, setStep] = useState<ReviewStep>(1);
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
     if (!myReview) return;
@@ -56,16 +54,13 @@ export const EditReviewPage = () => {
       },
       {
         onSuccess: () => {
-          setIsSubmitted(true);
-
           setTimeout(() => {
-            navigate(`/catalog/${wineId}`);
+            navigate("/profile");
           }, 1000);
         },
       }
     );
-  }, [myReview, rating, reviewText, updateReview, navigate, wineId]);
-
+  }, [myReview, rating, reviewText, updateReview, navigate]);
 
   return (
     <ReviewStepLayout
@@ -79,7 +74,7 @@ export const EditReviewPage = () => {
 
       {isConfirmOpen && (
         <div style={{ marginTop: 20 }}>
-          {isSubmitted ? (
+          {updateReview.isSuccess ? (
             <h3>Review updated</h3>
           ) : (
             <button onClick={handleSubmit}>

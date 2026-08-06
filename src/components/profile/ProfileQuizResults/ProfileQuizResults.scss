@@ -8,26 +8,43 @@
     margin-top: 60px;
   }
 
-  &__grid-wrap {
-    overflow-x: visible;
-    overflow-y: hidden;
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+    margin-top: 40px;
+  }
+
+  &__block {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__date {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 16px;
   }
 
   &__grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 28px;
+  }
 
+  &__actions {
     margin-top: 40px;
+    display: flex;
+    justify-content: flex-end;
   }
 
-  &__empty {
-    margin-top: 20px;
-    font-size: 16px;
-    color: rgba(255, 255, 255, 0.6);
+  &__view-all {
+    @include expandable-button;
   }
 
-  &__loader {
+  &__empty,
+  &__loader,
+  &__error {
     margin-top: 20px;
     font-size: 16px;
     color: rgba(255, 255, 255, 0.6);
@@ -40,10 +57,13 @@
       margin-top: 80px;
     }
 
+    &__list {
+      gap: 80px;
+    }
+
     &__grid {
       grid-template-columns: repeat(2, 1fr);
       gap: 28px;
-      margin-top: 80px;
     }
   }
 
@@ -54,10 +74,13 @@
       margin-top: 100px;
     }
 
+    &__list {
+      gap: 100px;
+    }
+
     &__grid {
       grid-template-columns: repeat(4, 1fr);
       gap: 32px;
-      margin-top: 120px;
     }
   }
 }

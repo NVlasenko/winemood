@@ -7,7 +7,6 @@ import { compressImage } from "@/utils/compressImage";
 import { useFavorites } from "@/context/FavoritesContext";
 
 import { CropAvatarModal } from "@/components/profile/CropAvatarModal";
-import { useUserReviews } from "@/hooks/reviews/useReviewMutations.ts";
 
 type Props = {
   achievementsCount: number;
@@ -16,7 +15,6 @@ type Props = {
 export const ProfileHero = ({ achievementsCount }: Props) => {
   const { user, updateUser } = useAuth();
   const { favoritesCount } = useFavorites();
-  const { data: userReviews = [] } = useUserReviews();
   const [preview, setPreview] = useState<string | null>(null);
   const [cropImage, setCropImage] = useState<string | null>(null);
 
@@ -94,9 +92,9 @@ export const ProfileHero = ({ achievementsCount }: Props) => {
           </div>
 
           <div className="profile-hero__stat">
-            <span className="profile-hero__value">
-            {userReviews.length}
-            </span>
+          <span className="profile-hero__value">
+            {user?.reviewCount ?? 0}
+          </span>
             <span className="profile-hero__label">Reviews</span>
           </div>
         </div>

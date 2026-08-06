@@ -1,8 +1,8 @@
 import { authApi } from "@/shared/api/authApi";
 import { userApi } from "@/shared/api/userApi";
 import { queryClient } from "@/shared/lib/reactQuery";
-import type { AuthResponse, LoginRequest, RegisterRequest } from "@/types/auth";
-import type { UserResponse } from "@/types/user";
+import type { AuthResponseDto, LoginRequestDto, RegisterRequestDto } from "@/types/auth";
+import type { UserDto } from "@/types/user";
 import type { Wine } from "@/types/wine";
 import {
   createContext,
@@ -19,15 +19,15 @@ const USER_STORAGE_KEY = "user";
 
 type AuthContextType = {
   accessToken: string | null;
-  user: UserResponse | null;
+  user: UserDto | null;
   isAuthenticated: boolean;
   isLoadingUser: boolean;
 
-  register: (data: RegisterRequest) => Promise<AuthResponse>;
-  login: (data: LoginRequest) => Promise<AuthResponse>;
+  register: (data: RegisterRequestDto) => Promise<AuthResponseDto>;
+  login: (data: LoginRequestDto) => Promise<AuthResponseDto>;
   logout: () => void;
 
-  updateUser: (user: UserResponse) => void;
+  updateUser: (user: UserDto) => void;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -46,7 +46,7 @@ const getSavedAccessToken = () => {
   return token;
 };
 
-const getSavedUser = (): UserResponse | null => {
+const getSavedUser = (): UserDto | null => {
   try {
     const data = localStorage.getItem(USER_STORAGE_KEY);
     if (!data) return null;
@@ -62,18 +62,18 @@ export const AuthProvider = ({ children }: Props) => {
     getSavedAccessToken()
   );
 
-  const [user, setUser] = useState<UserResponse | null>(() =>
+  const [user, setUser] = useState<UserDto | null>(() =>
     getSavedUser()
   );
 
   const [isLoadingUser, setIsLoadingUser] = useState(false);
 
-  const saveAuthData = useCallback((data: AuthResponse) => {
+  const saveAuthData = useCallback((data: AuthResponseDto) => {
     localStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, data.accessToken);
     setAccessToken(data.accessToken);
   }, []);
 
-  const updateUser = useCallback((updatedUser: UserResponse) => {
+  const updateUser = useCallback((updatedUser: UserDto) => {
     setUser(updatedUser);
     localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updatedUser));
   }, []);
@@ -87,7 +87,7 @@ export const AuthProvider = ({ children }: Props) => {
   }, []);
 
   const register = useCallback(
-    async (data: RegisterRequest) => {
+    async (data: RegisterRequestDto) => {
       const response = await authApi.register(data);
   
       console.log("REGISTER RESPONSE:", response);
@@ -98,7 +98,7 @@ export const AuthProvider = ({ children }: Props) => {
   );
 
   const login = useCallback(
-    async (data: LoginRequest) => {
+    async (data: LoginRequestDto) => {
       const response = await authApi.login(data);
 
       saveAuthData(response);

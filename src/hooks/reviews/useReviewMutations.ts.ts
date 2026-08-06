@@ -20,7 +20,6 @@ export const useCreateReview = (wineId: number) => {
   });
 };
 
-
 export const useUserReviews = () => {
   return useQuery({
     queryKey: ["my-reviews"],
@@ -28,7 +27,7 @@ export const useUserReviews = () => {
   });
 };
 
-export const useUpdateReview = () => {
+export const useUpdateReview = (wineId: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -44,6 +43,10 @@ export const useUpdateReview = () => {
       reviewApi.updateReview(reviewId, { rating, reviewText }),
 
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["wine-reviews", wineId],
+      });
+
       queryClient.invalidateQueries({
         queryKey: ["my-reviews"],
       });
@@ -61,6 +64,10 @@ export const useDeleteReview = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["my-reviews"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["wine-reviews"],
       });
     },
   });

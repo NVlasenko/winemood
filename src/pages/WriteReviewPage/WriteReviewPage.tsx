@@ -60,18 +60,21 @@ export const WriteReviewPage = () => {
   const authorName = user?.name || "";
   const navigate = useNavigate();
   const { id } = useParams();
-  if (!id) return null; 
+
   const currentRating = hoverRating || rating;
   const wineId = Number(id);
-  const createReview = useCreateReview(wineId);
+
   const { data: wineReviews = [] } = useWineReviews(wineId);
- 
-  const updateReview = useUpdateReview();
+  const createReview = useCreateReview(wineId);
+  const updateReview = useUpdateReview(wineId);
+
   const myReview = useMemo(() => {
     if (!user) return null;
     return wineReviews.find((r) => r.userId === Number(user.id));
   }, [wineReviews, user]);
 
+  if (!id || Number.isNaN(wineId)) return null;
+  
   useEffect(() => {
     if (!myReview || isSubmitted) return;
   

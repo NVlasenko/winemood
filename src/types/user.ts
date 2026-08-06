@@ -1,6 +1,7 @@
-export type UserResponse = {
+export type UserDto = {
   id: number;
   name: string;
   email: string;
-  avatarUrl?: string | null;
+  avatarUrl: string | null;
+  reviewCount: number;
 };

@@ -1,11 +1,11 @@
 export type PageMeta = {
   totalElements: number;
   totalPages: number;
-  page: number;
+  currentPage: number;
   size: number;
 };
 
-export type PageResponse<T> = {
+export type PageDto<T> = {
   data: T[];
   meta: PageMeta;
 };

@@ -1,21 +1,21 @@
 import type {
-  AuthResponse,
-  LoginRequest,
-  RegisterRequest,
+  AuthResponseDto,
+  LoginRequestDto,
+  RegisterRequestDto,
 } from "@/types/auth";
 import { httpClient } from "./httpClient";
 
 export const authApi = {
-  register: (data: RegisterRequest) => {
-    return httpClient<AuthResponse>("/api/auth/registration", {
+  register: (data: RegisterRequestDto) => {
+    return httpClient<AuthResponseDto>("/api/auth/registration", {
       method: "POST",
       body: JSON.stringify(data),
       skipAuth: true,
     });
   },
 
-  login: (data: LoginRequest) => {
-    return httpClient<AuthResponse>("/api/auth/login", {
+  login: (data: LoginRequestDto) => {
+    return httpClient<AuthResponseDto>("/api/auth/login", {
       method: "POST",
       body: JSON.stringify(data),
       skipAuth: true,

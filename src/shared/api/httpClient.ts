@@ -28,8 +28,16 @@ export class ApiError extends Error {
     this.name = "ApiError";
     this.status = status;
     this.data = data;
+    Object.setPrototypeOf(this, ApiError.prototype);
   }
 }
+
+const getAccessToken = () => {
+  const token = localStorage.getItem("accessToken");
+  return token && token !== "undefined" && token !== "null"
+    ? token
+    : null;
+};
 
 const buildUrl = (endpoint: string) => {
   if (!BASE_URL) {
@@ -46,38 +54,50 @@ const parseResponseBody = async (response: Response) => {
     return null;
   }
 
-  return response.json();
+  try {
+    return await response.json();
+  } catch {
+    return null;
+  }
 };
 
 export const httpClient = async <T>(
   endpoint: string,
   options: HttpClientOptions = {}
 ): Promise<T> => {
-  const { skipJsonContentType, skipAuth, headers, body, ...rest } = options;
+  const {
+    skipJsonContentType,
+    skipAuth,
+    headers,
+    body,
+    ...rest
+  } = options;
 
   const isFormData = body instanceof FormData;
 
-  const token = localStorage.getItem("accessToken");
-
-  const isValidToken =
-    token && token !== "undefined" && token !== "null";
+  const token = getAccessToken();
 
   const requestHeaders: HeadersInit = {
     ...(!isFormData && !skipJsonContentType
       ? { "Content-Type": "application/json" }
       : {}),
 
-    ...(isValidToken && !skipAuth
+    ...(token && !skipAuth
       ? { Authorization: `Bearer ${token}` }
       : {}),
 
     ...headers,
   };
 
+  const preparedBody =
+    body && !isFormData && typeof body === "object"
+      ? JSON.stringify(body)
+      : body;
+
   const response = await fetch(buildUrl(endpoint), {
     ...rest,
     headers: requestHeaders,
-    body,
+    body: preparedBody,
   });
 
   const data = await parseResponseBody(response);

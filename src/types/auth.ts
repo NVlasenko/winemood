@@ -1,16 +1,15 @@
-export type RegisterRequest = {
+export type RegisterRequestDto = {
   email: string;
   name: string;
   password: string;
 };
 
-export type LoginRequest = {
+export type LoginRequestDto = {
   email: string;
   password: string;
 };
 
-export type AuthResponse = {
+export type AuthResponseDto = {
   accessToken: string;
-  tokenType: string;
+  tokenType: "Bearer";
 };
-

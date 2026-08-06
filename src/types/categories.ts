@@ -1,7 +1,9 @@
-export interface Category {
+export type CategoryType = string;
+
+export type Category = {
   id: number;
   title: string;
-  type: string;
-  homeImage: string;
-  profileImage: string;
-}
+  type: CategoryType;
+  homeImageUrl: string;
+  profileImageUrl: string;
+};

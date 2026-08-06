@@ -1,14 +1,14 @@
-export type WineReview = {
+export type WineReviewDto = {
   id: number;
   userId: number;
   userName: string;
-  avatarUrl: string;
+  avatarUrl: string | null;
   rating: number;
   reviewText: string;
   createdAt: string;
 };
 
-export type UserReview = {
+export type UserReviewDto = {
   reviewId: number;
   wineId: number;
   wineName: string;

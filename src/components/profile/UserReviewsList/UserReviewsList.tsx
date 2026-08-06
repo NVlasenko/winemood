@@ -10,7 +10,7 @@ import {
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { MoodLinkButton } from "@/components/ui/MoodLinkButton";
 
-const INITIAL_VISIBLE_COUNT = 5; // 🔥 как ты хотел
+const INITIAL_VISIBLE_COUNT = 5;
 
 export const UserReviewsList = () => {
   const { data: reviews = [], isLoading } = useUserReviews();
@@ -20,7 +20,6 @@ export const UserReviewsList = () => {
   const [reviewToDelete, setReviewToDelete] = useState<number | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  // 👇 показываем часть или все
   const visibleReviews = useMemo(
     () =>
       isOpen ? reviews : reviews.slice(0, INITIAL_VISIBLE_COUNT),
@@ -37,7 +36,7 @@ export const UserReviewsList = () => {
 
   return (
     <section className="user-reviews">
-      <SectionTitle title="Your reviews" />
+      <SectionTitle title="My reviews" />
 
       {isLoading && (
         <div className="user-reviews__loading">
@@ -92,7 +91,7 @@ export const UserReviewsList = () => {
         ))}
       </div>
 
-      {/* 🔥 КНОПКА КАК В FAVORITES */}
+
       {hasMore && (
         <div className="user-reviews__actions-bottom">
           <MoodLinkButton
@@ -103,7 +102,7 @@ export const UserReviewsList = () => {
         </div>
       )}
 
-      {/* POPUP */}
+
       {reviewToDelete && (
         <div className="user-reviews__modal-overlay">
           <div className="user-reviews__modal">

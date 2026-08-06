@@ -1,9 +1,9 @@
-import type { UserReview, WineReview } from "@/types/reviews";
+import type {UserReviewDto, WineReviewDto} from "@/types/reviews";
 import { httpClient } from "./httpClient";
 
 export const reviewApi = {
   getWineReviews: (wineId: number) => {
-    return httpClient<WineReview[]>(
+    return httpClient<WineReviewDto[]>(
       `/api/wines/${wineId}/reviews`,
       {
         method: "GET",
@@ -47,7 +47,7 @@ export const reviewApi = {
   },
 
   getMyReviews: () => {
-    return httpClient<UserReview[]>(
+    return httpClient<UserReviewDto[]>(
       "/api/users/reviews",
       {
         method: "GET",

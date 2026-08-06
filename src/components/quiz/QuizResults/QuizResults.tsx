@@ -2,7 +2,6 @@ import { useEffect, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 
-import type { Wine } from "@/types/wine";
 import type { WineCatalogCard as WineCatalogCardType } from "@/types/wineCatalogCard";
 
 import { WineCatalogCard } from "@/components/catalog/WineCatalogCard";
@@ -20,23 +19,10 @@ import arrowRightIcon from "@/assets/images/icons/arrow-right.svg";
 import "./QuizResults.scss";
 
 type Props = {
-  wines: Wine[];
+  wines: WineCatalogCardType[];
 };
 
 const QUIZ_SENT_KEY = "quizSent:v1";
-
-const mapWineToCard = (wine: Wine): WineCatalogCardType => ({
-  id: wine.id,
-  name: wine.name,
-  type: wine.type,
-  sweetnessLevel: {
-    name: wine.sweetnessLevel.name,
-  },
-  volumeMl: wine.volumeMl,
-  countryName: wine.countryName,
-  imageUrl: wine.imageUrl,
-  rating: wine.rating,
-});
 
 const isAuthPath = (path: string) => path.startsWith("/auth");
 
@@ -80,11 +66,6 @@ export const QuizResults = ({ wines }: Props) => {
     [favoriteIds]
   );
 
-  const winesForUI = useMemo(
-    () => wines.map(mapWineToCard),
-    [wines]
-  );
-
   useEffect(() => {
     clearWineDetailsBackTarget();
   }, [clearWineDetailsBackTarget]);
@@ -98,16 +79,10 @@ export const QuizResults = ({ wines }: Props) => {
       if (!(target instanceof HTMLElement)) return;
 
       const anchor = target.closest("a");
+
+      if (!anchor) return;
+
       if (!(anchor instanceof HTMLAnchorElement)) return;
-
-      const isNewTab =
-        event.metaKey ||
-        event.ctrlKey ||
-        event.shiftKey ||
-        event.altKey ||
-        anchor.target === "_blank";
-
-      if (isNewTab) return;
 
       const isWineCard = Boolean(
         anchor.closest("[data-quiz-result-card]")
@@ -175,21 +150,19 @@ export const QuizResults = ({ wines }: Props) => {
             queryKey: ["quiz-history"],
           });
         })
-        .catch((e) => {
-          console.error("Failed to save quiz result", e);
-        });
+        .catch(console.error);
     } else {
       saveQuizResult(wines);
     }
   }, [wines, isAuthenticated, saveQuizResult, queryClient]);
 
+  
+
   const handleRestart = () => {
-    sessionStorage.removeItem(QUIZ_SENT_KEY);
     clearQuizResult();
-    clearWineDetailsBackTarget();
-    navigate("/quiz");
   };
 
+  
   return (
     <main className="quiz-results">
       <div className="container">
@@ -214,45 +187,37 @@ export const QuizResults = ({ wines }: Props) => {
               Wines you might enjoy
             </h2>
 
-            {winesForUI.length > 0 ? (
-              <>
-                <div className="quiz-results__grid">
-                  {winesForUI.map((wine, index) => (
-                    <div
-                      key={wine.id}
-                      className="quiz-results__card"
-                      data-quiz-result-card
-                    >
-                      <WineCatalogCard
-                        wine={wine}
-                        index={index}
-                        isFavorite={favoriteIdsSet.has(wine.id)}
-                        onToggleFavorite={toggleFavorite}
-                      />
-                    </div>
-                  ))}
+            <div className="quiz-results__grid">
+              {wines.map((wine, index) => (
+                <div
+                  key={wine.id}
+                  className="quiz-results__card"
+                  data-quiz-result-card
+                >
+                  <WineCatalogCard
+                    wine={wine}
+                    index={index}
+                    isFavorite={favoriteIdsSet.has(wine.id)}
+                    onToggleFavorite={toggleFavorite}
+                  />
                 </div>
+              ))}
+            </div>
 
-                <div className="quiz-results__actions">
-                  <button
-                    className="quiz-results__try-again"
-                    onClick={handleRestart}
-                  >
-                    Try Again
-                  </button>
+            <div className="quiz-results__actions">
+              <button
+                className="quiz-results__try-again"
+                onClick={handleRestart}
+              >
+                Try Again
+              </button>
 
-                  <Link to="/catalog" className="quiz-results__all-wines">
-                    <span>All wines</span>
-                    <img src={arrowRightIcon} alt="" />
-                  </Link>
-                </div>
-              </>
-            ) : (
-              <div className="quiz-results__empty">
-                <h3>No recommendations found</h3>
-                <p>Try again</p>
-              </div>
-            )}
+              <Link to="/catalog" className="quiz-results__all-wines">
+                <span>All wines</span>
+                <img src={arrowRightIcon} alt="" />
+              </Link>
+            </div>
+
           </section>
 
         </div>

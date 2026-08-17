@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { userApi } from "@/shared/api/userApi";
 
@@ -7,16 +7,20 @@ import { compressImage } from "@/utils/compressImage";
 import { useFavorites } from "@/context/FavoritesContext";
 
 import { CropAvatarModal } from "@/components/profile/CropAvatarModal";
+import { useAchievements } from "@/hooks/achievements/useAchievements";
 
-type Props = {
-  achievementsCount: number;
-};
-
-export const ProfileHero = ({ achievementsCount }: Props) => {
+export const ProfileHero = () => {
   const { user, updateUser } = useAuth();
   const { favoritesCount } = useFavorites();
   const [preview, setPreview] = useState<string | null>(null);
   const [cropImage, setCropImage] = useState<string | null>(null);
+  const { data: achievements = [] } = useAchievements(!!user);
+  const unlockedCount = useMemo(
+    () =>
+      achievements.filter((achievement) => Boolean(achievement.unlockedAt))
+        .length,
+    [achievements]
+  );
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -29,11 +33,11 @@ export const ProfileHero = ({ achievementsCount }: Props) => {
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-  
+
     const localPreview = URL.createObjectURL(file);
-  
+
     setCropImage(localPreview);
- 
+
     e.target.value = "";
   };
 
@@ -45,11 +49,7 @@ export const ProfileHero = ({ achievementsCount }: Props) => {
         <div className="profile-hero__left">
           <div className="profile-hero__avatar-wrapper">
             <div className="profile-hero__avatar" onClick={openFile}>
-              {avatarSrc ? (
-                <img src={avatarSrc} alt="avatar" />
-              ) : (
-                firstLetter
-              )}
+              {avatarSrc ? <img src={avatarSrc} alt="avatar" /> : firstLetter}
             </div>
 
             <button
@@ -72,9 +72,7 @@ export const ProfileHero = ({ achievementsCount }: Props) => {
           <div className="profile-hero__user">
             <h2 className="profile-hero__name">{user?.name}</h2>
 
-            <p className="profile-hero__subtitle">
-              Your wine journey
-            </p>
+            <p className="profile-hero__subtitle">Your wine journey</p>
           </div>
         </div>
 
@@ -85,16 +83,14 @@ export const ProfileHero = ({ achievementsCount }: Props) => {
           </div>
 
           <div className="profile-hero__stat">
-            <span className="profile-hero__value">
-              {achievementsCount}
-            </span>
+            <span className="profile-hero__value">{unlockedCount}</span>
             <span className="profile-hero__label">Achievements</span>
           </div>
 
           <div className="profile-hero__stat">
-          <span className="profile-hero__value">
-            {user?.reviewCount ?? 0}
-          </span>
+            <span className="profile-hero__value">
+              {user?.reviewCount ?? 0}
+            </span>
             <span className="profile-hero__label">Reviews</span>
           </div>
         </div>
@@ -105,22 +101,21 @@ export const ProfileHero = ({ achievementsCount }: Props) => {
           image={cropImage}
           onClose={() => setCropImage(null)}
           onSave={async (blob) => {
-
             const localPreview = URL.createObjectURL(blob);
             setPreview(localPreview);
-          
+
             setCropImage(null);
-          
+
             try {
               const file = new File([blob], "avatar.jpg", {
                 type: "image/jpeg",
               });
-          
+
               const compressedFile = await compressImage(file);
               const response = await userApi.uploadAvatar(compressedFile);
-          
+
               updateUser(response);
-          
+
               URL.revokeObjectURL(localPreview);
             } catch (e) {
               console.error(e);

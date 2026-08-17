@@ -9,7 +9,7 @@ export const CATALOG_SORT_OPTIONS = [
 export type CatalogSortOption = (typeof CATALOG_SORT_OPTIONS)[number];
 
 type Props = {
-  activeSort: CatalogSortOption;
+  activeSort: CatalogSortOption | null;
   onSortSelect: (option: CatalogSortOption) => void;
   onOpenFilters: () => void;
 };
@@ -52,7 +52,7 @@ export const CatalogControls = ({
           aria-expanded={isSortOpen}
           onClick={() => setIsSortOpen((prev) => !prev)}
         >
-          {activeSort}
+          {activeSort ?? "Sort"}
         </button>
 
         {isSortOpen && (
@@ -62,9 +62,7 @@ export const CatalogControls = ({
                 key={option}
                 type="button"
                 className={`catalog-page__sort-item ${
-                  option === activeSort
-                    ? "catalog-page__sort-item--active"
-                    : ""
+                  option === activeSort ? "catalog-page__sort-item--active" : ""
                 }`}
                 onClick={() => handleSortSelect(option)}
               >

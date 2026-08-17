@@ -1,0 +1,110 @@
+@import "@/styles/mixins";
+@import "@/styles/variables";
+
+.profile-achievements {
+  --achievements-gap: 28px;
+
+  margin-top: 100px;
+
+
+  &__top {
+    scroll-margin-top: 130px;
+  }
+
+  &__list {
+    margin-top: 40px;
+
+    min-width: 0;
+  }
+
+
+  &__grid {
+    width: 100%;
+    min-width: 0;
+
+    display: grid;
+
+    grid-template-columns:
+      minmax(0, 1fr);
+
+    gap: var(--achievements-gap);
+
+    margin: 0;
+  }
+
+  &__extra {
+    margin-top: var(--achievements-gap);
+
+    opacity: 0;
+
+    transform: translateY(12px);
+
+    transition:
+      opacity 0.35s ease,
+      transform 0.35s
+        cubic-bezier(
+          0.22,
+          1,
+          0.36,
+          1
+        );
+
+    &--visible {
+      opacity: 1;
+
+      transform: translateY(0);
+    }
+  }
+
+  &__extra-inner {
+    width: 100%;
+
+    min-width: 0;
+  }
+
+
+  &__actions {
+    margin-top: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  &__view-all {
+    @include expandable-button;
+  }
+
+
+  @include on-tablet {
+    --achievements-gap: 28px;
+
+    &__top {
+      scroll-margin-top: 140px;
+    }
+
+    &__grid {
+      grid-template-columns:
+        repeat(
+          2,
+          minmax(0, 1fr)
+        );
+    }
+  }
+
+  @include on-desktop {
+    --achievements-gap: 28px;
+
+    &__top {
+      scroll-margin-top: 150px;
+    }
+
+    &__grid {
+      grid-template-columns:
+        repeat(
+          4,
+          minmax(0, 1fr)
+        );
+    }
+  }
+}

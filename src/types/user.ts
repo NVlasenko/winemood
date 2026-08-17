@@ -4,4 +4,5 @@ export type UserDto = {
   email: string;
   avatarUrl: string | null;
   reviewCount: number;
+  achievementCount: number;
 };

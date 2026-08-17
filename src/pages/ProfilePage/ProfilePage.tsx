@@ -8,6 +8,7 @@ import "./ProfilePage.scss";
 import { ProfileFavorites } from "@/components/profile/ProfileFavorites";
 import { ProfileQuizResults } from "@/components/profile/ProfileQuizResults/ProfileQuizResults";
 import { UserReviewsList } from "@/components/profile/UserReviewsList";
+import { ProfileAchievements } from "@/components/profile/ProfileAchievements";
 
 export const ProfilePage = () => {
   const navigate = useNavigate();
@@ -48,9 +49,7 @@ export const ProfilePage = () => {
           </button>
         </div>
 
-        <ProfileHero
-          achievementsCount={0}
-        />
+        <ProfileHero />
 
         <ProfileCategories />
 
@@ -59,6 +58,8 @@ export const ProfilePage = () => {
         <ProfileQuizResults />
 
         <UserReviewsList />
+
+        <ProfileAchievements />
       </div>
     </main>
   );

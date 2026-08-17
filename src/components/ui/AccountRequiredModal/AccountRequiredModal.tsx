@@ -9,12 +9,16 @@ type Props = {
   isOpen: boolean;
   title: string;
   text: string;
+
   primaryLabel?: string;
   primaryTo?: string;
+
   secondaryLabel?: string;
   secondaryTo?: string;
+
   continueLabel?: string;
   cancelLabel?: string;
+
   onClose: () => void;
   onContinue?: () => void;
   onCancel?: () => void;
@@ -24,12 +28,16 @@ export const AccountRequiredModal = ({
   isOpen,
   title,
   text,
+
   primaryLabel = "Sign up",
-  primaryTo = "/registration",
+  primaryTo = "/auth?mode=register",
+
   secondaryLabel = "Log in",
-  secondaryTo = "/login",
+  secondaryTo = "/auth?mode=login",
+
   continueLabel = "Continue without saving",
   cancelLabel,
+
   onClose,
   onContinue,
   onCancel,
@@ -72,6 +80,16 @@ export const AccountRequiredModal = ({
       />
 
       <div className="account-required-modal__content">
+        <button
+          className="account-required-modal__close"
+          type="button"
+          aria-label="Close modal"
+          onClick={onClose}
+        >
+          <span />
+          <span />
+        </button>
+
         <div className="account-required-modal__icon" aria-hidden="true">
           <span className="account-required-modal__lock-shackle" />
           <span className="account-required-modal__lock-body" />
@@ -92,13 +110,21 @@ export const AccountRequiredModal = ({
         </p>
 
         <div className="account-required-modal__actions">
-          <Link to={primaryTo} className="account-required-modal__primary">
+          <Link
+            to={primaryTo}
+            className="account-required-modal__primary"
+            onClick={onClose}
+          >
             <span>{primaryLabel}</span>
 
             <img src={arrowRightIcon} alt="" aria-hidden="true" />
           </Link>
 
-          <Link to={secondaryTo} className="account-required-modal__secondary">
+          <Link
+            to={secondaryTo}
+            className="account-required-modal__secondary"
+            onClick={onClose}
+          >
             {secondaryLabel}
           </Link>
 

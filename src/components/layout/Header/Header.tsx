@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
+import { useAuth } from "@/context/AuthContext";
+import { useAuthRequired } from "@/context/AuthRequiredContext";
+
 import searchIcon from "@/assets/images/icons/search.svg";
 import iconProfile from "@/assets/images/icons/icon-account.svg";
 import { navLinks } from "@/constants/navigation";
@@ -13,13 +16,22 @@ export const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const { isAuthenticated } = useAuth();
+  const { openAuthRequired, closeAuthRequired } = useAuthRequired();
+
   const closeMenu = useCallback(() => {
     setIsMenuOpen(false);
   }, []);
 
   useEffect(() => {
     closeMenu();
-  }, [closeMenu, location.pathname, location.search]);
+    closeAuthRequired();
+  }, [
+    closeMenu,
+    closeAuthRequired,
+    location.pathname,
+    location.search,
+  ]);
 
   const handleSearchClick = useCallback(() => {
     closeMenu();
@@ -28,8 +40,18 @@ export const Header = () => {
 
   const handleProfileClick = useCallback(() => {
     closeMenu();
-    navigate("/profile");
-  }, [closeMenu, navigate]);
+
+    if (isAuthenticated) {
+      navigate("/profile");
+
+      return;
+    }
+
+    openAuthRequired({
+      title: "Continue with an account",
+      text: "Please sign up or log in to access your personal profile.",
+    });
+  }, [closeMenu, isAuthenticated, navigate, openAuthRequired]);
 
   const toggleMenu = useCallback(() => {
     setIsMenuOpen((prev) => !prev);
@@ -39,12 +61,18 @@ export const Header = () => {
     <header className="header">
       <div className="container">
         <div className="header__inner">
-          <NavLink to="/" className="header__logo" onClick={closeMenu}>
+          <NavLink
+            to="/"
+            className="header__logo"
+            onClick={closeMenu}
+          >
             Vinoteca
           </NavLink>
 
           <nav
-            className={`header__nav ${isMenuOpen ? "header__nav--open" : ""}`}
+            className={`header__nav ${
+              isMenuOpen ? "header__nav--open" : ""
+            }`}
           >
             {navLinks.map(({ to, label }) => (
               <NavLink

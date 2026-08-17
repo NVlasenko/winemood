@@ -3,7 +3,6 @@
 
 .history-hero {
   position: relative;
-  // min-height: 100vh;
   overflow: hidden;
 
   background: linear-gradient(
@@ -265,11 +264,6 @@
         filter: blur(130px);
       }
     }
-  
-    // &__image {
-    //   width: 100%;
-    //   height: 100%;
-    // }
 
     &__text {
       left: auto;

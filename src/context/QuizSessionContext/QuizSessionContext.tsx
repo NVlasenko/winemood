@@ -3,14 +3,15 @@ import {
   type ReactNode,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 
-import type { Wine } from "@/types/wine";
+import type { WineCatalogCard } from "@/types/wineCatalogCard";
 
-const QUIZ_RESULT_STORAGE_KEY = "quizResult";
-const WINE_DETAILS_BACK_TARGET_KEY = "wineDetailsBackTarget";
+import { useAuth } from "@/context/AuthContext";
 
 type WineDetailsBackTarget = {
   to: string;
@@ -18,42 +19,42 @@ type WineDetailsBackTarget = {
 };
 
 type QuizSessionContextValue = {
-  quizResult: Wine[] | null;
+  quizResult: WineCatalogCard[] | null;
   backTarget: WineDetailsBackTarget | null;
-  saveQuizResult: (wines: Wine[]) => void;
+
+  saveQuizResult: (wines: WineCatalogCard[]) => void;
   clearQuizResult: () => void;
+
   markWineDetailsOpenedFromQuizResults: () => void;
   clearWineDetailsBackTarget: () => void;
 };
 
-type Props = {
-  children: ReactNode;
-};
+const QuizSessionContext = createContext<QuizSessionContextValue | null>(null);
+
+const QUIZ_RESULT_STORAGE_KEY = "quizResult";
 
 const QUIZ_RESULTS_BACK_TARGET: WineDetailsBackTarget = {
   to: "/quiz",
   label: "Quiz results",
 };
 
-const QuizSessionContext = createContext<QuizSessionContextValue | null>(null);
-
-const getSavedQuizResult = (): Wine[] | null => {
+const getSavedQuizResult = (): WineCatalogCard[] | null => {
   try {
-    const savedResult = sessionStorage.getItem(QUIZ_RESULT_STORAGE_KEY);
+    const savedQuiz = sessionStorage.getItem(QUIZ_RESULT_STORAGE_KEY);
 
-    if (!savedResult) {
+    if (!savedQuiz) {
       return null;
     }
 
-    const parsedResult = JSON.parse(savedResult);
+    const parsed = JSON.parse(savedQuiz);
 
-    if (!Array.isArray(parsedResult)) {
+    if (!Array.isArray(parsed)) {
       sessionStorage.removeItem(QUIZ_RESULT_STORAGE_KEY);
 
       return null;
     }
 
-    return parsedResult as Wine[];
+    return parsed;
   } catch {
     sessionStorage.removeItem(QUIZ_RESULT_STORAGE_KEY);
 
@@ -61,74 +62,73 @@ const getSavedQuizResult = (): Wine[] | null => {
   }
 };
 
-const getSavedWineDetailsBackTarget = (): WineDetailsBackTarget | null => {
-  try {
-    const savedTarget = sessionStorage.getItem(WINE_DETAILS_BACK_TARGET_KEY);
+export const QuizSessionProvider = ({ children }: { children: ReactNode }) => {
+  const { user, isAuthenticated } = useAuth();
 
-    if (!savedTarget) {
-      return null;
-    }
-
-    const parsedTarget = JSON.parse(savedTarget) as WineDetailsBackTarget;
-
-    const isValidTarget =
-      parsedTarget &&
-      typeof parsedTarget.to === "string" &&
-      typeof parsedTarget.label === "string";
-
-    if (!isValidTarget) {
-      sessionStorage.removeItem(WINE_DETAILS_BACK_TARGET_KEY);
-
-      return null;
-    }
-
-    return parsedTarget;
-  } catch {
-    sessionStorage.removeItem(WINE_DETAILS_BACK_TARGET_KEY);
-
-    return null;
-  }
-};
-
-export const QuizSessionProvider = ({ children }: Props) => {
-  const [quizResult, setQuizResult] = useState<Wine[] | null>(() =>
-    getSavedQuizResult(),
+  const [quizResult, setQuizResult] = useState<WineCatalogCard[] | null>(() =>
+    getSavedQuizResult()
   );
 
   const [backTarget, setBackTarget] = useState<WineDetailsBackTarget | null>(
-    () => getSavedWineDetailsBackTarget(),
+    null
   );
 
-  const saveQuizResult = useCallback((wines: Wine[]) => {
-    sessionStorage.setItem(QUIZ_RESULT_STORAGE_KEY, JSON.stringify(wines));
-    setQuizResult(wines);
-  }, []);
+  const previousUserIdRef = useRef<number | null>(user?.id ?? null);
 
   const clearQuizResult = useCallback(() => {
-    sessionStorage.removeItem(QUIZ_RESULT_STORAGE_KEY);
     setQuizResult(null);
+
+    sessionStorage.removeItem(QUIZ_RESULT_STORAGE_KEY);
   }, []);
+  const saveQuizResult = useCallback(
+    (wines: WineCatalogCard[]) => {
+      setQuizResult(wines);
+
+      if (!isAuthenticated) {
+        sessionStorage.setItem(QUIZ_RESULT_STORAGE_KEY, JSON.stringify(wines));
+      }
+    },
+    [isAuthenticated]
+  );
 
   const markWineDetailsOpenedFromQuizResults = useCallback(() => {
-    sessionStorage.setItem(
-      WINE_DETAILS_BACK_TARGET_KEY,
-      JSON.stringify(QUIZ_RESULTS_BACK_TARGET),
-    );
-
     setBackTarget(QUIZ_RESULTS_BACK_TARGET);
   }, []);
 
   const clearWineDetailsBackTarget = useCallback(() => {
-    sessionStorage.removeItem(WINE_DETAILS_BACK_TARGET_KEY);
     setBackTarget(null);
   }, []);
+
+  useEffect(() => {
+    const previousUserId = previousUserIdRef.current;
+
+    const currentUserId = user?.id ?? null;
+
+    if (
+      previousUserId !== null &&
+      currentUserId !== null &&
+      previousUserId !== currentUserId
+    ) {
+      clearQuizResult();
+      setBackTarget(null);
+    }
+
+    if (previousUserId !== null && !isAuthenticated) {
+      clearQuizResult();
+      setBackTarget(null);
+    }
+
+    previousUserIdRef.current = currentUserId;
+  }, [user?.id, isAuthenticated, clearQuizResult]);
 
   const value = useMemo(
     () => ({
       quizResult,
       backTarget,
+
       saveQuizResult,
       clearQuizResult,
+
       markWineDetailsOpenedFromQuizResults,
       clearWineDetailsBackTarget,
     }),
@@ -139,7 +139,7 @@ export const QuizSessionProvider = ({ children }: Props) => {
       clearQuizResult,
       markWineDetailsOpenedFromQuizResults,
       clearWineDetailsBackTarget,
-    ],
+    ]
   );
 
   return (

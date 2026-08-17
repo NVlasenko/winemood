@@ -4,7 +4,7 @@ import type {
   QuizRequestDto,
 } from "@/types/quiz";
 
-const experienceLevelByLevel: Record<
+const EXPERIENCE_LEVEL_MAP: Record<
   QuizExperienceLevel,
   QuizRequestDto["experienceLevel"]
 > = {
@@ -18,31 +18,42 @@ export const buildQuizRequest = (
   questions: QuizQuestionConfig[],
   selectedAnswers: Record<number, string>,
 ): QuizRequestDto => {
-  const answers = questions.reduce<QuizRequestDto["answers"]>(
-    (acc, question) => {
-      const selectedOptionId = selectedAnswers[question.step];
+  const mappedLevel = EXPERIENCE_LEVEL_MAP[experienceLevel];
 
-      if (!selectedOptionId) {
-        return acc;
-      }
+  if (!mappedLevel) {
+    throw new Error(`Unsupported experience level: ${experienceLevel}`);
+  }
 
-      const selectedOption = question.options.find(
-        (option) => option.id === selectedOptionId,
+  const answers: QuizRequestDto["answers"] = {};
+
+  for (const question of questions) {
+    const selectedOptionId = selectedAnswers[question.step];
+
+    if (!selectedOptionId) continue;
+
+    const selectedOption = question.options.find(
+      (option) => option.id === selectedOptionId,
+    );
+
+    if (!selectedOption) {
+      continue;
+    }
+
+    if (!selectedOption.apiValue) {
+      continue;
+    }
+
+    if (answers[question.apiField]) {
+      console.warn(
+        `Duplicate apiField detected: ${question.apiField}`,
       );
+    }
 
-      if (!selectedOption || !selectedOption.apiValue) {
-        return acc;
-      }
-
-      acc[question.apiField] = selectedOption.apiValue;
-
-      return acc;
-    },
-    {},
-  );
+    answers[question.apiField] = selectedOption.apiValue;
+  }
 
   return {
-    experienceLevel: experienceLevelByLevel[experienceLevel],
+    experienceLevel: mappedLevel,
     answers,
   };
 };

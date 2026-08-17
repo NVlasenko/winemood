@@ -219,22 +219,6 @@
     }
   }
 
-  &__modal-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    padding: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: radial-gradient(
-      circle at center,
-      rgba(var(--wine-glow-rgb), 0.18) 0%,
-      rgba(0, 0, 0, 0.86) 58%
-    );
-    backdrop-filter: blur(22px);
-    -webkit-backdrop-filter: blur(22px);
-  }
 
   &__modal {
     position: relative;
@@ -269,9 +253,32 @@
       filter: blur(90px);
       pointer-events: none;
     }
+
+    &-success-text {
+      margin: 0;
+      font-size: 13px;
+      text-align: center;
+      color: rgba(177, 167, 166, 1);
   }
 
-  &__modal-close {
+  &-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(
+      circle at center,
+      rgba(var(--wine-glow-rgb), 0.18) 0%,
+      rgba(0, 0, 0, 0.86) 58%
+    );
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+  }
+
+  &-close {
     position: absolute;
     top: 18px;
     right: 18px;
@@ -307,7 +314,7 @@
     }
   }
 
-  &__modal-title {
+  &-title {
     position: relative;
     z-index: 2;
     margin: 0 0 28px;
@@ -320,15 +327,14 @@
     text-transform: uppercase;
     color: $text-primary;
   }
-
-  &__modal-summary {
+  &-summary {
     position: relative;
     z-index: 2;
     display: grid;
     gap: 14px;
   }
 
-  &__modal-row {
+  &-row {
     padding: 16px 18px;
     border: 0.4px solid rgba(177, 167, 166, 0.18);
     border-radius: 14px;
@@ -343,7 +349,7 @@
       0 0 18px rgba(var(--wine-glow-rgb), 0.08);
   }
 
-  &__modal-label {
+  &-label {
     display: block;
     margin-bottom: 8px;
     font-family: "Poppins", sans-serif;
@@ -354,8 +360,8 @@
     color: rgba(var(--wine-glow-rgb), 0.95);
   }
 
-  &__modal-value,
-  &__modal-review {
+  &-value,
+  &-review {
     margin: 0;
     font-family: "Poppins", sans-serif;
     font-size: 16px;
@@ -363,52 +369,57 @@
     color: $text-primary;
   }
 
-  &__modal-value {
+  &-value {
     font-weight: 500;
   }
 
-  &__modal-review {
+  &-review {
     font-weight: 400;
     color: rgba(177, 167, 166, 1);
   }
 
-  &__modal-button {
+  &-button {
     position: relative;
     z-index: 2;
     width: 100%;
     height: 58px;
     margin-top: 30px;
   }
-
-  &__success-icon {
-    width: 84px;
-    height: 84px;
-    margin: 0 auto 26px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background: linear-gradient(
-      135deg,
-      var(--button-gradient-start),
-      var(--button-gradient-end)
-    );
-    box-shadow: 0 0 40px rgba(var(--wine-glow-rgb), 0.45);
-    font-size: 42px;
-    color: $text-primary;
   }
 
-  &__modal-success-text {
-    position: relative;
-    z-index: 2;
-    margin: 0;
-    font-family: "Poppins", sans-serif;
-    font-size: 15px;
-    line-height: 1.7;
-    text-align: center;
-    color: rgba(177, 167, 166, 1);
-  }
-
+    &__success {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+  
+      animation: fadeInScale 0.4s ease;
+    }
+  
+    &__success-icon {
+      width: 64px;
+      height: 64px;
+  
+      border-radius: 50%;
+  
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  
+      font-size: 28px;
+      color: #fff;
+  
+      background: rgba(var(--wine-glow-rgb), 0.15);
+      color: rgba(var(--wine-glow-rgb), 1);
+    
+      box-shadow:
+        0 0 20px rgba(var(--wine-glow-rgb), 0.5),
+        inset 0 0 10px rgba(var(--wine-glow-rgb), 0.3);
+  
+      animation: popIn 0.4s ease;
+    }
+  
+  
   @include on-tablet {
     &__step {
       margin-top: 120px;
@@ -473,5 +484,30 @@
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  80% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
   }
 }

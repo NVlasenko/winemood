@@ -13,7 +13,7 @@ import { CatalogFilters } from "@/components/catalog-filters";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 
 import { useFavorites } from "@/context/FavoritesContext";
-import { useCatalogSort, useCatalogWines } from "@/hooks/catalog";
+import { useCatalogWines } from "@/hooks/catalog";
 
 import "./CatalogPage.scss";
 
@@ -49,13 +49,22 @@ const scrollToCatalogTop = () => {
 
 export const CatalogPage = () => {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-
-  const { favorites, toggleFavorite } = useFavorites();
-
+  const { favoriteIds, toggleFavorite } = useFavorites(); 
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
   const isSearchOpen = searchParams.get("searchOpen") === "true";
   const pageParam = searchParams.get("page") || "1";
+  const sortParam = searchParams.get("sort");
+
+const activeSort: CatalogSortOption | null =
+  sortParam === "TOP_RATED"
+    ? "Top Rated"
+    : sortParam === "ALPHABETICAL"
+      ? "Alphabetical"
+         : sortParam === "POPULARITY"
+      ? "Popularity"
+      : null;
+
 
   const wineTypesFromUrl = useMemo(
     () => getArrayParam(searchParams, "wineTypes"),
@@ -122,6 +131,20 @@ export const CatalogPage = () => {
     return parsedPage - 1;
   }, [pageParam]);
 
+  const backendSort = useMemo<string[]>(() => {
+    switch (activeSort) {
+      case "Top Rated":
+        return ["rating,desc"];
+  
+      case "Alphabetical":
+        return ["name,asc"];
+  
+      case "Popularity":
+      default:
+        return [];
+    }
+  }, [activeSort]);
+
   const {
     wines,
     currentPage,
@@ -133,6 +156,7 @@ export const CatalogPage = () => {
     startCuratingAnimation,
   } = useCatalogWines({
     searchQuery,
+    sort: backendSort,
     wineTypes: wineTypesFromUrl,
     countries: countriesFromUrl,
     sweetnessLevels: sweetnessLevelsFromUrl,
@@ -150,9 +174,7 @@ export const CatalogPage = () => {
     setCurrentPage(pageFromUrl);
   }, [pageFromUrl, setCurrentPage]);
 
-  const { activeSort, sortedWines, setActiveSort } = useCatalogSort(wines);
-
-  const favoriteIds = useMemo(() => new Set(favorites), [favorites]);
+  const favoriteIdsSet = useMemo(() => new Set(favoriteIds), [favoriteIds]);
 
   const handleOpenFilters = useCallback(() => {
     setIsFiltersOpen(true);
@@ -165,9 +187,32 @@ export const CatalogPage = () => {
   const handleSortSelect = useCallback(
     (option: CatalogSortOption) => {
       startCuratingAnimation();
-      setActiveSort(option);
+  
+      const nextParams = new URLSearchParams(searchParams);
+  
+      nextParams.delete("page");
+  
+      if (option === "Top Rated") {
+        nextParams.set("sort", "TOP_RATED");
+      }
+  
+      if (option === "Alphabetical") {
+        nextParams.set("sort", "ALPHABETICAL");
+      }
+  
+      if (option === "Popularity") {
+        nextParams.set("sort", "POPULARITY");
+      }
+  
+      setSearchParams(nextParams);
+      setCurrentPage(0);
     },
-    [startCuratingAnimation, setActiveSort],
+    [
+      startCuratingAnimation,
+      searchParams,
+      setSearchParams,
+      setCurrentPage,
+    ],
   );
 
   const handleCloseSearch = useCallback(() => {
@@ -217,15 +262,15 @@ export const CatalogPage = () => {
           onClose={handleCloseSearch}
         />
 
-        <CatalogContent
-          wines={sortedWines}
-          favoriteIds={favoriteIds}
-          isInitialLoading={isInitialLoading}
-          isCurating={isCurating}
-          error={error}
-          onOpenFilters={handleOpenFilters}
-          onToggleFavorite={toggleFavorite}
-        />
+      <CatalogContent
+         wines={wines}
+        favoriteIds={favoriteIdsSet}
+        isInitialLoading={isInitialLoading}
+        isCurating={isCurating}
+        error={error}
+        onOpenFilters={handleOpenFilters}
+        onToggleFavorite={toggleFavorite}
+      />
 
         <CatalogPagination
           currentPage={currentPage}

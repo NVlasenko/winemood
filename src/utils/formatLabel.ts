@@ -4,10 +4,10 @@ export const formatLabel = (value: string): string => {
   }
 
   return value
+    .trim()
     .toLowerCase()
-    .split("_")
-    .map((word) =>
-      word ? word[0].toUpperCase() + word.slice(1) : ""
-    )
+    .split(/[_-]+/)
+    .filter(Boolean)
+    .map((word) => word[0].toUpperCase() + word.slice(1))
     .join(" ");
 };

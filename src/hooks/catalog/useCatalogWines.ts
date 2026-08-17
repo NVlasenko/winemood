@@ -1,24 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
-import { filterWines, type WineFilterRequest } from "@/shared/api/wineFilterApi";
+import {
+  filterWines,
+  type WineFilterRequest,
+} from "@/shared/api/wineFilterApi";
 import { searchWines } from "@/shared/api/wineSearchApi";
 
-import type { WineCatalogCard as WineCatalogCardType } from "@/types/wineCatalogCard";
+import { useAuth } from "@/context/AuthContext";
+import { refetchAchievementsSafe } from "@/shared/lib/refetchAchievementsSafe";
 
-type UseCatalogWinesParams = {
-  searchQuery: string;
-  wineTypes: string[];
-  countries: string[];
-  sweetnessLevels: string[];
-  grapeVarieties: string[];
-  wineStyles: string[];
-  acidityLevels: string[];
-  aromaNotes: string[];
-  moods: string[];
-  events: string[];
-  seasons: string[];
-  foodName: string[];
-};
+import type { WineCatalogCard as WineCatalogCardType } from "@/types/wineCatalogCard";
+import type { UseCatalogWinesParams } from "@/types/catalogWinesParams";
 
 const CATALOG_PAGE_SIZE = 8;
 
@@ -86,6 +79,7 @@ const buildWineFilters = ({
 
 export const useCatalogWines = ({
   searchQuery,
+  sort = [],
   wineTypes,
   countries,
   sweetnessLevels,
@@ -98,6 +92,9 @@ export const useCatalogWines = ({
   seasons,
   foodName,
 }: UseCatalogWinesParams) => {
+  const { user, refreshUser } = useAuth();
+  const queryClient = useQueryClient();
+
   const [wines, setWines] = useState<WineCatalogCardType[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -156,7 +153,18 @@ export const useCatalogWines = ({
               }),
               page: currentPage,
               size: CATALOG_PAGE_SIZE,
+              sort,
             });
+
+        if (user && !normalizedSearchQuery && events.length > 0) {
+          await refetchAchievementsSafe(queryClient, user.id);
+          await refreshUser();
+        }
+
+        if (user && !normalizedSearchQuery && foodName.length > 0) {
+          await refetchAchievementsSafe(queryClient, user.id);
+          await refreshUser();
+        }
 
         if (!Array.isArray(response.data)) {
           throw new Error("Invalid wines data");
@@ -200,6 +208,7 @@ export const useCatalogWines = ({
   }, [
     normalizedSearchQuery,
     searchQuery,
+    sort,
     wineTypes,
     countries,
     sweetnessLevels,
@@ -213,6 +222,9 @@ export const useCatalogWines = ({
     foodName,
     currentPage,
     startCuratingAnimation,
+    user?.id,
+    queryClient,
+    refreshUser,
   ]);
 
   useEffect(() => {

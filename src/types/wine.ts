@@ -1,4 +1,5 @@
 import type { FoodPairing } from "./food";
+import type { NamedEntity } from "./namedEntity";
 
 export type Wine = {
   id: number;
@@ -10,25 +11,10 @@ export type Wine = {
   rating: number;
   alcoholPercentage: number;
 
-  sweetnessLevel: {
-    id: number;
-    name: string;
-  };
-
-  grapeVariety: {
-    id: number;
-    name: string;
-  };
-
-  acidity: {
-    id: number;
-    name: string;
-  };
-
-  wineStyle: {
-    id: number;
-    name: string;
-  };
+  sweetnessLevel: NamedEntity;
+  grapeVariety: NamedEntity;
+  acidity: NamedEntity;
+  wineStyle: NamedEntity;
 
   agingMonths: number;
   environmentalAttributes: string[];

@@ -1,0 +1,358 @@
+@import "@/styles/mixins";
+@import "@/styles/variables";
+
+.user-reviews {
+  --reviews-gap: 16px;
+
+  width: 100%;
+
+  margin-top: 80px;
+
+  display: flex;
+  flex-direction: column;
+
+  &__top {
+    scroll-margin-top: 130px;
+  }
+
+  &__list {
+    margin-top: 50px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--reviews-gap);
+
+    min-width: 0;
+  }
+
+  &__extra {
+    opacity: 0;
+
+    transform: translateY(12px);
+
+    transition: opacity 0.35s ease,
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+
+    &--visible {
+      opacity: 1;
+
+      transform: translateY(0);
+    }
+  }
+
+  &__extra-inner {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--reviews-gap);
+
+    min-width: 0;
+  }
+
+  &__card {
+    padding: 20px;
+
+    border-radius: 16px;
+
+    border: 1px solid rgba(217, 217, 217, 0.12);
+
+    background: rgba(255, 255, 255, 0.04);
+
+    backdrop-filter: blur(40px);
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 14px;
+
+    transition: background 0.25s ease, transform 0.25s ease,
+      border-color 0.25s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.06);
+
+      transform: translateY(-2px);
+    }
+  }
+
+  &__wine {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    cursor: pointer;
+
+    img {
+      width: 64px;
+      height: 64px;
+
+      object-fit: contain;
+
+      border-radius: 12px;
+
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  &__wine-info {
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+
+    h4 {
+      margin: 0;
+
+      font-family: "Marcellus", serif;
+
+      font-size: 16px;
+
+      color: $text-primary;
+    }
+
+    span {
+      font-size: 13px;
+
+      color: rgba(177, 167, 166, 1);
+    }
+  }
+
+  &__text {
+    margin: 0;
+
+    font-size: 14px;
+    line-height: 1.6;
+
+    color: $text-primary;
+  }
+
+  &__date {
+    font-size: 12px;
+
+    color: rgba(177, 167, 166, 1);
+  }
+
+  &__actions {
+    margin-top: 6px;
+
+    display: flex;
+
+    gap: 10px;
+  }
+
+  &__btn {
+    padding: 8px 14px;
+
+    border-radius: 10px;
+
+    border: 1px solid rgba(217, 217, 217, 0.14);
+
+    background: rgba(255, 255, 255, 0.04);
+
+    color: $text-primary;
+
+    font-size: 12px;
+
+    cursor: pointer;
+
+    transition: background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+
+      cursor: not-allowed;
+    }
+
+    &--danger {
+      color: #ff6b6b;
+
+      border-color: rgba(255, 107, 107, 0.3);
+
+      &:hover:not(:disabled) {
+        background: rgba(255, 107, 107, 0.12);
+      }
+    }
+  }
+
+  &__actions-bottom {
+    margin-top: 40px;
+
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &__view-all {
+    @include expandable-button;
+  }
+
+  &__modal-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(0, 0, 0, 0.6);
+
+    backdrop-filter: blur(6px);
+
+    animation: user-reviews-fade-in 0.2s ease;
+  }
+
+  &__modal {
+    width: 100%;
+    max-width: 320px;
+
+    padding: 24px;
+
+    border-radius: 16px;
+
+    border: 1px solid rgba(217, 217, 217, 0.12);
+
+    background: rgba(20, 20, 20, 0.95);
+
+    backdrop-filter: blur(40px);
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 16px;
+
+    text-align: center;
+
+    animation: user-reviews-scale-in 0.2s ease;
+
+    h3 {
+      margin: 0;
+
+      font-family: "Marcellus", serif;
+
+      font-size: 18px;
+
+      color: $text-primary;
+    }
+
+    p {
+      margin: 0;
+
+      font-size: 13px;
+
+      color: rgba(177, 167, 166, 1);
+    }
+  }
+
+  &__modal-actions {
+    display: flex;
+    justify-content: center;
+
+    gap: 12px;
+  }
+
+  @include on-tablet {
+    --reviews-gap: 25px;
+
+    margin-top: 120px;
+
+    &__top {
+      scroll-margin-top: 140px;
+    }
+
+    &__list {
+      margin-top: 80px;
+    }
+
+    &__card {
+      padding: 24px;
+    }
+
+    &__wine {
+      img {
+        width: 72px;
+        height: 72px;
+      }
+    }
+  }
+
+  @include on-desktop {
+    --reviews-gap: 30px;
+
+    margin-top: 100px;
+
+    &__top {
+      scroll-margin-top: 150px;
+    }
+
+    &__list {
+      margin-top: 120px;
+    }
+
+    &__card {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 24px;
+    }
+
+    &__wine {
+      min-width: 240px;
+
+      img {
+        width: 80px;
+        height: 80px;
+      }
+    }
+
+    &__text {
+      flex: 1;
+
+      max-width: 600px;
+    }
+
+    &__actions {
+      flex-shrink: 0;
+    }
+  }
+}
+
+@keyframes user-reviews-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes user-reviews-scale-in {
+  from {
+    opacity: 0;
+
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: scale(1);
+  }
+}

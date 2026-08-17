@@ -2,6 +2,41 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 type HttpClientOptions = RequestInit & {
   skipJsonContentType?: boolean;
+  skipAuth?: boolean;
+};
+
+export type ApiFieldError = {
+  field: string;
+  message: string;
+};
+
+export type ApiErrorResponse = {
+  timestamp?: string;
+  status?: number;
+  error?: string;
+  message?: string;
+  path?: string;
+  fieldErrors?: ApiFieldError[];
+};
+
+export class ApiError extends Error {
+  status: number;
+  data: ApiErrorResponse | null;
+
+  constructor(message: string, status: number, data: ApiErrorResponse | null) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+    this.data = data;
+    Object.setPrototypeOf(this, ApiError.prototype);
+  }
+}
+
+const getAccessToken = () => {
+  const token = localStorage.getItem("accessToken");
+  return token && token !== "undefined" && token !== "null"
+    ? token
+    : null;
 };
 
 const buildUrl = (endpoint: string) => {
@@ -19,39 +54,61 @@ const parseResponseBody = async (response: Response) => {
     return null;
   }
 
-  return response.json();
+  try {
+    return await response.json();
+  } catch {
+    return null;
+  }
 };
 
 export const httpClient = async <T>(
   endpoint: string,
-  options: HttpClientOptions = {},
+  options: HttpClientOptions = {}
 ): Promise<T> => {
-  const { skipJsonContentType, headers, body, ...restOptions } = options;
+  const {
+    skipJsonContentType,
+    skipAuth,
+    headers,
+    body,
+    ...rest
+  } = options;
 
   const isFormData = body instanceof FormData;
+
+  const token = getAccessToken();
 
   const requestHeaders: HeadersInit = {
     ...(!isFormData && !skipJsonContentType
       ? { "Content-Type": "application/json" }
       : {}),
+
+    ...(token && !skipAuth
+      ? { Authorization: `Bearer ${token}` }
+      : {}),
+
     ...headers,
   };
 
+  const preparedBody =
+    body && !isFormData && typeof body === "object"
+      ? JSON.stringify(body)
+      : body;
+
   const response = await fetch(buildUrl(endpoint), {
-    ...restOptions,
-    body,
+    ...rest,
     headers: requestHeaders,
+    body: preparedBody,
   });
 
   const data = await parseResponseBody(response);
 
   if (!response.ok) {
-    const message =
-      data && typeof data === "object" && "message" in data
-        ? String(data.message)
-        : `HTTP error: ${response.status}`;
+    const errorData = data as ApiErrorResponse | null;
 
-    throw new Error(message);
+    const message =
+      errorData?.message ?? `HTTP error: ${response.status}`;
+
+    throw new ApiError(message, response.status, errorData);
   }
 
   return data as T;

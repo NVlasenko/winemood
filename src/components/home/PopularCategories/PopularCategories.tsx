@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { SectionTitle } from "@/components/ui/SectionTitle";
+import { SectionState } from "@/components/ui/SectionState";
 import { getCategories } from "@/shared/api/categoryApi";
-
 import type { Category } from "@/types/categories";
 
 import {
@@ -45,7 +44,9 @@ export const PopularCategories = () => {
   const navigate = useNavigate();
 
   const [categories, setCategories] = useState<Category[]>([]);
+
   const [loading, setLoading] = useState(true);
+
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -74,11 +75,13 @@ export const PopularCategories = () => {
 
         if (error instanceof TypeError) {
           setError("Network error. Please check your internet connection.");
+
           return;
         }
 
         if (error instanceof Error) {
           setError(error.message);
+
           return;
         }
 
@@ -103,24 +106,20 @@ export const PopularCategories = () => {
 
       navigate(wineType ? `/catalog?wineTypes=${wineType}` : "/catalog");
     },
-    [navigate],
+    [navigate]
   );
 
   const renderContent = () => {
     if (loading) {
-      return <p className="popular-categories__state">Loading categories...</p>;
+      return <SectionState variant="loading" text="Loading categories..." />;
     }
 
     if (error) {
-      return (
-        <p className="popular-categories__state popular-categories__state--error">
-          {error}
-        </p>
-      );
+      return <SectionState variant="error" text={error} />;
     }
 
     if (!categories.length) {
-      return <p className="popular-categories__state">No categories found.</p>;
+      return <SectionState variant="empty" text="No categories found." />;
     }
 
     return (

@@ -11,10 +11,15 @@ import {
 import { useAuth } from "@/context/AuthContext";
 
 import "./WriteReviewPage.scss";
-import { useCreateReview, useUpdateReview } from "@/hooks/reviews/useReviewMutations.ts";
+import {
+  useCreateReview,
+  useUpdateReview,
+} from "@/hooks/reviews/useReviewMutations.ts";
+import { invalidateUserData } from "@/shared/lib/invalidateUserData";
+import { useQueryClient } from "@tanstack/react-query";
+import { refetchAchievementsSafe } from "@/shared/lib/refetchAchievementsSafe";
 
 const STARS = [1, 2, 3, 4, 5] as const;
-
 
 const getPreviousStep = (step: ReviewStep): ReviewStep => {
   switch (step) {
@@ -56,11 +61,14 @@ export const WriteReviewPage = () => {
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const [mode, setMode] = useState<"create" | "edit">("create");
+  const [submittedMode, setSubmittedMode] = useState<"create" | "edit" | null>(
+    null
+  );
   const { user } = useAuth();
   const authorName = user?.name || "";
   const navigate = useNavigate();
   const { id } = useParams();
-
+  const queryClient = useQueryClient();
   const currentRating = hoverRating || rating;
   const wineId = Number(id);
 
@@ -74,14 +82,14 @@ export const WriteReviewPage = () => {
   }, [wineReviews, user]);
 
   if (!id || Number.isNaN(wineId)) return null;
-  
+
   useEffect(() => {
-    if (!myReview || isSubmitted) return;
-  
+    if (!myReview || isSubmitted || submittedMode) return;
+
     setMode("edit");
     setRating(myReview.rating);
     setReviewText(myReview.reviewText);
-  }, [myReview, isSubmitted]);
+  }, [myReview, isSubmitted, submittedMode]);
 
   const canGoNext = useMemo(() => {
     switch (step) {
@@ -101,7 +109,7 @@ export const WriteReviewPage = () => {
 
   const getRatingFromPointer = (
     event: MouseEvent<HTMLButtonElement>,
-    star: number,
+    star: number
   ) => {
     const rect = event.currentTarget.getBoundingClientRect();
     const pointerX = event.clientX - rect.left;
@@ -111,18 +119,16 @@ export const WriteReviewPage = () => {
     return Number(preciseRating.toFixed(2));
   };
 
-
-
   const handleStarClick = (
     event: MouseEvent<HTMLButtonElement>,
-    star: number,
+    star: number
   ) => {
     setRating(getRatingFromPointer(event, star));
   };
 
   const handleStarMove = (
     event: MouseEvent<HTMLButtonElement>,
-    star: number,
+    star: number
   ) => {
     setHoverRating(getRatingFromPointer(event, star));
   };
@@ -152,8 +158,9 @@ export const WriteReviewPage = () => {
     setIsConfirmOpen(false);
   }, [isSubmitted]);
 
-  const handleSubmitReview = useCallback(() => {
+  const handleSubmitReview = useCallback(async () => {
     if (mode === "edit" && myReview) {
+      setSubmittedMode("edit");
 
       updateReview.mutate(
         {
@@ -162,16 +169,27 @@ export const WriteReviewPage = () => {
           reviewText,
         },
         {
-          onSuccess: () => {
+          onSuccess: async () => {
             setIsSubmitted(true);
-  
+
+            invalidateUserData(user?.id);
+
+            await refetchAchievementsSafe(queryClient, user?.id);
+
             setTimeout(() => {
-              navigate("/profile"); 
-            }, 1000);
+              queryClient.refetchQueries({
+                queryKey: ["achievements", user?.id],
+              });
+            }, 500);
+
+            setTimeout(() => {
+              navigate("/profile");
+            }, 1800);
           },
         }
       );
     } else {
+      setSubmittedMode("create");
 
       createReview.mutate(
         {
@@ -179,12 +197,22 @@ export const WriteReviewPage = () => {
           reviewText,
         },
         {
-          onSuccess: () => {
+          onSuccess: async () => {
             setIsSubmitted(true);
-  
+
+            invalidateUserData(user?.id);
+
+            await refetchAchievementsSafe(queryClient, user?.id);
+
             setTimeout(() => {
-              navigate(`/catalog/${wineId}`)
-            }, 1200);
+              queryClient.refetchQueries({
+                queryKey: ["achievements", user?.id],
+              });
+            }, 500);
+
+            setTimeout(() => {
+              navigate(`/catalog/${wineId}`);
+            }, 1500);
           },
         }
       );
@@ -197,6 +225,7 @@ export const WriteReviewPage = () => {
     createReview,
     navigate,
     wineId,
+    user,
   ]);
 
   return (
@@ -210,7 +239,7 @@ export const WriteReviewPage = () => {
       {step === 1 && (
         <div className="write-review-page__step">
           <h2 className="write-review-page__subtitle">
-          "How would you rate this wine?"
+            "How would you rate this wine?"
           </h2>
 
           <div
@@ -291,9 +320,7 @@ export const WriteReviewPage = () => {
               aria-hidden="true"
             />
 
-          <div className="write-review-page__input">
-            {authorName}
-          </div>
+            <div className="write-review-page__input">{authorName}</div>
           </div>
         </div>
       )}
@@ -316,7 +343,9 @@ export const WriteReviewPage = () => {
                 <div className="write-review-page__success-icon">✓</div>
 
                 <h3 className="write-review-page__modal-title">
-                {mode === "edit" ? "Review updated" : "Review submitted"}
+                  {submittedMode === "edit"
+                    ? "Review updated"
+                    : "Review submitted"}
                 </h3>
 
                 <p className="write-review-page__modal-success-text">
@@ -325,8 +354,10 @@ export const WriteReviewPage = () => {
               </div>
             ) : (
               <>
-               <h3 className="write-review-page__modal-title">
-               {mode === "edit" ? "Update your review" : "Confirm your review"}
+                <h3 className="write-review-page__modal-title">
+                  {mode === "edit"
+                    ? "Update your review"
+                    : "Confirm your review"}
                 </h3>
 
                 <div className="write-review-page__modal-summary">
@@ -363,15 +394,19 @@ export const WriteReviewPage = () => {
                   className="button-primary write-review-page__modal-button"
                   type="button"
                   onClick={handleSubmitReview}
-                  disabled={mode === "edit" ? updateReview.isPending : createReview.isPending}
+                  disabled={
+                    mode === "edit"
+                      ? updateReview.isPending
+                      : createReview.isPending
+                  }
                 >
-                 {mode === "edit"
-                  ? updateReview.isPending
-                    ? "Updating..."
-                    : "Update review"
-                  : createReview.isPending
-                  ? "Sending..."
-                  : "Submit review"}
+                  {mode === "edit"
+                    ? updateReview.isPending
+                      ? "Updating..."
+                      : "Update review"
+                    : createReview.isPending
+                    ? "Sending..."
+                    : "Submit review"}
                 </button>
               </>
             )}
@@ -381,4 +416,3 @@ export const WriteReviewPage = () => {
     </ReviewStepLayout>
   );
 };
-

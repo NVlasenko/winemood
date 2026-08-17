@@ -10,8 +10,9 @@ import {
 
 import { userApi } from "@/shared/api/userApi";
 import { useAuth } from "@/context/AuthContext";
-
+import { queryClient } from "@/shared/lib/reactQuery";
 import type { WineCatalogCard as WineCatalogCardType } from "@/types/wineCatalogCard";
+import { refetchAchievementsSafe } from "@/shared/lib/refetchAchievementsSafe";
 
 type FavoritesContextType = {
   favoriteWines: WineCatalogCardType[];
@@ -30,13 +31,17 @@ type Props = {
 };
 
 export const FavoritesProvider = ({ children }: Props) => {
-  const { isAuthenticated, isLoadingUser } = useAuth();
+  const { isAuthenticated, isLoadingUser, user } = useAuth();
 
   const [favoriteWines, setFavoriteWines] = useState<WineCatalogCardType[]>([]);
   const [pendingIds, setPendingIds] = useState<number[]>([]);
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    setFavoriteWines([]);
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (!isAuthenticated || !user) {
       setFavoriteWines([]);
       return;
     }
@@ -50,22 +55,16 @@ export const FavoritesProvider = ({ children }: Props) => {
         console.error("Failed to load favorites", e);
         setFavoriteWines([]);
       });
-  }, [isAuthenticated, isLoadingUser]);
+  }, [isAuthenticated, isLoadingUser, user?.id]);
 
   const favoriteIds = useMemo(
     () => favoriteWines.map((w) => w.id),
     [favoriteWines]
   );
 
-  const favoriteSet = useMemo(
-    () => new Set(favoriteIds),
-    [favoriteIds]
-  );
+  const favoriteSet = useMemo(() => new Set(favoriteIds), [favoriteIds]);
 
-  const pendingSet = useMemo(
-    () => new Set(pendingIds),
-    [pendingIds]
-  );
+  const pendingSet = useMemo(() => new Set(pendingIds), [pendingIds]);
 
   const favoritesCount = favoriteWines.length;
 
@@ -105,14 +104,18 @@ export const FavoritesProvider = ({ children }: Props) => {
         } else {
           await userApi.addFavorite(id);
         }
+
+        queryClient.invalidateQueries({
+          queryKey: ["favorites", user?.id],
+        });
+
+        await refetchAchievementsSafe(queryClient, user?.id);
       } catch (e) {
         console.error("Toggle favorite failed", e);
-        
+
         setFavoriteWines((prev) => {
           if (isFav) {
-            return prev.some((w) => w.id === id)
-              ? prev
-              : [...prev, wine];
+            return prev.some((w) => w.id === id) ? prev : [...prev, wine];
           }
 
           return prev.filter((w) => w.id !== id);
@@ -121,7 +124,7 @@ export const FavoritesProvider = ({ children }: Props) => {
         setPendingIds((prev) => prev.filter((i) => i !== id));
       }
     },
-    [favoriteSet]
+    [favoriteSet, user?.id]
   );
 
   const isFavorite = useCallback(

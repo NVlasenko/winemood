@@ -21,6 +21,7 @@ type FilterWinesParams = {
   filters: WineFilterRequest;
   page: number;
   size: number;
+  sort?: string[];
   signal?: AbortSignal;
 };
 
@@ -36,11 +37,16 @@ export const filterWines = ({
   filters,
   page,
   size,
+  sort = [],
   signal,
 }: FilterWinesParams): Promise<PageDto<WineCatalogCard>> => {
   const searchParams = new URLSearchParams({
     page: String(page),
     size: String(size),
+  });
+
+  sort.forEach((sortItem) => {
+    searchParams.append("sort", sortItem);
   });
 
   return httpClient<PageDto<WineCatalogCard>>(

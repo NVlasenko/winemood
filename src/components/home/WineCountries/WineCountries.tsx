@@ -48,40 +48,16 @@ export const WineCountries = () => {
         if (!isMounted) {
           return;
         }
-
+      
         console.error("Failed to load countries:", error);
-
+      
         if (error instanceof TypeError) {
           setError("Network error. Please check your internet connection.");
-
+      
           return;
         }
-
-        if (error instanceof Error) {
-          if (error.message.includes("404")) {
-            setError("Countries endpoint not found.");
-
-            return;
-          }
-
-          if (error.message.includes("500")) {
-            setError("Server error. Please try again later.");
-
-            return;
-          }
-
-          if (error.message.includes("Failed to fetch")) {
-            setError("Unable to connect to the server.");
-
-            return;
-          }
-
-          setError(error.message);
-
-          return;
-        }
-
-        setError("Something went wrong.");
+      
+        setError("Something went wrong. Please try again later.");
       } finally {
         if (isMounted) {
           setLoading(false);

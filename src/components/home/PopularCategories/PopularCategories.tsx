@@ -56,13 +56,13 @@ export const PopularCategories = () => {
       try {
         setLoading(true);
         setError("");
-
+    
         const data = await getCategories();
-
+    
         if (!Array.isArray(data)) {
           throw new Error("Invalid categories data");
         }
-
+    
         if (isMounted) {
           setCategories(data);
         }
@@ -70,22 +70,23 @@ export const PopularCategories = () => {
         if (!isMounted) {
           return;
         }
-
-        console.error("Failed to load categories:", error);
-
+    
+        console.error(
+          "Failed to load categories:",
+          error
+        );
+    
         if (error instanceof TypeError) {
-          setError("Network error. Please check your internet connection.");
-
+          setError(
+            "Network error. Please check your internet connection."
+          );
+    
           return;
         }
-
-        if (error instanceof Error) {
-          setError(error.message);
-
-          return;
-        }
-
-        setError("Something went wrong.");
+    
+        setError(
+          "Something went wrong. Please try again later."
+        );
       } finally {
         if (isMounted) {
           setLoading(false);

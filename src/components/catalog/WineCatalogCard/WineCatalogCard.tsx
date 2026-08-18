@@ -57,38 +57,51 @@ export const WineCatalogCard = ({
       className="catalog-page__card"
       style={{ "--card-index": index } as CSSProperties}
     >
-      <FavoriteButton
-        isFavorite={isFavorite}
-        className="catalog-page__favorite"
-        onClick={handleFavoriteClick}
-      />
-
-      <Link to={`/catalog/${wine.id}`} className="catalog-page__image-link">
-        <span className="catalog-page__wine-glow" />
-
-        <img
-          className="catalog-page__image"
-          src={wine.imageUrl}
-          alt={wine.name}
+      <div className="catalog-page__card-inner">
+        <FavoriteButton
+          isFavorite={isFavorite}
+          className="catalog-page__favorite"
+          onClick={handleFavoriteClick}
         />
-      </Link>
 
-      <div className="catalog-page__info">
-        <p className="catalog-page__country">{wine.countryName}</p>
+        <Link
+          to={`/catalog/${wine.id}`}
+          className="catalog-page__image-link"
+        >
+          <span className="catalog-page__wine-glow" />
 
-        <h3 className="catalog-page__name">{wine.name}</h3>
+          <img
+            className="catalog-page__image"
+            src={wine.imageUrl}
+            alt={wine.name}
+          />
+        </Link>
 
-        <WineRating rating={wine.rating} />
+        <div className="catalog-page__info">
+          <p className="catalog-page__country">
+            {wine.countryName}
+          </p>
 
-        <div className="catalog-page__meta">
-          <div className="catalog-page__meta-item">
-            <img src={wineDropIcon} alt="" />
-            <span>{formatWineValue(wine.sweetnessLevel.name)}</span>
-          </div>
+          <h3 className="catalog-page__name">
+            {wine.name}
+          </h3>
 
-          <div className="catalog-page__meta-item">
-            <img src={bottleIcon} alt="" />
-            <span>{wine.volumeMl} ml</span>
+          <WineRating rating={wine.rating} />
+
+          <div className="catalog-page__meta">
+            <div className="catalog-page__meta-item">
+              <img src={wineDropIcon} alt="" />
+
+              <span>
+                {formatWineValue(wine.sweetnessLevel.name)}
+              </span>
+            </div>
+
+            <div className="catalog-page__meta-item">
+              <img src={bottleIcon} alt="" />
+
+              <span>{wine.volumeMl} ml</span>
+            </div>
           </div>
         </div>
       </div>

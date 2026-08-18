@@ -19,7 +19,6 @@ import {
 import "./BrowseByMood.scss";
 import { MoodCard } from "./sections/MoodCard";
 
-
 type ParticleTheme = Exclude<MoodCardTheme, "celebration">;
 
 export const BrowseByMood = () => {
@@ -96,7 +95,7 @@ export const BrowseByMood = () => {
         particleTimeoutRef.current = null;
       }, 2600);
     },
-    [clearParticleTimeout, clearAnimationFrame],
+    [clearParticleTimeout, clearAnimationFrame]
   );
 
   const handleResetMood = useCallback(() => {
@@ -126,7 +125,7 @@ export const BrowseByMood = () => {
       clearParticleTimeout,
       clearAnimationFrame,
       fireParticleEffect,
-    ],
+    ]
   );
 
   return (
@@ -141,15 +140,11 @@ export const BrowseByMood = () => {
       )}
 
       <div className="container">
-        <SectionTitle title="Browse By Mood" />
+        <SectionTitle title="Choose Your Vibe" />
 
         <div className="browse-by-mood__grid">
           {moods.map((mood) => (
-            <MoodCard
-              key={mood.id}
-              mood={mood}
-              onMoodClick={handleMoodClick}
-            />
+            <MoodCard key={mood.id} mood={mood} onMoodClick={handleMoodClick} />
           ))}
         </div>
 
@@ -166,15 +161,11 @@ export const BrowseByMood = () => {
                   Current Mood
                 </span>
 
-                <span className="browse-by-mood__reset-value">
-                  {moodTheme}
-                </span>
+                <span className="browse-by-mood__reset-value">{moodTheme}</span>
 
                 <span className="browse-by-mood__reset-divider" />
 
-                <span className="browse-by-mood__reset-action">
-                  Reset
-                </span>
+                <span className="browse-by-mood__reset-action">Reset</span>
               </button>
             )}
           </div>
@@ -185,7 +176,6 @@ export const BrowseByMood = () => {
               className="button-primary browse-by-mood__button"
             >
               Find My Wine
-
               <img
                 src={arrowRight}
                 alt=""

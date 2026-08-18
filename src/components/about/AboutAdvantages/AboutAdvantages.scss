@@ -4,7 +4,7 @@
 .about-advantages {
   position: relative;
   padding: 90px 0 0;
-  overflow: hidden;
+  overflow: visible;
 
   &::after {
     content: none;
@@ -161,11 +161,11 @@
     padding: 164px 0 0;
 
     &::after {
-      top: 30%;
+      top: 50%;
       right: 0;
   
-      width: 500px;
-      height: 300px;
+      width: 250px;
+      height: 100px;
   
       filter: blur(120px);
     }

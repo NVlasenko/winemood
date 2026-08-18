@@ -182,16 +182,16 @@ export const useCatalogWines = ({
         console.error("Failed to load wines", error);
 
         if (error instanceof TypeError) {
-          setError("Network error. Please check your internet connection.");
+          setError(
+            "Network error. Please check your internet connection."
+          );
+
           return;
         }
 
-        if (error instanceof Error) {
-          setError(error.message);
-          return;
-        }
-
-        setError("Something went wrong.");
+        setError(
+          "Something went wrong. Please try again later."
+        );
       } finally {
         if (isMounted) {
           hasLoadedRef.current = true;

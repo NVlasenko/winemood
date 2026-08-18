@@ -279,14 +279,14 @@
   }
 
   @include on-desktop {
-    min-height: 920px;
-
+    min-height: 100svh;
+  
     &::before {
       top: 0;
       left: -300px;
   
-      width: 850px;
-      height: 850px;
+      width: min(850px, 60vw);
+      height: min(850px, 90vh);
   
       filter: blur(150px);
     }
@@ -295,55 +295,56 @@
       top: -220px;
       right: -280px;
   
-      width: 950px;
-      height: 950px;
+      width: min(950px, 65vw);
+      height: min(950px, 95vh);
   
       filter: blur(170px);
     }
-
+  
     &__content {
-      min-height: 1000px;
+      min-height: 100svh;
     }
-
+  
     &__pattern--left {
       top: -100px;
       left: -85px;
-
-      width: 760px;
-      height: 920px;
-
+  
+      width: min(760px, 55vw);
+      height: min(920px, 95vh);
+  
       opacity: 0.56;
     }
-
+  
     &__pattern--right {
       top: -60px;
       right: -170px;
-
-      width: 920px;
-      height: 920px;
-
+  
+      width: min(920px, 65vw);
+      height: min(920px, 95vh);
+  
       opacity: 0.66;
     }
-
+  
     &__title {
-      top: 182px;
+      top: clamp(120px, 18vh, 182px);
       left: 0;
   
       transform: none;
   
-      font-size: 42px;
+      font-size: clamp(32px, 2.6vw, 42px);
       text-align: left;
     }
+  
     &__image-wrapper {
-      top: 120px;
+      top: clamp(80px, 12vh, 120px);
       left: 43%;
   
-      width: 500px;
-      height: 600px;
+      width: clamp(380px, 32vw, 500px);
+      height: clamp(480px, 68vh, 600px);
   
       &::before {
-        width: 1100px;
-        height: 1100px;
+        width: clamp(760px, 70vw, 1100px);
+        height: clamp(760px, 70vw, 1100px);
   
         filter: blur(170px);
       }
@@ -353,15 +354,55 @@
       width: 100%;
       height: 100%;
     }
-
+  
     &__text {
       right: 0;
-      bottom: 230px;
-
-      width: 557px;
-
-      font-size: 18px;
+  
+      bottom: clamp(70px, 16vh, 230px);
+  
+      width: min(557px, 40vw);
+  
+      font-size: clamp(14px, 1.2vw, 18px);
       line-height: 1.5;
+    }
+  }
+  @media (min-width: 1440px) and (max-height: 850px) {
+    .history-hero {
+      min-height: 100svh;
+  
+      &__content {
+        min-height: 100svh;
+      }
+  
+      &__title {
+        top: 115px;
+        font-size: 34px;
+      }
+  
+      &__image-wrapper {
+        top: 75px;
+  
+        width: 400px;
+        height: 500px;
+      }
+  
+      &__text {
+        bottom: 55px;
+  
+        width: 480px;
+  
+        font-size: 14px;
+      }
+  
+      &__pattern--left {
+        width: 680px;
+        height: 760px;
+      }
+  
+      &__pattern--right {
+        width: 760px;
+        height: 760px;
+      }
     }
   }
 }

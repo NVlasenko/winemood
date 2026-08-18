@@ -30,7 +30,7 @@ export const WineRating = ({ rating }: Props) => {
         })}
       </div>
 
-      <span>{rating}</span>
+      <span>{rating.toFixed(2)}</span>
     </div>
   );
 };

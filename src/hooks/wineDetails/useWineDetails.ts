@@ -27,11 +27,9 @@ const getWineDetailsErrorMessage = (error: unknown): string => {
     if (error.message.includes("Failed to fetch")) {
       return "Unable to connect to the server.";
     }
-
-    return error.message;
   }
 
-  return "Something went wrong.";
+  return "Something went wrong. Please try again later.";
 };
 
 export const useWineDetails = (id?: string): UseWineDetailsResult => {

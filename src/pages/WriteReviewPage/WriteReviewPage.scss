@@ -29,78 +29,92 @@
   &__stars {
     position: relative;
     margin-top: 20px;
+  
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 15px;
-
+  
     &::before {
       content: "";
       position: absolute;
-      inset: -80px;
-      background: rgba(var(--wine-glow-rgb), 0.14);
-      filter: blur(80px);
+  
+      top: 50%;
+      left: 50%;
+  
+      width: 420px;
+      height: 180px;
+  
+      transform: translate(-50%, -50%);
+  
+      border-radius: 50%;
+  
       pointer-events: none;
     }
   }
-
+  
   &__star {
     position: relative;
     z-index: 1;
+  
     width: 54px;
     height: 54px;
+  
     display: flex;
     align-items: center;
     justify-content: center;
+  
     padding: 0;
     border: none;
+    outline: none;
+  
     background: transparent;
+  
+    appearance: none;
+    -webkit-appearance: none;
+  
     cursor: pointer;
+  
     font-size: 54px;
     line-height: 1;
-    transition: transform 0.3s ease, filter 0.3s ease;
-
-    &:hover {
-      transform: scale(1.08);
-      filter: drop-shadow(0 0 14px rgba(var(--wine-glow-rgb), 0.55))
-        drop-shadow(0 0 30px rgba(var(--wine-glow-rgb), 0.3));
-    }
-
+  
     &:focus {
       outline: none;
     }
-
+  
     &:focus-visible {
       border-radius: 8px;
       outline: 2px solid rgba(var(--wine-glow-rgb), 0.85);
       outline-offset: 6px;
     }
   }
-
+  
   &__star-bg {
     position: absolute;
     inset: 0;
+  
     display: flex;
     align-items: center;
     justify-content: center;
+  
     color: rgba(var(--wine-glow-rgb), 0.35);
-    transition: color 0.35s ease, filter 0.35s ease;
+  
+    pointer-events: none;
   }
-
+  
   &__star-fill {
     position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
+    inset: 0;
+  
     display: flex;
     align-items: center;
-    overflow: hidden;
-    white-space: nowrap;
+    justify-content: center;
+  
     color: rgba(var(--wine-glow-rgb), 1);
+  
     pointer-events: none;
-    transition: color 0.35s ease, filter 0.35s ease;
-    filter: drop-shadow(0 0 10px rgba(var(--wine-glow-rgb), 0.45))
-      drop-shadow(0 0 22px rgba(var(--wine-glow-rgb), 0.25));
+  
+    will-change: clip-path;
   }
 
   &__rating-value {

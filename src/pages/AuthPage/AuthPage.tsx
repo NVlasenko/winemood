@@ -183,7 +183,12 @@ const AuthSuccessModal = ({ isOpen, title, text }: SuccessModalProps) => {
 
 export const AuthPage = () => {
   const navigate = useNavigate();
-  const { register, login } = useAuth();
+  const {
+    register,
+    login,
+    isAuthenticated,
+    isLoadingUser,
+  } = useAuth();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -210,7 +215,6 @@ export const AuthPage = () => {
   const [submitError, setSubmitError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
-  const { isAuthenticated, isLoadingUser } = useAuth();
 
 useEffect(() => {
   if (isAuthenticated && !isLoadingUser) {
@@ -385,12 +389,10 @@ useEffect(() => {
         setRegisterForm(DEFAULT_REGISTER_FORM);
 
       } catch (error) {
-        if (error instanceof ApiError) {
-          if (error.status === 409) {
-            setSubmitError("User already exists");
-          } else {
-            setSubmitError(error.message);
-          }
+        console.error("Registration failed:", error);
+      
+        if (error instanceof ApiError && error.status === 409) {
+          setSubmitError("User already exists");
         } else {
           setSubmitError("Something went wrong. Please try again.");
         }
@@ -439,13 +441,13 @@ useEffect(() => {
           navigate("/profile");
         }, PROFILE_NAVIGATION_DELAY_MS);
       } catch (error) {
-        if (error instanceof ApiError) {
-          setSubmitError(error.message);
-
-          return;
+        console.error("Login failed:", error);
+      
+        if (error instanceof ApiError && error.status === 401) {
+          setSubmitError("Invalid email or password");
+        } else {
+          setSubmitError("Something went wrong. Please try again.");
         }
-
-        setSubmitError("Something went wrong. Please try again.");
       } finally {
         setIsSubmitting(false);
       }

@@ -264,7 +264,9 @@ export const WriteReviewPage = () => {
 
                   <span
                     className="write-review-page__star-fill"
-                    style={{ width: `${fillPercent}%` }}
+                    style={{
+                      clipPath: `inset(0 ${100 - fillPercent}% 0 0)`,
+                    }}
                   >
                     ★
                   </span>

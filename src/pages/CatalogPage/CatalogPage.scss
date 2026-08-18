@@ -326,79 +326,159 @@
 
   &__card {
     position: relative;
+  
     min-height: 372px;
-    display: flex;
-    flex-direction: column;
-    padding: 24px 20px 28px;
-    overflow: hidden;
-    border: 0.4px solid rgba(217, 217, 217, 0.16);
+  
+    padding: 0;
+  
+    border: none;
     border-radius: 12px;
-    background: rgba(5, 5, 5, 0.78);
-    transition: transform 0.35s ease, border-color 0.35s ease,
+  
+    background: transparent;
+  
+    overflow: visible;
+  
+    transition:
+      transform 0.35s ease,
       box-shadow 0.35s ease;
-
+  
     &:hover {
       transform: translateY(-6px);
-      border-color: var(--border-color);
-      box-shadow: 0 28px 60px rgba(0, 0, 0, 0.45), 0 0 36px var(--line-shadow);
+  
+      box-shadow:
+        0 28px 60px rgba(0, 0, 0, 0.45),
+        0 0 28px rgba(var(--wine-glow-rgb), 0.12);
     }
   }
-
+  
+  &__card-inner {
+    position: relative;
+  
+    min-height: inherit;
+    height: 100%;
+  
+    display: flex;
+    flex-direction: column;
+  
+    padding: 24px 20px 28px;
+  
+    overflow: hidden;
+  
+    border: 1px solid rgba(217, 217, 217, 0.16);
+    border-radius: 12px;
+  
+    background: rgba(5, 5, 5, 0.78);
+  
+    transition: border-color 0.35s ease;
+  }
+  
+  &__card:hover &__card-inner {
+    border-color: var(--border-color);
+  }
+  
   &__favorite {
     position: absolute;
     top: 22px;
     right: 22px;
-    z-index: 4;
+  
+    z-index: 10;
   }
-
+  
   &__image-link {
     position: relative;
     z-index: 2;
+  
     height: 178px;
+  
     display: flex;
     align-items: flex-start;
     justify-content: center;
+  
     text-decoration: none;
-
+  
+    isolation: isolate;
+  
     &:focus-visible {
       outline: 2px solid var(--mood-link-hover-color);
       outline-offset: 8px;
       border-radius: 12px;
     }
   }
-
+  
   &__wine-glow {
     position: absolute;
-    top: 14px;
+  
+    top: 70%;
     left: 50%;
-    z-index: 1;
-    width: 210px;
-    height: 210px;
-    transform: translateX(-50%);
+    z-index: -1;
+  
+    width: 300px;
+    height: 350px;
+  
+    transform: translate(-50%, -50%);
+  
+    border-radius: 50%;
+  
     background: radial-gradient(
-      circle,
-      rgba(var(--wine-glow-rgb), 1) 0%,
-      rgba(var(--wine-glow-rgb), 0.72) 28%,
-      rgba(var(--wine-glow-rgb), 0.28) 55%,
-      transparent 78%
+      ellipse 55% 52% at center,
+      rgba(var(--wine-glow-rgb), 0.9) 0%,
+      rgba(var(--wine-glow-rgb), 0.72) 15%,
+      rgba(var(--wine-glow-rgb), 0.5) 30%,
+      rgba(var(--wine-glow-rgb), 0.3) 45%,
+      rgba(var(--wine-glow-rgb), 0.16) 58%,
+      rgba(var(--wine-glow-rgb), 0.07) 70%,
+      rgba(var(--wine-glow-rgb), 0.025) 82%,
+      rgba(var(--wine-glow-rgb), 0.008) 90%,
+      transparent 100%
     );
-    filter: blur(30px);
+  
+    opacity: 1;
+  
     pointer-events: none;
+  
+    transition:
+      opacity 0.35s ease,
+      transform 0.35s ease;
   }
-
+  
+  &__card:hover &__wine-glow {
+    opacity: 1;
+  
+    transform:
+      translate(-50%, -50%)
+      scale(1.12);
+  }
+  
+  &__card:hover &__wine-glow {
+    opacity: 1;
+  
+    transform:
+      translate(-50%, -50%)
+      scale(1.08);
+  }
+  
   &__image {
     position: relative;
     z-index: 2;
+  
+    display: block;
+  
     width: 100px;
-    height: 178px;
+    height: 220px;
+  
     object-fit: contain;
+  
+    border: 0;
+    outline: 0;
+  
+    transform: scale(1);
+  
     transition: transform 0.35s ease;
   }
-
+  
   &__card:hover &__image {
     transform: scale(1.06);
   }
-
   &__info {
     position: relative;
     z-index: 3;
@@ -536,14 +616,12 @@
     &:hover:not(:disabled) {
       color: var(--mood-link-hover-color);
       border-color: var(--border-color);
-      box-shadow: 0 0 18px var(--line-shadow);
     }
 
     &:focus-visible {
       outline: 2px solid var(--mood-link-hover-color);
       outline-offset: 4px;
     }
-
     &:disabled {
       cursor: not-allowed;
       opacity: 0.45;
@@ -553,7 +631,6 @@
   &__pagination-item--active {
     color: var(--mood-link-hover-color);
     border-color: var(--border-color);
-    box-shadow: 0 0 18px var(--line-shadow);
   }
 
   &__pagination-arrow {
@@ -666,7 +743,6 @@
 
     &__card {
       min-height: 390px;
-      padding: 24px 20px 28px;
     }
 
     &__image-link {
@@ -674,14 +750,14 @@
     }
 
     &__image {
-      width: 108px;
-      height: 190px;
+      width: 100px;
+      height: 220px;
     }
 
     &__wine-glow {
-      top: 38px;
-      width: 210px;
-      height: 210px;
+      top: 75%;
+      width: 290px;
+      height: 340px;
     }
   }
 
@@ -714,7 +790,6 @@
 
     &__card {
       min-height: 447px;
-      padding: 24px 20px 28px;
     }
 
     &__image-link {
@@ -727,9 +802,9 @@
     }
 
     &__wine-glow {
-      top: 38px;
-      width: 210px;
-      height: 210px;
+      top: 75%;
+      width: 300px;
+      height: 350px;
     }
 
     &__pagination {

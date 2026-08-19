@@ -31,19 +31,6 @@
       background 0.45s ease;
   }
 
-  &--has-query {
-    pointer-events: none;
-
-    .catalog-search__backdrop {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .catalog-search__panel {
-      pointer-events: auto;
-    }
-  }
-
   &__panel {
     position: relative;
     z-index: 2;
@@ -274,7 +261,23 @@
       pointer-events: auto;
     }
   }
-
+  &--no-results {
+    pointer-events: auto;
+  
+    .catalog-search__backdrop {
+      opacity: 1;
+      pointer-events: auto;
+  
+      background: rgba(0, 0, 0, 0.48);
+  
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+  
+    .catalog-search__panel {
+      pointer-events: auto;
+    }
+  }
   @include on-tablet {
     padding: 92px 32px 40px;
 

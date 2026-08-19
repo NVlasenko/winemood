@@ -130,12 +130,12 @@ export const QuizResults = ({ wines, onRestart }: Props) => {
         secondaryTo: "/auth?mode=login",
         continueLabel: "Continue without saving",
         cancelLabel: "Stay here",
-
+      
         onContinue: () => {
-          clearQuizResult();
-
+          onRestart();
+      
           sessionStorage.removeItem(quizSentKey);
-
+      
           navigate(nextPath);
         },
       });

@@ -66,7 +66,7 @@ export const Header = () => {
             className="header__logo"
             onClick={closeMenu}
           >
-            Vinoteca
+            Winemood
           </NavLink>
 
           <nav

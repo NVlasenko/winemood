@@ -136,7 +136,7 @@
   }
 
   &__background-text {
-    @include vinoteca-text(rgba(41, 43, 44, 1), clamp(90px, 30vw, 520px), 0);
+    @include vinoteca-text(rgba(41, 43, 44, 1), clamp(90px, 25vw, 520px), 0);
     margin-top: 20px;
     position: relative;
     transform: translateX(-5%) scaleX(1.03);
@@ -208,7 +208,7 @@
 
     &__background-text {
       margin-top: 30px;
-      font-size: clamp(160px, 28vw, 360px);
+      font-size: clamp(140px, 23vw, 360px);
       letter-spacing: 0.03em;
       transform: translateX(-5%) scaleX(1.04);
     }
@@ -251,7 +251,7 @@
 
     &__background-text {
       margin-top: 8px;
-      font-size: clamp(380px, 25vw, 520px);
+      font-size: clamp(350px, 15vw, 520px);
       letter-spacing: 0.07em;
       transform: translateX(-2%) scaleX(1.04);
     }

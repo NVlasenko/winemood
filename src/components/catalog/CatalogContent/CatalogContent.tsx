@@ -40,15 +40,6 @@ export const CatalogContent = ({
   return (
     <div className="catalog-page__curation">
 
-      {isCurating && (
-        <div className="catalog-page__curation-overlay">
-          <div className="catalog-page__curation-glow" />
-          <p className="catalog-page__curation-text">
-            Finding the best matches...
-          </p>
-        </div>
-      )}
-
       <div
         className={`catalog-page__grid ${
           isCurating ? "catalog-page__grid--curating" : ""

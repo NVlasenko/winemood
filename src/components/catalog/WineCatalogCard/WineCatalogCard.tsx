@@ -58,16 +58,18 @@ export const WineCatalogCard = ({
       style={{ "--card-index": index } as CSSProperties}
     >
       <div className="catalog-page__card-inner">
+      <Link
+        to={`/catalog/${wine.id}`}
+        className="catalog-page__card-link"
+        aria-label={`View ${wine.name}`}
+      />
         <FavoriteButton
           isFavorite={isFavorite}
           className="catalog-page__favorite"
           onClick={handleFavoriteClick}
         />
 
-        <Link
-          to={`/catalog/${wine.id}`}
-          className="catalog-page__image-link"
-        >
+        <div className="catalog-page__image-link">
           <span className="catalog-page__wine-glow" />
 
           <img
@@ -75,7 +77,7 @@ export const WineCatalogCard = ({
             src={wine.imageUrl}
             alt={wine.name}
           />
-        </Link>
+        </div>
 
         <div className="catalog-page__info">
           <p className="catalog-page__country">

@@ -144,22 +144,58 @@ export const CatalogSearch = ({
     inputRef.current?.focus();
   }, [searchParams, setSearchParams]);
 
+  const handleCloseNoResults = useCallback(() => {
+    setSearchQuery("");
+  
+    const nextParams = new URLSearchParams(searchParams);
+  
+    nextParams.delete("search");
+    nextParams.delete("searchOpen");
+    nextParams.delete("page");
+  
+    setSearchParams(nextParams);
+  }, [searchParams, setSearchParams]);
+
+  const handleSearchAction = useCallback(() => {
+    if (shouldShowNoResults) {
+      handleCloseNoResults();
+      return;
+    }
+  
+    if (searchQuery) {
+      handleClearInput();
+      return;
+    }
+  
+    onClose();
+  }, [
+    shouldShowNoResults,
+    searchQuery,
+    handleCloseNoResults,
+    handleClearInput,
+    onClose,
+  ]);
+
   if (!isOpen) {
     return null;
   }
 
   return (
     <div
-      className={`catalog-search ${
-        normalizedQuery ? "catalog-search--has-query" : ""
-      }`}
+      className={[
+        "catalog-search",
+        normalizedQuery ? "catalog-search--has-query" : "",
+        shouldShowNoResults ? "catalog-search--no-results" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
     >
-      <button
-        className="catalog-search__backdrop"
-        type="button"
-        aria-label="Close search"
-        onClick={onClose}
-      />
+        <button
+          className="catalog-search__backdrop"
+          type="button"
+          aria-label="Close search"
+          onClick={shouldShowNoResults ? handleCloseNoResults : onClose}
+        />
 
       <section className="catalog-search__panel" aria-label="Wine search">
         <div className="catalog-search__bar">
@@ -187,8 +223,14 @@ export const CatalogSearch = ({
           <button
             className="catalog-search__action"
             type="button"
-            onClick={searchQuery ? handleClearInput : onClose}
-            aria-label={searchQuery ? "Clear search" : "Close search"}
+            onClick={handleSearchAction}
+            aria-label={
+              shouldShowNoResults
+                ? "Close search"
+                : searchQuery
+                  ? "Clear search"
+                  : "Close search"
+            }
           >
             ×
           </button>
@@ -234,7 +276,6 @@ export const CatalogSearch = ({
 
             {shouldShowNoResults && (
               <div className="catalog-search__state">
-                <p className="catalog-search__state-title">No wines found</p>
                 <p className="catalog-search__state-text">
                   We couldn’t find wines matching “{normalizedQuery}”. Try
                   another name or check the spelling.

@@ -127,10 +127,6 @@
     display: block;
 
     object-fit: contain;
-
-    // ВАЖНО:
-    // Не используем filter: drop-shadow(),
-    // потому что SVG может давать прямоугольный glow.
     transition: transform 0.35s ease;
   }
 

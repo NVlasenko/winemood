@@ -1,5 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
 import { useSearchParams } from "react-router-dom";
+
+import { analytics } from "@/shared/lib/analytics";
 
 import recentSearchIcon from "@/assets/images/icons/recent-search.svg";
 import searchIcon from "@/assets/images/icons/search.svg";
@@ -15,6 +23,7 @@ type Props = {
 };
 
 const SEARCH_DEBOUNCE_MS = 400;
+const SEARCH_ANALYTICS_DEBOUNCE_MS = 1200;
 
 export const CatalogSearch = ({
   isOpen,
@@ -22,6 +31,8 @@ export const CatalogSearch = ({
   onClose,
 }: Props) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const lastTrackedQueryRef = useRef("");
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -64,42 +75,50 @@ export const CatalogSearch = ({
   const handleClose = useCallback(() => {
     onClose();
   }, [onClose]);
-  
+
   useEffect(() => {
     if (!isOpen) {
       return;
     }
-  
+
     const handleEscapeKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         handleClose();
       }
     };
-  
-    document.addEventListener("keydown", handleEscapeKey);
-  
+
+    document.addEventListener(
+      "keydown",
+      handleEscapeKey,
+    );
+
     return () => {
-      document.removeEventListener("keydown", handleEscapeKey);
+      document.removeEventListener(
+        "keydown",
+        handleEscapeKey,
+      );
     };
-  }, [isOpen, handleClose]);
+  }, [
+    isOpen,
+    handleClose,
+  ]);
 
-  useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
+  const applySearch = useCallback(
+    (query: string) => {
+      const normalized = query.trim();
 
-    const timeoutId = window.setTimeout(() => {
       const currentSearchParam =
         searchParams.get("search") ?? "";
 
-      if (currentSearchParam === normalizedQuery) {
+      if (currentSearchParam === normalized) {
         return;
       }
 
-      const nextParams = new URLSearchParams(searchParams);
+      const nextParams =
+        new URLSearchParams(searchParams);
 
-      if (normalizedQuery) {
-        nextParams.set("search", normalizedQuery);
+      if (normalized) {
+        nextParams.set("search", normalized);
       } else {
         nextParams.delete("search");
       }
@@ -107,6 +126,20 @@ export const CatalogSearch = ({
       nextParams.delete("page");
 
       setSearchParams(nextParams);
+    },
+    [
+      searchParams,
+      setSearchParams,
+    ],
+  );
+
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      applySearch(normalizedQuery);
     }, SEARCH_DEBOUNCE_MS);
 
     return () => {
@@ -115,8 +148,41 @@ export const CatalogSearch = ({
   }, [
     isOpen,
     normalizedQuery,
-    searchParams,
-    setSearchParams,
+    applySearch,
+  ]);
+
+  useEffect(() => {
+    if (!isOpen || !normalizedQuery) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      if (
+        lastTrackedQueryRef.current ===
+        normalizedQuery
+      ) {
+        return;
+      }
+
+      lastTrackedQueryRef.current =
+        normalizedQuery;
+
+      analytics
+        .searchStarted(normalizedQuery)
+        .catch((error) => {
+          console.error(
+            "Failed to send SEARCH_STARTED analytics event:",
+            error,
+          );
+        });
+    }, SEARCH_ANALYTICS_DEBOUNCE_MS);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [
+    isOpen,
+    normalizedQuery,
   ]);
 
   const handleSubmit = useCallback(() => {
@@ -126,35 +192,24 @@ export const CatalogSearch = ({
 
     addSearchQuery(normalizedQuery);
 
-    const nextParams = new URLSearchParams(searchParams);
-
-    nextParams.set("search", normalizedQuery);
-    nextParams.delete("page");
-
-    setSearchParams(nextParams);
+    applySearch(normalizedQuery);
   }, [
     addSearchQuery,
     normalizedQuery,
-    searchParams,
-    setSearchParams,
+    applySearch,
   ]);
 
   const handleHistoryClick = useCallback(
     (query: string) => {
       setSearchQuery(query);
+
       addSearchQuery(query);
 
-      const nextParams = new URLSearchParams(searchParams);
-
-      nextParams.set("search", query);
-      nextParams.delete("page");
-
-      setSearchParams(nextParams);
+      applySearch(query);
     },
     [
       addSearchQuery,
-      searchParams,
-      setSearchParams,
+      applySearch,
     ],
   );
 
@@ -163,7 +218,7 @@ export const CatalogSearch = ({
   }
 
   return (
-       <div
+    <div
       className={[
         "catalog-search",
         normalizedQuery
@@ -175,107 +230,119 @@ export const CatalogSearch = ({
       ]
         .filter(Boolean)
         .join(" ")}
+      onClick={handleClose}
     >
-
       <div className="container">
-         <section
-        className="catalog-search__panel"
-        aria-label="Wine search"
-      >
-        <div className="catalog-search__bar">
-          <img
-            className="catalog-search__search-icon"
-            src={searchIcon}
-            alt=""
-            aria-hidden="true"
-          />
+        <section
+          className="catalog-search__panel"
+          aria-label="Wine search"
+          onClick={(event) => {
+            event.stopPropagation();
+          }}
+        >
+          <div className="catalog-search__bar">
+            <img
+              className="catalog-search__search-icon"
+              src={searchIcon}
+              alt=""
+              aria-hidden="true"
+            />
 
-          <input
-            ref={inputRef}
-            className="catalog-search__input"
-            type="search"
-            value={searchQuery}
-            placeholder="Search wines..."
-            autoComplete="off"
-            onChange={(event) =>
-              setSearchQuery(event.target.value)
-            }
-            onKeyDown={(event) => {
-              if (event.key === "Enter") {
-                handleSubmit();
+            <input
+              ref={inputRef}
+              className="catalog-search__input"
+              type="search"
+              value={searchQuery}
+              placeholder="Search wines..."
+              autoComplete="off"
+              onChange={(event) =>
+                setSearchQuery(
+                  event.target.value,
+                )
               }
-            }}
-          />
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  handleSubmit();
+                }
+              }}
+            />
 
-          <button
-            className="catalog-search__action"
-            type="button"
-            onClick={handleClose}
-            aria-label="Close search"
-          >
-            ×
-          </button>
-        </div>
-
-        {shouldShowHistory && (
-          <div className="catalog-search__dropdown">
-            <h3 className="catalog-search__title">
-              Recent searches
-            </h3>
-
-            <ul className="catalog-search__history-list">
-              {history.map((query) => (
-                <li
-                  className="catalog-search__history-item"
-                  key={query}
-                >
-                  <button
-                    className="catalog-search__history-button"
-                    type="button"
-                    onClick={() =>
-                      handleHistoryClick(query)
-                    }
-                  >
-                    <img
-                      className="catalog-search__history-icon"
-                      src={recentSearchIcon}
-                      alt=""
-                      aria-hidden="true"
-                    />
-
-                    <span>{query}</span>
-                  </button>
-
-                  <button
-                    className="catalog-search__history-remove"
-                    type="button"
-                    onClick={() =>
-                      removeSearchQuery(query)
-                    }
-                    aria-label={`Remove ${query} from search history`}
-                  >
-                    ×
-                  </button>
-                </li>
-              ))}
-            </ul>
+            <button
+              className="catalog-search__action"
+              type="button"
+              onClick={handleClose}
+              aria-label="Close search"
+            >
+              ×
+            </button>
           </div>
-        )}
 
-        {shouldShowNoResults && (
-          <div className="catalog-search__dropdown catalog-search__dropdown--state">
-            <p className="catalog-search__state-text">
-              We couldn’t find wines matching
-              {" "}
-              <strong>“{normalizedQuery}”</strong>.
-              Try another name or change your filters.
-            </p>
-          </div>
-        )}
-      </section> 
+          {shouldShowHistory && (
+            <div className="catalog-search__dropdown">
+              <h3 className="catalog-search__title">
+                Recent searches
+              </h3>
+
+              <ul className="catalog-search__history-list">
+                {history.map((query) => (
+                  <li
+                    className="catalog-search__history-item"
+                    key={query}
+                  >
+                    <button
+                      className="catalog-search__history-button"
+                      type="button"
+                      onClick={() =>
+                        handleHistoryClick(
+                          query,
+                        )
+                      }
+                    >
+                      <img
+                        className="catalog-search__history-icon"
+                        src={
+                          recentSearchIcon
+                        }
+                        alt=""
+                        aria-hidden="true"
+                      />
+
+                      <span>{query}</span>
+                    </button>
+
+                    <button
+                      className="catalog-search__history-remove"
+                      type="button"
+                      onClick={() =>
+                        removeSearchQuery(
+                          query,
+                        )
+                      }
+                      aria-label={`Remove ${query} from search history`}
+                    >
+                      ×
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {shouldShowNoResults && (
+            <div className="catalog-search__dropdown catalog-search__dropdown--state">
+              <p className="catalog-search__state-text">
+                We couldn’t find wines
+                matching{" "}
+                <strong>
+                  “{normalizedQuery}”
+                </strong>
+                . Try another name or change
+                your filters.
+              </p>
+            </div>
+          )}
+        </section>
       </div>
-    
     </div>
-   
   );
 };

@@ -75,12 +75,24 @@ const getSavedUser = (): UserDto | null => {
   }
 };
 
+const getInitialUser = (): UserDto | null => {
+  const token = getSavedAccessToken();
+
+  if (!token) {
+    localStorage.removeItem(USER_STORAGE_KEY);
+
+    return null;
+  }
+
+  return getSavedUser();
+};
+
 export const AuthProvider = ({ children }: Props) => {
   const [accessToken, setAccessToken] = useState<string | null>(() =>
     getSavedAccessToken()
   );
 
-  const [user, setUser] = useState<UserDto | null>(() => getSavedUser());
+  const [user, setUser] = useState<UserDto | null>(() => getInitialUser());
 
   const [isLoadingUser, setIsLoadingUser] = useState(false);
 

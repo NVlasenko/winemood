@@ -1,6 +1,7 @@
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-type HttpClientOptions = RequestInit & {
+type HttpClientOptions = Omit<RequestInit, "body"> & {
+  body?: BodyInit | object | null;
   skipJsonContentType?: boolean;
   skipAuth?: boolean;
 };
@@ -75,30 +76,30 @@ export const httpClient = async <T>(
 
   const isFormData = body instanceof FormData;
 
-  const token = getAccessToken();
+const token = getAccessToken();
 
-  const requestHeaders: HeadersInit = {
-    ...(!isFormData && !skipJsonContentType
-      ? { "Content-Type": "application/json" }
-      : {}),
+const requestHeaders: HeadersInit = {
+  ...(!isFormData && !skipJsonContentType
+    ? { "Content-Type": "application/json" }
+    : {}),
 
-    ...(token && !skipAuth
-      ? { Authorization: `Bearer ${token}` }
-      : {}),
+  ...(token && !skipAuth
+    ? { Authorization: `Bearer ${token}` }
+    : {}),
 
-    ...headers,
-  };
+  ...headers,
+};
 
-  const preparedBody =
-    body && !isFormData && typeof body === "object"
-      ? JSON.stringify(body)
-      : body;
+const preparedBody: BodyInit | null | undefined =
+  body && !isFormData && typeof body === "object"
+    ? JSON.stringify(body)
+    : (body as BodyInit | null | undefined);
 
-  const response = await fetch(buildUrl(endpoint), {
-    ...rest,
-    headers: requestHeaders,
-    body: preparedBody,
-  });
+const response = await fetch(buildUrl(endpoint), {
+  ...rest,
+  headers: requestHeaders,
+  body: preparedBody,
+});
 
   const data = await parseResponseBody(response);
 

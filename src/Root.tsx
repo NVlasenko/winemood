@@ -23,6 +23,8 @@ import { AuthRequiredProvider } from "@/context/AuthRequiredContext";
 
 import { QuizSessionProvider } from "@/context/QuizSessionContext";
 import { AuthProvider } from "@/context/AuthContext";
+import { AnalyticsSessionTracker } from "./components/analytics/AnalyticsSessionTracker";
+import { AnalyticsPageViewTracker } from "./components/analytics/AnalyticsPageViewTracker";
 
 const HomePage = lazy(() =>
   import("@/pages/HomePage").then((module) => ({
@@ -115,6 +117,9 @@ export const Root = () => {
     <QueryClientProvider client={queryClient}>
       <HashRouter>
         <AppProviders>
+          <AnalyticsSessionTracker />
+          <AnalyticsPageViewTracker />
+
           <ScrollToTop />
 
           <Suspense fallback={null}>
@@ -123,10 +128,7 @@ export const Root = () => {
                 path={ROUTES.home}
                 element={<App />}
               >
-                <Route
-                  index
-                  element={<HomePage />}
-                />
+                <Route index element={<HomePage />} />
 
                 <Route
                   path={ROUTES.catalog}

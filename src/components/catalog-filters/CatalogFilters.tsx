@@ -8,14 +8,11 @@ import {
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { getMetadata } from "@/shared/api/metadataApi";
-import {
-  filterWines,
-  type WineFilterRequest,
-} from "@/shared/api/wineFilterApi";
-
+import { filterWines } from "@/shared/api/wineFilterApi";
 import ResetIcon from "@/assets/images/filters/reset/reset-default.svg?react";
 
 import type { MetadataFilter } from "@/types/metadata";
+import type { WineArrayFilterKey, WineFilterRequest } from "@/types/filters";
 
 import { buildFilterGroups } from "./config/buildFilterGroups";
 import { CatalogFilterGroup } from "./sections/CatalogFilterGroup";
@@ -27,7 +24,7 @@ type Props = {
   onClose: () => void;
 };
 
-type WineArrayFilterKey = Exclude<keyof WineFilterRequest, "search">;
+
 
 type SelectedFilters = Partial<
   Record<WineArrayFilterKey, string[]>

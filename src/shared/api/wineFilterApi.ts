@@ -1,30 +1,9 @@
 import { httpClient } from "@/shared/api/httpClient";
+import type { FilterWinesParams, WineFilterRequest } from "@/types/filters";
 
 import type { PageDto } from "@/types/pagination";
 import type { WineCatalogCard } from "@/types/wineCatalogCard";
 
-export type WineFilterRequest = {
-  search?: string;
-  wineTypes?: string[];
-  sweetnessLevels?: string[];
-  countries?: string[];
-  grapeVarieties?: string[];
-  wineStyles?: string[];
-  acidityLevels?: string[];
-  aromaNotes?: string[];
-  moods?: string[];
-  events?: string[];
-  seasons?: string[];
-  foodName?: string[];
-};
-
-type FilterWinesParams = {
-  filters: WineFilterRequest;
-  page: number;
-  size: number;
-  sort?: string[];
-  signal?: AbortSignal;
-};
 
 const cleanFilters = (
   filters: WineFilterRequest

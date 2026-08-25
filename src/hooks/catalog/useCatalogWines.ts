@@ -3,7 +3,6 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import {
   filterWines,
-  type WineFilterRequest,
 } from "@/shared/api/wineFilterApi";
 
 import { useAuth } from "@/context/AuthContext";
@@ -11,6 +10,7 @@ import { refetchAchievementsSafe } from "@/shared/lib/refetchAchievementsSafe";
 
 import type { WineCatalogCard as WineCatalogCardType } from "@/types/wineCatalogCard";
 import type { UseCatalogWinesParams } from "@/types/catalogWinesParams";
+import type { WineFilterRequest } from "@/types/filters";
 
 const CATALOG_PAGE_SIZE = 8;
 

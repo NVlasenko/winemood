@@ -1,6 +1,6 @@
 import confetti from "canvas-confetti";
 import type { ISourceOptions } from "@tsparticles/engine";
-import type { MoodCardTheme } from "../types/mood";
+import type { MoodCardTheme } from "@/types/mood";
 
 type ParticleTheme = Exclude<MoodCardTheme, "celebration">;
 

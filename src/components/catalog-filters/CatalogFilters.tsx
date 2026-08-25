@@ -1,14 +1,23 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { getMetadata } from "@/shared/api/metadataApi";
-import { filterWines, type WineFilterRequest } from "@/shared/api/wineFilterApi";
+import {
+  filterWines,
+  type WineFilterRequest,
+} from "@/shared/api/wineFilterApi";
 
 import ResetIcon from "@/assets/images/filters/reset/reset-default.svg?react";
 
 import type { MetadataFilter } from "@/types/metadata";
-import { buildFilterGroups } from "./config/buildFilterGroups";
 
+import { buildFilterGroups } from "./config/buildFilterGroups";
 import { CatalogFilterGroup } from "./sections/CatalogFilterGroup";
 
 import "./CatalogFilters.scss";
@@ -18,7 +27,11 @@ type Props = {
   onClose: () => void;
 };
 
-type SelectedFilters = Record<string, string[]>;
+type WineArrayFilterKey = Exclude<keyof WineFilterRequest, "search">;
+
+type SelectedFilters = Partial<
+  Record<WineArrayFilterKey, string[]>
+>;
 
 const PREVIEW_PAGE = 0;
 const PREVIEW_PAGE_SIZE = 1;
@@ -35,13 +48,13 @@ const FILTER_PARAM_KEYS = [
   "events",
   "seasons",
   "foodName",
-] as const;
+] as const satisfies readonly WineArrayFilterKey[];
 
 const buildSelectedFiltersFromUrl = (
   searchParams: URLSearchParams,
 ): SelectedFilters => {
   return FILTER_PARAM_KEYS.reduce<SelectedFilters>((acc, key) => {
-    const param = searchParams.get(key) || "";
+    const param = searchParams.get(key);
 
     acc[key] = param ? param.split(",") : [];
 
@@ -51,20 +64,39 @@ const buildSelectedFiltersFromUrl = (
 
 const buildWineFilters = (
   selectedFilters: SelectedFilters,
+  searchQuery: string,
 ): WineFilterRequest => {
   const filters: WineFilterRequest = {};
 
-  Object.entries(selectedFilters).forEach(([key, values]) => {
+  const normalizedSearchQuery = searchQuery.trim();
+
+  if (normalizedSearchQuery) {
+    filters.search = normalizedSearchQuery;
+  }
+
+  FILTER_PARAM_KEYS.forEach((key) => {
+    const values = selectedFilters[key] ?? [];
+
     if (values.length > 0) {
-      filters[key as keyof WineFilterRequest] = values;
+      filters[key] = values;
     }
   });
 
   return filters;
 };
 
-export const CatalogFilters = ({ isOpen, onClose }: Props) => {
+const buildCatalogUrl = (params: URLSearchParams) => {
+  const query = params.toString();
+
+  return query ? `/catalog?${query}` : "/catalog";
+};
+
+export const CatalogFilters = ({
+  isOpen,
+  onClose,
+}: Props) => {
   const navigate = useNavigate();
+
   const [searchParams] = useSearchParams();
 
   const previewDebounceRef = useRef<number | null>(null);
@@ -72,12 +104,15 @@ export const CatalogFilters = ({ isOpen, onClose }: Props) => {
   const [metadataFilters, setMetadataFilters] = useState<MetadataFilter[]>([]);
   const [openedFilter, setOpenedFilter] = useState("");
 
-  const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>(() =>
-    buildSelectedFiltersFromUrl(searchParams),
-  );
+  const [selectedFilters, setSelectedFilters] =
+    useState<SelectedFilters>(() =>
+      buildSelectedFiltersFromUrl(searchParams),
+    );
 
   const [previewCount, setPreviewCount] = useState(0);
   const [isPreviewLoading, setIsPreviewLoading] = useState(false);
+
+  const searchQuery = searchParams.get("search") ?? "";
 
   const filterGroups = useMemo(
     () => buildFilterGroups(metadataFilters),
@@ -95,7 +130,10 @@ export const CatalogFilters = ({ isOpen, onClose }: Props) => {
           setMetadataFilters(metadata);
         }
       } catch (error) {
-        console.error("Failed to load metadata filters:", error);
+        console.error(
+          "Failed to load metadata filters:",
+          error,
+        );
       }
     };
 
@@ -107,8 +145,14 @@ export const CatalogFilters = ({ isOpen, onClose }: Props) => {
   }, []);
 
   useEffect(() => {
-    setSelectedFilters(buildSelectedFiltersFromUrl(searchParams));
-  }, [searchParams]);
+    if (!isOpen) {
+      return;
+    }
+
+    setSelectedFilters(
+      buildSelectedFiltersFromUrl(searchParams),
+    );
+  }, [isOpen, searchParams]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -117,94 +161,158 @@ export const CatalogFilters = ({ isOpen, onClose }: Props) => {
 
     let isMounted = true;
 
-    if (previewDebounceRef.current) {
-      clearTimeout(previewDebounceRef.current);
+    if (previewDebounceRef.current !== null) {
+      window.clearTimeout(previewDebounceRef.current);
     }
 
-    previewDebounceRef.current = window.setTimeout(async () => {
-      try {
-        setIsPreviewLoading(true);
+    previewDebounceRef.current = window.setTimeout(
+      async () => {
+        try {
+          setIsPreviewLoading(true);
 
-        const response = await filterWines({
-          filters: buildWineFilters(selectedFilters),
-          page: PREVIEW_PAGE,
-          size: PREVIEW_PAGE_SIZE,
-        });
+          const response = await filterWines({
+            filters: buildWineFilters(
+              selectedFilters,
+              searchQuery,
+            ),
+            page: PREVIEW_PAGE,
+            size: PREVIEW_PAGE_SIZE,
+          });
 
-        if (isMounted) {
-          setPreviewCount(response.meta.totalElements);
-        }
-      } catch (error) {
-        console.error("Failed to load preview count:", error);
+          if (isMounted) {
+            setPreviewCount(
+              response.meta.totalElements,
+            );
+          }
+        } catch (error) {
+          console.error(
+            "Failed to load preview count:",
+            error,
+          );
 
-        if (isMounted) {
-          setPreviewCount(0);
+          if (isMounted) {
+            setPreviewCount(0);
+          }
+        } finally {
+          if (isMounted) {
+            setIsPreviewLoading(false);
+          }
         }
-      } finally {
-        if (isMounted) {
-          setIsPreviewLoading(false);
-        }
-      }
-    }, 350);
+      },
+      350,
+    );
 
     return () => {
       isMounted = false;
 
-      if (previewDebounceRef.current) {
-        clearTimeout(previewDebounceRef.current);
+      if (previewDebounceRef.current !== null) {
+        window.clearTimeout(previewDebounceRef.current);
+        previewDebounceRef.current = null;
       }
     };
-  }, [isOpen, selectedFilters]);
+  }, [
+    isOpen,
+    selectedFilters,
+    searchQuery,
+  ]);
 
   const handleClose = useCallback(() => {
     setOpenedFilter("");
     onClose();
   }, [onClose]);
 
-  const toggleFilter = useCallback((id: string) => {
-    setOpenedFilter((prev) => (prev === id ? "" : id));
-  }, []);
+  const toggleFilter = useCallback(
+    (id: string) => {
+      setOpenedFilter((prev) =>
+        prev === id ? "" : id,
+      );
+    },
+    [],
+  );
 
-  const toggleOption = useCallback((filterId: string, value: string) => {
-    setSelectedFilters((prev) => {
-      const currentValues = prev[filterId] || [];
-      const isSelected = currentValues.includes(value);
+  const toggleOption = useCallback(
+    (
+      filterId: WineArrayFilterKey,
+      value: string,
+    ) => {
+      setSelectedFilters((prev) => {
+        const currentValues =
+          prev[filterId] ?? [];
 
-      return {
-        ...prev,
-        [filterId]: isSelected
-          ? currentValues.filter((item) => item !== value)
-          : [...currentValues, value],
-      };
-    });
-  }, []);
+        const isSelected =
+          currentValues.includes(value);
+
+        return {
+          ...prev,
+          [filterId]: isSelected
+            ? currentValues.filter(
+                (item) => item !== value,
+              )
+            : [...currentValues, value],
+        };
+      });
+    },
+    [],
+  );
 
   const resetFilters = useCallback(() => {
     setSelectedFilters({});
-
     setOpenedFilter("");
-    navigate("/catalog");
-  }, [navigate]);
+
+    const params = new URLSearchParams(
+      searchParams,
+    );
+
+    FILTER_PARAM_KEYS.forEach((key) => {
+      params.delete(key);
+    });
+
+    params.delete("page");
+
+    navigate(buildCatalogUrl(params));
+  }, [navigate, searchParams]);
 
   const handleShowWines = useCallback(() => {
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(
+      searchParams,
+    );
 
-    Object.entries(selectedFilters).forEach(([filterId, values]) => {
-      if (values.length) {
-        params.set(filterId, values.join(","));
+    FILTER_PARAM_KEYS.forEach((key) => {
+      params.delete(key);
+    });
+
+    FILTER_PARAM_KEYS.forEach((key) => {
+      const values =
+        selectedFilters[key] ?? [];
+
+      if (values.length > 0) {
+        params.set(key, values.join(","));
       }
     });
 
     params.delete("page");
 
-    const query = params.toString();
+    navigate(buildCatalogUrl(params));
 
-    navigate(query ? `/catalog?${query}` : "/catalog");
     onClose();
-  }, [navigate, onClose, selectedFilters]);
+  }, [
+    navigate,
+    onClose,
+    searchParams,
+    selectedFilters,
+  ]);
 
   return (
-    <div className={`catalog-filters ${isOpen ? "catalog-filters--open" : ""}`}>
+    <div
+      className={[
+        "catalog-filters",
+        isOpen
+          ? "catalog-filters--open"
+          : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <button
         className="catalog-filters__backdrop"
         type="button"
@@ -215,7 +323,9 @@ export const CatalogFilters = ({ isOpen, onClose }: Props) => {
       <aside className="catalog-filters__panel">
         <div className="catalog-filters__header">
           <div className="catalog-filters__header-left">
-            <h2 className="catalog-filters__title">Filters</h2>
+            <h2 className="catalog-filters__title">
+              Filters
+            </h2>
 
             <button
               className="catalog-filters__reset"
@@ -223,6 +333,7 @@ export const CatalogFilters = ({ isOpen, onClose }: Props) => {
               onClick={resetFilters}
             >
               Reset all
+
               <ResetIcon
                 className="catalog-filters__reset-icon"
                 aria-hidden="true"

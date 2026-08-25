@@ -5,7 +5,6 @@ import {
   filterWines,
   type WineFilterRequest,
 } from "@/shared/api/wineFilterApi";
-import { searchWines } from "@/shared/api/wineSearchApi";
 
 import { useAuth } from "@/context/AuthContext";
 import { refetchAchievementsSafe } from "@/shared/lib/refetchAchievementsSafe";
@@ -16,6 +15,7 @@ import type { UseCatalogWinesParams } from "@/types/catalogWinesParams";
 const CATALOG_PAGE_SIZE = 8;
 
 const buildWineFilters = ({
+  searchQuery,
   wineTypes,
   countries,
   sweetnessLevels,
@@ -29,6 +29,12 @@ const buildWineFilters = ({
   foodName,
 }: UseCatalogWinesParams): WineFilterRequest => {
   const filters: WineFilterRequest = {};
+
+  const normalizedSearchQuery = searchQuery.trim();
+
+  if (normalizedSearchQuery) {
+    filters.search = normalizedSearchQuery;
+  }
 
   if (wineTypes.length > 0) {
     filters.wineTypes = wineTypes;
@@ -130,31 +136,25 @@ export const useCatalogWines = ({
 
         setError("");
 
-        const response = normalizedSearchQuery
-          ? await searchWines({
-              query: normalizedSearchQuery,
-              page: currentPage,
-              size: CATALOG_PAGE_SIZE,
-            })
-          : await filterWines({
-              filters: buildWineFilters({
-                searchQuery,
-                wineTypes,
-                countries,
-                sweetnessLevels,
-                grapeVarieties,
-                wineStyles,
-                acidityLevels,
-                aromaNotes,
-                moods,
-                events,
-                seasons,
-                foodName,
-              }),
-              page: currentPage,
-              size: CATALOG_PAGE_SIZE,
-              sort,
-            });
+        const response = await filterWines({
+          filters: buildWineFilters({
+            searchQuery,
+            wineTypes,
+            countries,
+            sweetnessLevels,
+            grapeVarieties,
+            wineStyles,
+            acidityLevels,
+            aromaNotes,
+            moods,
+            events,
+            seasons,
+            foodName,
+          }),
+          page: currentPage,
+          size: CATALOG_PAGE_SIZE,
+          sort,
+        });
 
         if (user && !normalizedSearchQuery && events.length > 0) {
           await refetchAchievementsSafe(queryClient, user.id);

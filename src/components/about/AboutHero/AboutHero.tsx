@@ -23,7 +23,7 @@ export const AboutHero = () => {
       <div className="container">
         <div className="about-hero__content">
           <h1 className="about-hero__brand" aria-hidden="true">
-            Winemood
+            WineMood
           </h1>
 
           <img

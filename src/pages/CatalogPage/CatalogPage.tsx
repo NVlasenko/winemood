@@ -20,12 +20,6 @@ import "./CatalogPage.scss";
 const CATALOG_TOP_ID = "catalog-top";
 const HEADER_OFFSET = 90;
 
-const getArrayParam = (searchParams: URLSearchParams, key: string) => {
-  const value = searchParams.get(key) || "";
-
-  return value ? value.split(",") : [];
-};
-
 const scrollToCatalogTop = () => {
   const catalogElement = document.getElementById(CATALOG_TOP_ID);
 
@@ -39,7 +33,8 @@ const scrollToCatalogTop = () => {
   }
 
   const elementPosition = catalogElement.getBoundingClientRect().top;
-  const offsetPosition = elementPosition + window.scrollY - HEADER_OFFSET;
+  const offsetPosition =
+    elementPosition + window.scrollY - HEADER_OFFSET;
 
   window.scrollTo({
     top: offsetPosition,
@@ -49,82 +44,155 @@ const scrollToCatalogTop = () => {
 
 export const CatalogPage = () => {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-  const { favoriteIds, toggleFavorite } = useFavorites(); 
+
+  const { favoriteIds, toggleFavorite } = useFavorites();
+
   const [searchParams, setSearchParams] = useSearchParams();
-  const searchQuery = searchParams.get("search") || "";
-  const isSearchOpen = searchParams.get("searchOpen") === "true";
-  const pageParam = searchParams.get("page") || "1";
+
+  const searchQuery = searchParams.get("search") ?? "";
+  const isSearchOpen =
+    searchParams.get("searchOpen") === "true";
+
+  const pageParam = searchParams.get("page") ?? "1";
   const sortParam = searchParams.get("sort");
 
-const activeSort: CatalogSortOption | null =
-  sortParam === "TOP_RATED"
-    ? "Top Rated"
-    : sortParam === "ALPHABETICAL"
-      ? "Alphabetical"
-         : sortParam === "POPULARITY"
-      ? "Popularity"
-      : null;
+  const wineTypesParam =
+    searchParams.get("wineTypes") ?? "";
 
+  const countriesParam =
+    searchParams.get("countries") ?? "";
+
+  const sweetnessLevelsParam =
+    searchParams.get("sweetnessLevels") ?? "";
+
+  const grapeVarietiesParam =
+    searchParams.get("grapeVarieties") ?? "";
+
+  const wineStylesParam =
+    searchParams.get("wineStyles") ?? "";
+
+  const acidityLevelsParam =
+    searchParams.get("acidityLevels") ?? "";
+
+  const aromaNotesParam =
+    searchParams.get("aromaNotes") ?? "";
+
+  const moodsParam =
+    searchParams.get("moods") ?? "";
+
+  const eventsParam =
+    searchParams.get("events") ?? "";
+
+  const seasonsParam =
+    searchParams.get("seasons") ?? "";
+
+  const foodNameParam =
+    searchParams.get("foodName") ?? "";
+
+  const activeSort: CatalogSortOption | null =
+    sortParam === "TOP_RATED"
+      ? "Top Rated"
+      : sortParam === "ALPHABETICAL"
+        ? "Alphabetical"
+        : sortParam === "POPULARITY"
+          ? "Popularity"
+          : null;
 
   const wineTypesFromUrl = useMemo(
-    () => getArrayParam(searchParams, "wineTypes"),
-    [searchParams],
+    () =>
+      wineTypesParam
+        ? wineTypesParam.split(",")
+        : [],
+    [wineTypesParam],
   );
 
   const countriesFromUrl = useMemo(
-    () => getArrayParam(searchParams, "countries"),
-    [searchParams],
+    () =>
+      countriesParam
+        ? countriesParam.split(",")
+        : [],
+    [countriesParam],
   );
 
   const sweetnessLevelsFromUrl = useMemo(
-    () => getArrayParam(searchParams, "sweetnessLevels"),
-    [searchParams],
+    () =>
+      sweetnessLevelsParam
+        ? sweetnessLevelsParam.split(",")
+        : [],
+    [sweetnessLevelsParam],
   );
 
   const grapeVarietiesFromUrl = useMemo(
-    () => getArrayParam(searchParams, "grapeVarieties"),
-    [searchParams],
+    () =>
+      grapeVarietiesParam
+        ? grapeVarietiesParam.split(",")
+        : [],
+    [grapeVarietiesParam],
   );
 
   const wineStylesFromUrl = useMemo(
-    () => getArrayParam(searchParams, "wineStyles"),
-    [searchParams],
+    () =>
+      wineStylesParam
+        ? wineStylesParam.split(",")
+        : [],
+    [wineStylesParam],
   );
 
   const acidityLevelsFromUrl = useMemo(
-    () => getArrayParam(searchParams, "acidityLevels"),
-    [searchParams],
+    () =>
+      acidityLevelsParam
+        ? acidityLevelsParam.split(",")
+        : [],
+    [acidityLevelsParam],
   );
 
   const aromaNotesFromUrl = useMemo(
-    () => getArrayParam(searchParams, "aromaNotes"),
-    [searchParams],
+    () =>
+      aromaNotesParam
+        ? aromaNotesParam.split(",")
+        : [],
+    [aromaNotesParam],
   );
 
   const moodsFromUrl = useMemo(
-    () => getArrayParam(searchParams, "moods"),
-    [searchParams],
+    () =>
+      moodsParam
+        ? moodsParam.split(",")
+        : [],
+    [moodsParam],
   );
 
   const eventsFromUrl = useMemo(
-    () => getArrayParam(searchParams, "events"),
-    [searchParams],
+    () =>
+      eventsParam
+        ? eventsParam.split(",")
+        : [],
+    [eventsParam],
   );
 
   const seasonsFromUrl = useMemo(
-    () => getArrayParam(searchParams, "seasons"),
-    [searchParams],
+    () =>
+      seasonsParam
+        ? seasonsParam.split(",")
+        : [],
+    [seasonsParam],
   );
 
   const foodNameFromUrl = useMemo(
-    () => getArrayParam(searchParams, "foodName"),
-    [searchParams],
+    () =>
+      foodNameParam
+        ? foodNameParam.split(",")
+        : [],
+    [foodNameParam],
   );
 
   const pageFromUrl = useMemo(() => {
     const parsedPage = Number(pageParam);
 
-    if (!Number.isInteger(parsedPage) || parsedPage < 1) {
+    if (
+      !Number.isInteger(parsedPage) ||
+      parsedPage < 1
+    ) {
       return 0;
     }
 
@@ -135,13 +203,13 @@ const activeSort: CatalogSortOption | null =
     switch (activeSort) {
       case "Top Rated":
         return ["rating,desc"];
-  
+
       case "Alphabetical":
         return ["name,asc"];
-  
+
       case "Popularity":
         return ["viewCount,desc"];
-  
+
       default:
         return [];
     }
@@ -155,7 +223,6 @@ const activeSort: CatalogSortOption | null =
     isCurating,
     error,
     setCurrentPage,
-    startCuratingAnimation,
   } = useCatalogWines({
     searchQuery,
     sort: backendSort,
@@ -174,9 +241,15 @@ const activeSort: CatalogSortOption | null =
 
   useEffect(() => {
     setCurrentPage(pageFromUrl);
-  }, [pageFromUrl, setCurrentPage]);
+  }, [
+    pageFromUrl,
+    setCurrentPage,
+  ]);
 
-  const favoriteIdsSet = useMemo(() => new Set(favoriteIds), [favoriteIds]);
+  const favoriteIdsSet = useMemo(
+    () => new Set(favoriteIds),
+    [favoriteIds],
+  );
 
   const handleOpenFilters = useCallback(() => {
     setIsFiltersOpen(true);
@@ -188,29 +261,36 @@ const activeSort: CatalogSortOption | null =
 
   const handleSortSelect = useCallback(
     (option: CatalogSortOption) => {
-      startCuratingAnimation();
-  
-      const nextParams = new URLSearchParams(searchParams);
-  
+      const nextParams =
+        new URLSearchParams(searchParams);
+
       nextParams.delete("page");
-  
+
       if (option === "Top Rated") {
-        nextParams.set("sort", "TOP_RATED");
+        nextParams.set(
+          "sort",
+          "TOP_RATED",
+        );
       }
-  
+
       if (option === "Alphabetical") {
-        nextParams.set("sort", "ALPHABETICAL");
+        nextParams.set(
+          "sort",
+          "ALPHABETICAL",
+        );
       }
-  
+
       if (option === "Popularity") {
-        nextParams.set("sort", "POPULARITY");
+        nextParams.set(
+          "sort",
+          "POPULARITY",
+        );
       }
-  
+
       setSearchParams(nextParams);
       setCurrentPage(0);
     },
     [
-      startCuratingAnimation,
       searchParams,
       setSearchParams,
       setCurrentPage,
@@ -218,21 +298,29 @@ const activeSort: CatalogSortOption | null =
   );
 
   const handleCloseSearch = useCallback(() => {
-    const nextParams = new URLSearchParams(searchParams);
+    const nextParams =
+      new URLSearchParams(searchParams);
 
     nextParams.delete("searchOpen");
 
     setSearchParams(nextParams);
-  }, [searchParams, setSearchParams]);
+  }, [
+    searchParams,
+    setSearchParams,
+  ]);
 
   const handlePageChange = useCallback(
     (page: number) => {
-      const nextParams = new URLSearchParams(searchParams);
+      const nextParams =
+        new URLSearchParams(searchParams);
 
       if (page <= 0) {
         nextParams.delete("page");
       } else {
-        nextParams.set("page", String(page + 1));
+        nextParams.set(
+          "page",
+          String(page + 1),
+        );
       }
 
       setSearchParams(nextParams);
@@ -242,11 +330,18 @@ const activeSort: CatalogSortOption | null =
         scrollToCatalogTop();
       });
     },
-    [searchParams, setSearchParams, setCurrentPage],
+    [
+      searchParams,
+      setSearchParams,
+      setCurrentPage,
+    ],
   );
 
   return (
-    <main className="catalog-page" id={CATALOG_TOP_ID}>
+    <main
+      className="catalog-page"
+      id={CATALOG_TOP_ID}
+    >
       <div className="container">
         <SectionTitle title="Catalog" />
 
@@ -259,20 +354,22 @@ const activeSort: CatalogSortOption | null =
         <CatalogSearch
           isOpen={isSearchOpen}
           hasNoResults={
-            Boolean(searchQuery.trim()) && !isInitialLoading && wines.length === 0
+            Boolean(searchQuery.trim()) &&
+            !isInitialLoading &&
+            wines.length === 0
           }
           onClose={handleCloseSearch}
         />
 
-      <CatalogContent
-         wines={wines}
-        favoriteIds={favoriteIdsSet}
-        isInitialLoading={isInitialLoading}
-        isCurating={isCurating}
-        error={error}
-        onOpenFilters={handleOpenFilters}
-        onToggleFavorite={toggleFavorite}
-      />
+        <CatalogContent
+          wines={wines}
+          favoriteIds={favoriteIdsSet}
+          isInitialLoading={isInitialLoading}
+          isCurating={isCurating}
+          error={error}
+          onOpenFilters={handleOpenFilters}
+          onToggleFavorite={toggleFavorite}
+        />
 
         <CatalogPagination
           currentPage={currentPage}
@@ -281,7 +378,10 @@ const activeSort: CatalogSortOption | null =
         />
       </div>
 
-      <CatalogFilters isOpen={isFiltersOpen} onClose={handleCloseFilters} />
+      <CatalogFilters
+        isOpen={isFiltersOpen}
+        onClose={handleCloseFilters}
+      />
     </main>
   );
 };

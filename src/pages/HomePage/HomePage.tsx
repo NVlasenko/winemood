@@ -17,6 +17,10 @@ export const HomePage = () => {
       </RevealOnScroll>
 
       <RevealOnScroll>
+        <BrowseByMood />
+      </RevealOnScroll>
+
+      <RevealOnScroll>
         <PopularCategories />
       </RevealOnScroll>
 
@@ -26,10 +30,6 @@ export const HomePage = () => {
 
       <RevealOnScroll>
         <WineCountries />
-      </RevealOnScroll>
-
-      <RevealOnScroll>
-        <BrowseByMood />
       </RevealOnScroll>
     </main>
   );

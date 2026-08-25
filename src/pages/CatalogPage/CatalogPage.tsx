@@ -140,6 +140,8 @@ const activeSort: CatalogSortOption | null =
         return ["name,asc"];
   
       case "Popularity":
+        return ["viewCount,desc"];
+  
       default:
         return [];
     }

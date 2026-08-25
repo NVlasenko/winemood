@@ -63,7 +63,7 @@ export const ProfileQuizResults = () => {
 
   return (
     <section className="profile-quiz-results">
-      <div className="container">
+      <div>
         <div ref={titleRef} className="profile-quiz-results__top">
           <SectionTitle title="My Quiz Results" />
         </div>

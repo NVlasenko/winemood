@@ -1,8 +1,6 @@
 export type UseCatalogWinesParams = {
   searchQuery: string;
-
   sort?: string[];
-
   wineTypes: string[];
   countries: string[];
   sweetnessLevels: string[];

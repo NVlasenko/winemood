@@ -1,23 +1,34 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import type { MouseEvent } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useWineReviews } from "@/hooks/reviews/useWineReviews";
-import messageIcon from "@/assets/images/icons/message.svg";
-import personIcon from "@/assets/images/icons/person.svg";
 import {
-  ReviewStepLayout,
-  type ReviewStep,
-} from "@/components/wineDetails/sections/ReviewStepLayout";
-import { useAuth } from "@/context/AuthContext";
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import type { PointerEvent } from "react";
 
-import "./WriteReviewPage.scss";
+import { useNavigate, useParams } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
+
+import { useWineReviews } from "@/hooks/reviews/useWineReviews";
 import {
   useCreateReview,
   useUpdateReview,
 } from "@/hooks/reviews/useReviewMutations.ts";
+
+import {
+  ReviewStepLayout,
+  type ReviewStep,
+} from "@/components/wineDetails/sections/ReviewStepLayout";
+
+import { useAuth } from "@/context/AuthContext";
+
 import { invalidateUserData } from "@/shared/lib/invalidateUserData";
-import { useQueryClient } from "@tanstack/react-query";
 import { refetchAchievementsSafe } from "@/shared/lib/refetchAchievementsSafe";
+
+import messageIcon from "@/assets/images/icons/message.svg";
+import personIcon from "@/assets/images/icons/person.svg";
+
+import "./WriteReviewPage.scss";
 
 const STARS = [1, 2, 3, 4, 5] as const;
 
@@ -57,34 +68,50 @@ export const WriteReviewPage = () => {
   const [step, setStep] = useState<ReviewStep>(1);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
+
   const [reviewText, setReviewText] = useState("");
+
   const [mode, setMode] = useState<"create" | "edit">("create");
-  const [submittedMode, setSubmittedMode] = useState<"create" | "edit" | null>(
-    null
-  );
+
+  const [submittedMode, setSubmittedMode] = useState<
+    "create" | "edit" | null
+  >(null);
+
   const { user } = useAuth();
+
   const authorName = user?.name || "";
+
   const navigate = useNavigate();
   const { id } = useParams();
+
   const queryClient = useQueryClient();
+
   const currentRating = hoverRating || rating;
+
   const wineId = Number(id);
 
   const { data: wineReviews = [] } = useWineReviews(wineId);
+
   const createReview = useCreateReview(wineId);
   const updateReview = useUpdateReview(wineId);
 
   const myReview = useMemo(() => {
-    if (!user) return null;
-    return wineReviews.find((r) => r.userId === Number(user.id));
+    if (!user) {
+      return null;
+    }
+
+    return wineReviews.find(
+      (review) => review.userId === Number(user.id)
+    );
   }, [wineReviews, user]);
 
-  if (!id || Number.isNaN(wineId)) return null;
-
   useEffect(() => {
-    if (!myReview || isSubmitted || submittedMode) return;
+    if (!myReview || isSubmitted || submittedMode) {
+      return;
+    }
 
     setMode("edit");
     setRating(myReview.rating);
@@ -97,7 +124,7 @@ export const WriteReviewPage = () => {
         return rating > 0;
 
       case 2:
-        return reviewText.trim().length >= 5;
+        return reviewText.trim().length > 0;
 
       case 3:
         return true;
@@ -107,30 +134,66 @@ export const WriteReviewPage = () => {
     }
   }, [step, rating, reviewText]);
 
-  const getRatingFromPointer = (
-    event: MouseEvent<HTMLButtonElement>,
+  const getRatingFromPointer = useCallback(
+    (
+      event: PointerEvent<HTMLButtonElement>,
+      star: number
+    ) => {
+      const rect =
+        event.currentTarget.getBoundingClientRect();
+  
+      const x = Math.min(
+        Math.max(event.clientX - rect.left, 0),
+        rect.width
+      );
+  
+      const position = x / rect.width;
+  
+      if (position >= 0.8) {
+        return star;
+      }
+  
+      const precisePosition = position / 0.8;
+  
+      const value =
+        star - 1 + precisePosition;
+  
+      return Number(
+        Math.min(star, Math.max(star - 1, value)).toFixed(2)
+      );
+    },
+    []
+  );
+
+  const handleStarPointerMove = (
+    event: PointerEvent<HTMLButtonElement>,
     star: number
   ) => {
-    const rect = event.currentTarget.getBoundingClientRect();
-    const pointerX = event.clientX - rect.left;
-    const percent = Math.min(Math.max(pointerX / rect.width, 0), 1);
-    const preciseRating = star - 1 + percent;
+    if (event.pointerType !== "mouse") {
+      return;
+    }
 
-    return Number(preciseRating.toFixed(2));
+    const nextRating = getRatingFromPointer(
+      event,
+      star
+    );
+
+    setHoverRating(nextRating);
   };
 
-  const handleStarClick = (
-    event: MouseEvent<HTMLButtonElement>,
+  const handleStarPointerDown = (
+    event: PointerEvent<HTMLButtonElement>,
     star: number
   ) => {
-    setRating(getRatingFromPointer(event, star));
-  };
+    event.preventDefault();
 
-  const handleStarMove = (
-    event: MouseEvent<HTMLButtonElement>,
-    star: number
-  ) => {
-    setHoverRating(getRatingFromPointer(event, star));
+    const nextRating = getRatingFromPointer(
+      event,
+      star
+    );
+
+    setRating(nextRating);
+    setHoverRating(0);
   };
 
   const handlePreviousStep = useCallback(() => {
@@ -174,11 +237,17 @@ export const WriteReviewPage = () => {
 
             invalidateUserData(user?.id);
 
-            await refetchAchievementsSafe(queryClient, user?.id);
+            await refetchAchievementsSafe(
+              queryClient,
+              user?.id
+            );
 
             setTimeout(() => {
               queryClient.refetchQueries({
-                queryKey: ["achievements", user?.id],
+                queryKey: [
+                  "achievements",
+                  user?.id,
+                ],
               });
             }, 500);
 
@@ -202,11 +271,17 @@ export const WriteReviewPage = () => {
 
             invalidateUserData(user?.id);
 
-            await refetchAchievementsSafe(queryClient, user?.id);
+            await refetchAchievementsSafe(
+              queryClient,
+              user?.id
+            );
 
             setTimeout(() => {
               queryClient.refetchQueries({
-                queryKey: ["achievements", user?.id],
+                queryKey: [
+                  "achievements",
+                  user?.id,
+                ],
               });
             }, 500);
 
@@ -226,7 +301,13 @@ export const WriteReviewPage = () => {
     navigate,
     wineId,
     user,
+    mode,
+    queryClient,
   ]);
+
+  if (!id || Number.isNaN(wineId)) {
+    return null;
+  }
 
   return (
     <ReviewStepLayout
@@ -244,23 +325,44 @@ export const WriteReviewPage = () => {
 
           <div
             className="write-review-page__stars"
-            onMouseLeave={() => setHoverRating(0)}
-            aria-label={`Rating ${currentRating.toFixed(2)} out of 5`}
+            onPointerLeave={() => setHoverRating(0)}
+            aria-label={`Rating ${currentRating.toFixed(
+              2
+            )} out of 5`}
           >
             {STARS.map((star) => {
               const fillPercent =
-                Math.min(Math.max(currentRating - (star - 1), 0), 1) * 100;
+                Math.min(
+                  Math.max(
+                    currentRating - (star - 1),
+                    0
+                  ),
+                  1
+                ) * 100;
 
               return (
                 <button
                   key={star}
                   type="button"
                   className="write-review-page__star"
-                  onClick={(event) => handleStarClick(event, star)}
-                  onMouseMove={(event) => handleStarMove(event, star)}
-                  aria-label={`Rate ${star} star`}
+                  onPointerMove={(event) =>
+                    handleStarPointerMove(
+                      event,
+                      star
+                    )
+                  }
+                  onPointerDown={(event) =>
+                    handleStarPointerDown(
+                      event,
+                      star
+                    )
+                  }
+                  aria-label={`Rate ${star} stars`}
                 >
-                  <span className="write-review-page__star-bg">☆</span>
+                  <span className="write-review-page__star-visual">
+                  <span className="write-review-page__star-bg">
+                    ★
+                  </span>
 
                   <span
                     className="write-review-page__star-fill"
@@ -270,13 +372,16 @@ export const WriteReviewPage = () => {
                   >
                     ★
                   </span>
+                  </span>
                 </button>
               );
             })}
           </div>
 
           <p className="write-review-page__rating-value">
-            {currentRating ? currentRating.toFixed(2) : "0.00"}
+            {currentRating
+              ? currentRating.toFixed(2)
+              : "0.00"}
           </p>
         </div>
       )}
@@ -300,7 +405,9 @@ export const WriteReviewPage = () => {
               value={reviewText}
               maxLength={200}
               placeholder="Share your experience..."
-              onChange={(event) => setReviewText(event.target.value)}
+              onChange={(event) =>
+                setReviewText(event.target.value)
+              }
             />
 
             <span className="write-review-page__counter">
@@ -312,7 +419,9 @@ export const WriteReviewPage = () => {
 
       {step === 3 && (
         <div className="write-review-page__step">
-          <h2 className="write-review-page__subtitle">About you</h2>
+          <h2 className="write-review-page__subtitle">
+            About you
+          </h2>
 
           <div className="write-review-page__input-wrapper">
             <img
@@ -322,7 +431,9 @@ export const WriteReviewPage = () => {
               aria-hidden="true"
             />
 
-            <div className="write-review-page__input">{authorName}</div>
+            <div className="write-review-page__input">
+              {authorName}
+            </div>
           </div>
         </div>
       )}
@@ -342,7 +453,9 @@ export const WriteReviewPage = () => {
 
             {isSubmitted ? (
               <div className="write-review-page__success">
-                <div className="write-review-page__success-icon">✓</div>
+                <div className="write-review-page__success-icon">
+                  ✓
+                </div>
 
                 <h3 className="write-review-page__modal-title">
                   {submittedMode === "edit"
@@ -351,7 +464,8 @@ export const WriteReviewPage = () => {
                 </h3>
 
                 <p className="write-review-page__modal-success-text">
-                  Thank you for sharing your experience with the community.
+                  Thank you for sharing your
+                  experience with the community.
                 </p>
               </div>
             ) : (
@@ -384,7 +498,9 @@ export const WriteReviewPage = () => {
                   </div>
 
                   <div className="write-review-page__modal-row">
-                    <span className="write-review-page__modal-label">Name</span>
+                    <span className="write-review-page__modal-label">
+                      Name
+                    </span>
 
                     <strong className="write-review-page__modal-value">
                       {authorName}
@@ -407,8 +523,8 @@ export const WriteReviewPage = () => {
                       ? "Updating..."
                       : "Update review"
                     : createReview.isPending
-                    ? "Sending..."
-                    : "Submit review"}
+                      ? "Sending..."
+                      : "Submit review"}
                 </button>
               </>
             )}

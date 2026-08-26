@@ -9,7 +9,7 @@ export const Footer = () => {
         <div className="footer__wrapper">
           <div className="footer__top">
             <h2 className="footer__logo">
-              Winemood
+              WineMood
             </h2>
 
             <div className="footer__content">
@@ -56,7 +56,7 @@ export const Footer = () => {
           className="footer__background-text"
           aria-hidden="true"
         >
-          Winemood
+          WineMood
         </h2>
       </div>
     </footer>

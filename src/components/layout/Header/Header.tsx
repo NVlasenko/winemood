@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import {
+  NavLink,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 
 import { useAuth } from "@/context/AuthContext";
 import { useAuthRequired } from "@/context/AuthRequiredContext";
@@ -15,6 +20,8 @@ export const Header = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
+
+  const [searchParams] = useSearchParams();
 
   const { isAuthenticated } = useAuth();
   const { openAuthRequired, closeAuthRequired } = useAuthRequired();
@@ -35,8 +42,27 @@ export const Header = () => {
 
   const handleSearchClick = useCallback(() => {
     closeMenu();
+
+
+    if (location.pathname === "/catalog") {
+      const nextParams = new URLSearchParams(searchParams);
+
+      nextParams.set("searchOpen", "true");
+
+      navigate(
+        `/catalog${nextParams.toString() ? `?${nextParams.toString()}` : ""}`,
+      );
+
+      return;
+    }
+
     navigate("/catalog?searchOpen=true");
-  }, [closeMenu, navigate]);
+  }, [
+    closeMenu,
+    location.pathname,
+    navigate,
+    searchParams,
+  ]);
 
   const handleProfileClick = useCallback(() => {
     closeMenu();
@@ -51,7 +77,12 @@ export const Header = () => {
       title: "Continue with an account",
       text: "Please sign up or log in to access your personal profile.",
     });
-  }, [closeMenu, isAuthenticated, navigate, openAuthRequired]);
+  }, [
+    closeMenu,
+    isAuthenticated,
+    navigate,
+    openAuthRequired,
+  ]);
 
   const toggleMenu = useCallback(() => {
     setIsMenuOpen((prev) => !prev);
@@ -66,7 +97,7 @@ export const Header = () => {
             className="header__logo"
             onClick={closeMenu}
           >
-            Winemood
+            WineMood
           </NavLink>
 
           <nav
@@ -81,7 +112,9 @@ export const Header = () => {
                 onClick={closeMenu}
                 className={({ isActive }) =>
                   `header__nav-link ${
-                    isActive ? "header__nav-link--active" : ""
+                    isActive
+                      ? "header__nav-link--active"
+                      : ""
                   }`
                 }
               >
@@ -97,7 +130,11 @@ export const Header = () => {
               aria-label="Search"
               onClick={handleSearchClick}
             >
-              <img src={searchIcon} alt="" aria-hidden="true" />
+              <img
+                src={searchIcon}
+                alt=""
+                aria-hidden="true"
+              />
             </button>
 
             <button
@@ -106,16 +143,26 @@ export const Header = () => {
               aria-label="Profile"
               onClick={handleProfileClick}
             >
-              <img src={iconProfile} alt="" aria-hidden="true" />
+              <img
+                src={iconProfile}
+                alt=""
+                aria-hidden="true"
+              />
             </button>
           </div>
 
           <button
             className={`header__burger ${
-              isMenuOpen ? "header__burger--open" : ""
+              isMenuOpen
+                ? "header__burger--open"
+                : ""
             }`}
             type="button"
-            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            aria-label={
+              isMenuOpen
+                ? "Close menu"
+                : "Open menu"
+            }
             aria-expanded={isMenuOpen}
             onClick={toggleMenu}
           >

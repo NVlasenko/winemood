@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Particles, { initParticlesEngine } from "@tsparticles/react";
-import { loadAll } from "@tsparticles/all";
 import { Link } from "react-router-dom";
+import Particles, { initParticlesEngine } from "@tsparticles/react";
+import { loadSlim } from "@tsparticles/slim";
+import { loadEmittersPlugin } from "@tsparticles/plugin-emitters";
+import { loadTextShape } from "@tsparticles/shape-text";
 import type { Engine } from "@tsparticles/engine";
 
 import { SectionTitle } from "@/components/ui/SectionTitle";
@@ -50,7 +52,9 @@ export const BrowseByMood = () => {
     let isMounted = true;
 
     initParticlesEngine(async (engine: Engine) => {
-      await loadAll(engine);
+      await loadSlim(engine);
+      await loadEmittersPlugin(engine);
+      await loadTextShape(engine);
     }).then(() => {
       if (isMounted) {
         setIsParticlesReady(true);

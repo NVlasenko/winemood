@@ -1,26 +1,84 @@
-import { HashRouter, Route, Routes } from "react-router-dom";
+import {
+  lazy,
+  Suspense,
+  type ReactNode,
+} from "react";
+
+import {
+  HashRouter,
+  Route,
+  Routes,
+} from "react-router-dom";
+
 import { QueryClientProvider } from "@tanstack/react-query";
-import type { ReactNode } from "react";
 
 import { queryClient } from "@/shared/lib/reactQuery";
 
 import { App } from "@/App";
-import { AboutPage } from "@/pages/AboutPage";
-import { CatalogPage } from "@/pages/CatalogPage";
-import { HistoryPage } from "@/pages/HistoryPage";
-import { HomePage } from "@/pages/HomePage";
-import { QuizPage } from "@/pages/QuizPage";
-import { WineDetailsPage } from "@/pages/WineDetailsPage";
-import { WriteReviewPage } from "@/pages/WriteReviewPage";
-import { AuthPage } from "./pages/AuthPage";
-import { ProfilePage } from "./pages/ProfilePage";
 
 import { ScrollToTop } from "@/components/layout/ScrollToTop/ScrollToTop";
 
 import { FavoritesProvider } from "@/context/FavoritesContext";
-import { QuizSessionProvider } from "./context/QuizSessionContext";
-import { AuthProvider } from "./context/AuthContext";
 import { AuthRequiredProvider } from "@/context/AuthRequiredContext";
+
+import { QuizSessionProvider } from "@/context/QuizSessionContext";
+import { AuthProvider } from "@/context/AuthContext";
+import { AnalyticsSessionTracker } from "./components/analytics/AnalyticsSessionTracker";
+import { AnalyticsPageViewTracker } from "./components/analytics/AnalyticsPageViewTracker";
+
+const HomePage = lazy(() =>
+  import("@/pages/HomePage").then((module) => ({
+    default: module.HomePage,
+  })),
+);
+
+const CatalogPage = lazy(() =>
+  import("@/pages/CatalogPage").then((module) => ({
+    default: module.CatalogPage,
+  })),
+);
+
+const WineDetailsPage = lazy(() =>
+  import("@/pages/WineDetailsPage").then((module) => ({
+    default: module.WineDetailsPage,
+  })),
+);
+
+const WriteReviewPage = lazy(() =>
+  import("@/pages/WriteReviewPage").then((module) => ({
+    default: module.WriteReviewPage,
+  })),
+);
+
+const AboutPage = lazy(() =>
+  import("@/pages/AboutPage").then((module) => ({
+    default: module.AboutPage,
+  })),
+);
+
+const HistoryPage = lazy(() =>
+  import("@/pages/HistoryPage").then((module) => ({
+    default: module.HistoryPage,
+  })),
+);
+
+const QuizPage = lazy(() =>
+  import("@/pages/QuizPage").then((module) => ({
+    default: module.QuizPage,
+  })),
+);
+
+const AuthPage = lazy(() =>
+  import("@/pages/AuthPage").then((module) => ({
+    default: module.AuthPage,
+  })),
+);
+
+const ProfilePage = lazy(() =>
+  import("@/pages/ProfilePage").then((module) => ({
+    default: module.ProfilePage,
+  })),
+);
 
 export const ROUTES = {
   home: "/",
@@ -36,12 +94,18 @@ export const ROUTES = {
   profile: "/profile",
 } as const;
 
-const AppProviders = ({ children }: { children: ReactNode }) => {
+const AppProviders = ({
+  children,
+}: {
+  children: ReactNode;
+}) => {
   return (
     <AuthProvider>
       <AuthRequiredProvider>
         <FavoritesProvider>
-          <QuizSessionProvider>{children}</QuizSessionProvider>
+          <QuizSessionProvider>
+            {children}
+          </QuizSessionProvider>
         </FavoritesProvider>
       </AuthRequiredProvider>
     </AuthProvider>
@@ -53,23 +117,61 @@ export const Root = () => {
     <QueryClientProvider client={queryClient}>
       <HashRouter>
         <AppProviders>
+          <AnalyticsSessionTracker />
+          <AnalyticsPageViewTracker />
+
           <ScrollToTop />
 
-          <Routes>
-            <Route path={ROUTES.home} element={<App />}>
-              <Route index element={<HomePage />} />
+          <Suspense fallback={null}>
+            <Routes>
+              <Route
+                path={ROUTES.home}
+                element={<App />}
+              >
+                <Route index element={<HomePage />} />
 
-              <Route path={ROUTES.catalog} element={<CatalogPage />} />
-              <Route path="/catalog/:id" element={<WineDetailsPage />} />
-              <Route path="/catalog/:id/review" element={<WriteReviewPage />} />
+                <Route
+                  path={ROUTES.catalog}
+                  element={<CatalogPage />}
+                />
 
-              <Route path={ROUTES.about} element={<AboutPage />} />
-              <Route path={ROUTES.history} element={<HistoryPage />} />
-              <Route path={ROUTES.quiz} element={<QuizPage />} />
-              <Route path={ROUTES.auth} element={<AuthPage />} />
-              <Route path={ROUTES.profile} element={<ProfilePage />} />
-            </Route>
-          </Routes>
+                <Route
+                  path="/catalog/:id"
+                  element={<WineDetailsPage />}
+                />
+
+                <Route
+                  path="/catalog/:id/review"
+                  element={<WriteReviewPage />}
+                />
+
+                <Route
+                  path={ROUTES.about}
+                  element={<AboutPage />}
+                />
+
+                <Route
+                  path={ROUTES.history}
+                  element={<HistoryPage />}
+                />
+
+                <Route
+                  path={ROUTES.quiz}
+                  element={<QuizPage />}
+                />
+
+                <Route
+                  path={ROUTES.auth}
+                  element={<AuthPage />}
+                />
+
+                <Route
+                  path={ROUTES.profile}
+                  element={<ProfilePage />}
+                />
+              </Route>
+            </Routes>
+          </Suspense>
         </AppProviders>
       </HashRouter>
     </QueryClientProvider>

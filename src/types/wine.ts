@@ -10,7 +10,7 @@ export type Wine = {
   imageUrl: string;
   rating: number;
   alcoholPercentage: number;
-
+  viewCount: number;
   sweetnessLevel: NamedEntity;
   grapeVariety: NamedEntity;
   acidity: NamedEntity;

@@ -52,7 +52,7 @@
 
   &__logo {
     margin: 0;
-    font-family: "Cormorant Garamond", serif;
+    font-family: "Cormorant", serif;
     font-style: italic;
     font-weight: 700;
     font-size: 42px;
@@ -136,7 +136,7 @@
   }
 
   &__background-text {
-    @include vinoteca-text(rgba(41, 43, 44, 1), clamp(90px, 25vw, 520px), 0);
+    @include winemood-text(rgba(41, 43, 44, 1), clamp(90px, 25vw, 520px), 0);
     margin-top: 20px;
     position: relative;
     transform: translateX(-5%) scaleX(1.03);

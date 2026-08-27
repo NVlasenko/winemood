@@ -84,7 +84,7 @@
   }
 
   &__brand {
-    @include vinoteca-text(
+    @include winemood-text(
       rgba(var(--wine-glow-rgb), 1),
       clamp(58px, 16vw, 78px),
       0.01em,

@@ -1,11 +1,11 @@
 export type MoodTheme =
-  | 'default'
-  | 'celebration'
-  | 'cozy'
-  | 'dateNight'
-  | 'culinary';
+  | "default"
+  | "celebration"
+  | "cozy"
+  | "dateNight"
+  | "culinary";
 
-export type MoodCardTheme = Exclude<MoodTheme, 'default'>;
+export type MoodCardTheme = Exclude<MoodTheme, "default">;
 
 export interface Mood {
   id: number;
@@ -13,3 +13,9 @@ export interface Mood {
   image: string;
   theme: MoodCardTheme;
 }
+
+export type MoodAsset = {
+  id: MoodCardTheme;
+  title: string;
+  imageUrl: string;
+};

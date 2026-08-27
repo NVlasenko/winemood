@@ -1,23 +1,34 @@
+import { useSiteAssets } from "@/hooks/assets/siteAssets/useSiteAssets";
+
 import "./HistoryVideoSection.scss";
-import HistoryVideo from "@/assets/images/videos/history/wine-story.mp4";
 
 export const HistoryVideoSection = () => {
+  const { data: siteAssets } = useSiteAssets();
+
+  const videoUrl =
+    siteAssets?.history.videoUrl;
+
   return (
     <section className="history-video-section">
       <div className="container">
         <div className="history-video-section__frame">
-          <video
-            className="history-video-section__video"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-          >
-            <source src={HistoryVideo} type="video/mp4" />
+          {videoUrl && (
+            <video
+              className="history-video-section__video"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+            >
+              <source
+                src={videoUrl}
+                type="video/mp4"
+              />
 
-            Your browser does not support the video tag.
-          </video>
+              Your browser does not support the video tag.
+            </video>
+          )}
 
           <div className="history-video-section__overlay" />
 

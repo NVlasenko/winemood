@@ -12,16 +12,18 @@ import { useAuthRequired } from "@/context/AuthRequiredContext";
 import { useFavorites } from "@/context/FavoritesContext";
 import { useQuizSession } from "@/context/QuizSessionContext";
 
+
+
 import { formatLabel } from "@/utils/formatLabel";
 
 import backArrowIcon from "@/assets/images/icons/arrow-right.svg";
-import winePattern from "@/assets/images/wineCard/bg/wine-pattern.png";
 
 import BottleIcon from "@/assets/images/wineCard/icons/bottle-default.svg?react";
 import VintageIcon from "@/assets/images/wineCard/icons/vintage-default.svg?react";
 import SweetnessIcon from "@/assets/images/wineCard/icons/sweet-default.svg?react";
 
 import "./WineHero.scss";
+import { useSiteAssets } from "@/hooks/assets/siteAssets/useSiteAssets";
 
 type Props = {
   wine: Wine;
@@ -29,7 +31,9 @@ type Props = {
 
 const STARS = [1, 2, 3, 4, 5] as const;
 
-const mapWineToCard = (wine: Wine): WineCatalogCardType => ({
+const mapWineToCard = (
+  wine: Wine,
+): WineCatalogCardType => ({
   id: wine.id,
   name: wine.name,
   type: wine.type,
@@ -43,16 +47,34 @@ const mapWineToCard = (wine: Wine): WineCatalogCardType => ({
 });
 
 export const WineHero = ({ wine }: Props) => {
-  const { isFavorite, toggleFavorite } = useFavorites();
-  const { backTarget, clearWineDetailsBackTarget } = useQuizSession();
+  const { isFavorite, toggleFavorite } =
+    useFavorites();
+
+  const {
+    backTarget,
+    clearWineDetailsBackTarget,
+  } = useQuizSession();
+
   const { isAuthenticated } = useAuth();
   const { openAuthRequired } = useAuthRequired();
 
+  const {
+    data: siteAssets,
+    isLoading: isSiteAssetsLoading,
+    isError: isSiteAssetsError,
+  } = useSiteAssets();
+
+  const winePattern =
+    siteAssets?.shared.pagePatternUrl;
+
   const backTo = backTarget?.to ?? "/catalog";
-  const backLabel = backTarget?.label ?? "Catalog";
+  const backLabel =
+    backTarget?.label ?? "Catalog";
 
   const isFav = isFavorite(wine.id);
-  const isMateusRose = wine.name === "Mateus Rosé";
+
+  const isMateusRose =
+    wine.name === "Mateus Rosé";
 
   const handleFavoriteClick = () => {
     if (!isAuthenticated) {
@@ -80,7 +102,9 @@ export const WineHero = ({ wine }: Props) => {
       {
         id: "sweetness",
         Icon: SweetnessIcon,
-        value: formatLabel(wine.sweetnessLevel.name),
+        value: formatLabel(
+          wine.sweetnessLevel.name,
+        ),
       },
       {
         id: "volume",
@@ -93,12 +117,21 @@ export const WineHero = ({ wine }: Props) => {
         value: wine.vintage,
       },
     ],
-    [wine]
+    [wine],
   );
 
   return (
     <div className="wine-hero">
-      <img className="wine-hero__pattern" src={winePattern} alt="" />
+      {!isSiteAssetsLoading &&
+        !isSiteAssetsError &&
+        winePattern && (
+          <img
+            className="wine-hero__pattern"
+            src={winePattern}
+            alt=""
+            aria-hidden="true"
+          />
+        )}
 
       <div className="container">
         <div className="wine-hero__top">
@@ -107,7 +140,11 @@ export const WineHero = ({ wine }: Props) => {
             className="wine-hero__back"
             onClick={handleBackClick}
           >
-            <img src={backArrowIcon} alt="" />
+            <img
+              src={backArrowIcon}
+              alt=""
+            />
+
             <span>{backLabel}</span>
           </Link>
 
@@ -128,14 +165,28 @@ export const WineHero = ({ wine }: Props) => {
             >
               {STARS.map((star) => {
                 const fillPercent =
-                  Math.min(Math.max(wine.rating - (star - 1), 0), 1) * 100;
+                  Math.min(
+                    Math.max(
+                      wine.rating - (star - 1),
+                      0,
+                    ),
+                    1,
+                  ) * 100;
 
                 return (
-                  <span className="wine-hero__star" key={star}>
-                    <span className="wine-hero__star-bg">★</span>
+                  <span
+                    className="wine-hero__star"
+                    key={star}
+                  >
+                    <span className="wine-hero__star-bg">
+                      ★
+                    </span>
+
                     <span
                       className="wine-hero__star-fill"
-                      style={{ width: `${fillPercent}%` }}
+                      style={{
+                        width: `${fillPercent}%`,
+                      }}
                     >
                       ★
                     </span>
@@ -147,19 +198,27 @@ export const WineHero = ({ wine }: Props) => {
             <div className="wine-hero__info">
               <div className="wine-hero__info-item">
                 <p>Type</p>
-                <span>{formatLabel(wine.type)}</span>
+
+                <span>
+                  {formatLabel(wine.type)}
+                </span>
               </div>
 
               <div className="wine-hero__info-item">
                 <p>Origin</p>
+
                 <span>
-                  {wine.region}, {wine.countryName}
+                  {wine.region},{" "}
+                  {wine.countryName}
                 </span>
               </div>
 
               <div className="wine-hero__info-item">
                 <p>Alcohol</p>
-                <span>{wine.alcoholPercentage}%</span>
+
+                <span>
+                  {wine.alcoholPercentage}%
+                </span>
               </div>
             </div>
 
@@ -168,8 +227,12 @@ export const WineHero = ({ wine }: Props) => {
                 const Icon = item.Icon;
 
                 return (
-                  <div className="wine-hero__meta-item" key={item.id}>
+                  <div
+                    className="wine-hero__meta-item"
+                    key={item.id}
+                  >
                     <Icon className="wine-hero__meta-icon" />
+
                     <span>{item.value}</span>
                   </div>
                 );
@@ -186,7 +249,9 @@ export const WineHero = ({ wine }: Props) => {
 
             <img
               className={`wine-hero__image ${
-                isMateusRose ? "wine-hero__image--mateus-rose" : ""
+                isMateusRose
+                  ? "wine-hero__image--mateus-rose"
+                  : ""
               }`}
               src={wine.imageUrl}
               alt={wine.name}

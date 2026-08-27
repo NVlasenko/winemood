@@ -3,8 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 
 import arrowRightIcon from "@/assets/images/icons/arrow-right.svg";
-import authBackground from "@/assets/images/auth/bg.png";
-
+import { useSiteAssets } from "@/hooks/assets/siteAssets/useSiteAssets";
 import NameIcon from "@/assets/images/auth/name.svg?react";
 import EmailIcon from "@/assets/images/auth/email.svg?react";
 import PasswordHiddenIcon from "@/assets/images/auth/password.svg?react";
@@ -182,6 +181,14 @@ const AuthSuccessModal = ({ isOpen, title, text }: SuccessModalProps) => {
 };
 
 export const AuthPage = () => {
+  const {
+    data: siteAssets,
+    isLoading: isSiteAssetsLoading,
+    isError: isSiteAssetsError,
+  } = useSiteAssets();
+  
+  const authBackground =
+    siteAssets?.auth.backgroundUrl;
   const navigate = useNavigate();
   const {
     register,
@@ -459,9 +466,15 @@ useEffect(() => {
     <>
       <main
         className="auth-page"
-        style={{
-          backgroundImage: `url(${authBackground})`,
-        }}
+        style={
+          !isSiteAssetsLoading &&
+          !isSiteAssetsError &&
+          authBackground
+            ? {
+                backgroundImage: `url(${authBackground})`,
+              }
+            : undefined
+        }
       >
         <div className="auth-page__overlay" />
 

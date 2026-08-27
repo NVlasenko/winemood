@@ -7,8 +7,7 @@ import { WineReviewsActions } from "./config/WineReviewsActions";
 
 import { useWineReviews } from "@/hooks/reviews/useWineReviews";
 import { useAuth } from "@/context/AuthContext";
-
-import reviewsBg from "@/assets/images/wineDetailsInfo/wineReviews/reviews-bg.png";
+import { useSiteAssets } from "@/hooks/assets/siteAssets/useSiteAssets";
 
 import "./WineReviews.scss";
 
@@ -21,7 +20,12 @@ export const WineReviews = ({ wine }: Props) => {
 
   const { data: wineReviews = [], isLoading } = useWineReviews(wine.id);
   const { user } = useAuth();
-
+  const {
+    data: siteAssets,
+  } = useSiteAssets();
+  
+  const reviewsBackdrop =
+    siteAssets?.reviews.wineBackdropUrl;
 
   const myReview = useMemo(() => {
     if (!user) return null;
@@ -94,11 +98,14 @@ const visibleReviews = useMemo(
           {!isExpanded && (
             <div className="wine-reviews__right">
               <div className="wine-reviews__visual">
+              {reviewsBackdrop && (
                 <img
                   className="wine-reviews__bg"
-                  src={reviewsBg}
+                  src={reviewsBackdrop}
                   alt=""
+                  aria-hidden="true"
                 />
+              )}
 
                 <img
                   className={`wine-reviews__bottle ${

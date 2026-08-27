@@ -1,41 +1,59 @@
 import { SectionTitle } from "@/components/ui/SectionTitle";
-
+import { useHistoryTimeline } from "@/hooks/assets/history/useHistoryTimeline";
+import { TIMELINE_ICONS } from "./config/timelineItems";
 import "./HistoryTimeline.scss";
-import { TIMELINE_ITEMS } from "./config/timelineItems";
 
 export const HistoryTimeline = () => {
+  const {
+    data: timelineItems = [],
+    isLoading,
+    isError,
+  } = useHistoryTimeline();
+
   return (
     <section className="history-timeline">
       <div className="container">
         <SectionTitle title="A Journey Through Time" />
 
-        <div className="history-timeline__grid">
-          {TIMELINE_ITEMS.map((item) => {
-            const Icon = item.Icon;
+        {!isLoading && !isError && (
+          <div className="history-timeline__grid">
+            {timelineItems.map((item) => {
+              const Icon =
+                TIMELINE_ICONS[
+                  item.id as keyof typeof TIMELINE_ICONS
+                ];
 
-            return (
-              <article className="history-timeline__card" key={item.id}>
-                <div className="history-timeline__image-wrap">
-                  <img
-                    className="history-timeline__image"
-                    src={item.image}
-                    alt=""
-                  />
-                </div>
+              return (
+                <article
+                  className="history-timeline__card"
+                  key={item.id}
+                >
+                  <div className="history-timeline__image-wrap">
+                    <img
+                      className="history-timeline__image"
+                      src={item.imageUrl}
+                      alt=""
+                    />
+                  </div>
 
-                <div className="history-timeline__dot" />
+                  <div className="history-timeline__dot" />
 
-                <Icon
-                  className="history-timeline__date"
-                  aria-hidden="true"
-                  focusable="false"
-                />
+                  {Icon && (
+                    <Icon
+                      className="history-timeline__date"
+                      aria-hidden="true"
+                      focusable="false"
+                    />
+                  )}
 
-                <p className="history-timeline__text">{item.text}</p>
-              </article>
-            );
-          })}
-        </div>
+                  <p className="history-timeline__text">
+                    {item.text}
+                  </p>
+                </article>
+              );
+            })}
+          </div>
+        )}
       </div>
     </section>
   );

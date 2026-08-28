@@ -1,7 +1,7 @@
 import { Outlet, useLocation, matchPath } from "react-router-dom";
 import { Header } from "./components/layout/Header";
 import { Footer } from "./components/layout/Footer";
-import { ROUTES } from "@/Root";
+import { ROUTES } from "@/ClientApp.tsx";
 import "./App.scss";
 import { useAchievementListener } from "./hooks/achievements/useAchievementListener";
 import { AchievementUnlockedModal } from "./components/profile/AchievementUnlockedModal";

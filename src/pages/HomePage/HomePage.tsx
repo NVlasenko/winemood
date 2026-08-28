@@ -1,20 +1,24 @@
 import { BrowseByMood } from "@/components/home/BrowseByMood";
 import { HeroSection } from "@/components/home/HeroSection";
-
 import { WineCountries } from "@/components/home/WineCountries";
-
-
-import "./HomePage.scss";
-import { RevealOnScroll } from "../../components/ui/RevealOnScroll/RevealOnScroll";
 import { PopularCategories } from "@/components/home/PopularCategories/PopularCategories";
 import { QuizCTA } from "@/components/quiz/QuizCTA/QuizCTA";
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll/RevealOnScroll";
 
-export const HomePage = () => {
+import "./HomePage.scss";
+
+type HomePageProps = {
+  heroBackgroundUrl: string;
+};
+
+export const HomePage = ({
+  heroBackgroundUrl,
+}: HomePageProps) => {
   return (
     <main className="home-page">
-      <RevealOnScroll>
-        <HeroSection />
-      </RevealOnScroll>
+      <HeroSection
+        heroBackgroundUrl={heroBackgroundUrl}
+      />
 
       <RevealOnScroll>
         <BrowseByMood />

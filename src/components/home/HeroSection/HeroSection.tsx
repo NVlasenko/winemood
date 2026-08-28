@@ -1,17 +1,16 @@
 import { Link } from "react-router-dom";
 
-import { useSiteAssets } from "@/hooks/assets/siteAssets/useSiteAssets";
-
 import arrowRight from "@/assets/images/icons/arrow-right.svg";
 
 import "./HeroSection.scss";
 
-export const HeroSection = () => {
-  const { data: siteAssets } = useSiteAssets();
+type HeroSectionProps = {
+  heroBackgroundUrl: string;
+};
 
-  const heroBackground =
-    siteAssets?.home.heroBackgroundUrl;
-
+export const HeroSection = ({
+  heroBackgroundUrl,
+}: HeroSectionProps) => {
   return (
     <section className="hero-section">
       <div className="container">
@@ -42,13 +41,11 @@ export const HeroSection = () => {
         </div>
 
         <div className="hero-section__image">
-          {heroBackground && (
-            <img
-              src={heroBackground}
-              alt="Elegant wine bottle composition"
-              fetchPriority="high"
-            />
-          )}
+          <img
+            src={heroBackgroundUrl}
+            alt="Elegant wine bottle composition"
+            fetchPriority="high"
+          />
         </div>
       </div>
     </section>

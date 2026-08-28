@@ -21,6 +21,10 @@ const MoodThemeContext = createContext<
 >(undefined);
 
 const getInitialMoodTheme = (): MoodTheme => {
+  if (typeof window === "undefined") {
+    return "default";
+  }
+
   const savedTheme = localStorage.getItem(
     MOOD_THEME_STORAGE_KEY
   );

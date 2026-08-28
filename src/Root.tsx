@@ -1,179 +1,65 @@
 import {
-  lazy,
-  Suspense,
-  type ReactNode,
-} from "react";
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+} from "react-router";
 
-import {
-  HashRouter,
-  Route,
-  Routes,
-} from "react-router-dom";
-
+import { MoodThemeProvider } from "@/context/MoodThemeContext";
 import { QueryClientProvider } from "@tanstack/react-query";
 
 import { queryClient } from "@/shared/lib/reactQuery";
+import "@/index.scss";
 
-import { App } from "@/App";
-
-import { ScrollToTop } from "@/components/layout/ScrollToTop/ScrollToTop";
-
-import { FavoritesProvider } from "@/context/FavoritesContext";
-import { AuthRequiredProvider } from "@/context/AuthRequiredContext";
-
-import { QuizSessionProvider } from "@/context/QuizSessionContext";
-import { AuthProvider } from "@/context/AuthContext";
-import { AnalyticsSessionTracker } from "./components/analytics/AnalyticsSessionTracker";
-import { AnalyticsPageViewTracker } from "./components/analytics/AnalyticsPageViewTracker";
-
-const HomePage = lazy(() =>
-  import("@/pages/HomePage").then((module) => ({
-    default: module.HomePage,
-  })),
-);
-
-const CatalogPage = lazy(() =>
-  import("@/pages/CatalogPage").then((module) => ({
-    default: module.CatalogPage,
-  })),
-);
-
-const WineDetailsPage = lazy(() =>
-  import("@/pages/WineDetailsPage").then((module) => ({
-    default: module.WineDetailsPage,
-  })),
-);
-
-const WriteReviewPage = lazy(() =>
-  import("@/pages/WriteReviewPage").then((module) => ({
-    default: module.WriteReviewPage,
-  })),
-);
-
-const AboutPage = lazy(() =>
-  import("@/pages/AboutPage").then((module) => ({
-    default: module.AboutPage,
-  })),
-);
-
-const HistoryPage = lazy(() =>
-  import("@/pages/HistoryPage").then((module) => ({
-    default: module.HistoryPage,
-  })),
-);
-
-const QuizPage = lazy(() =>
-  import("@/pages/QuizPage").then((module) => ({
-    default: module.QuizPage,
-  })),
-);
-
-const AuthPage = lazy(() =>
-  import("@/pages/AuthPage").then((module) => ({
-    default: module.AuthPage,
-  })),
-);
-
-const ProfilePage = lazy(() =>
-  import("@/pages/ProfilePage").then((module) => ({
-    default: module.ProfilePage,
-  })),
-);
-
-export const ROUTES = {
-  home: "/",
-  catalog: "/catalog",
-
-  wineDetails: (id: number) => `/catalog/${id}`,
-  writeReview: (id: number) => `/catalog/${id}/review`,
-
-  about: "/about",
-  history: "/history",
-  quiz: "/quiz",
-  auth: "/auth",
-  profile: "/profile",
-} as const;
-
-const AppProviders = ({
+export function Layout({
   children,
 }: {
-  children: ReactNode;
-}) => {
+  children: React.ReactNode;
+}) {
   return (
-    <AuthProvider>
-      <AuthRequiredProvider>
-        <FavoritesProvider>
-          <QuizSessionProvider>
-            {children}
-          </QuizSessionProvider>
-        </FavoritesProvider>
-      </AuthRequiredProvider>
-    </AuthProvider>
-  );
-};
+    <html lang="en">
+      <head>
+        <meta charSet="UTF-8" />
 
-export const Root = () => {
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0"
+        />
+
+        <meta
+          name="description"
+          content="WineMood helps you discover wines by mood, taste, occasion, food pairing and personal preferences."
+        />
+
+        <link
+          rel="icon"
+          type="image/png"
+          href="/favicon.png"
+        />
+
+        <title>WineMood — Find Wine for Your Mood</title>
+
+        <Meta />
+        <Links />
+      </head>
+
+      <body>
+        {children}
+
+        <ScrollRestoration />
+        <Scripts />
+      </body>
+    </html>
+  );
+}
+
+export default function Root() {
   return (
     <QueryClientProvider client={queryClient}>
-      <HashRouter>
-        <AppProviders>
-          <AnalyticsSessionTracker />
-          <AnalyticsPageViewTracker />
-
-          <ScrollToTop />
-
-          <Suspense fallback={null}>
-            <Routes>
-              <Route
-                path={ROUTES.home}
-                element={<App />}
-              >
-                <Route index element={<HomePage />} />
-
-                <Route
-                  path={ROUTES.catalog}
-                  element={<CatalogPage />}
-                />
-
-                <Route
-                  path="/catalog/:id"
-                  element={<WineDetailsPage />}
-                />
-
-                <Route
-                  path="/catalog/:id/review"
-                  element={<WriteReviewPage />}
-                />
-
-                <Route
-                  path={ROUTES.about}
-                  element={<AboutPage />}
-                />
-
-                <Route
-                  path={ROUTES.history}
-                  element={<HistoryPage />}
-                />
-
-                <Route
-                  path={ROUTES.quiz}
-                  element={<QuizPage />}
-                />
-
-                <Route
-                  path={ROUTES.auth}
-                  element={<AuthPage />}
-                />
-
-                <Route
-                  path={ROUTES.profile}
-                  element={<ProfilePage />}
-                />
-              </Route>
-            </Routes>
-          </Suspense>
-        </AppProviders>
-      </HashRouter>
+      <MoodThemeProvider>
+        <Outlet />
+      </MoodThemeProvider>
     </QueryClientProvider>
   );
-};
+}

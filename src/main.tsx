@@ -2,7 +2,7 @@ import { createRoot } from "react-dom/client";
 import { StrictMode } from "react";
 
 import { MoodThemeProvider } from "@/context/MoodThemeContext";
-import { Root } from "@/Root";
+import { Root } from "@/ClientApp.tsx";
 
 import "@/index.scss";
 

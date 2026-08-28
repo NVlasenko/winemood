@@ -7,11 +7,7 @@ import arrowRight from "@/assets/images/icons/arrow-right.svg";
 import "./HeroSection.scss";
 
 export const HeroSection = () => {
-  const {
-    data: siteAssets,
-    isLoading,
-    isError,
-  } = useSiteAssets();
+  const { data: siteAssets } = useSiteAssets();
 
   const heroBackground =
     siteAssets?.home.heroBackgroundUrl;
@@ -40,15 +36,17 @@ export const HeroSection = () => {
               src={arrowRight}
               alt=""
               className="hero-section__button-arrow"
+              aria-hidden="true"
             />
           </Link>
         </div>
 
         <div className="hero-section__image">
-          {!isLoading && !isError && heroBackground && (
+          {heroBackground && (
             <img
               src={heroBackground}
               alt="Elegant wine bottle composition"
+              fetchPriority="high"
             />
           )}
         </div>

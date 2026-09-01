@@ -1,5 +1,9 @@
-import { useCallback, useMemo } from "react";
-import { Link } from "react-router-dom";
+import {
+  useCallback,
+  useMemo,
+} from "react";
+
+import { Link } from "react-router";
 
 import type { Wine } from "@/types/wine";
 import type { WineCatalogCard as WineCatalogCardType } from "@/types/wineCatalogCard";
@@ -12,8 +16,6 @@ import { useAuthRequired } from "@/context/AuthRequiredContext";
 import { useFavorites } from "@/context/FavoritesContext";
 import { useQuizSession } from "@/context/QuizSessionContext";
 
-
-
 import { formatLabel } from "@/utils/formatLabel";
 
 import backArrowIcon from "@/assets/images/icons/arrow-right.svg";
@@ -23,10 +25,10 @@ import VintageIcon from "@/assets/images/wineCard/icons/vintage-default.svg?reac
 import SweetnessIcon from "@/assets/images/wineCard/icons/sweet-default.svg?react";
 
 import "./WineHero.scss";
-import { useSiteAssets } from "@/hooks/assets/siteAssets/useSiteAssets";
 
 type Props = {
   wine: Wine;
+  pagePatternUrl?: string;
 };
 
 const STARS = [1, 2, 3, 4, 5] as const;
@@ -46,32 +48,34 @@ const mapWineToCard = (
   rating: wine.rating,
 });
 
-export const WineHero = ({ wine }: Props) => {
-  const { isFavorite, toggleFavorite } =
-    useFavorites();
+export const WineHero = ({
+  wine,
+  pagePatternUrl,
+}: Props) => {
+  const {
+    isFavorite,
+    toggleFavorite,
+  } = useFavorites();
 
   const {
     backTarget,
     clearWineDetailsBackTarget,
   } = useQuizSession();
 
-  const { isAuthenticated } = useAuth();
-  const { openAuthRequired } = useAuthRequired();
+  const { isAuthenticated } =
+    useAuth();
 
-  const {
-    data: siteAssets,
-    isLoading: isSiteAssetsLoading,
-    isError: isSiteAssetsError,
-  } = useSiteAssets();
+  const { openAuthRequired } =
+    useAuthRequired();
 
-  const winePattern =
-    siteAssets?.shared.pagePatternUrl;
+  const backTo =
+    backTarget?.to ?? "/catalog";
 
-  const backTo = backTarget?.to ?? "/catalog";
   const backLabel =
     backTarget?.label ?? "Catalog";
 
-  const isFav = isFavorite(wine.id);
+  const isFav =
+    isFavorite(wine.id);
 
   const isMateusRose =
     wine.name === "Mateus Rosé";
@@ -90,12 +94,17 @@ export const WineHero = ({ wine }: Props) => {
       return;
     }
 
-    toggleFavorite(mapWineToCard(wine));
+    toggleFavorite(
+      mapWineToCard(wine),
+    );
   };
 
-  const handleBackClick = useCallback(() => {
-    clearWineDetailsBackTarget();
-  }, [clearWineDetailsBackTarget]);
+  const handleBackClick =
+    useCallback(() => {
+      clearWineDetailsBackTarget();
+    }, [
+      clearWineDetailsBackTarget,
+    ]);
 
   const metaItems = useMemo(
     () => [
@@ -122,16 +131,14 @@ export const WineHero = ({ wine }: Props) => {
 
   return (
     <div className="wine-hero">
-      {!isSiteAssetsLoading &&
-        !isSiteAssetsError &&
-        winePattern && (
-          <img
-            className="wine-hero__pattern"
-            src={winePattern}
-            alt=""
-            aria-hidden="true"
-          />
-        )}
+      {pagePatternUrl && (
+        <img
+          className="wine-hero__pattern"
+          src={pagePatternUrl}
+          alt=""
+          aria-hidden="true"
+        />
+      )}
 
       <div className="container">
         <div className="wine-hero__top">
@@ -145,62 +152,73 @@ export const WineHero = ({ wine }: Props) => {
               alt=""
             />
 
-            <span>{backLabel}</span>
+            <span>
+              {backLabel}
+            </span>
           </Link>
 
           <FavoriteButton
             isFavorite={isFav}
             className="wine-hero__favorite"
-            onClick={handleFavoriteClick}
+            onClick={
+              handleFavoriteClick
+            }
           />
         </div>
 
         <div className="wine-hero__content">
           <div className="wine-hero__left">
-            <SectionTitle title={wine.name} />
+            <SectionTitle
+              title={wine.name}
+            />
 
             <div
               className="wine-hero__rating"
               aria-label={`Rating ${wine.rating} out of 5`}
             >
-              {STARS.map((star) => {
-                const fillPercent =
-                  Math.min(
-                    Math.max(
-                      wine.rating - (star - 1),
-                      0,
-                    ),
-                    1,
-                  ) * 100;
+              {STARS.map(
+                (star) => {
+                  const fillPercent =
+                    Math.min(
+                      Math.max(
+                        wine.rating -
+                          (star - 1),
+                        0,
+                      ),
+                      1,
+                    ) * 100;
 
-                return (
-                  <span
-                    className="wine-hero__star"
-                    key={star}
-                  >
-                    <span className="wine-hero__star-bg">
-                      ★
-                    </span>
-
+                  return (
                     <span
-                      className="wine-hero__star-fill"
-                      style={{
-                        width: `${fillPercent}%`,
-                      }}
+                      className="wine-hero__star"
+                      key={star}
                     >
-                      ★
+                      <span className="wine-hero__star-bg">
+                        ★
+                      </span>
+
+                      <span
+                        className="wine-hero__star-fill"
+                        style={{
+                          width: `${fillPercent}%`,
+                        }}
+                      >
+                        ★
+                      </span>
                     </span>
-                  </span>
-                );
-              })}
+                  );
+                },
+              )}
             </div>
 
             <div className="wine-hero__info">
               <div className="wine-hero__info-item">
                 <p>Type</p>
-
+               
                 <span>
-                  {formatLabel(wine.type)}
+                  {formatLabel(
+                    wine.type,
+                  )}
                 </span>
               </div>
 
@@ -217,26 +235,34 @@ export const WineHero = ({ wine }: Props) => {
                 <p>Alcohol</p>
 
                 <span>
-                  {wine.alcoholPercentage}%
+                  {
+                    wine.alcoholPercentage
+                  }
+                  %
                 </span>
               </div>
             </div>
 
             <div className="wine-hero__meta">
-              {metaItems.map((item) => {
-                const Icon = item.Icon;
+              {metaItems.map(
+                (item) => {
+                  const Icon =
+                    item.Icon;
 
-                return (
-                  <div
-                    className="wine-hero__meta-item"
-                    key={item.id}
-                  >
-                    <Icon className="wine-hero__meta-icon" />
+                  return (
+                    <div
+                      className="wine-hero__meta-item"
+                      key={item.id}
+                    >
+                      <Icon className="wine-hero__meta-icon" />
 
-                    <span>{item.value}</span>
-                  </div>
-                );
-              })}
+                      <span>
+                        {item.value}
+                      </span>
+                    </div>
+                  );
+                },
+              )}
             </div>
 
             <p className="wine-hero__description">

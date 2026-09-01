@@ -1,9 +1,16 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const BASE_URL =
+  import.meta.env.VITE_API_BASE_URL;
 
-type HttpClientOptions = Omit<RequestInit, "body"> & {
+type HttpClientOptions = Omit<
+  RequestInit,
+  "body"
+> & {
   body?: BodyInit | object | null;
+
   skipJsonContentType?: boolean;
+
   skipAuth?: boolean;
+  authToken?: string | null;
 };
 
 export type ApiFieldError = {
@@ -24,34 +31,72 @@ export class ApiError extends Error {
   status: number;
   data: ApiErrorResponse | null;
 
-  constructor(message: string, status: number, data: ApiErrorResponse | null) {
+  constructor(
+    message: string,
+    status: number,
+    data: ApiErrorResponse | null,
+  ) {
     super(message);
+
     this.name = "ApiError";
+
     this.status = status;
+
     this.data = data;
-    Object.setPrototypeOf(this, ApiError.prototype);
+
+    Object.setPrototypeOf(
+      this,
+      ApiError.prototype,
+    );
   }
 }
 
 const getAccessToken = () => {
-  const token = localStorage.getItem("accessToken");
-  return token && token !== "undefined" && token !== "null"
-    ? token
-    : null;
+  if (
+    typeof window === "undefined"
+  ) {
+    return null;
+  }
+
+  const token =
+    localStorage.getItem(
+      "accessToken",
+    );
+
+  return (
+    token &&
+    token !== "undefined" &&
+    token !== "null"
+      ? token
+      : null
+  );
 };
 
-const buildUrl = (endpoint: string) => {
+const buildUrl = (
+  endpoint: string,
+) => {
   if (!BASE_URL) {
-    throw new Error("VITE_API_BASE_URL is not defined.");
+    throw new Error(
+      "VITE_API_BASE_URL is not defined.",
+    );
   }
 
   return `${BASE_URL}${endpoint}`;
 };
 
-const parseResponseBody = async (response: Response) => {
-  const contentType = response.headers.get("content-type");
+const parseResponseBody = async (
+  response: Response,
+) => {
+  const contentType =
+    response.headers.get(
+      "content-type",
+    );
 
-  if (!contentType?.includes("application/json")) {
+  if (
+    !contentType?.includes(
+      "application/json",
+    )
+  ) {
     return null;
   }
 
@@ -62,55 +107,88 @@ const parseResponseBody = async (response: Response) => {
   }
 };
 
-export const httpClient = async <T>(
-  endpoint: string,
-  options: HttpClientOptions = {}
-): Promise<T> => {
-  const {
-    skipJsonContentType,
-    skipAuth,
-    headers,
-    body,
-    ...rest
-  } = options;
+export const httpClient =
+  async <T>(
+    endpoint: string,
+    options: HttpClientOptions = {},
+  ): Promise<T> => {
+    const {
+      skipJsonContentType,
+      skipAuth,
+      authToken,
+      headers,
+      body,
+      ...rest
+    } = options;
 
-  const isFormData = body instanceof FormData;
+    const isFormData =
+      body instanceof FormData;
 
-const token = getAccessToken();
+    const token =
+      authToken ??
+      getAccessToken();
 
-const requestHeaders: HeadersInit = {
-  ...(!isFormData && !skipJsonContentType
-    ? { "Content-Type": "application/json" }
-    : {}),
+    const requestHeaders: HeadersInit = {
+      ...(!isFormData &&
+      !skipJsonContentType
+        ? {
+            "Content-Type":
+              "application/json",
+          }
+        : {}),
 
-  ...(token && !skipAuth
-    ? { Authorization: `Bearer ${token}` }
-    : {}),
+      ...(token && !skipAuth
+        ? {
+            Authorization:
+              `Bearer ${token}`,
+          }
+        : {}),
 
-  ...headers,
-};
+      ...headers,
+    };
 
-const preparedBody: BodyInit | null | undefined =
-  body && !isFormData && typeof body === "object"
-    ? JSON.stringify(body)
-    : (body as BodyInit | null | undefined);
+    const preparedBody:
+      | BodyInit
+      | null
+      | undefined =
+      body &&
+      !isFormData &&
+      typeof body === "object"
+        ? JSON.stringify(body)
+        : (body as
+            | BodyInit
+            | null
+            | undefined);
 
-const response = await fetch(buildUrl(endpoint), {
-  ...rest,
-  headers: requestHeaders,
-  body: preparedBody,
-});
+    const response = await fetch(
+      buildUrl(endpoint),
+      {
+        ...rest,
+        headers:
+          requestHeaders,
+        body: preparedBody,
+      },
+    );
 
-  const data = await parseResponseBody(response);
+    const data =
+      await parseResponseBody(
+        response,
+      );
 
-  if (!response.ok) {
-    const errorData = data as ApiErrorResponse | null;
+    if (!response.ok) {
+      const errorData =
+        data as ApiErrorResponse | null;
 
-    const message =
-      errorData?.message ?? `HTTP error: ${response.status}`;
+      const message =
+        errorData?.message ??
+        `HTTP error: ${response.status}`;
 
-    throw new ApiError(message, response.status, errorData);
-  }
+      throw new ApiError(
+        message,
+        response.status,
+        errorData,
+      );
+    }
 
-  return data as T;
-};
+    return data as T;
+  };

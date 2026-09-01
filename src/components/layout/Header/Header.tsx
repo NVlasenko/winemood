@@ -4,7 +4,7 @@ import {
   useLocation,
   useNavigate,
   useSearchParams,
-} from "react-router-dom";
+} from "react-router";
 
 import { useAuth } from "@/context/AuthContext";
 import { useAuthRequired } from "@/context/AuthRequiredContext";
@@ -22,6 +22,12 @@ export const Header = () => {
   const navigate = useNavigate();
 
   const [searchParams] = useSearchParams();
+  const isSearchActive =
+  location.pathname === "/catalog" &&
+  searchParams.get("searchOpen") === "true";
+
+const isProfileActive =
+  location.pathname === "/profile";
 
   const { isAuthenticated } = useAuth();
   const { openAuthRequired, closeAuthRequired } = useAuthRequired();
@@ -105,50 +111,64 @@ export const Header = () => {
               isMenuOpen ? "header__nav--open" : ""
             }`}
           >
-            {navLinks.map(({ to, label }) => (
-              <NavLink
-                key={to}
-                to={to}
-                onClick={closeMenu}
-                className={({ isActive }) =>
-                  `header__nav-link ${
-                    isActive
-                      ? "header__nav-link--active"
-                      : ""
-                  }`
-                }
-              >
-                {label}
-              </NavLink>
-            ))}
+
+{navLinks.map(({ to, label }) => (
+  <NavLink
+    key={to}
+    to={to}
+    prefetch={
+      to === "/history"
+        ? "intent"
+        : undefined
+    }
+    onClick={closeMenu}
+    className={({ isActive }) =>
+      `header__nav-link ${
+        isActive
+          ? "header__nav-link--active"
+          : ""
+      }`
+    }
+  >
+    {label}
+  </NavLink>
+))}
           </nav>
 
           <div className="header__actions">
-            <button
-              className="header__icon"
-              type="button"
-              aria-label="Search"
-              onClick={handleSearchClick}
-            >
-              <img
-                src={searchIcon}
-                alt=""
-                aria-hidden="true"
-              />
-            </button>
+          <button
+            className={`header__icon ${
+              isSearchActive
+                ? "header__icon--active"
+                : ""
+            }`}
+            type="button"
+            aria-label="Search"
+            onClick={handleSearchClick}
+          >
+            <img
+              src={searchIcon}
+              alt=""
+              aria-hidden="true"
+            />
+          </button>
 
-            <button
-              className="header__icon"
-              type="button"
-              aria-label="Profile"
-              onClick={handleProfileClick}
-            >
-              <img
-                src={iconProfile}
-                alt=""
-                aria-hidden="true"
-              />
-            </button>
+          <button
+            className={`header__icon ${
+              isProfileActive
+                ? "header__icon--active"
+                : ""
+            }`}
+            type="button"
+            aria-label="Profile"
+            onClick={handleProfileClick}
+          >
+            <img
+              src={iconProfile}
+              alt=""
+              aria-hidden="true"
+            />
+          </button>
           </div>
 
           <button

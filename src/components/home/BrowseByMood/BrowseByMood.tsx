@@ -6,7 +6,7 @@ import {
   useState,
 } from "react";
 
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 import Particles, {
   initParticlesEngine,
@@ -22,10 +22,6 @@ import { SectionTitle } from "@/components/ui/SectionTitle";
 
 import { useMoodTheme } from "@/context/MoodThemeContext";
 
-
-
-import type { MoodCardTheme } from "@/types/mood";
-
 import arrowRight from "@/assets/images/icons/arrow-right.svg";
 
 import {
@@ -34,23 +30,27 @@ import {
 } from "@/utils/moodEffects";
 
 import { MoodCard } from "./sections/MoodCard";
+import type {
+  MoodAsset,
+  MoodCardTheme,
+} from "@/types/mood";
 
 import "./BrowseByMood.scss";
-import { useMoodAssets } from "@/hooks/assets/mood/useMoodAssets";
 
 type ParticleTheme = Exclude<
   MoodCardTheme,
   "celebration"
 >;
+type BrowseByMoodProps = {
+  moods: MoodAsset[];
+};
 
-export const BrowseByMood = () => {
+export const BrowseByMood = ({
+  moods,
+}: BrowseByMoodProps) => {
   const { moodTheme, setMoodTheme } = useMoodTheme();
 
-  const {
-    data: moods = [],
-    isLoading,
-    isError,
-  } = useMoodAssets();
+
 
   const particleTimeoutRef =
     useRef<number | null>(null);
@@ -214,17 +214,15 @@ export const BrowseByMood = () => {
       <div className="container">
         <SectionTitle title="Choose Your Vibe" />
 
-        {!isLoading && !isError && (
-          <div className="browse-by-mood__grid">
-            {moods.map((mood) => (
-              <MoodCard
-                key={mood.id}
-                mood={mood}
-                onMoodClick={handleMoodClick}
-              />
-            ))}
-          </div>
-        )}
+        <div className="browse-by-mood__grid">
+          {moods.map((mood) => (
+            <MoodCard
+              key={mood.id}
+              mood={mood}
+              onMoodClick={handleMoodClick}
+            />
+          ))}
+        </div>
 
         <div className="browse-by-mood__actions">
           <div className="browse-by-mood__mood-control">

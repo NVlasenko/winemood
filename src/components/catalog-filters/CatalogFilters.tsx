@@ -5,7 +5,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router";
 
 import { getMetadata } from "@/shared/api/metadataApi";
 import { filterWines } from "@/shared/api/wineFilterApi";

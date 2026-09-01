@@ -1,56 +1,58 @@
 import { useMoodTheme } from "@/context/MoodThemeContext";
 
-import { useHistoryWomanImages } from "@/hooks/assets/history/useHistoryWomanImages";
-
 import type { HistoryWomanImages } from "@/types/historyWomanImages";
+import type { SiteAssets } from "@/types/siteAssets";
+
+import { optimizeCloudinaryImage } from "@/shared/lib/optimizeCloudinaryImage";
 
 import "./HistoryHero.scss";
-import { useSiteAssets } from "@/hooks/assets/siteAssets/useSiteAssets";
 
-export const HistoryHero = () => {
+type HistoryHeroProps = {
+  womanImages?: HistoryWomanImages;
+  siteAssets?: SiteAssets;
+};
+
+export const HistoryHero = ({
+  womanImages,
+  siteAssets,
+}: HistoryHeroProps) => {
   const { moodTheme } = useMoodTheme();
-
-  const {
-    data: womanImages,
-    isLoading: isWomanImagesLoading,
-    isError: isWomanImagesError,
-  } = useHistoryWomanImages();
-
-  const {
-    data: siteAssets,
-    isLoading: isSiteAssetsLoading,
-    isError: isSiteAssetsError,
-  } = useSiteAssets();
 
   const womanImage =
     womanImages?.[
       moodTheme as keyof HistoryWomanImages
     ] ?? womanImages?.default;
 
+  const optimizedWomanImage =
+    womanImage
+      ? optimizeCloudinaryImage(
+          womanImage,
+          { width: 700 },
+        )
+      : undefined;
+
   const winePattern =
     siteAssets?.shared.pagePatternUrl;
 
   return (
     <section className="history-hero">
-      {!isSiteAssetsLoading &&
-        !isSiteAssetsError &&
-        winePattern && (
-          <>
-            <img
-              className="history-hero__pattern history-hero__pattern--left"
-              src={winePattern}
-              alt=""
-              aria-hidden="true"
-            />
+      {winePattern && (
+        <>
+          <img
+            className="history-hero__pattern history-hero__pattern--left"
+            src={winePattern}
+            alt=""
+            aria-hidden="true"
+          />
 
-            <img
-              className="history-hero__pattern history-hero__pattern--right"
-              src={winePattern}
-              alt=""
-              aria-hidden="true"
-            />
-          </>
-        )}
+          <img
+            className="history-hero__pattern history-hero__pattern--right"
+            src={winePattern}
+            alt=""
+            aria-hidden="true"
+          />
+        </>
+      )}
 
       <div className="container">
         <div className="history-hero__content">
@@ -59,16 +61,14 @@ export const HistoryHero = () => {
           </h1>
 
           <div className="history-hero__image-wrapper">
-            {!isWomanImagesLoading &&
-              !isWomanImagesError &&
-              womanImage && (
-                <img
-                  className="history-hero__image"
-                  src={womanImage}
-                  alt=""
-                  aria-hidden="true"
-                />
-              )}
+            {optimizedWomanImage && (
+              <img
+                className="history-hero__image"
+                src={optimizedWomanImage}
+                alt=""
+                aria-hidden="true"
+              />
+            )}
           </div>
 
           <p className="history-hero__text">

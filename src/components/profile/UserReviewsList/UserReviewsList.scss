@@ -5,7 +5,6 @@
   --reviews-gap: 16px;
 
   width: 100%;
-
   margin-top: 80px;
 
   display: flex;
@@ -31,7 +30,8 @@
 
     transform: translateY(12px);
 
-    transition: opacity 0.35s ease,
+    transition:
+      opacity 0.35s ease,
       transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 
     &--visible {
@@ -55,9 +55,11 @@
 
     border-radius: 16px;
 
-    border: 1px solid rgba(217, 217, 217, 0.12);
+    border: 1px solid
+      rgba(217, 217, 217, 0.12);
 
-    background: rgba(255, 255, 255, 0.04);
+    background:
+      rgba(255, 255, 255, 0.04);
 
     backdrop-filter: blur(40px);
 
@@ -66,17 +68,22 @@
 
     gap: 14px;
 
-    transition: background 0.25s ease, transform 0.25s ease,
+    transition:
+      background 0.25s ease,
+      transform 0.25s ease,
       border-color 0.25s ease;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.06);
+      background:
+        rgba(255, 255, 255, 0.06);
 
       transform: translateY(-2px);
     }
   }
 
   &__wine {
+    min-width: 0;
+
     display: flex;
     align-items: center;
 
@@ -88,13 +95,18 @@
       width: 64px;
       height: 64px;
 
+      flex-shrink: 0;
+
       object-fit: contain;
 
       border-radius: 12px;
 
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+      box-shadow:
+        0 10px 25px
+        rgba(0, 0, 0, 0.45);
 
-      transition: transform 0.3s ease;
+      transition:
+        transform 0.3s ease;
 
       &:hover {
         transform: scale(1.05);
@@ -103,6 +115,8 @@
   }
 
   &__wine-info {
+    min-width: 0;
+
     display: flex;
     flex-direction: column;
 
@@ -111,33 +125,45 @@
     h4 {
       margin: 0;
 
-      font-family: "Marcellus", serif;
+      font-family:
+        "Marcellus", serif;
 
       font-size: 16px;
+      line-height: 1.35;
 
       color: $text-primary;
+
+      overflow-wrap: anywhere;
     }
 
     span {
       font-size: 13px;
 
-      color: rgba(177, 167, 166, 1);
+      color:
+        rgba(177, 167, 166, 1);
     }
   }
 
   &__text {
+    min-width: 0;
+
     margin: 0;
 
     font-size: 14px;
     line-height: 1.6;
 
     color: $text-primary;
+
+    overflow-wrap: anywhere;
   }
 
   &__date {
     font-size: 12px;
 
-    color: rgba(177, 167, 166, 1);
+    color:
+      rgba(177, 167, 166, 1);
+
+    white-space: nowrap;
   }
 
   &__actions {
@@ -153,9 +179,11 @@
 
     border-radius: 10px;
 
-    border: 1px solid rgba(217, 217, 217, 0.14);
+    border: 1px solid
+      rgba(217, 217, 217, 0.14);
 
-    background: rgba(255, 255, 255, 0.04);
+    background:
+      rgba(255, 255, 255, 0.04);
 
     color: $text-primary;
 
@@ -163,10 +191,14 @@
 
     cursor: pointer;
 
-    transition: background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+    transition:
+      background 0.2s ease,
+      border-color 0.2s ease,
+      opacity 0.2s ease;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.08);
+      background:
+        rgba(255, 255, 255, 0.08);
     }
 
     &:disabled {
@@ -178,10 +210,12 @@
     &--danger {
       color: #ff6b6b;
 
-      border-color: rgba(255, 107, 107, 0.3);
+      border-color:
+        rgba(255, 107, 107, 0.3);
 
       &:hover:not(:disabled) {
-        background: rgba(255, 107, 107, 0.12);
+        background:
+          rgba(255, 107, 107, 0.12);
       }
     }
   }
@@ -210,11 +244,14 @@
 
     padding: 20px;
 
-    background: rgba(0, 0, 0, 0.6);
+    background:
+      rgba(0, 0, 0, 0.6);
 
     backdrop-filter: blur(6px);
 
-    animation: user-reviews-fade-in 0.2s ease;
+    animation:
+      user-reviews-fade-in
+      0.2s ease;
   }
 
   &__modal {
@@ -225,9 +262,11 @@
 
     border-radius: 16px;
 
-    border: 1px solid rgba(217, 217, 217, 0.12);
+    border: 1px solid
+      rgba(217, 217, 217, 0.12);
 
-    background: rgba(20, 20, 20, 0.95);
+    background:
+      rgba(20, 20, 20, 0.95);
 
     backdrop-filter: blur(40px);
 
@@ -238,12 +277,15 @@
 
     text-align: center;
 
-    animation: user-reviews-scale-in 0.2s ease;
+    animation:
+      user-reviews-scale-in
+      0.2s ease;
 
     h3 {
       margin: 0;
 
-      font-family: "Marcellus", serif;
+      font-family:
+        "Marcellus", serif;
 
       font-size: 18px;
 
@@ -255,7 +297,8 @@
 
       font-size: 13px;
 
-      color: rgba(177, 167, 166, 1);
+      color:
+        rgba(177, 167, 166, 1);
     }
   }
 
@@ -305,15 +348,25 @@
     }
 
     &__card {
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
+      display: grid;
 
-      gap: 24px;
+      grid-template-columns:
+        minmax(280px, 1.15fr)
+        minmax(320px, 2fr)
+        120px
+        166px;
+
+      align-items: center;
+
+      column-gap: 32px;
+
+      min-height: 122px;
+
+      padding: 24px 30px;
     }
 
     &__wine {
-      min-width: 240px;
+      min-width: 0;
 
       img {
         width: 80px;
@@ -321,14 +374,39 @@
       }
     }
 
-    &__text {
-      flex: 1;
+    &__wine-info {
+      min-width: 0;
 
-      max-width: 600px;
+      h4 {
+        max-width: 100%;
+      }
+    }
+
+    &__text {
+      width: 100%;
+      min-width: 0;
+      max-width: none;
+
+      margin: 0;
+    }
+
+    &__date {
+      width: 100%;
+
+      text-align: center;
+
+      white-space: nowrap;
     }
 
     &__actions {
-      flex-shrink: 0;
+      margin-top: 0;
+
+      display: flex;
+      justify-content: flex-end;
+
+      gap: 10px;
+
+      white-space: nowrap;
     }
   }
 }

@@ -129,12 +129,11 @@
   }
 
   &__stats {
-    width: 100%;
-    min-width: 0;
-
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    align-items: stretch;
+    display: flex;
+    justify-content: flex-end;
+  
+    flex: 0 0 auto;
+    width: auto;
   }
 
   &__stat {
@@ -220,68 +219,68 @@
 
   @include on-desktop {
     margin-top: 56px;
-
+  
     &__inner {
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
     }
-
+  
     &__left {
       width: auto;
       flex-shrink: 0;
-
+  
       justify-content: flex-start;
       gap: 32px;
-
+  
       text-align: left;
     }
-
+  
     &__user {
       align-items: flex-start;
     }
-
+  
     &__stats {
-      width: auto;
-      flex: 1;
-
       display: flex;
       justify-content: flex-end;
+  
+      flex: 0 0 auto;
+      width: auto;
     }
-
+  
     &__stat {
       min-width: 145px;
       padding: 0 35px;
-
+  
       &:not(:first-child)::before {
         left: 0;
       }
     }
-
+  
     &__avatar {
       width: 88px;
       height: 88px;
       font-size: 32px;
     }
-
+  
     &__avatar-action {
       width: 26px;
       height: 26px;
       font-size: 16px;
     }
-
+  
     &__name {
       font-size: 36px;
     }
-
+  
     &__subtitle {
       font-size: 18px;
     }
-
+  
     &__value {
       font-size: 42px;
     }
-
+  
     &__label {
       font-size: 20px;
       white-space: nowrap;

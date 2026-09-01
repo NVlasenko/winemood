@@ -1,115 +1,77 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
 import { useQueryClient } from "@tanstack/react-query";
 
-import {
-  filterWines,
-} from "@/shared/api/wineFilterApi";
-
 import { useAuth } from "@/context/AuthContext";
+
+import { filterWines } from "@/shared/api/wineFilterApi";
+import { CATALOG_PAGE_SIZE } from "@/shared/config/catalog";
+import { buildWineFilters } from "@/shared/lib/buildWineFilters";
 import { refetchAchievementsSafe } from "@/shared/lib/refetchAchievementsSafe";
 
-import type { WineCatalogCard as WineCatalogCardType } from "@/types/wineCatalogCard";
 import type { UseCatalogWinesParams } from "@/types/catalogWinesParams";
-import type { WineFilterRequest } from "@/types/filters";
+import type { WineCatalogCard as WineCatalogCardType } from "@/types/wineCatalogCard";
 
-const CATALOG_PAGE_SIZE = 8;
-
-const buildWineFilters = ({
-  searchQuery,
-  wineTypes,
-  countries,
-  sweetnessLevels,
-  grapeVarieties,
-  wineStyles,
-  acidityLevels,
-  aromaNotes,
-  moods,
-  events,
-  seasons,
-  foodName,
-}: UseCatalogWinesParams): WineFilterRequest => {
-  const filters: WineFilterRequest = {};
-
-  const normalizedSearchQuery = searchQuery.trim();
-
-  if (normalizedSearchQuery) {
-    filters.search = normalizedSearchQuery;
-  }
-
-  if (wineTypes.length > 0) {
-    filters.wineTypes = wineTypes;
-  }
-
-  if (countries.length > 0) {
-    filters.countries = countries;
-  }
-
-  if (sweetnessLevels.length > 0) {
-    filters.sweetnessLevels = sweetnessLevels;
-  }
-
-  if (grapeVarieties.length > 0) {
-    filters.grapeVarieties = grapeVarieties;
-  }
-
-  if (wineStyles.length > 0) {
-    filters.wineStyles = wineStyles;
-  }
-
-  if (acidityLevels.length > 0) {
-    filters.acidityLevels = acidityLevels;
-  }
-
-  if (aromaNotes.length > 0) {
-    filters.aromaNotes = aromaNotes;
-  }
-
-  if (moods.length > 0) {
-    filters.moods = moods;
-  }
-
-  if (events.length > 0) {
-    filters.events = events;
-  }
-
-  if (seasons.length > 0) {
-    filters.seasons = seasons;
-  }
-
-  if (foodName.length > 0) {
-    filters.foodName = foodName;
-  }
-
-  return filters;
+type InitialCatalogData = {
+  wines: WineCatalogCardType[];
+  currentPage: number;
+  totalPages: number;
 };
 
-export const useCatalogWines = ({
-  searchQuery,
-  sort = [],
-  wineTypes,
-  countries,
-  sweetnessLevels,
-  grapeVarieties,
-  wineStyles,
-  acidityLevels,
-  aromaNotes,
-  moods,
-  events,
-  seasons,
-  foodName,
-}: UseCatalogWinesParams) => {
+export const useCatalogWines = (
+  {
+    searchQuery,
+    sort = [],
+    wineTypes,
+    countries,
+    sweetnessLevels,
+    grapeVarieties,
+    wineStyles,
+    acidityLevels,
+    aromaNotes,
+    moods,
+    events,
+    seasons,
+    foodName,
+  }: UseCatalogWinesParams,
+  initialData?: InitialCatalogData,
+) => {
   const { user, refreshUser } = useAuth();
   const queryClient = useQueryClient();
 
-  const [wines, setWines] = useState<WineCatalogCardType[]>([]);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
-  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [wines, setWines] = useState<WineCatalogCardType[]>(
+    initialData?.wines ?? [],
+  );
+
+  const [currentPage, setCurrentPage] = useState(
+    initialData?.currentPage ?? 0,
+  );
+
+  const [totalPages, setTotalPages] = useState(
+    initialData?.totalPages ?? 0,
+  );
+
+  const [isInitialLoading, setIsInitialLoading] = useState(
+    !initialData,
+  );
+
   const [isCurating, setIsCurating] = useState(false);
   const [error, setError] = useState("");
 
-  const hasLoadedRef = useRef(false);
-  const curatingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hasLoadedRef = useRef(Boolean(initialData));
+
+  const shouldSkipInitialFetchRef = useRef(
+    Boolean(initialData),
+  );
+
+  const curatingTimeoutRef = useRef<
+    ReturnType<typeof setTimeout> | null
+  >(null);
 
   const normalizedSearchQuery = searchQuery.trim();
 
@@ -126,6 +88,11 @@ export const useCatalogWines = ({
   }, []);
 
   useEffect(() => {
+    if (shouldSkipInitialFetchRef.current) {
+      shouldSkipInitialFetchRef.current = false;
+      return;
+    }
+
     let isMounted = true;
 
     const loadWines = async () => {
@@ -156,13 +123,29 @@ export const useCatalogWines = ({
           sort,
         });
 
-        if (user && !normalizedSearchQuery && events.length > 0) {
-          await refetchAchievementsSafe(queryClient, user.id);
+        if (
+          user &&
+          !normalizedSearchQuery &&
+          events.length > 0
+        ) {
+          await refetchAchievementsSafe(
+            queryClient,
+            user.id,
+          );
+
           await refreshUser();
         }
 
-        if (user && !normalizedSearchQuery && foodName.length > 0) {
-          await refetchAchievementsSafe(queryClient, user.id);
+        if (
+          user &&
+          !normalizedSearchQuery &&
+          foodName.length > 0
+        ) {
+          await refetchAchievementsSafe(
+            queryClient,
+            user.id,
+          );
+
           await refreshUser();
         }
 
@@ -179,18 +162,21 @@ export const useCatalogWines = ({
           return;
         }
 
-        console.error("Failed to load wines", error);
+        console.error(
+          "Failed to load wines",
+          error,
+        );
 
         if (error instanceof TypeError) {
           setError(
-            "Network error. Please check your internet connection."
+            "Network error. Please check your internet connection.",
           );
 
           return;
         }
 
         setError(
-          "Something went wrong. Please try again later."
+          "Something went wrong. Please try again later.",
         );
       } finally {
         if (isMounted) {
@@ -241,7 +227,9 @@ export const useCatalogWines = ({
     totalPages,
     isInitialLoading,
     isCurating,
-    isSearching: Boolean(normalizedSearchQuery) && isCurating,
+    isSearching:
+      Boolean(normalizedSearchQuery) &&
+      isCurating,
     error,
     setCurrentPage,
     startCuratingAnimation,

@@ -1,22 +1,23 @@
-import { useSiteAssets } from "@/hooks/assets/siteAssets/useSiteAssets";
+import type { SiteAssets } from "@/types/siteAssets";
+
 import "./AboutHero.scss";
 
-export const AboutHero = () => {
-  const {
-    data: siteAssets,
-    isLoading,
-    isError,
-  } = useSiteAssets();
+type AboutHeroProps = {
+  siteAssets: SiteAssets;
+};
 
+export const AboutHero = ({
+  siteAssets,
+}: AboutHeroProps) => {
   const winePattern =
-    siteAssets?.shared.pagePatternUrl;
+    siteAssets.shared.pagePatternUrl;
 
   const bottleImage =
-    siteAssets?.about.bottleImageUrl;
+    siteAssets.about.bottleImageUrl;
 
   return (
     <section className="about-hero">
-      {!isLoading && !isError && winePattern && (
+      {winePattern && (
         <>
           <img
             className="about-hero__pattern about-hero__pattern--left"

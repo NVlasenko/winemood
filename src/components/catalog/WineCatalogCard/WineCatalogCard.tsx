@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 import { WineRating } from "@/components/catalog/WineRating";
 import { FavoriteButton } from "@/components/ui/FavoriteButton";
@@ -11,7 +11,7 @@ import wineDropIcon from "@/assets/images/wine/sweet.svg";
 import bottleIcon from "@/assets/images/wine/bottle.svg";
 
 import type { WineCatalogCard as WineCatalogCardType } from "@/types/wineCatalogCard";
-
+import "./WineCatalogCard.scss";
 type Props = {
   wine: WineCatalogCardType;
   index: number;

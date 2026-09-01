@@ -1,33 +1,63 @@
-import { Outlet, useLocation, matchPath } from "react-router-dom";
+import {
+  Outlet,
+  matchPath,
+  useLocation,
+} from "react-router";
+
 import { Header } from "./components/layout/Header";
 import { Footer } from "./components/layout/Footer";
-import { ROUTES } from "@/ClientApp.tsx";
-import "./App.scss";
-import { useAchievementListener } from "./hooks/achievements/useAchievementListener";
+
+import { NavigationLoadingOverlay } from "@/components/ui/NavigationLoadingOverlay";
 import { AchievementUnlockedModal } from "./components/profile/AchievementUnlockedModal";
+
+import { ROUTES } from "@/constants/routes";
+
+import { useAchievementListener } from "./hooks/achievements/useAchievementListener";
+
+import "./App.scss";
 
 export const App = () => {
   const location = useLocation();
-  const { unlocked, closeAchievement } = useAchievementListener();
+
+  const {
+    unlocked,
+    closeAchievement,
+  } = useAchievementListener();
 
   const isReviewPage = matchPath(
-    { path: "/catalog/:id/review" },
-    location.pathname
+    {
+      path: "/catalog/:id/review",
+    },
+    location.pathname,
   );
 
-  const isQuizPage = location.pathname.startsWith(ROUTES.quiz);
-  const isAuthPage = location.pathname.startsWith(ROUTES.auth);
+  const isQuizPage =
+    location.pathname.startsWith(
+      ROUTES.quiz,
+    );
 
-  const shouldHideFooter = isReviewPage || isQuizPage || isAuthPage;
+  const isAuthPage =
+    location.pathname.startsWith(
+      ROUTES.auth,
+    );
+
+  const shouldHideFooter =
+    isReviewPage ||
+    isQuizPage ||
+    isAuthPage;
 
   return (
     <div className="App">
       <Header />
 
+      <NavigationLoadingOverlay />
+
       {unlocked && (
         <AchievementUnlockedModal
           achievement={unlocked}
-          onClose={closeAchievement}
+          onClose={
+            closeAchievement
+          }
         />
       )}
 
@@ -35,7 +65,9 @@ export const App = () => {
         <Outlet />
       </main>
 
-      {!shouldHideFooter && <Footer />}
+      {!shouldHideFooter && (
+        <Footer />
+      )}
     </div>
   );
 };

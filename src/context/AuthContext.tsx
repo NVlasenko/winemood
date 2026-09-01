@@ -10,6 +10,7 @@ import {
 
 import { authApi } from "@/shared/api/authApi";
 import { userApi } from "@/shared/api/userApi";
+import { ApiError } from "@/shared/api/httpClient";
 
 import { queryClient } from "@/shared/lib/reactQuery";
 import { refetchAchievementsSafe } from "@/shared/lib/refetchAchievementsSafe";
@@ -49,7 +50,11 @@ type Props = {
   children: ReactNode;
 };
 
-const getSavedAccessToken = () => {
+const getSavedAccessToken = (): string | null => {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
   const token = localStorage.getItem(ACCESS_TOKEN_STORAGE_KEY);
 
   if (!token || token === "undefined" || token === "null") {
@@ -60,6 +65,10 @@ const getSavedAccessToken = () => {
 };
 
 const getSavedUser = (): UserDto | null => {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
   try {
     const data = localStorage.getItem(USER_STORAGE_KEY);
 
@@ -76,6 +85,10 @@ const getSavedUser = (): UserDto | null => {
 };
 
 const getInitialUser = (): UserDto | null => {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
   const token = getSavedAccessToken();
 
   if (!token) {
@@ -92,12 +105,17 @@ export const AuthProvider = ({ children }: Props) => {
     getSavedAccessToken()
   );
 
-  const [user, setUser] = useState<UserDto | null>(() => getInitialUser());
+  const [user, setUser] = useState<UserDto | null>(() =>
+    getInitialUser()
+  );
 
   const [isLoadingUser, setIsLoadingUser] = useState(false);
 
   const saveAuthData = useCallback((data: AuthResponseDto) => {
-    localStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, data.accessToken);
+    localStorage.setItem(
+      ACCESS_TOKEN_STORAGE_KEY,
+      data.accessToken
+    );
 
     setAccessToken(data.accessToken);
   }, []);
@@ -105,7 +123,10 @@ export const AuthProvider = ({ children }: Props) => {
   const updateUser = useCallback((updatedUser: UserDto) => {
     setUser(updatedUser);
 
-    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updatedUser));
+    localStorage.setItem(
+      USER_STORAGE_KEY,
+      JSON.stringify(updatedUser)
+    );
   }, []);
 
   const refreshUser = useCallback(async () => {
@@ -119,7 +140,9 @@ export const AuthProvider = ({ children }: Props) => {
   }, [accessToken, updateUser]);
 
   const syncSavedQuiz = useCallback(async (userData: UserDto) => {
-    const savedQuiz = sessionStorage.getItem(QUIZ_RESULT_STORAGE_KEY);
+    const savedQuiz = sessionStorage.getItem(
+      QUIZ_RESULT_STORAGE_KEY
+    );
 
     if (!savedQuiz) {
       return;
@@ -145,11 +168,16 @@ export const AuthProvider = ({ children }: Props) => {
 
     const quizResultKey = wineIds.join("-");
 
-    const quizSentKey = `${QUIZ_SENT_PREFIX}:${userData.id}:${quizResultKey}`;
+    const quizSentKey =
+      `${QUIZ_SENT_PREFIX}:${userData.id}:${quizResultKey}`;
 
-    const existingStatus = sessionStorage.getItem(quizSentKey);
+    const existingStatus =
+      sessionStorage.getItem(quizSentKey);
 
-    if (existingStatus === "sending" || existingStatus === "sent") {
+    if (
+      existingStatus === "sending" ||
+      existingStatus === "sent"
+    ) {
       sessionStorage.removeItem(QUIZ_RESULT_STORAGE_KEY);
 
       return;
@@ -159,18 +187,26 @@ export const AuthProvider = ({ children }: Props) => {
       sessionStorage.setItem(quizSentKey, "sending");
 
       await userApi.saveQuizResult(wineIds);
+
       sessionStorage.setItem(quizSentKey, "sent");
 
       sessionStorage.removeItem(QUIZ_RESULT_STORAGE_KEY);
+
       await queryClient.invalidateQueries({
         queryKey: ["quiz-history", userData.id],
       });
 
-      await refetchAchievementsSafe(queryClient, userData.id);
+      await refetchAchievementsSafe(
+        queryClient,
+        userData.id
+      );
     } catch (error) {
       sessionStorage.removeItem(quizSentKey);
 
-      console.error("Failed to send saved quiz", error);
+      console.error(
+        "Failed to send saved quiz",
+        error
+      );
     }
   }, []);
 
@@ -195,13 +231,14 @@ export const AuthProvider = ({ children }: Props) => {
     setUser(null);
   }, []);
 
-  const register = useCallback(async (data: RegisterRequestDto) => {
-    const response = await authApi.register(data);
+  const register = useCallback(
+    async (data: RegisterRequestDto) => {
+      const response = await authApi.register(data);
 
-    console.log("REGISTER RESPONSE:", response);
-
-    return response;
-  }, []);
+      return response;
+    },
+    []
+  );
 
   const login = useCallback(
     async (data: LoginRequestDto) => {
@@ -219,7 +256,11 @@ export const AuthProvider = ({ children }: Props) => {
 
       return response;
     },
-    [saveAuthData, updateUser, syncSavedQuiz]
+    [
+      saveAuthData,
+      updateUser,
+      syncSavedQuiz,
+    ]
   );
 
   useEffect(() => {
@@ -238,10 +279,25 @@ export const AuthProvider = ({ children }: Props) => {
           updateUser(userData);
         }
       })
-      .catch(() => {
-        console.error("Auth invalid → logout");
+      .catch((error) => {
+        if (
+          error instanceof ApiError &&
+          (error.status === 401 || error.status === 403)
+        ) {
+          console.error(
+            "Auth invalid → logout",
+            error
+          );
 
-        logout();
+          logout();
+
+          return;
+        }
+
+        console.error(
+          "Failed to refresh authenticated user:",
+          error
+        );
       })
       .finally(() => {
         if (isMounted) {
@@ -252,7 +308,11 @@ export const AuthProvider = ({ children }: Props) => {
     return () => {
       isMounted = false;
     };
-  }, [accessToken, updateUser, logout]);
+  }, [
+    accessToken,
+    updateUser,
+    logout,
+  ]);
 
   const value = useMemo(
     () => ({
@@ -281,14 +341,20 @@ export const AuthProvider = ({ children }: Props) => {
     ]
   );
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
 
   if (!context) {
-    throw new Error("useAuth must be used inside AuthProvider");
+    throw new Error(
+      "useAuth must be used inside AuthProvider"
+    );
   }
 
   return context;

@@ -1,4 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import {
   QuizIntro,
@@ -45,8 +50,14 @@ const questionsByLevel = {
 };
 
 const getSavedQuizDraft = (): QuizDraft | null => {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
   try {
-    const saved = sessionStorage.getItem(QUIZ_DRAFT_STORAGE_KEY);
+    const saved = sessionStorage.getItem(
+      QUIZ_DRAFT_STORAGE_KEY,
+    );
 
     if (!saved) {
       return null;
@@ -59,51 +70,100 @@ const getSavedQuizDraft = (): QuizDraft | null => {
       typeof parsed !== "object" ||
       !Number.isInteger(parsed.currentStep)
     ) {
-      sessionStorage.removeItem(QUIZ_DRAFT_STORAGE_KEY);
+      sessionStorage.removeItem(
+        QUIZ_DRAFT_STORAGE_KEY,
+      );
 
       return null;
     }
 
     return parsed;
   } catch {
-    sessionStorage.removeItem(QUIZ_DRAFT_STORAGE_KEY);
+    sessionStorage.removeItem(
+      QUIZ_DRAFT_STORAGE_KEY,
+    );
 
     return null;
   }
 };
 
 const saveQuizDraft = (draft: QuizDraft) => {
-  sessionStorage.setItem(QUIZ_DRAFT_STORAGE_KEY, JSON.stringify(draft));
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  sessionStorage.setItem(
+    QUIZ_DRAFT_STORAGE_KEY,
+    JSON.stringify(draft),
+  );
 };
 
 const clearQuizDraft = () => {
-  sessionStorage.removeItem(QUIZ_DRAFT_STORAGE_KEY);
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  sessionStorage.removeItem(
+    QUIZ_DRAFT_STORAGE_KEY,
+  );
 };
 
 export const QuizPage = () => {
-  const { quizResult, saveQuizResult, clearQuizResult } = useQuizSession();
+  const {
+    quizResult,
+    saveQuizResult,
+    clearQuizResult,
+  } = useQuizSession();
 
-  const savedDraft = useMemo(() => getSavedQuizDraft(), []);
+  const [currentStep, setCurrentStep] =
+    useState(FIRST_QUESTION_STEP);
 
-  const [currentStep, setCurrentStep] = useState(
-    savedDraft?.currentStep ?? FIRST_QUESTION_STEP
+  const [
+    selectedLevel,
+    setSelectedLevel,
+  ] = useState<QuizExperienceLevel | null>(
+    null,
   );
 
-  const [selectedLevel, setSelectedLevel] =
-    useState<QuizExperienceLevel | null>(savedDraft?.selectedLevel ?? null);
+  const [answers, setAnswers] =
+    useState<QuizAnswers>({});
 
-  const [answers, setAnswers] = useState<QuizAnswers>(
-    savedDraft?.answers ?? {}
-  );
+  const [
+    isDraftRestored,
+    setIsDraftRestored,
+  ] = useState(false);
 
-  const [isFinishModalOpen, setIsFinishModalOpen] = useState(false);
+  const [
+    isFinishModalOpen,
+    setIsFinishModalOpen,
+  ] = useState(false);
 
-  const [isPreparingResults, setIsPreparingResults] = useState(false);
+  const [
+    isPreparingResults,
+    setIsPreparingResults,
+  ] = useState(false);
 
-  const [quizError, setQuizError] = useState<string | null>(null);
+  const [quizError, setQuizError] =
+    useState<string | null>(null);
 
   useEffect(() => {
-    if (quizResult) {
+    const savedDraft = getSavedQuizDraft();
+
+    if (savedDraft) {
+      setCurrentStep(savedDraft.currentStep);
+
+      setSelectedLevel(
+        savedDraft.selectedLevel,
+      );
+
+      setAnswers(savedDraft.answers);
+    }
+
+    setIsDraftRestored(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isDraftRestored || quizResult) {
       return;
     }
 
@@ -112,7 +172,13 @@ export const QuizPage = () => {
       selectedLevel,
       answers,
     });
-  }, [currentStep, selectedLevel, answers, quizResult]);
+  }, [
+    currentStep,
+    selectedLevel,
+    answers,
+    quizResult,
+    isDraftRestored,
+  ]);
 
   const currentQuestions = useMemo(() => {
     if (!selectedLevel) {
@@ -122,11 +188,14 @@ export const QuizPage = () => {
     return questionsByLevel[selectedLevel];
   }, [selectedLevel]);
 
-  const currentQuestion = currentQuestions.find(
-    (question) => question.step === currentStep
-  );
+  const currentQuestion =
+    currentQuestions.find(
+      (question) =>
+        question.step === currentStep,
+    );
 
-  const selectedAnswerId = answers[currentStep];
+  const selectedAnswerId =
+    answers[currentStep];
 
   const canGoNext =
     currentStep === FIRST_QUESTION_STEP
@@ -138,11 +207,16 @@ export const QuizPage = () => {
       clearQuizResult();
 
       setSelectedLevel(level);
+
       setAnswers({});
-      setCurrentStep(FIRST_QUESTION_STEP);
+
+      setCurrentStep(
+        FIRST_QUESTION_STEP,
+      );
+
       setQuizError(null);
     },
-    [clearQuizResult]
+    [clearQuizResult],
   );
 
   const handleSelectAnswer = useCallback(
@@ -152,11 +226,16 @@ export const QuizPage = () => {
         [currentStep]: optionId,
       }));
     },
-    [currentStep]
+    [currentStep],
   );
 
   const handlePrevious = useCallback(() => {
-    setCurrentStep((previous) => Math.max(previous - 1, FIRST_QUESTION_STEP));
+    setCurrentStep((previous) =>
+      Math.max(
+        previous - 1,
+        FIRST_QUESTION_STEP,
+      ),
+    );
   }, []);
 
   const handleNext = useCallback(() => {
@@ -164,59 +243,99 @@ export const QuizPage = () => {
       return;
     }
 
-    if (currentStep === QUIZ_TOTAL_STEPS) {
+    if (
+      currentStep === QUIZ_TOTAL_STEPS
+    ) {
       setIsFinishModalOpen(true);
 
       return;
     }
 
-    setCurrentStep((previous) => previous + 1);
+    setCurrentStep(
+      (previous) => previous + 1,
+    );
   }, [canGoNext, currentStep]);
 
   const restartQuiz = useCallback(() => {
     clearQuizDraft();
 
-    setCurrentStep(FIRST_QUESTION_STEP);
+    setCurrentStep(
+      FIRST_QUESTION_STEP,
+    );
+
     setSelectedLevel(null);
+
     setAnswers({});
+
     setQuizError(null);
+
     setIsFinishModalOpen(false);
 
     clearQuizResult();
   }, [clearQuizResult]);
 
-  const handleFinish = useCallback(async () => {
-    if (!selectedLevel) {
-      return;
-    }
+  const handleFinish = useCallback(
+    async () => {
+      if (!selectedLevel) {
+        return;
+      }
 
-    setIsFinishModalOpen(false);
-    setIsPreparingResults(true);
-    setQuizError(null);
+      setIsFinishModalOpen(false);
 
-    try {
-      const payload = buildQuizRequest(
-        selectedLevel,
-        currentQuestions,
-        answers
-      );
+      setIsPreparingResults(true);
 
-      const result = await quizApi.getResult(payload);
+      setQuizError(null);
 
-      clearQuizDraft();
+      try {
+        const payload = buildQuizRequest(
+          selectedLevel,
+          currentQuestions,
+          answers,
+        );
+      
+        const result =
+          await quizApi.getResult(payload);
+      
+        clearQuizDraft();
+      
+        saveQuizResult(result);
+      } catch (error) {
+        console.error("QUIZ FINISH ERROR:", error);
+      
+        setQuizError(
+          "Failed to get quiz results",
+        );
+      } finally {
+        setIsPreparingResults(false);
+      }
+    },
+    [
+      answers,
+      currentQuestions,
+      selectedLevel,
+      saveQuizResult,
+    ],
+  );
 
-      saveQuizResult(result);
-    } catch {
-      setQuizError("Failed to get quiz results");
-    } finally {
-      setIsPreparingResults(false);
-    }
-  }, [answers, currentQuestions, selectedLevel, saveQuizResult]);
+  if (!isDraftRestored) {
+    return (
+      <div className="quiz-page quiz-page--restoring" />
+    );
+  }
 
   return (
-    <div key={quizResult ? "result" : "quiz"}>
+    <div
+      key={
+        quizResult
+          ? "result"
+          : "quiz"
+      }
+    >
       {quizResult ? (
-        <QuizResults wines={quizResult} onRestart={restartQuiz} />
+        <QuizResults
+          wines={quizResult}
+          onRestart={restartQuiz}
+        />
       ) : (
         <>
           <StepFlowLayout
@@ -224,7 +343,9 @@ export const QuizPage = () => {
             backTo="/"
             backLabel="Home"
             currentStep={currentStep}
-            totalSteps={QUIZ_TOTAL_STEPS}
+            totalSteps={
+              QUIZ_TOTAL_STEPS
+            }
             canGoNext={canGoNext}
             previousLabel="Previous"
             nextLabel="Next"
@@ -234,34 +355,63 @@ export const QuizPage = () => {
             onPrevious={handlePrevious}
             onNext={handleNext}
           >
-            {currentStep === FIRST_QUESTION_STEP && (
+            {currentStep ===
+              FIRST_QUESTION_STEP && (
               <QuizIntro
-                selectedLevel={selectedLevel}
-                onSelectLevel={handleSelectLevel}
+                selectedLevel={
+                  selectedLevel
+                }
+                onSelectLevel={
+                  handleSelectLevel
+                }
               />
             )}
 
-            {currentStep > FIRST_QUESTION_STEP && currentQuestion && (
-              <QuizQuestion
-                step={currentQuestion.step}
-                totalSteps={QUIZ_TOTAL_STEPS}
-                question={currentQuestion.question}
-                options={currentQuestion.options}
-                selectedOptionId={selectedAnswerId}
-                onSelectOption={handleSelectAnswer}
-              />
-            )}
+            {currentStep >
+              FIRST_QUESTION_STEP &&
+              currentQuestion && (
+                <QuizQuestion
+                  step={
+                    currentQuestion.step
+                  }
+                  totalSteps={
+                    QUIZ_TOTAL_STEPS
+                  }
+                  question={
+                    currentQuestion.question
+                  }
+                  options={
+                    currentQuestion.options
+                  }
+                  selectedOptionId={
+                    selectedAnswerId
+                  }
+                  onSelectOption={
+                    handleSelectAnswer
+                  }
+                />
+              )}
 
-            {quizError && <p className="quiz-page__error">{quizError}</p>}
+            {quizError && (
+              <p className="quiz-page__error">
+                {quizError}
+              </p>
+            )}
           </StepFlowLayout>
 
           <QuizFinishModal
             isOpen={isFinishModalOpen}
-            onBackToQuiz={() => setIsFinishModalOpen(false)}
+            onBackToQuiz={() =>
+              setIsFinishModalOpen(false)
+            }
             onFinish={handleFinish}
           />
 
-          <QuizPreparingResults isOpen={isPreparingResults} />
+          <QuizPreparingResults
+            isOpen={
+              isPreparingResults
+            }
+          />
         </>
       )}
     </div>

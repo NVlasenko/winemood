@@ -3,16 +3,25 @@ import { HeroSection } from "@/components/home/HeroSection";
 import { WineCountries } from "@/components/home/WineCountries";
 import { PopularCategories } from "@/components/home/PopularCategories/PopularCategories";
 import { QuizCTA } from "@/components/quiz/QuizCTA/QuizCTA";
-import { RevealOnScroll } from "@/components/ui/RevealOnScroll/RevealOnScroll";
+
+import type { MoodAsset } from "@/types/mood";
+import type { Category } from "@/types/categories";
+import type { CountryWineDto } from "@/types/countryWine";
 
 import "./HomePage.scss";
 
 type HomePageProps = {
   heroBackgroundUrl: string;
+  moods: MoodAsset[];
+  categories: Category[];
+  countries: CountryWineDto[];
 };
 
 export const HomePage = ({
   heroBackgroundUrl,
+  moods,
+  categories,
+  countries,
 }: HomePageProps) => {
   return (
     <main className="home-page">
@@ -20,21 +29,17 @@ export const HomePage = ({
         heroBackgroundUrl={heroBackgroundUrl}
       />
 
-      <RevealOnScroll>
-        <BrowseByMood />
-      </RevealOnScroll>
+      <BrowseByMood moods={moods} />
 
-      <RevealOnScroll>
-        <PopularCategories />
-      </RevealOnScroll>
+      <PopularCategories
+        categories={categories}
+      />
 
-      <RevealOnScroll>
-        <QuizCTA />
-      </RevealOnScroll>
+      <QuizCTA />
 
-      <RevealOnScroll>
-        <WineCountries />
-      </RevealOnScroll>
+      <WineCountries
+        countries={countries}
+      />
     </main>
   );
 };

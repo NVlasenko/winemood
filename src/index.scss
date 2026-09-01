@@ -16,7 +16,6 @@
 html {
   width: 100%;
   min-height: 100%;
-  scroll-behavior: smooth;
   scroll-padding-top: 80px;
 }
 
@@ -32,13 +31,31 @@ body {
   overflow-x: clip;
   font-family: "Poppins", Arial, sans-serif;
   color: var(--text-primary);
-  background: var(--background);
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  transition: background 1.2s cubic-bezier(0.22, 1, 0.36, 1), color 0.6s ease;
+
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+
+  background: var(--background);
+  background-repeat: no-repeat;
+}
+
+html.theme-transitions-enabled body::before {
+  transition:
+    background 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html.theme-transitions-enabled body {
+  transition:
+    color 0.6s ease;
 }
 
 #root {

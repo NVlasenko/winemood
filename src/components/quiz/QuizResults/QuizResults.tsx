@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import Confetti from "react-confetti";
-import { useWindowSize } from "react-use";
 
 import type { WineCatalogCard as WineCatalogCardType } from "@/types/wineCatalogCard";
 
@@ -47,12 +46,30 @@ const getCurrentPath = () => {
 export const QuizResults = ({ wines, onRestart }: Props) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-
-  const { width, height } = useWindowSize();
-
   const { favoriteIds, toggleFavorite } = useFavorites();
   const { isAuthenticated, user, refreshUser } = useAuth();
   const { openAuthRequired } = useAuthRequired();
+  const [windowSize, setWindowSize] = useState({
+    width: 0,
+    height: 0,
+  });
+  
+  useEffect(() => {
+    const updateWindowSize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+  
+    updateWindowSize();
+  
+    window.addEventListener("resize", updateWindowSize);
+  
+    return () => {
+      window.removeEventListener("resize", updateWindowSize);
+    };
+  }, []);
 
   const {
     clearQuizResult,
@@ -226,14 +243,16 @@ export const QuizResults = ({ wines, onRestart }: Props) => {
 
   return (
     <>
-      {showConfetti && (
-        <Confetti
-          width={width}
-          height={height}
-          numberOfPieces={250}
-          recycle={false}
-        />
-      )}
+      {showConfetti &&
+        windowSize.width > 0 &&
+        windowSize.height > 0 && (
+          <Confetti
+            width={windowSize.width}
+            height={windowSize.height}
+            numberOfPieces={250}
+            recycle={false}
+          />
+        )}
 
       <main className="quiz-results">
         <div className="container">

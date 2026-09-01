@@ -40,15 +40,35 @@ export const useCreateReview = (wineId: number) => {
   });
 };
 
-export const useUserReviews = () => {
+export const useUserReviews = (
+  initialData?: Awaited<
+    ReturnType<
+      typeof reviewApi.getMyReviews
+    >
+  >,
+) => {
   const { user } = useAuth();
 
-  return useQuery({
-    queryKey: ["my-reviews", user?.id],
+  const hasInitialData =
+    initialData !== undefined;
 
-    queryFn: reviewApi.getMyReviews,
+  return useQuery({
+    queryKey: [
+      "my-reviews",
+      user?.id,
+    ],
+
+    queryFn: () =>
+      reviewApi.getMyReviews(),
 
     enabled: Boolean(user),
+
+    initialData,
+
+    staleTime: 0,
+
+    refetchOnMount:
+      !hasInitialData,
   });
 };
 

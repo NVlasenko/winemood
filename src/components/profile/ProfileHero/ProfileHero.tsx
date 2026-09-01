@@ -1,55 +1,119 @@
-import { useMemo, useRef, useState } from "react";
-import { useAuth } from "@/context/AuthContext";
-import { userApi } from "@/shared/api/userApi";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
-import "./ProfileHero.scss";
-import { compressImage } from "@/utils/compressImage";
+import { useAuth } from "@/context/AuthContext";
 import { useFavorites } from "@/context/FavoritesContext";
 
+import { userApi } from "@/shared/api/userApi";
+
+import { compressImage } from "@/utils/compressImage";
+
 import { CropAvatarModal } from "@/components/profile/CropAvatarModal";
-import { useAchievements } from "@/hooks/achievements/useAchievements";
 
-export const ProfileHero = () => {
-  const { user, updateUser } = useAuth();
-  const { favoritesCount } = useFavorites();
-  const [preview, setPreview] = useState<string | null>(null);
-  const [cropImage, setCropImage] = useState<string | null>(null);
-  const { data: achievements = [] } = useAchievements(!!user);
-  const unlockedCount = useMemo(
-    () =>
-      achievements.filter((achievement) => Boolean(achievement.unlockedAt))
-        .length,
-    [achievements]
-  );
+import type { UserDto } from "@/types/user";
 
-  const inputRef = useRef<HTMLInputElement | null>(null);
+import "./ProfileHero.scss";
 
-  const firstLetter = (user?.name || "").charAt(0).toUpperCase();
+type ProfileHeroProps = {
+  initialUser: UserDto;
+  initialFavoritesCount: number;
+};
+
+export const ProfileHero = ({
+  initialUser,
+  initialFavoritesCount,
+}: ProfileHeroProps) => {
+  const {
+    user: authUser,
+    updateUser,
+  } = useAuth();
+
+  const {
+    favoritesCount,
+    hasLoadedFavorites,
+  } = useFavorites();
+
+  const [isHydrated, setIsHydrated] =
+    useState(false);
+
+  const [preview, setPreview] =
+    useState<string | null>(null);
+
+  const [cropImage, setCropImage] =
+    useState<string | null>(null);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
+  const user =
+    isHydrated && authUser
+      ? authUser
+      : initialUser;
+
+  const displayedFavoritesCount =
+    hasLoadedFavorites
+      ? favoritesCount
+      : initialFavoritesCount;
+
+  const inputRef =
+    useRef<HTMLInputElement | null>(
+      null,
+    );
+
+  const firstLetter = (
+    user.name || ""
+  )
+    .charAt(0)
+    .toUpperCase();
 
   const openFile = () => {
     inputRef.current?.click();
   };
 
-  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handleUpload = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file =
+      e.target.files?.[0];
 
-    const localPreview = URL.createObjectURL(file);
+    if (!file) {
+      return;
+    }
+
+    const localPreview =
+      URL.createObjectURL(file);
 
     setCropImage(localPreview);
 
     e.target.value = "";
   };
 
-  const avatarSrc = preview || user?.avatarUrl || null;
+  const avatarSrc =
+    preview ||
+    user.avatarUrl ||
+    null;
 
   return (
     <section className="profile-hero">
       <div className="profile-hero__inner">
         <div className="profile-hero__left">
           <div className="profile-hero__avatar-wrapper">
-            <div className="profile-hero__avatar" onClick={openFile}>
-              {avatarSrc ? <img src={avatarSrc} alt="avatar" /> : firstLetter}
+            <div
+              className="profile-hero__avatar"
+              onClick={openFile}
+            >
+              {avatarSrc ? (
+                <img
+                  src={avatarSrc}
+                  alt="avatar"
+                />
+              ) : (
+                firstLetter
+              )}
             </div>
 
             <button
@@ -70,28 +134,45 @@ export const ProfileHero = () => {
           </div>
 
           <div className="profile-hero__user">
-            <h2 className="profile-hero__name">{user?.name}</h2>
+            <h2 className="profile-hero__name">
+              {user.name}
+            </h2>
 
-            <p className="profile-hero__subtitle">Your wine journey</p>
+            <p className="profile-hero__subtitle">
+              Your wine journey
+            </p>
           </div>
         </div>
 
         <div className="profile-hero__stats">
           <div className="profile-hero__stat">
-            <span className="profile-hero__value">{favoritesCount}</span>
-            <span className="profile-hero__label">Favorites</span>
-          </div>
+            <span className="profile-hero__value">
+              {displayedFavoritesCount}
+            </span>
 
-          <div className="profile-hero__stat">
-            <span className="profile-hero__value">{unlockedCount}</span>
-            <span className="profile-hero__label">Achievements</span>
+            <span className="profile-hero__label">
+              Favorites
+            </span>
           </div>
 
           <div className="profile-hero__stat">
             <span className="profile-hero__value">
-              {user?.reviewCount ?? 0}
+              {user.achievementCount ?? 0}
             </span>
-            <span className="profile-hero__label">Reviews</span>
+
+            <span className="profile-hero__label">
+              Achievements
+            </span>
+          </div>
+
+          <div className="profile-hero__stat">
+            <span className="profile-hero__value">
+              {user.reviewCount ?? 0}
+            </span>
+
+            <span className="profile-hero__label">
+              Reviews
+            </span>
           </div>
         </div>
       </div>
@@ -99,26 +180,52 @@ export const ProfileHero = () => {
       {cropImage && (
         <CropAvatarModal
           image={cropImage}
-          onClose={() => setCropImage(null)}
+          onClose={() =>
+            setCropImage(null)
+          }
           onSave={async (blob) => {
-            const localPreview = URL.createObjectURL(blob);
-            setPreview(localPreview);
+            const localPreview =
+              URL.createObjectURL(
+                blob,
+              );
+
+            setPreview(
+              localPreview,
+            );
 
             setCropImage(null);
 
             try {
-              const file = new File([blob], "avatar.jpg", {
-                type: "image/jpeg",
-              });
+              const file =
+                new File(
+                  [blob],
+                  "avatar.jpg",
+                  {
+                    type: "image/jpeg",
+                  },
+                );
 
-              const compressedFile = await compressImage(file);
-              const response = await userApi.uploadAvatar(compressedFile);
+              const compressedFile =
+                await compressImage(
+                  file,
+                );
+
+              const response =
+                await userApi.uploadAvatar(
+                  compressedFile,
+                );
 
               updateUser(response);
 
-              URL.revokeObjectURL(localPreview);
-            } catch (e) {
-              console.error(e);
+              setPreview(null);
+
+              URL.revokeObjectURL(
+                localPreview,
+              );
+            } catch (error) {
+              console.error(
+                error,
+              );
             }
           }}
         />

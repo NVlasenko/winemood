@@ -6,7 +6,7 @@ import {
 } from "react";
 import type { PointerEvent } from "react";
 
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { useWineReviews } from "@/hooks/reviews/useWineReviews";

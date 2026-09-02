@@ -1,36 +1,45 @@
 import { BrowseByMood } from "@/components/home/BrowseByMood";
 import { HeroSection } from "@/components/home/HeroSection";
-
 import { WineCountries } from "@/components/home/WineCountries";
+import { PopularCategories } from "@/components/home/PopularCategories";
+import { QuizCTA } from "@/components/quiz/QuizCTA";
 
+import type { MoodAsset } from "@/types/mood";
+import type { Category } from "@/types/categories";
+import type { CountryWineDto } from "@/types/countryWine";
 
 import "./HomePage.scss";
-import { RevealOnScroll } from "../../components/ui/RevealOnScroll/RevealOnScroll";
-import { PopularCategories } from "@/components/home/PopularCategories/PopularCategories";
-import { QuizCTA } from "@/components/quiz/QuizCTA/QuizCTA";
 
-export const HomePage = () => {
+type HomePageProps = {
+  heroBackgroundUrl: string;
+  moods: MoodAsset[];
+  categories: Category[];
+  countries: CountryWineDto[];
+};
+
+export const HomePage = ({
+  heroBackgroundUrl,
+  moods,
+  categories,
+  countries,
+}: HomePageProps) => {
   return (
     <main className="home-page">
-      <RevealOnScroll>
-        <HeroSection />
-      </RevealOnScroll>
+      <HeroSection
+        heroBackgroundUrl={heroBackgroundUrl}
+      />
 
-      <RevealOnScroll>
-        <BrowseByMood />
-      </RevealOnScroll>
+      <BrowseByMood moods={moods} />
 
-      <RevealOnScroll>
-        <PopularCategories />
-      </RevealOnScroll>
+      <PopularCategories
+        categories={categories}
+      />
 
-      <RevealOnScroll>
-        <QuizCTA />
-      </RevealOnScroll>
+      <QuizCTA />
 
-      <RevealOnScroll>
-        <WineCountries />
-      </RevealOnScroll>
+      <WineCountries
+        countries={countries}
+      />
     </main>
   );
 };

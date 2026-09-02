@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Fragment, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 import arrowRight from "@/assets/images/icons/arrow-right.svg";
 import backArrowIcon from "@/assets/images/icons/arrow-right.svg";

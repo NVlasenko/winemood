@@ -29,7 +29,8 @@ type QuizSessionContextValue = {
   clearWineDetailsBackTarget: () => void;
 };
 
-const QuizSessionContext = createContext<QuizSessionContextValue | null>(null);
+const QuizSessionContext =
+  createContext<QuizSessionContextValue | null>(null);
 
 const QUIZ_RESULT_STORAGE_KEY = "quizResult";
 
@@ -39,8 +40,14 @@ const QUIZ_RESULTS_BACK_TARGET: WineDetailsBackTarget = {
 };
 
 const getSavedQuizResult = (): WineCatalogCard[] | null => {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
   try {
-    const savedQuiz = sessionStorage.getItem(QUIZ_RESULT_STORAGE_KEY);
+    const savedQuiz = sessionStorage.getItem(
+      QUIZ_RESULT_STORAGE_KEY,
+    );
 
     if (!savedQuiz) {
       return null;
@@ -49,60 +56,109 @@ const getSavedQuizResult = (): WineCatalogCard[] | null => {
     const parsed = JSON.parse(savedQuiz);
 
     if (!Array.isArray(parsed)) {
-      sessionStorage.removeItem(QUIZ_RESULT_STORAGE_KEY);
+      sessionStorage.removeItem(
+        QUIZ_RESULT_STORAGE_KEY,
+      );
 
       return null;
     }
 
     return parsed;
   } catch {
-    sessionStorage.removeItem(QUIZ_RESULT_STORAGE_KEY);
+    sessionStorage.removeItem(
+      QUIZ_RESULT_STORAGE_KEY,
+    );
 
     return null;
   }
 };
 
-export const QuizSessionProvider = ({ children }: { children: ReactNode }) => {
+export const QuizSessionProvider = ({
+  children,
+}: {
+  children: ReactNode;
+}) => {
   const { user, isAuthenticated } = useAuth();
 
-  const [quizResult, setQuizResult] = useState<WineCatalogCard[] | null>(() =>
-    getSavedQuizResult()
-  );
+  const [quizResult, setQuizResult] =
+    useState<WineCatalogCard[] | null>(null);
 
-  const [backTarget, setBackTarget] = useState<WineDetailsBackTarget | null>(
-    null
-  );
+  const [isSessionRestored, setIsSessionRestored] =
+    useState(false);
 
-  const previousUserIdRef = useRef<number | null>(user?.id ?? null);
+  const [backTarget, setBackTarget] =
+    useState<WineDetailsBackTarget | null>(
+      null,
+    );
 
-  const clearQuizResult = useCallback(() => {
-    setQuizResult(null);
-
-    sessionStorage.removeItem(QUIZ_RESULT_STORAGE_KEY);
-  }, []);
-  const saveQuizResult = useCallback(
-    (wines: WineCatalogCard[]) => {
-      setQuizResult(wines);
-
-      if (!isAuthenticated) {
-        sessionStorage.setItem(QUIZ_RESULT_STORAGE_KEY, JSON.stringify(wines));
-      }
-    },
-    [isAuthenticated]
-  );
-
-  const markWineDetailsOpenedFromQuizResults = useCallback(() => {
-    setBackTarget(QUIZ_RESULTS_BACK_TARGET);
-  }, []);
-
-  const clearWineDetailsBackTarget = useCallback(() => {
-    setBackTarget(null);
-  }, []);
+  const previousUserIdRef =
+    useRef<number | null>(null);
 
   useEffect(() => {
-    const previousUserId = previousUserIdRef.current;
+    const savedResult =
+      getSavedQuizResult();
 
-    const currentUserId = user?.id ?? null;
+    if (savedResult) {
+      setQuizResult(savedResult);
+    }
+
+    previousUserIdRef.current =
+      user?.id ?? null;
+
+    setIsSessionRestored(true);
+  }, []);
+
+  const clearQuizResult =
+    useCallback(() => {
+      setQuizResult(null);
+
+      if (typeof window !== "undefined") {
+        sessionStorage.removeItem(
+          QUIZ_RESULT_STORAGE_KEY,
+        );
+      }
+    }, []);
+
+  const saveQuizResult =
+    useCallback(
+      (wines: WineCatalogCard[]) => {
+        setQuizResult(wines);
+
+        if (
+          !isAuthenticated &&
+          typeof window !== "undefined"
+        ) {
+          sessionStorage.setItem(
+            QUIZ_RESULT_STORAGE_KEY,
+            JSON.stringify(wines),
+          );
+        }
+      },
+      [isAuthenticated],
+    );
+
+  const markWineDetailsOpenedFromQuizResults =
+    useCallback(() => {
+      setBackTarget(
+        QUIZ_RESULTS_BACK_TARGET,
+      );
+    }, []);
+
+  const clearWineDetailsBackTarget =
+    useCallback(() => {
+      setBackTarget(null);
+    }, []);
+
+  useEffect(() => {
+    if (!isSessionRestored) {
+      return;
+    }
+
+    const previousUserId =
+      previousUserIdRef.current;
+
+    const currentUserId =
+      user?.id ?? null;
 
     if (
       previousUserId !== null &&
@@ -113,13 +169,22 @@ export const QuizSessionProvider = ({ children }: { children: ReactNode }) => {
       setBackTarget(null);
     }
 
-    if (previousUserId !== null && !isAuthenticated) {
+    if (
+      previousUserId !== null &&
+      !isAuthenticated
+    ) {
       clearQuizResult();
       setBackTarget(null);
     }
 
-    previousUserIdRef.current = currentUserId;
-  }, [user?.id, isAuthenticated, clearQuizResult]);
+    previousUserIdRef.current =
+      currentUserId;
+  }, [
+    user?.id,
+    isAuthenticated,
+    clearQuizResult,
+    isSessionRestored,
+  ]);
 
   const value = useMemo(
     () => ({
@@ -139,21 +204,26 @@ export const QuizSessionProvider = ({ children }: { children: ReactNode }) => {
       clearQuizResult,
       markWineDetailsOpenedFromQuizResults,
       clearWineDetailsBackTarget,
-    ]
+    ],
   );
 
   return (
-    <QuizSessionContext.Provider value={value}>
+    <QuizSessionContext.Provider
+      value={value}
+    >
       {children}
     </QuizSessionContext.Provider>
   );
 };
 
 export const useQuizSession = () => {
-  const context = useContext(QuizSessionContext);
+  const context =
+    useContext(QuizSessionContext);
 
   if (!context) {
-    throw new Error("useQuizSession must be used within QuizSessionProvider");
+    throw new Error(
+      "useQuizSession must be used within QuizSessionProvider",
+    );
   }
 
   return context;

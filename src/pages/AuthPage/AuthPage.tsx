@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import {
+  useFetcher,
+  useNavigate,
+  useSearchParams,
+} from "react-router";
 import { useAuth } from "@/context/AuthContext";
 
 import arrowRightIcon from "@/assets/images/icons/arrow-right.svg";
-import { useSiteAssets } from "@/hooks/assets/siteAssets/useSiteAssets";
 import NameIcon from "@/assets/images/auth/name.svg?react";
 import EmailIcon from "@/assets/images/auth/email.svg?react";
 import PasswordHiddenIcon from "@/assets/images/auth/password.svg?react";
@@ -13,6 +16,9 @@ import "./AuthPage.scss";
 import { ApiError } from "@/shared/api/httpClient";
 
 type AuthMode = "register" | "login";
+type AuthPageProps = {
+  authBackgroundUrl: string;
+};
 
 type RegisterForm = {
   name: string;
@@ -136,22 +142,6 @@ const getRegisterFieldError = (
   }
 };
 
-const getLoginFieldError = (
-  field: keyof LoginForm,
-  form: LoginForm,
-): string => {
-  switch (field) {
-    case "email":
-      return validateEmail(form.email);
-
-      case "password":
-        return form.password.length === 0 ? "Password is required" : "";
-
-    default:
-      return "";
-  }
-};
-
 type SuccessModalProps = {
   isOpen: boolean;
   title: string;
@@ -180,16 +170,16 @@ const AuthSuccessModal = ({ isOpen, title, text }: SuccessModalProps) => {
   );
 };
 
-export const AuthPage = () => {
-  const {
-    data: siteAssets,
-    isLoading: isSiteAssetsLoading,
-    isError: isSiteAssetsError,
-  } = useSiteAssets();
-  
-  const authBackground =
-    siteAssets?.auth.backgroundUrl;
+export const AuthPage = ({
+  authBackgroundUrl,
+}: AuthPageProps) => {
   const navigate = useNavigate();
+
+  const loginFetcher = useFetcher<{
+    success: boolean;
+    message?: string;
+  }>();
+
   const {
     register,
     login,
@@ -259,6 +249,61 @@ useEffect(() => {
     }
   }, [mode, emailFromQuery]);
 
+  useEffect(() => {
+    if (
+      loginFetcher.state !==
+      "idle"
+    ) {
+      return;
+    }
+  
+    if (!loginFetcher.data) {
+      return;
+    }
+  
+    if (
+      !loginFetcher.data.success
+    ) {
+      setSubmitError(
+        loginFetcher.data.message ??
+          "Invalid email or password",
+      );
+  
+      setIsSubmitting(false);
+  
+      return;
+    }
+  
+    setIsSuccessModalOpen(true);
+  
+    setLoginForm(
+      DEFAULT_LOGIN_FORM,
+    );
+  
+    setLoginTouched({});
+  
+    setIsLoginPasswordVisible(
+      false,
+    );
+  
+    setIsSubmitting(false);
+  
+    const timeoutId =
+      window.setTimeout(() => {
+        navigate("/profile");
+      }, PROFILE_NAVIGATION_DELAY_MS);
+  
+    return () => {
+      window.clearTimeout(
+        timeoutId,
+      );
+    };
+  }, [
+    loginFetcher.state,
+    loginFetcher.data,
+    navigate,
+  ]);
+
   const registerErrors = useMemo<RegisterErrors>(() => {
     return {
       name: getRegisterFieldError("name", registerForm),
@@ -270,14 +315,10 @@ useEffect(() => {
 
   const loginErrors = useMemo<LoginErrors>(() => {
     return {
-      email: loginTouched.email
-        ? getLoginFieldError("email", loginForm)
-        : "",
-      password: loginTouched.password
-        ? getLoginFieldError("password", loginForm)
-        : "",
+      email: "",
+      password: "",
     };
-  }, [loginForm, loginTouched]);
+  }, []);
 
   const isRegisterFormValid =
     !registerErrors.name &&
@@ -285,7 +326,6 @@ useEffect(() => {
     !registerErrors.password &&
     !registerErrors.confirmPassword;
 
-  const isLoginFormValid = !loginErrors.email && !loginErrors.password;
 
   const isNameValid = registerForm.name.trim() !== "" && !registerErrors.name;
 
@@ -411,70 +451,109 @@ useEffect(() => {
   );
 
   const handleLoginSubmit = useCallback(
-    async (event: React.FormEvent<HTMLFormElement>) => {
+    async (
+      event: React.FormEvent<HTMLFormElement>,
+    ) => {
       event.preventDefault();
-
+  
       if (isSubmitting) {
         return;
       }
-
-      setLoginTouched({
-        email: true,
-        password: true,
-      });
-
-      if (!isLoginFormValid) {
-        setSubmitError("Please enter a valid email and password");
-
+  
+      const email =
+        loginForm.email.trim();
+  
+      const password =
+        loginForm.password;
+  
+      if (!email) {
+        setSubmitError(
+          "Email is required",
+        );
+  
         return;
       }
-
+  
+      if (!password) {
+        setSubmitError(
+          "Password is required",
+        );
+  
+        return;
+      }
+  
       setSubmitError("");
+      setLoginTouched({});
       setIsSubmitting(true);
-
+  
       try {
         await login({
-          email: loginForm.email.trim(),
-          password: loginForm.password,
+          email,
+          password,
         });
 
-        setIsSuccessModalOpen(true);
-
-        setLoginForm(DEFAULT_LOGIN_FORM);
-        setLoginTouched({});
-        setIsLoginPasswordVisible(false);
-
-        window.setTimeout(() => {
-          navigate("/profile");
-        }, PROFILE_NAVIGATION_DELAY_MS);
+        const formData =
+          new FormData();
+  
+        formData.set(
+          "intent",
+          "login",
+        );
+  
+        formData.set(
+          "email",
+          email,
+        );
+  
+        formData.set(
+          "password",
+          password,
+        );
+  
+        await loginFetcher.submit(
+          formData,
+          {
+            method: "post",
+            action: "/auth",
+          },
+        );
       } catch (error) {
-        console.error("Login failed:", error);
-      
-        if (error instanceof ApiError && error.status === 401) {
-          setSubmitError("Invalid email or password");
+        console.error(
+          "Login failed:",
+          error,
+        );
+  
+        if (
+          error instanceof ApiError &&
+          error.status === 401
+        ) {
+          setSubmitError(
+            "Invalid email or password",
+          );
         } else {
-          setSubmitError("Something went wrong. Please try again.");
+          setSubmitError(
+            "Something went wrong. Please try again.",
+          );
         }
-      } finally {
+  
         setIsSubmitting(false);
       }
     },
-    [isLoginFormValid, isSubmitting, login, loginForm, navigate],
+    [
+      isSubmitting,
+      loginForm,
+      login,
+      loginFetcher,
+    ],
   );
 
   return (
     <>
       <main
         className="auth-page"
-        style={
-          !isSiteAssetsLoading &&
-          !isSiteAssetsError &&
-          authBackground
-            ? {
-                backgroundImage: `url(${authBackground})`,
-              }
-            : undefined
-        }
+        style={{
+          backgroundImage: `url(${authBackgroundUrl})`,
+        }}
       >
         <div className="auth-page__overlay" />
 

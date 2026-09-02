@@ -1,12 +1,12 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import { reactRouter } from "@react-router/dev/vite";
 import svgr from "vite-plugin-svgr";
 import { visualizer } from "rollup-plugin-visualizer";
 import path from "path";
 
 export default defineConfig({
   plugins: [
-    react(),
+    reactRouter(),
     svgr(),
 
     visualizer({

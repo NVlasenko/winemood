@@ -22,7 +22,10 @@ export const MoodLinkButton = memo(
   }: Props) => {
     return (
       <button
-        className={["mood-link-button", className]
+        className={[
+          "mood-link-button",
+          className,
+        ]
           .filter(Boolean)
           .join(" ")}
         type={type}
@@ -31,8 +34,10 @@ export const MoodLinkButton = memo(
       >
         <MoodArrow className="mood-link-button__arrow" />
 
-        <span className="mood-link-button__text">{text}</span>
+        <span className="mood-link-button__text">
+          {text}
+        </span>
       </button>
     );
-  }
+  },
 );

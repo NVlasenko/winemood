@@ -1,4 +1,6 @@
-import { useMemo } from "react";
+import {
+  useMemo,
+} from "react";
 
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { SectionState } from "@/components/ui/SectionState";
@@ -12,108 +14,184 @@ import { useExpandableSection } from "@/hooks/ui/useExpandableSection";
 import { AchievementCard } from "../AchievementCard";
 import { ALL_ACHIEVEMENTS } from "../config/achievementsConfig";
 
+import type { UserDto } from "@/types/user";
+import type { Achievement } from "@/types/achievement";
+
 import "./ProfileAchievements.scss";
 
 const INITIAL_VISIBLE_COUNT = 4;
 
-export const ProfileAchievements = () => {
-  const { user } = useAuth();
+type ProfileAchievementsProps = {
+  initialUser: UserDto;
+  initialAchievements: Achievement[];
+};
+
+export const ProfileAchievements = ({
+  initialUser,
+  initialAchievements,
+}: ProfileAchievementsProps) => {
+  const {
+    user: authUser,
+  } = useAuth();
 
   const {
-    data: achievements = [],
+    data: achievements =
+      initialAchievements,
     isLoading,
     isError,
-  } = useAchievements(!!user);
-
-  const { isOpen, isVisible, titleRef, toggleOpen } = useExpandableSection();
-
-  const mergedAchievements = useMemo(() => {
-    return ALL_ACHIEVEMENTS.map((base) => {
-      const achievement = achievements.find((item) => item.code === base.code);
-
-      return {
-        ...base,
-        ...achievement,
-
-        unlockedAt: achievement?.unlockedAt ?? null,
-
-        progress: achievement?.progress,
-
-        total: achievement?.total,
-
-        iconUrl: achievement?.iconUrl,
-      };
-    });
-  }, [achievements]);
-
-  const initialAchievements = useMemo(
-    () => mergedAchievements.slice(0, INITIAL_VISIBLE_COUNT),
-    [mergedAchievements]
+  } = useAchievements(
+    !!(authUser || initialUser),
+    initialAchievements,
   );
 
-  const extraAchievements = useMemo(
-    () => mergedAchievements.slice(INITIAL_VISIBLE_COUNT),
-    [mergedAchievements]
-  );
+  const {
+    isOpen,
+    isVisible,
+    titleRef,
+    toggleOpen,
+  } = useExpandableSection();
 
-  const hasMore = extraAchievements.length > 0;
+  const mergedAchievements =
+    useMemo(() => {
+      return ALL_ACHIEVEMENTS.map(
+        (base) => {
+          const achievement =
+            achievements.find(
+              (item) =>
+                item.code === base.code,
+            );
 
-  if (!user) {
-    return null;
-  }
+          return {
+            ...base,
+            ...achievement,
+
+            unlockedAt:
+              achievement?.unlockedAt ??
+              null,
+
+            progress:
+              achievement?.progress,
+
+            total:
+              achievement?.total,
+
+            iconUrl:
+              achievement?.iconUrl,
+          };
+        },
+      );
+    }, [achievements]);
+
+  const visibleAchievements =
+    useMemo(
+      () =>
+        mergedAchievements.slice(
+          0,
+          INITIAL_VISIBLE_COUNT,
+        ),
+      [mergedAchievements],
+    );
+
+  const extraAchievements =
+    useMemo(
+      () =>
+        mergedAchievements.slice(
+          INITIAL_VISIBLE_COUNT,
+        ),
+      [mergedAchievements],
+    );
+
+  const hasMore =
+    extraAchievements.length > 0;
 
   return (
     <section className="profile-achievements">
-      <div ref={titleRef} className="profile-achievements__top">
-        <SectionTitle title="Achievements" />
+      <div
+        ref={titleRef}
+        className="profile-achievements__top"
+      >
+        <SectionTitle
+          title="Achievements"
+        />
       </div>
 
-      {isLoading && (
-        <SectionState variant="loading" text="Loading achievements..." />
-      )}
+      {isLoading &&
+        !achievements.length && (
+          <SectionState
+            variant="loading"
+            text="Loading achievements..."
+          />
+        )}
 
-      {isError && !isLoading && (
-        <SectionState variant="error" text="Failed to load achievements." />
-      )}
+      {isError &&
+        !achievements.length && (
+          <SectionState
+            variant="error"
+            text="Failed to load achievements."
+          />
+        )}
 
-      {!isLoading && !isError && (
+      {!!achievements.length && (
         <>
           <div className="profile-achievements__list">
             <div className="profile-achievements__grid">
-              {initialAchievements.map((achievement) => (
-                <AchievementCard
-                  key={achievement.code}
-                  achievement={achievement}
-                />
-              ))}
+              {visibleAchievements.map(
+                (achievement) => (
+                  <AchievementCard
+                    key={
+                      achievement.code
+                    }
+                    achievement={
+                      achievement
+                    }
+                  />
+                ),
+              )}
             </div>
 
-            {hasMore && isOpen && (
-              <div
-                className={`profile-achievements__extra ${
-                  isVisible ? "profile-achievements__extra--visible" : ""
-                }`}
-              >
-                <div className="profile-achievements__extra-inner">
-                  <div className="profile-achievements__grid">
-                    {extraAchievements.map((achievement) => (
-                      <AchievementCard
-                        key={achievement.code}
-                        achievement={achievement}
-                      />
-                    ))}
+            {hasMore &&
+              isOpen && (
+                <div
+                  className={`profile-achievements__extra ${
+                    isVisible
+                      ? "profile-achievements__extra--visible"
+                      : ""
+                  }`}
+                >
+                  <div className="profile-achievements__extra-inner">
+                    <div className="profile-achievements__grid">
+                      {extraAchievements.map(
+                        (
+                          achievement,
+                        ) => (
+                          <AchievementCard
+                            key={
+                              achievement.code
+                            }
+                            achievement={
+                              achievement
+                            }
+                          />
+                        ),
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
 
           {hasMore && (
             <div className="profile-achievements__actions">
               <MoodLinkButton
                 className="profile-achievements__view-all"
-                text={isOpen ? "Hide Achievements" : "View All Achievements"}
-                onClick={toggleOpen}
+                text={
+                  isOpen
+                    ? "Hide Achievements"
+                    : "View All Achievements"
+                }
+                onClick={
+                  toggleOpen
+                }
               />
             </div>
           )}

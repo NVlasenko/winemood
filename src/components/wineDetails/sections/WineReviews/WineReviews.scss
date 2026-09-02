@@ -176,10 +176,10 @@
     justify-content: center;
     opacity: 1;
     transform: scale(1);
-
-    transition: opacity 0.45s ease, transform 0.45s ease;
-
-    animation: wineReviewsVisualFade 0.45s ease;
+  
+    transition:
+      opacity 0.45s ease,
+      transform 0.45s ease;
   }
 
   &__bg {

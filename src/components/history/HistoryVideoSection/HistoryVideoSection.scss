@@ -43,15 +43,35 @@
     /* stylelint-enable */
   }
 
-  &__video {
-    width: 100%;
-    height: 100%;
+  &__poster,
+&__video {
+  position: absolute;
+  inset: 0;
 
-    object-fit: cover;
-    object-position: 70% center;
+  width: 100%;
+  height: 100%;
 
-    transform: scale(1.03);
+  object-fit: cover;
+  object-position: 70% center;
+
+  transform: scale(1.03);
+}
+
+&__poster {
+  z-index: 0;
+}
+
+&__video {
+  z-index: 1;
+
+  opacity: 0;
+
+  transition: opacity 0.35s ease;
+
+  &--ready {
+    opacity: 1;
   }
+}
 
   &__overlay {
     position: absolute;
@@ -64,7 +84,7 @@
       rgba(0, 0, 0, 0.28) 85%,
       rgba(0, 0, 0, 0.4) 100%
     );
-
+    z-index: 2;
     pointer-events: none;
   }
 
@@ -72,7 +92,7 @@
     position: absolute;
     left: 50%;
     bottom: 48px;
-    z-index: 2;
+    z-index: 3;
 
     width: min(90%, 720px);
     margin: 0;

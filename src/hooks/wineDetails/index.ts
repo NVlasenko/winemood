@@ -1,1 +1,0 @@
-export { useWineDetails } from "./useWineDetails";

@@ -1,6 +1,7 @@
 import {
   createCookie,
   data,
+  redirect,
   useLoaderData,
 } from "react-router";
 
@@ -53,10 +54,8 @@ export async function action({
     );
 
   if (intent === "logout") {
-    return data(
-      {
-        success: true,
-      },
+    return redirect(
+      "/",
       {
         headers: {
           "Set-Cookie":

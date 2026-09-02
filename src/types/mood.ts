@@ -7,13 +7,6 @@ export type MoodTheme =
 
 export type MoodCardTheme = Exclude<MoodTheme, "default">;
 
-export interface Mood {
-  id: number;
-  title: string;
-  image: string;
-  theme: MoodCardTheme;
-}
-
 export type MoodAsset = {
   id: MoodCardTheme;
   title: string;

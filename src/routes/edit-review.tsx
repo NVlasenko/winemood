@@ -1,5 +1,5 @@
-import { EditReviewPage } from "@/components/wineDetails/sections/WineReviews/config/EditReviewPage";
+import { WriteReviewPage } from "@/pages/WriteReviewPage";
 
 export default function EditReview() {
-  return <EditReviewPage />;
+  return <WriteReviewPage />;
 }

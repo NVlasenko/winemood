@@ -5,7 +5,6 @@ import {
 
 import { useQueryClient } from "@tanstack/react-query";
 
-import { WineDetails } from "@/components/wineDetails/WineDetails";
 import { WineDetailsErrorState } from "@/components/wineDetails/sections/WineDetailsErrorState";
 import { WineDetailsNotFoundState } from "@/components/wineDetails/sections/WineDetailsNotFoundState";
 
@@ -13,6 +12,7 @@ import { useAuth } from "@/context/AuthContext";
 
 import { getWineById } from "@/shared/api/wineApi";
 import { refetchAchievementsSafe } from "@/shared/lib/refetchAchievementsSafe";
+import { WineDetails } from "@/components/wineDetails";
 
 import type { Wine } from "@/types/wine";
 import type { WineCatalogCard } from "@/types/wineCatalogCard";

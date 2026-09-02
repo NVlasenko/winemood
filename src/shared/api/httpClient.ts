@@ -1,19 +1,22 @@
 const BASE_URL =
   import.meta.env.VITE_API_BASE_URL;
 
+const MAX_NETWORK_RETRIES = 2;
+const NETWORK_RETRY_DELAY_MS = 1_000;
+
+const SSR_REQUEST_TIMEOUT_MS = 3_000;
+
 type HttpClientOptions = Omit<
   RequestInit,
   "body"
 > & {
   body?: BodyInit | object | null;
-
   skipJsonContentType?: boolean;
-
   skipAuth?: boolean;
   authToken?: string | null;
 };
 
-export type ApiFieldError = {
+type ApiFieldError = {
   field: string;
   message: string;
 };
@@ -39,9 +42,7 @@ export class ApiError extends Error {
     super(message);
 
     this.name = "ApiError";
-
     this.status = status;
-
     this.data = data;
 
     Object.setPrototypeOf(
@@ -51,25 +52,37 @@ export class ApiError extends Error {
   }
 }
 
+export class SsrTimeoutError extends Error {
+  timeoutMs: number;
+
+  constructor(timeoutMs: number) {
+    super(
+      `SSR request timed out after ${timeoutMs}ms`,
+    );
+
+    this.name = "SsrTimeoutError";
+    this.timeoutMs = timeoutMs;
+
+    Object.setPrototypeOf(
+      this,
+      SsrTimeoutError.prototype,
+    );
+  }
+}
+
 const getAccessToken = () => {
-  if (
-    typeof window === "undefined"
-  ) {
+  if (typeof window === "undefined") {
     return null;
   }
 
   const token =
-    localStorage.getItem(
-      "accessToken",
-    );
+    localStorage.getItem("accessToken");
 
-  return (
-    token &&
+  return token &&
     token !== "undefined" &&
     token !== "null"
-      ? token
-      : null
-  );
+    ? token
+    : null;
 };
 
 const buildUrl = (
@@ -88,9 +101,7 @@ const parseResponseBody = async (
   response: Response,
 ) => {
   const contentType =
-    response.headers.get(
-      "content-type",
-    );
+    response.headers.get("content-type");
 
   if (
     !contentType?.includes(
@@ -104,6 +115,137 @@ const parseResponseBody = async (
     return await response.json();
   } catch {
     return null;
+  }
+};
+
+const sleep = (
+  delayMs: number,
+) =>
+  new Promise<void>((resolve) => {
+    setTimeout(resolve, delayMs);
+  });
+
+const isSafeToRetry = (
+  method?: string,
+) => {
+  const normalizedMethod =
+    (method ?? "GET").toUpperCase();
+
+  return (
+    normalizedMethod === "GET" ||
+    normalizedMethod === "HEAD"
+  );
+};
+
+const fetchWithNetworkRetry = async (
+  url: string,
+  init: RequestInit,
+): Promise<Response> => {
+  const canRetry =
+    isSafeToRetry(init.method);
+
+  let attempt = 0;
+
+  while (true) {
+    try {
+      return await fetch(
+        url,
+        init,
+      );
+    } catch (error) {
+
+      if (init.signal?.aborted) {
+        throw error;
+      }
+
+      if (
+        !canRetry ||
+        attempt >=
+          MAX_NETWORK_RETRIES
+      ) {
+        throw error;
+      }
+
+      attempt += 1;
+
+      await sleep(
+        NETWORK_RETRY_DELAY_MS *
+          attempt,
+      );
+    }
+  }
+};
+
+const fetchWithSsrTimeout = async (
+  url: string,
+  init: RequestInit,
+): Promise<Response> => {
+  const isServer =
+    typeof window === "undefined";
+
+  const shouldUseTimeout =
+    isServer &&
+    isSafeToRetry(init.method);
+
+  if (!shouldUseTimeout) {
+    return fetchWithNetworkRetry(
+      url,
+      init,
+    );
+  }
+
+  const timeoutController =
+    new AbortController();
+
+  const originalSignal =
+    init.signal;
+
+  const handleOriginalAbort =
+    () => {
+      timeoutController.abort(
+        originalSignal?.reason,
+      );
+    };
+
+  if (originalSignal) {
+    if (originalSignal.aborted) {
+      handleOriginalAbort();
+    } else {
+      originalSignal.addEventListener(
+        "abort",
+        handleOriginalAbort,
+        {
+          once: true,
+        },
+      );
+    }
+  }
+
+  const timeoutId =
+  setTimeout(() => {
+    timeoutController.abort(
+      new SsrTimeoutError(
+        SSR_REQUEST_TIMEOUT_MS,
+      ),
+    );
+  }, SSR_REQUEST_TIMEOUT_MS);
+
+  try {
+    return await fetchWithNetworkRetry(
+      url,
+      {
+        ...init,
+        signal:
+          timeoutController.signal,
+      },
+    );
+  } finally {
+    clearTimeout(timeoutId);
+
+    originalSignal?.removeEventListener(
+      "abort",
+      handleOriginalAbort,
+    );
   }
 };
 
@@ -160,15 +302,17 @@ export const httpClient =
             | null
             | undefined);
 
-    const response = await fetch(
-      buildUrl(endpoint),
-      {
-        ...rest,
-        headers:
-          requestHeaders,
-        body: preparedBody,
-      },
-    );
+    const response =
+      await fetchWithSsrTimeout(
+        buildUrl(endpoint),
+        {
+          ...rest,
+          headers:
+            requestHeaders,
+          body:
+            preparedBody,
+        },
+      );
 
     const data =
       await parseResponseBody(
@@ -177,7 +321,9 @@ export const httpClient =
 
     if (!response.ok) {
       const errorData =
-        data as ApiErrorResponse | null;
+        data as
+          | ApiErrorResponse
+          | null;
 
       const message =
         errorData?.message ??

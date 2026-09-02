@@ -4,7 +4,6 @@ export const COLORS = {
 
   wineDark: "rgba(102, 7, 8, 1)",
   wine: "rgba(164, 22, 26, 1)",
-  wineShadow: "rgba(102, 7, 8, 0.55)",
 
   celebration: "rgba(247, 170, 251, 1)",
   celebrationDark: "rgba(168, 56, 174, 1)",

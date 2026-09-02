@@ -154,8 +154,7 @@ export async function loader({
 
   return {
     wines: response.data,
-    currentPage:
-      response.meta.currentPage,
+    currentPage: page,
     totalPages:
       response.meta.totalPages,
   };

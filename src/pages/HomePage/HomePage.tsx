@@ -1,8 +1,8 @@
 import { BrowseByMood } from "@/components/home/BrowseByMood";
 import { HeroSection } from "@/components/home/HeroSection";
 import { WineCountries } from "@/components/home/WineCountries";
-import { PopularCategories } from "@/components/home/PopularCategories/PopularCategories";
-import { QuizCTA } from "@/components/quiz/QuizCTA/QuizCTA";
+import { PopularCategories } from "@/components/home/PopularCategories";
+import { QuizCTA } from "@/components/quiz/QuizCTA";
 
 import type { MoodAsset } from "@/types/mood";
 import type { Category } from "@/types/categories";

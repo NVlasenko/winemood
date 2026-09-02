@@ -15,9 +15,6 @@ export const useAchievements = (
     isAuthenticated,
   } = useAuth();
 
-  const hasInitialData =
-    initialData !== undefined;
-
   return useQuery<Achievement[]>({
     queryKey: [
       "achievements",
@@ -40,7 +37,6 @@ export const useAchievements = (
 
     gcTime: 0,
 
-    refetchOnMount:
-      !hasInitialData,
+    refetchOnMount: true,
   });
 };

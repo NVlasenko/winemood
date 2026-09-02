@@ -13,7 +13,7 @@ export type MetadataMoodOptions = {
   seasons: MetadataOption[];
 };
 
-export type MetadataOptions =
+type MetadataOptions =
   | MetadataOption[]
   | MetadataFoodGroup[]
   | MetadataMoodOptions;

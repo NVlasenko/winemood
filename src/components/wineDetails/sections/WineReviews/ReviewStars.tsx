@@ -8,6 +8,7 @@ export const ReviewStars = ({ rating }: Props) => {
   return (
     <div
       className="wine-reviews__stars"
+      role="img"
       aria-label={`Rating ${rating} out of 5`}
     >
       {STARS.map((star) => {

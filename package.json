@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "react-router dev",
     "build": "tsc -b && react-router build",
-    "start": "react-router-serve ./build/server/index.js",
+    "start": "react-router-serve ./build/server/nodejs_*/index.js",
     "lint": "eslint ."
   },
   "dependencies": {

@@ -15,7 +15,12 @@ export const ReviewCard = ({ review, isMine }: Props) => {
         isMine ? "wine-reviews__card--mine" : ""
       }`}
     >
-      <img className="wine-reviews__quote" src={quoteIcon} alt="" />
+      <img className="wine-reviews__quote" 
+      src={quoteIcon} 
+      alt="" 
+      loading="lazy"
+      decoding="async"
+      />
 
       <p className="wine-reviews__text">{review.reviewText}</p>
 
@@ -27,6 +32,8 @@ export const ReviewCard = ({ review, isMine }: Props) => {
             className="wine-reviews__avatar"
             src={review.avatarUrl}
             alt={review.userName}
+            loading="lazy"
+            decoding="async"
           />
         ) : (
           <div className="wine-reviews__avatar" aria-hidden="true">

@@ -14,14 +14,17 @@ export const AchievementCard = ({
 
       <div className="achievement__icon">
         {achievement.iconUrl ? (
-          <img src={achievement.iconUrl} alt="" />
+          <img src={achievement.iconUrl} alt="" 
+          loading="lazy"
+          decoding="async" 
+          />
         ) : (
           <div className="achievement__placeholder" />
         )}
       </div>
 
       <div className="achievement__content">
-        <h4>{achievement.title}</h4>
+        <h3>{achievement.title}</h3>
         <p>{achievement.description}</p>
       </div>
     </div>

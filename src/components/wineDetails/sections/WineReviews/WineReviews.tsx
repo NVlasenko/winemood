@@ -143,6 +143,8 @@ export const WineReviews = ({
                     }
                     alt=""
                     aria-hidden="true"
+                    loading="lazy"
+                    decoding="async"
                   />
                 )}
 
@@ -154,6 +156,8 @@ export const WineReviews = ({
                   }`}
                   src={wine.imageUrl}
                   alt={wine.name}
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
 

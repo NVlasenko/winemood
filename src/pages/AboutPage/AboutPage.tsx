@@ -2,7 +2,7 @@ import { AboutHero } from "@/components/about/AboutHero";
 import { AboutFeatures } from "@/components/about/AboutFeatures";
 import { AboutAdvantages } from "@/components/about/AboutAdvantages";
 import { AboutHowItWorks } from "@/components/about/AboutHowItWorks";
-import { QuizCTA } from "@/components/quiz/QuizCTA/QuizCTA";
+import { QuizCTA } from "@/components/quiz/QuizCTA";
 
 import type { SiteAssets } from "@/types/siteAssets";
 

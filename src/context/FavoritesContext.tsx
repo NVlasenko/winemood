@@ -49,6 +49,7 @@ export const FavoritesProvider = ({
     isAuthenticated,
     isLoadingUser,
     user,
+    refreshUser,
   } = useAuth();
 
   const [
@@ -254,6 +255,7 @@ export const FavoritesProvider = ({
             queryClient,
             user?.id,
           );
+          await refreshUser();
         } catch (error) {
           console.error(
             "Toggle favorite failed",
@@ -293,6 +295,7 @@ export const FavoritesProvider = ({
       [
         favoriteSet,
         user?.id,
+        refreshUser,
       ],
     );
 

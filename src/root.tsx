@@ -9,7 +9,7 @@ import {
 } from "react-router";
 
 import { QueryClientProvider } from "@tanstack/react-query";
-
+import { AppLoadingProvider } from "@/context/AppLoadingContext";
 import { App } from "@/App";
 
 import { AnalyticsPageViewTracker } from "@/components/analytics/AnalyticsPageViewTracker";
@@ -267,10 +267,12 @@ export default function Root() {
               }
             >
               <QuizSessionProvider>
-                <AnalyticsSessionTracker />
-                <AnalyticsPageViewTracker />
+                <AppLoadingProvider>
+                  <AnalyticsSessionTracker />
+                  <AnalyticsPageViewTracker />
 
-                <App />
+                  <App />
+                </AppLoadingProvider>
               </QuizSessionProvider>
             </FavoritesProvider>
           </AuthRequiredProvider>

@@ -12,12 +12,18 @@ import { AchievementUnlockedModal } from "./components/profile/AchievementUnlock
 
 import { ROUTES } from "@/constants/routes";
 
+import { useAppLoading } from "@/context/AppLoadingContext";
+
 import { useAchievementListener } from "./hooks/achievements/useAchievementListener";
 
 import "./App.scss";
 
 export const App = () => {
   const location = useLocation();
+
+  const {
+    isBackendLoading,
+  } = useAppLoading();
 
   const {
     unlocked,
@@ -44,7 +50,8 @@ export const App = () => {
   const shouldHideFooter =
     isReviewPage ||
     isQuizPage ||
-    isAuthPage;
+    isAuthPage ||
+    isBackendLoading;
 
   return (
     <div className="App">

@@ -7,6 +7,8 @@ import {
   useNavigation,
 } from "react-router";
 
+import { useAppLoading } from "@/context/AppLoadingContext";
+
 import "./NavigationLoadingOverlay.scss";
 
 const SHOW_DELAY_MS = 3_000;
@@ -17,8 +19,16 @@ export const NavigationLoadingOverlay =
     const navigation =
       useNavigation();
 
+    const {
+      isBackendLoading,
+    } = useAppLoading();
+
     const isNavigating =
       navigation.state !== "idle";
+
+    const isLoading =
+      isNavigating ||
+      isBackendLoading;
 
     const [
       isVisible,
@@ -31,17 +41,25 @@ export const NavigationLoadingOverlay =
     ] = useState(false);
 
     useEffect(() => {
-      if (!isNavigating) {
+      if (!isLoading) {
         setIsVisible(false);
         setIsLongWait(false);
 
         return;
       }
 
-      const showTimer =
-        window.setTimeout(() => {
-          setIsVisible(true);
-        }, SHOW_DELAY_MS);
+      let showTimer:
+        | number
+        | undefined;
+
+      if (isBackendLoading) {
+        setIsVisible(true);
+      } else {
+        showTimer =
+          window.setTimeout(() => {
+            setIsVisible(true);
+          }, SHOW_DELAY_MS);
+      }
 
       const longWaitTimer =
         window.setTimeout(() => {
@@ -49,17 +67,25 @@ export const NavigationLoadingOverlay =
         }, LONG_WAIT_DELAY_MS);
 
       return () => {
-        window.clearTimeout(
-          showTimer,
-        );
+        if (showTimer) {
+          window.clearTimeout(
+            showTimer,
+          );
+        }
 
         window.clearTimeout(
           longWaitTimer,
         );
       };
-    }, [isNavigating]);
+    }, [
+      isLoading,
+      isBackendLoading,
+    ]);
 
-    if (!isVisible) {
+    if (
+      !isVisible &&
+      !isBackendLoading
+    ) {
       return null;
     }
 
@@ -131,6 +157,7 @@ export const NavigationLoadingOverlay =
 
             <div className="navigation-loading__progress">
               <span className="navigation-loading__progress-dot" />
+
               <span className="navigation-loading__progress-text">
                 Loading your experience
               </span>

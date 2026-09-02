@@ -15,6 +15,7 @@ import { QuizPreparingResults } from "@/components/quiz/QuizPreparingResults";
 import { QuizQuestion } from "@/components/quiz/QuizQuestion";
 import { QuizResults } from "@/components/quiz/QuizResults";
 
+
 import {
   beginnerQuestions,
   connoisseurQuestions,
@@ -24,8 +25,11 @@ import {
 import { StepFlowLayout } from "@/components/ui/StepFlowLayout";
 
 import { quizApi } from "@/shared/api/quizApi";
+import { userApi } from "@/shared/api/userApi";
+
 import { buildQuizRequest } from "@/utils/buildQuizRequest";
 
+import { useAuth } from "@/context/AuthContext";
 import { useQuizSession } from "@/context/QuizSessionContext";
 
 import "./QuizPage.scss";
@@ -34,6 +38,7 @@ const QUIZ_TOTAL_STEPS = 6;
 const FIRST_QUESTION_STEP = 1;
 
 const QUIZ_DRAFT_STORAGE_KEY = "quizDraft:v1";
+const QUIZ_VIEW_STORAGE_KEY = "quizView:v1";
 
 type QuizAnswers = Record<number, string>;
 
@@ -108,7 +113,31 @@ const clearQuizDraft = () => {
   );
 };
 
+const getSavedQuizView = () => {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  return sessionStorage.getItem(
+    QUIZ_VIEW_STORAGE_KEY,
+  );
+};
+
+const clearSavedQuizView = () => {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  sessionStorage.removeItem(
+    QUIZ_VIEW_STORAGE_KEY,
+  );
+};
+
 export const QuizPage = () => {
+  const {
+    isAuthenticated,
+  } = useAuth();
+
   const {
     quizResult,
     saveQuizResult,
@@ -147,23 +176,84 @@ export const QuizPage = () => {
     useState<string | null>(null);
 
   useEffect(() => {
-    const savedDraft = getSavedQuizDraft();
+    let isMounted = true;
 
-    if (savedDraft) {
-      setCurrentStep(savedDraft.currentStep);
+    const restoreQuiz = async () => {
+      const savedQuizView =
+        getSavedQuizView();
 
-      setSelectedLevel(
-        savedDraft.selectedLevel,
-      );
+      if (
+        savedQuizView === "results" &&
+        isAuthenticated &&
+        !quizResult
+      ) {
+        try {
+          const wines =
+            await userApi.getQuizHistory();
 
-      setAnswers(savedDraft.answers);
-    }
+          if (!isMounted) {
+            return;
+          }
 
-    setIsDraftRestored(true);
-  }, []);
+          if (wines.length > 0) {
+            clearQuizDraft();
+
+            saveQuizResult(wines);
+
+            setIsDraftRestored(true);
+
+            return;
+          }
+
+          clearSavedQuizView();
+        } catch (error) {
+          console.error(
+            "Failed to restore quiz results:",
+            error,
+          );
+
+          clearSavedQuizView();
+        }
+      }
+
+      const savedDraft =
+        getSavedQuizDraft();
+
+      if (savedDraft) {
+        setCurrentStep(
+          savedDraft.currentStep,
+        );
+
+        setSelectedLevel(
+          savedDraft.selectedLevel,
+        );
+
+        setAnswers(
+          savedDraft.answers,
+        );
+      }
+
+      if (isMounted) {
+        setIsDraftRestored(true);
+      }
+    };
+
+    restoreQuiz();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [
+    isAuthenticated,
+    quizResult,
+    saveQuizResult,
+  ]);
 
   useEffect(() => {
-    if (!isDraftRestored || quizResult) {
+    if (
+      !isDraftRestored ||
+      quizResult
+    ) {
       return;
     }
 
@@ -180,142 +270,194 @@ export const QuizPage = () => {
     isDraftRestored,
   ]);
 
-  const currentQuestions = useMemo(() => {
-    if (!selectedLevel) {
-      return [];
-    }
+  const currentQuestions =
+    useMemo(() => {
+      if (!selectedLevel) {
+        return [];
+      }
 
-    return questionsByLevel[selectedLevel];
-  }, [selectedLevel]);
+      return questionsByLevel[
+        selectedLevel
+      ];
+    }, [selectedLevel]);
 
   const currentQuestion =
     currentQuestions.find(
       (question) =>
-        question.step === currentStep,
+        question.step ===
+        currentStep,
     );
 
   const selectedAnswerId =
     answers[currentStep];
 
   const canGoNext =
-    currentStep === FIRST_QUESTION_STEP
+    currentStep ===
+    FIRST_QUESTION_STEP
       ? Boolean(selectedLevel)
-      : Boolean(selectedAnswerId);
+      : Boolean(
+          selectedAnswerId,
+        );
 
-  const handleSelectLevel = useCallback(
-    (level: QuizExperienceLevel) => {
-      clearQuizResult();
+  const handleSelectLevel =
+    useCallback(
+      (
+        level: QuizExperienceLevel,
+      ) => {
+        clearSavedQuizView();
 
-      setSelectedLevel(level);
+        clearQuizResult();
 
-      setAnswers({});
+        setSelectedLevel(
+          level,
+        );
+
+        setAnswers({});
+
+        setCurrentStep(
+          FIRST_QUESTION_STEP,
+        );
+
+        setQuizError(null);
+      },
+      [clearQuizResult],
+    );
+
+  const handleSelectAnswer =
+    useCallback(
+      (optionId: string) => {
+        setAnswers(
+          (previous) => ({
+            ...previous,
+            [currentStep]:
+              optionId,
+          }),
+        );
+      },
+      [currentStep],
+    );
+
+  const handlePrevious =
+    useCallback(() => {
+      setCurrentStep(
+        (previous) =>
+          Math.max(
+            previous - 1,
+            FIRST_QUESTION_STEP,
+          ),
+      );
+    }, []);
+
+  const handleNext =
+    useCallback(() => {
+      if (!canGoNext) {
+        return;
+      }
+
+      if (
+        currentStep ===
+        QUIZ_TOTAL_STEPS
+      ) {
+        setIsFinishModalOpen(
+          true,
+        );
+
+        return;
+      }
+
+      setCurrentStep(
+        (previous) =>
+          previous + 1,
+      );
+    }, [
+      canGoNext,
+      currentStep,
+    ]);
+
+  const restartQuiz =
+    useCallback(() => {
+      clearSavedQuizView();
+
+      clearQuizDraft();
 
       setCurrentStep(
         FIRST_QUESTION_STEP,
       );
 
-      setQuizError(null);
-    },
-    [clearQuizResult],
-  );
+      setSelectedLevel(
+        null,
+      );
 
-  const handleSelectAnswer = useCallback(
-    (optionId: string) => {
-      setAnswers((previous) => ({
-        ...previous,
-        [currentStep]: optionId,
-      }));
-    },
-    [currentStep],
-  );
-
-  const handlePrevious = useCallback(() => {
-    setCurrentStep((previous) =>
-      Math.max(
-        previous - 1,
-        FIRST_QUESTION_STEP,
-      ),
-    );
-  }, []);
-
-  const handleNext = useCallback(() => {
-    if (!canGoNext) {
-      return;
-    }
-
-    if (
-      currentStep === QUIZ_TOTAL_STEPS
-    ) {
-      setIsFinishModalOpen(true);
-
-      return;
-    }
-
-    setCurrentStep(
-      (previous) => previous + 1,
-    );
-  }, [canGoNext, currentStep]);
-
-  const restartQuiz = useCallback(() => {
-    clearQuizDraft();
-
-    setCurrentStep(
-      FIRST_QUESTION_STEP,
-    );
-
-    setSelectedLevel(null);
-
-    setAnswers({});
-
-    setQuizError(null);
-
-    setIsFinishModalOpen(false);
-
-    clearQuizResult();
-  }, [clearQuizResult]);
-
-  const handleFinish = useCallback(
-    async () => {
-      if (!selectedLevel) {
-        return;
-      }
-
-      setIsFinishModalOpen(false);
-
-      setIsPreparingResults(true);
+      setAnswers({});
 
       setQuizError(null);
 
-      try {
-        const payload = buildQuizRequest(
-          selectedLevel,
-          currentQuestions,
-          answers,
+      setIsFinishModalOpen(
+        false,
+      );
+
+      clearQuizResult();
+    }, [
+      clearQuizResult,
+    ]);
+
+  const handleFinish =
+    useCallback(
+      async () => {
+        if (!selectedLevel) {
+          return;
+        }
+
+        setIsFinishModalOpen(
+          false,
         );
-      
-        const result =
-          await quizApi.getResult(payload);
-      
-        clearQuizDraft();
-      
-        saveQuizResult(result);
-      } catch (error) {
-        console.error("QUIZ FINISH ERROR:", error);
-      
-        setQuizError(
-          "Failed to get quiz results",
+
+        setIsPreparingResults(
+          true,
         );
-      } finally {
-        setIsPreparingResults(false);
-      }
-    },
-    [
-      answers,
-      currentQuestions,
-      selectedLevel,
-      saveQuizResult,
-    ],
-  );
+
+        setQuizError(null);
+
+        try {
+          const payload =
+            buildQuizRequest(
+              selectedLevel,
+              currentQuestions,
+              answers,
+            );
+
+          const result =
+            await quizApi.getResult(
+              payload,
+            );
+
+          clearQuizDraft();
+
+          saveQuizResult(
+            result,
+          );
+        } catch (error) {
+          console.error(
+            "QUIZ FINISH ERROR:",
+            error,
+          );
+
+          setQuizError(
+            "Failed to get quiz results",
+          );
+        } finally {
+          setIsPreparingResults(
+            false,
+          );
+        }
+      },
+      [
+        answers,
+        currentQuestions,
+        selectedLevel,
+        saveQuizResult,
+      ],
+    );
 
   if (!isDraftRestored) {
     return (
@@ -334,7 +476,9 @@ export const QuizPage = () => {
       {quizResult ? (
         <QuizResults
           wines={quizResult}
-          onRestart={restartQuiz}
+          onRestart={
+            restartQuiz
+          }
         />
       ) : (
         <>
@@ -342,18 +486,26 @@ export const QuizPage = () => {
             title="Wine Quiz"
             backTo="/"
             backLabel="Home"
-            currentStep={currentStep}
+            currentStep={
+              currentStep
+            }
             totalSteps={
               QUIZ_TOTAL_STEPS
             }
-            canGoNext={canGoNext}
+            canGoNext={
+              canGoNext
+            }
             previousLabel="Previous"
             nextLabel="Next"
             completedNextLabel="Finish"
             progressAriaLabel="Quiz progress"
             className="quiz-page"
-            onPrevious={handlePrevious}
-            onNext={handleNext}
+            onPrevious={
+              handlePrevious
+            }
+            onNext={
+              handleNext
+            }
           >
             {currentStep ===
               FIRST_QUESTION_STEP && (
@@ -400,11 +552,17 @@ export const QuizPage = () => {
           </StepFlowLayout>
 
           <QuizFinishModal
-            isOpen={isFinishModalOpen}
-            onBackToQuiz={() =>
-              setIsFinishModalOpen(false)
+            isOpen={
+              isFinishModalOpen
             }
-            onFinish={handleFinish}
+            onBackToQuiz={() =>
+              setIsFinishModalOpen(
+                false,
+              )
+            }
+            onFinish={
+              handleFinish
+            }
           />
 
           <QuizPreparingResults

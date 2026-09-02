@@ -9,7 +9,7 @@ const cleanFilters = (
   filters: WineFilterRequest
 ): WineFilterRequest => {
   return Object.fromEntries(
-    Object.entries(filters).filter(([_, value]) => {
+    Object.entries(filters).filter(([, value]) => {
       if (typeof value === "string") {
         return value.trim().length > 0;
       }

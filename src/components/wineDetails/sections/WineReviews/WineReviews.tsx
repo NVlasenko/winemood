@@ -8,12 +8,13 @@ import type { Wine } from "@/types/wine";
 import type { WineReviewDto } from "@/types/reviews";
 
 import { SectionTitle } from "@/components/ui/SectionTitle";
-import { ReviewCard } from "./config/ReviewCard";
-import { WineReviewsActions } from "./config/WineReviewsActions";
+
 
 import { useAuth } from "@/context/AuthContext";
 
 import "./WineReviews.scss";
+import { ReviewCard } from "./ReviewCard";
+import { WineReviewsActions } from "./WineReviewsActions";
 
 type Props = {
   wine: Wine;

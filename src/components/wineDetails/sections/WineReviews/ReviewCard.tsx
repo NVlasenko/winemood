@@ -1,7 +1,7 @@
 import type { WineReviewDto} from "@/types/reviews";
-import { ReviewStars } from "./ReviewStars";
 
 import quoteIcon from "@/assets/images/wineDetailsInfo/wineReviews/quote.svg";
+import { ReviewStars } from "./ReviewStars";
 
 type Props = {
   review: WineReviewDto;

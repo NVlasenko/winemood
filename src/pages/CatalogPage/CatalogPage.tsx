@@ -531,24 +531,12 @@ export const CatalogPage = ({
 
         <CatalogContent
           wines={wines}
-          favoriteIds={
-            favoriteIdsSet
-          }
-          isInitialLoading={
-            false
-          }
-          isCurating={
-            isCurating
-          }
+          favoriteIds={favoriteIdsSet}
+          isCurating={isCurating}
           error=""
-          onOpenFilters={
-            handleOpenFilters
-          }
-          onToggleFavorite={
-            toggleFavorite
-          }
+          onOpenFilters={handleOpenFilters}
+          onToggleFavorite={toggleFavorite}
         />
-
         <CatalogPagination
           currentPage={
             currentPage

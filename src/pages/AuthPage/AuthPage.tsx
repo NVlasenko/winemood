@@ -142,22 +142,6 @@ const getRegisterFieldError = (
   }
 };
 
-const getLoginFieldError = (
-  field: keyof LoginForm,
-  form: LoginForm,
-): string => {
-  switch (field) {
-    case "email":
-      return validateEmail(form.email);
-
-      case "password":
-        return form.password.length === 0 ? "Password is required" : "";
-
-    default:
-      return "";
-  }
-};
-
 type SuccessModalProps = {
   isOpen: boolean;
   title: string;
@@ -331,14 +315,10 @@ useEffect(() => {
 
   const loginErrors = useMemo<LoginErrors>(() => {
     return {
-      email: loginTouched.email
-        ? getLoginFieldError("email", loginForm)
-        : "",
-      password: loginTouched.password
-        ? getLoginFieldError("password", loginForm)
-        : "",
+      email: "",
+      password: "",
     };
-  }, [loginForm, loginTouched]);
+  }, []);
 
   const isRegisterFormValid =
     !registerErrors.name &&
@@ -480,37 +460,30 @@ useEffect(() => {
         return;
       }
   
-      setLoginTouched({
-        email: true,
-        password: true,
-      });
-  
       const email =
         loginForm.email.trim();
   
       const password =
         loginForm.password;
   
-      const emailError =
-        validateEmail(email);
-  
-      const passwordError =
-        password.length === 0
-          ? "Password is required"
-          : "";
-  
-      if (
-        emailError ||
-        passwordError
-      ) {
+      if (!email) {
         setSubmitError(
-          "Please enter a valid email and password",
+          "Email is required",
+        );
+  
+        return;
+      }
+  
+      if (!password) {
+        setSubmitError(
+          "Password is required",
         );
   
         return;
       }
   
       setSubmitError("");
+      setLoginTouched({});
       setIsSubmitting(true);
   
       try {
@@ -521,6 +494,11 @@ useEffect(() => {
 
         const formData =
           new FormData();
+  
+        formData.set(
+          "intent",
+          "login",
+        );
   
         formData.set(
           "email",

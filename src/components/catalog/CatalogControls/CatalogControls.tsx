@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-export const CATALOG_SORT_OPTIONS = [
+ const CATALOG_SORT_OPTIONS = [
   "Popularity",
   "Top Rated",
   "Alphabetical",

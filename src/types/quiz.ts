@@ -3,9 +3,9 @@ import type { WineCatalogCard } from "./wineCatalogCard";
 
 export type QuizExperienceLevel = "beginner" | "enthusiast" | "connoisseur";
 
-export type QuizApiExperienceLevel = "BEGINNER" | "ENTHUSIAST" | "CONNOISSEUR";
+type QuizApiExperienceLevel = "BEGINNER" | "ENTHUSIAST" | "CONNOISSEUR";
 
-export type QuizApiAnswerField =
+type QuizApiAnswerField =
   | "WINE_TYPE"
   | "SWEETNESS"
   | "COUNTRY"

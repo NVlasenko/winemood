@@ -1,14 +1,14 @@
 import {
+  useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 
-import { useNavigate } from "react-router";
-
 import {
-  useDeleteReview,
-  useUserReviews,
-} from "@/hooks/reviews/useReviewMutations.ts";
+  useNavigate,
+  useSearchParams,
+} from "react-router";
 
 import { useExpandableSection } from "@/hooks/ui/useExpandableSection";
 
@@ -16,11 +16,17 @@ import { SectionTitle } from "@/components/ui/SectionTitle";
 import { SectionState } from "@/components/ui/SectionState";
 import { MoodLinkButton } from "@/components/ui/MoodLinkButton";
 
+import {
+  useDeleteReview,
+  useUserReviews,
+} from "@/hooks/reviews/useReviewMutations";
+
 import type { UserReviewDto } from "@/types/reviews";
 
 import "./UserReviewsList.scss";
 
 const INITIAL_VISIBLE_COUNT = 5;
+const TARGET_URL_CLEANUP_DELAY = 3_000;
 
 const formatReviewDate = (
   value: string,
@@ -43,6 +49,11 @@ type UserReviewsListProps = {
 export const UserReviewsList = ({
   initialReviews,
 }: UserReviewsListProps) => {
+  const [
+    searchParams,
+    setSearchParams,
+  ] = useSearchParams();
+
   const {
     data: reviews = initialReviews,
     isLoading,
@@ -57,6 +68,11 @@ export const UserReviewsList = ({
   const navigate =
     useNavigate();
 
+  const targetReviewRef =
+    useRef<HTMLDivElement | null>(
+      null,
+    );
+
   const [
     reviewToDelete,
     setReviewToDelete,
@@ -64,29 +80,184 @@ export const UserReviewsList = ({
     null,
   );
 
+  const [
+    hasScrolledToTarget,
+    setHasScrolledToTarget,
+  ] = useState(false);
+
+  const [
+    targetWineId,
+  ] = useState<number | null>(
+    () => {
+      if (
+        searchParams.get(
+          "section",
+        ) !== "reviews"
+      ) {
+        return null;
+      }
+
+      const value =
+        searchParams.get(
+          "wineId",
+        );
+
+      if (!value) {
+        return null;
+      }
+
+      const wineId =
+        Number(value);
+
+      return Number.isFinite(
+        wineId,
+      )
+        ? wineId
+        : null;
+    },
+  );
+
   const {
     isOpen,
     isVisible,
     titleRef,
     toggleOpen,
+    open,
   } = useExpandableSection();
 
-  const visibleReviews = useMemo(
-    () =>
-      reviews.slice(
-        0,
-        INITIAL_VISIBLE_COUNT,
-      ),
-    [reviews],
-  );
+  const targetReviewIndex =
+    useMemo(() => {
+      if (
+        targetWineId === null
+      ) {
+        return -1;
+      }
 
-  const extraReviews = useMemo(
-    () =>
-      reviews.slice(
-        INITIAL_VISIBLE_COUNT,
-      ),
-    [reviews],
-  );
+      return reviews.findIndex(
+        (review) =>
+          review.wineId ===
+          targetWineId,
+      );
+    }, [
+      reviews,
+      targetWineId,
+    ]);
+
+  const targetIsExtra =
+    targetReviewIndex >=
+    INITIAL_VISIBLE_COUNT;
+
+  useEffect(() => {
+    if (
+      targetReviewIndex === -1 ||
+      hasScrolledToTarget
+    ) {
+      return;
+    }
+
+    if (
+      targetIsExtra &&
+      !isOpen
+    ) {
+      open();
+
+      return;
+    }
+
+    if (
+      targetIsExtra &&
+      !isVisible
+    ) {
+      return;
+    }
+
+    const element =
+      targetReviewRef.current;
+
+    if (!element) {
+      return;
+    }
+
+    element.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+
+    setHasScrolledToTarget(
+      true,
+    );
+  }, [
+    targetReviewIndex,
+    targetIsExtra,
+    isOpen,
+    isVisible,
+    open,
+    hasScrolledToTarget,
+  ]);
+
+  useEffect(() => {
+    if (
+      !hasScrolledToTarget ||
+      targetWineId === null
+    ) {
+      return;
+    }
+
+    const cleanupTimeout =
+      window.setTimeout(() => {
+        setSearchParams(
+          (currentParams) => {
+            const nextParams =
+              new URLSearchParams(
+                currentParams,
+              );
+
+            nextParams.delete(
+              "section",
+            );
+
+            nextParams.delete(
+              "wineId",
+            );
+
+            return nextParams;
+          },
+          {
+            replace: true,
+            preventScrollReset: true,
+          },
+        );
+      }, TARGET_URL_CLEANUP_DELAY);
+
+    return () => {
+      window.clearTimeout(
+        cleanupTimeout,
+      );
+    };
+  }, [
+    hasScrolledToTarget,
+    targetWineId,
+    setSearchParams,
+  ]);
+
+  const visibleReviews =
+    useMemo(
+      () =>
+        reviews.slice(
+          0,
+          INITIAL_VISIBLE_COUNT,
+        ),
+      [reviews],
+    );
+
+  const extraReviews =
+    useMemo(
+      () =>
+        reviews.slice(
+          INITIAL_VISIBLE_COUNT,
+        ),
+      [reviews],
+    );
 
   const hasMore =
     extraReviews.length > 0;
@@ -94,21 +265,48 @@ export const UserReviewsList = ({
   const renderReview = (
     review: UserReviewDto,
   ) => {
+    const isTarget =
+      review.wineId ===
+      targetWineId;
+
+    const navigateToWine = () => {
+      navigate(
+        `/catalog/${review.wineId}`,
+      );
+    };
+
     return (
       <div
-        className="user-reviews__card"
+        ref={
+          isTarget
+            ? targetReviewRef
+            : undefined
+        }
+        className={`user-reviews__card ${
+          isTarget
+            ? "user-reviews__card--highlighted"
+            : ""
+        }`}
         key={review.reviewId}
-      >
-        <div
-          className="user-reviews__wine"
-          onClick={() =>
-            navigate(
-              `/catalog/${review.wineId}`,
-            )
+        role="link"
+        tabIndex={0}
+        onClick={navigateToWine}
+        onKeyDown={(event) => {
+          if (
+            event.key === "Enter" ||
+            event.key === " "
+          ) {
+            event.preventDefault();
+
+            navigateToWine();
           }
-        >
+        }}
+      >
+        <div className="user-reviews__wine">
           <img
-            src={review.wineImageUrl}
+            src={
+              review.wineImageUrl
+            }
             alt={review.wineName}
           />
 
@@ -137,11 +335,13 @@ export const UserReviewsList = ({
           <button
             className="user-reviews__btn"
             type="button"
-            onClick={() =>
+            onClick={(event) => {
+              event.stopPropagation();
+
               navigate(
                 `/catalog/${review.wineId}/review`,
-              )
-            }
+              );
+            }}
           >
             Edit
           </button>
@@ -149,11 +349,13 @@ export const UserReviewsList = ({
           <button
             className="user-reviews__btn user-reviews__btn--danger"
             type="button"
-            onClick={() =>
+            onClick={(event) => {
+              event.stopPropagation();
+
               setReviewToDelete(
                 review.reviewId,
-              )
-            }
+              );
+            }}
           >
             Delete
           </button>
@@ -241,7 +443,8 @@ export const UserReviewsList = ({
         </>
       )}
 
-      {reviewToDelete !== null && (
+      {reviewToDelete !==
+        null && (
         <div className="user-reviews__modal-overlay">
           <div className="user-reviews__modal">
             <h3>

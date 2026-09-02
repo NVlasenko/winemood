@@ -5,6 +5,7 @@ import {
 } from "react-router";
 
 import { useAuth } from "@/context/AuthContext";
+import { ProfileQuizResults } from "@/components/profile/ProfileQuizResults";
 
 import type { Category } from "@/types/categories";
 import type { UserDto } from "@/types/user";
@@ -18,7 +19,7 @@ import arrowRightIcon from "@/assets/images/icons/arrow-right.svg";
 import { ProfileHero } from "@/components/profile/ProfileHero";
 import { ProfileCategories } from "@/components/profile/ProfileCategories";
 import { ProfileFavorites } from "@/components/profile/ProfileFavorites";
-import { ProfileQuizResults } from "@/components/profile/ProfileQuizResults/ProfileQuizResults";
+
 import { UserReviewsList } from "@/components/profile/UserReviewsList";
 import { ProfileAchievements } from "@/components/profile/ProfileAchievements";
 

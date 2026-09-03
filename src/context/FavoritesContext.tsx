@@ -36,20 +36,23 @@ const FavoritesContext =
     null,
   );
 
-type Props = {
-  children: ReactNode;
-  initialFavoriteWines?: WineCatalogCardType[];
-};
+  type Props = {
+    children: ReactNode;
+    initialFavoriteWines?: WineCatalogCardType[];
+    initialHasLoadedFavorites?: boolean;
+  };
 
-export const FavoritesProvider = ({
-  children,
-  initialFavoriteWines = [],
-}: Props) => {
+  export const FavoritesProvider = ({
+    children,
+    initialFavoriteWines = [],
+    initialHasLoadedFavorites = false,
+  }: Props) => {
   const {
     isAuthenticated,
     isLoadingUser,
     user,
     refreshUser,
+    isAuthReady,
   } = useAuth();
 
   const [
@@ -73,14 +76,17 @@ export const FavoritesProvider = ({
     hasLoadedFavorites,
     setHasLoadedFavorites,
   ] = useState(
-    initialFavoriteWines.length > 0,
+    initialHasLoadedFavorites,
   );
 
   useEffect(() => {
-    if (isLoadingUser) {
+    if (
+      !isAuthReady ||
+      isLoadingUser
+    ) {
       return;
     }
-
+  
     if (
       !isAuthenticated ||
       !user
@@ -88,39 +94,48 @@ export const FavoritesProvider = ({
       setFavoriteWines([]);
       setIsLoadingFavorites(false);
       setHasLoadedFavorites(false);
-
+  
       return;
     }
-
+  
+    if (hasLoadedFavorites) {
+      return;
+    }
+  
     let isActive = true;
-
+  
     const loadFavorites =
       async () => {
         setIsLoadingFavorites(true);
-
+  
         try {
           const favorites =
             await userApi.getFavorites();
-
+  
           if (!isActive) {
             return;
           }
-
+  
           setFavoriteWines(
             favorites,
           );
-
-          setHasLoadedFavorites(true);
+  
+          setHasLoadedFavorites(
+            true,
+          );
         } catch (error) {
           if (!isActive) {
             return;
           }
-
+  
           console.error(
             "Failed to load favorites",
             error,
           );
-          setHasLoadedFavorites(true);
+  
+          setHasLoadedFavorites(
+            true,
+          );
         } finally {
           if (isActive) {
             setIsLoadingFavorites(
@@ -129,16 +144,18 @@ export const FavoritesProvider = ({
           }
         }
       };
-
+  
     void loadFavorites();
-
+  
     return () => {
       isActive = false;
     };
   }, [
+    isAuthReady,
     isAuthenticated,
     isLoadingUser,
     user?.id,
+    hasLoadedFavorites,
   ]);
 
   const favoriteIds =

@@ -7,7 +7,7 @@ const NETWORK_RETRY_DELAY_MS =
   1_000;
 
 const SSR_REQUEST_TIMEOUT_MS =
-  15_000;
+  5_000;
 
 type HttpClientOptions = Omit<
   RequestInit,

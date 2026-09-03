@@ -190,28 +190,33 @@ export async function loader({
       cookieHeader,
     );
 
-  let favoriteWines: WineCatalogCard[] =
+    let favoriteWines: WineCatalogCard[] =
     [];
-
+  
+  let hasLoadedFavorites = false;
+  
   if (authToken) {
     try {
       favoriteWines =
         await userApi.getFavorites({
           authToken,
         });
+  
+      hasLoadedFavorites = true;
     } catch (error) {
       console.error(
         "Root SSR favorites load failed:",
         error,
       );
-
+  
       favoriteWines = [];
     }
   }
-
+  
   return {
     moodTheme,
     favoriteWines,
+    hasLoadedFavorites,
   };
 }
 
@@ -231,18 +236,6 @@ export function Layout({
       typeof loader
     >("root");
 
-
-  /*
-   * При нормальной загрузке тема приходит
-   * из root loader.
-   *
-   * Если root loader завершился ошибкой,
-   * данных loader здесь уже нет.
-   *
-   * Сам ErrorBoundary ниже отдельно
-   * устанавливает CSS variables для
-   * Preparing WineMood.
-   */
   const moodTheme =
     data?.moodTheme ??
     "default";
@@ -402,6 +395,7 @@ export default function Root() {
   const {
     moodTheme,
     favoriteWines,
+    hasLoadedFavorites,
   } =
     useLoaderData<
       typeof loader
@@ -419,11 +413,14 @@ export default function Root() {
       >
         <AuthProvider>
           <AuthRequiredProvider>
-            <FavoritesProvider
-              initialFavoriteWines={
-                favoriteWines
-              }
-            >
+          <FavoritesProvider
+            initialFavoriteWines={
+              favoriteWines
+            }
+            initialHasLoadedFavorites={
+              hasLoadedFavorites
+            }
+          >
               <QuizSessionProvider>
                 <AppLoadingProvider>
                   <AnalyticsSessionTracker />

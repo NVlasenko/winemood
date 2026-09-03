@@ -14,6 +14,10 @@ import { ApiError } from "@/shared/api/httpClient";
 
 import { queryClient } from "@/shared/lib/reactQuery";
 import { refetchAchievementsSafe } from "@/shared/lib/refetchAchievementsSafe";
+import {
+  resetAuthSessionInvalidation,
+  subscribeToAuthSessionInvalidation,
+} from "@/shared/lib/authSessionInvalidation";
 
 import type {
   AuthResponseDto,
@@ -33,8 +37,10 @@ const QUIZ_SENT_PREFIX = "quizSent:v1";
 type AuthContextType = {
   accessToken: string | null;
   user: UserDto | null;
+
   isAuthenticated: boolean;
   isLoadingUser: boolean;
+  isAuthReady: boolean;
 
   register: (
     data: RegisterRequestDto,
@@ -46,7 +52,10 @@ type AuthContextType = {
 
   logout: () => void;
 
-  updateUser: (user: UserDto) => void;
+  updateUser: (
+    user: UserDto,
+  ) => void;
+
   refreshUser: () => Promise<void>;
 };
 
@@ -155,11 +164,21 @@ export const AuthProvider = ({
     setIsLoadingUser,
   ] = useState(false);
 
+  const [
+    isAuthReady,
+    setIsAuthReady,
+  ] = useState(
+    () => !getSavedAccessToken(),
+  );
+
   const saveAuthData =
     useCallback(
       (
         data: AuthResponseDto,
       ) => {
+
+        resetAuthSessionInvalidation();
+
         localStorage.setItem(
           ACCESS_TOKEN_STORAGE_KEY,
           data.accessToken,
@@ -167,6 +186,10 @@ export const AuthProvider = ({
 
         setAccessToken(
           data.accessToken,
+        );
+
+        setIsAuthReady(
+          false,
         );
       },
       [],
@@ -177,7 +200,9 @@ export const AuthProvider = ({
       (
         updatedUser: UserDto,
       ) => {
-        setUser(updatedUser);
+        setUser(
+          updatedUser,
+        );
 
         localStorage.setItem(
           USER_STORAGE_KEY,
@@ -189,6 +214,104 @@ export const AuthProvider = ({
       [],
     );
 
+  const clearQuizSession =
+    useCallback(() => {
+      sessionStorage.removeItem(
+        QUIZ_RESULT_STORAGE_KEY,
+      );
+
+      Object.keys(
+        sessionStorage,
+      ).forEach(
+        (key) => {
+          if (
+            key.startsWith(
+              `${QUIZ_SENT_PREFIX}:`,
+            )
+          ) {
+            sessionStorage.removeItem(
+              key,
+            );
+          }
+        },
+      );
+    }, []);
+
+  const clearAuth =
+    useCallback(
+      ({
+        preserveQuiz,
+      }: {
+        preserveQuiz: boolean;
+      }) => {
+        localStorage.removeItem(
+          ACCESS_TOKEN_STORAGE_KEY,
+        );
+
+        localStorage.removeItem(
+          USER_STORAGE_KEY,
+        );
+
+        localStorage.removeItem(
+          "shownAchievements",
+        );
+
+        if (!preserveQuiz) {
+          clearQuizSession();
+        }
+
+        queryClient.clear();
+
+        setAccessToken(
+          null,
+        );
+
+        setUser(
+          null,
+        );
+
+        setIsLoadingUser(
+          false,
+        );
+
+        setIsAuthReady(
+          true,
+        );
+      },
+      [
+        clearQuizSession,
+      ],
+    );
+
+  const logout =
+    useCallback(() => {
+      clearAuth({
+        preserveQuiz: false,
+      });
+    }, [
+      clearAuth,
+    ]);
+
+  const invalidateSession =
+    useCallback(() => {
+      clearAuth({
+        preserveQuiz: true,
+      });
+    }, [
+      clearAuth,
+    ]);
+
+
+  useEffect(() => {
+    return subscribeToAuthSessionInvalidation(
+      () => {
+        invalidateSession();
+      },
+    );
+  }, [
+    invalidateSession,
+  ]);
+
   const refreshUser =
     useCallback(
       async () => {
@@ -196,14 +319,30 @@ export const AuthProvider = ({
           return;
         }
 
-        const userData =
-          await userApi.getMe();
+        try {
+          const userData =
+            await userApi.getMe();
 
-        updateUser(userData);
+          updateUser(
+            userData,
+          );
+        } catch (error) {
+          if (
+            error instanceof ApiError &&
+            error.status === 401
+          ) {
+            invalidateSession();
+
+            return;
+          }
+
+          throw error;
+        }
       },
       [
         accessToken,
         updateUser,
+        invalidateSession,
       ],
     );
 
@@ -237,7 +376,9 @@ export const AuthProvider = ({
         }
 
         if (
-          !Array.isArray(wines) ||
+          !Array.isArray(
+            wines,
+          ) ||
           wines.length === 0
         ) {
           sessionStorage.removeItem(
@@ -319,6 +460,15 @@ export const AuthProvider = ({
             quizSentKey,
           );
 
+          if (
+            error instanceof ApiError &&
+            error.status === 401
+          ) {
+            invalidateSession();
+
+            return;
+          }
+
           console.error(
             "Failed to send saved quiz",
             error,
@@ -327,58 +477,18 @@ export const AuthProvider = ({
       },
       [
         updateUser,
+        invalidateSession,
       ],
     );
-
-  const logout =
-    useCallback(() => {
-      localStorage.removeItem(
-        ACCESS_TOKEN_STORAGE_KEY,
-      );
-
-      localStorage.removeItem(
-        USER_STORAGE_KEY,
-      );
-
-      localStorage.removeItem(
-        "shownAchievements",
-      );
-
-      sessionStorage.removeItem(
-        QUIZ_RESULT_STORAGE_KEY,
-      );
-
-      Object.keys(
-        sessionStorage,
-      ).forEach((key) => {
-        if (
-          key.startsWith(
-            `${QUIZ_SENT_PREFIX}:`,
-          )
-        ) {
-          sessionStorage.removeItem(
-            key,
-          );
-        }
-      });
-
-      queryClient.clear();
-
-      setAccessToken(null);
-      setUser(null);
-    }, []);
 
   const register =
     useCallback(
       async (
         data: RegisterRequestDto,
       ) => {
-        const response =
-          await authApi.register(
-            data,
-          );
-
-        return response;
+        return authApi.register(
+          data,
+        );
       },
       [],
     );
@@ -399,28 +509,52 @@ export const AuthProvider = ({
           response,
         );
 
-        const userData =
-          await userApi.getMe();
+        try {
+          const userData =
+            await userApi.getMe();
 
-        updateUser(
-          userData,
-        );
+          updateUser(
+            userData,
+          );
 
-        await syncSavedQuiz(
-          userData,
-        );
+          setIsAuthReady(
+            true,
+          );
 
-        return response;
+          await syncSavedQuiz(
+            userData,
+          );
+
+          return response;
+        } catch (error) {
+          if (
+            error instanceof ApiError &&
+            error.status === 401
+          ) {
+            invalidateSession();
+          }
+
+          throw error;
+        }
       },
       [
         saveAuthData,
         updateUser,
         syncSavedQuiz,
+        invalidateSession,
       ],
     );
 
   useEffect(() => {
     if (!accessToken) {
+      setIsLoadingUser(
+        false,
+      );
+
+      setIsAuthReady(
+        true,
+      );
+
       return;
     }
 
@@ -430,35 +564,34 @@ export const AuthProvider = ({
       true,
     );
 
+    setIsAuthReady(
+      false,
+    );
+
     userApi
       .getMe()
       .then(
         (userData) => {
-          if (isMounted) {
-            updateUser(
-              userData,
-            );
+          if (!isMounted) {
+            return;
           }
+
+          updateUser(
+            userData,
+          );
         },
       )
       .catch(
         (error) => {
-          if (
-            error instanceof
-              ApiError &&
-            (
-              error.status ===
-                401 ||
-              error.status ===
-                403
-            )
-          ) {
-            console.error(
-              "Auth invalid → logout",
-              error,
-            );
+          if (!isMounted) {
+            return;
+          }
 
-            logout();
+          if (
+            error instanceof ApiError &&
+            error.status === 401
+          ) {
+            invalidateSession();
 
             return;
           }
@@ -470,11 +603,17 @@ export const AuthProvider = ({
         },
       )
       .finally(() => {
-        if (isMounted) {
-          setIsLoadingUser(
-            false,
-          );
+        if (!isMounted) {
+          return;
         }
+
+        setIsLoadingUser(
+          false,
+        );
+
+        setIsAuthReady(
+          true,
+        );
       });
 
     return () => {
@@ -483,7 +622,7 @@ export const AuthProvider = ({
   }, [
     accessToken,
     updateUser,
-    logout,
+    invalidateSession,
   ]);
 
   const value =
@@ -493,11 +632,14 @@ export const AuthProvider = ({
         user,
 
         isAuthenticated:
+          isAuthReady &&
           Boolean(
-            accessToken,
+            accessToken &&
+            user,
           ),
 
         isLoadingUser,
+        isAuthReady,
 
         register,
         login,
@@ -509,6 +651,7 @@ export const AuthProvider = ({
         accessToken,
         user,
         isLoadingUser,
+        isAuthReady,
         register,
         login,
         logout,

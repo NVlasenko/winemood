@@ -136,7 +136,7 @@
   }
 
   &__background-text {
-    @include winemood-text(rgba(41, 43, 44, 1), clamp(75px, 25vw, 520px), 0);
+    @include winemood-text(rgba(41, 43, 44, 1), clamp(78px, 25vw, 520px), 0);
     margin-top: 20px;
     position: relative;
     transform: translateX(0%) scaleX(1.03);

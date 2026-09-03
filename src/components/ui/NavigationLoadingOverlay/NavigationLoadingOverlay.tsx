@@ -14,156 +14,167 @@ import "./NavigationLoadingOverlay.scss";
 const SHOW_DELAY_MS = 3_000;
 const LONG_WAIT_DELAY_MS = 15_000;
 
-export const NavigationLoadingOverlay =
-  () => {
-    const navigation =
-      useNavigation();
+type NavigationLoadingOverlayProps = {
+  forceVisible?: boolean;
+};
 
-    const {
-      isBackendLoading,
-    } = useAppLoading();
+export const NavigationLoadingOverlay = ({
+  forceVisible = false,
+}: NavigationLoadingOverlayProps) => {
+  const navigation =
+    useNavigation();
 
-    const isNavigating =
-      navigation.state !== "idle";
+  const {
+    isBackendLoading,
+  } = useAppLoading();
 
-    const isLoading =
-      isNavigating ||
-      isBackendLoading;
+  const isNavigating =
+    navigation.state !== "idle";
 
-    const [
-      isVisible,
-      setIsVisible,
-    ] = useState(false);
+  const isLoading =
+    forceVisible ||
+    isNavigating ||
+    isBackendLoading;
 
-    const [
-      isLongWait,
-      setIsLongWait,
-    ] = useState(false);
+  const [
+    isVisible,
+    setIsVisible,
+  ] = useState(forceVisible);
 
-    useEffect(() => {
-      if (!isLoading) {
-        setIsVisible(false);
-        setIsLongWait(false);
+  const [
+    isLongWait,
+    setIsLongWait,
+  ] = useState(false);
 
-        return;
-      }
+  useEffect(() => {
+    if (!isLoading) {
+      setIsVisible(false);
+      setIsLongWait(false);
 
-      let showTimer:
-        | number
-        | undefined;
-
-      if (isBackendLoading) {
-        setIsVisible(true);
-      } else {
-        showTimer =
-          window.setTimeout(() => {
-            setIsVisible(true);
-          }, SHOW_DELAY_MS);
-      }
-
-      const longWaitTimer =
-        window.setTimeout(() => {
-          setIsLongWait(true);
-        }, LONG_WAIT_DELAY_MS);
-
-      return () => {
-        if (showTimer) {
-          window.clearTimeout(
-            showTimer,
-          );
-        }
-
-        window.clearTimeout(
-          longWaitTimer,
-        );
-      };
-    }, [
-      isLoading,
-      isBackendLoading,
-    ]);
-
-    if (
-      !isVisible &&
-      !isBackendLoading
-    ) {
-      return null;
+      return;
     }
 
-    return (
-      <div
-        className="navigation-loading"
-        role="status"
-        aria-live="polite"
-        aria-busy="true"
-      >
-        <div className="navigation-loading__backdrop" />
+    let showTimer:
+      | number
+      | undefined;
 
-        <div className="navigation-loading__card">
-          <div className="navigation-loading__glow" />
+    if (
+      forceVisible ||
+      isBackendLoading
+    ) {
+      setIsVisible(true);
+    } else {
+      showTimer =
+        window.setTimeout(() => {
+          setIsVisible(true);
+        }, SHOW_DELAY_MS);
+    }
 
-          <div className="navigation-loading__content">
-            <div className="navigation-loading__loader">
-              <div className="navigation-loading__glass">
-                <div className="navigation-loading__wine" />
+    const longWaitTimer =
+      window.setTimeout(() => {
+        setIsLongWait(true);
+      }, LONG_WAIT_DELAY_MS);
 
-                <div className="navigation-loading__shine" />
-              </div>
+    return () => {
+      if (showTimer) {
+        window.clearTimeout(
+          showTimer,
+        );
+      }
 
-              <div className="navigation-loading__shadow" />
+      window.clearTimeout(
+        longWaitTimer,
+      );
+    };
+  }, [
+    isLoading,
+    isBackendLoading,
+    forceVisible,
+  ]);
+
+  if (
+    !isVisible &&
+    !isBackendLoading &&
+    !forceVisible
+  ) {
+    return null;
+  }
+
+  return (
+    <div
+      className="navigation-loading"
+      role="status"
+      aria-live="polite"
+      aria-busy="true"
+    >
+      <div className="navigation-loading__backdrop" />
+
+      <div className="navigation-loading__card">
+        <div className="navigation-loading__glow" />
+
+        <div className="navigation-loading__content">
+          <div className="navigation-loading__loader">
+            <div className="navigation-loading__glass">
+              <div className="navigation-loading__wine" />
+
+              <div className="navigation-loading__shine" />
             </div>
 
-            <div className="navigation-loading__copy">
-              <span className="navigation-loading__eyebrow">
-                WineMood
-              </span>
+            <div className="navigation-loading__shadow" />
+          </div>
 
-              <h2 className="navigation-loading__title">
-                {isLongWait
-                  ? "Still preparing..."
-                  : "Preparing WineMood"}
-              </h2>
+          <div className="navigation-loading__copy">
+            <span className="navigation-loading__eyebrow">
+              WineMood
+            </span>
 
-              {!isLongWait ? (
-                <>
-                  <p className="navigation-loading__text">
-                    We're getting your
-                    wine experience ready.
-                  </p>
+            <h2 className="navigation-loading__title">
+              {isLongWait
+                ? "Still preparing..."
+                : "Preparing WineMood"}
+            </h2>
 
-                  <p className="navigation-loading__hint">
-                    If you haven't visited
-                    in a while, preparation
-                    may take up to 3–5
-                    minutes.
-                  </p>
-                </>
-              ) : (
-                <>
-                  <p className="navigation-loading__text">
-                    Everything is still
-                    loading. You don't need
-                    to refresh the page.
-                  </p>
+            {!isLongWait ? (
+              <>
+                <p className="navigation-loading__text">
+                  We're getting your
+                  wine experience ready.
+                </p>
 
-                  <p className="navigation-loading__hint">
-                    After a longer period of
-                    inactivity, preparation
-                    can occasionally take a
-                    few minutes.
-                  </p>
-                </>
-              )}
-            </div>
+                <p className="navigation-loading__hint">
+                  If you haven't visited
+                  in a while, preparation
+                  may take up to 3–5
+                  minutes.
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="navigation-loading__text">
+                  Everything is still
+                  loading. You don't need
+                  to refresh the page.
+                </p>
 
-            <div className="navigation-loading__progress">
-              <span className="navigation-loading__progress-dot" />
+                <p className="navigation-loading__hint">
+                  After a longer period of
+                  inactivity, preparation
+                  can occasionally take a
+                  few minutes.
+                </p>
+              </>
+            )}
+          </div>
 
-              <span className="navigation-loading__progress-text">
-                Loading your experience
-              </span>
-            </div>
+          <div className="navigation-loading__progress">
+            <span className="navigation-loading__progress-dot" />
+
+            <span className="navigation-loading__progress-text">
+              Loading your experience
+            </span>
           </div>
         </div>
       </div>
-    );
-  };
+    </div>
+  );
+};

@@ -2,17 +2,26 @@ const BASE_URL =
   import.meta.env.VITE_API_BASE_URL;
 
 const MAX_NETWORK_RETRIES = 2;
-const NETWORK_RETRY_DELAY_MS = 1_000;
 
-const SSR_REQUEST_TIMEOUT_MS = 3_000;
+const NETWORK_RETRY_DELAY_MS =
+  1_000;
+
+const SSR_REQUEST_TIMEOUT_MS =
+  15_000;
 
 type HttpClientOptions = Omit<
   RequestInit,
   "body"
 > & {
-  body?: BodyInit | object | null;
+  body?:
+    | BodyInit
+    | object
+    | null;
+
   skipJsonContentType?: boolean;
+
   skipAuth?: boolean;
+
   authToken?: string | null;
 };
 
@@ -32,12 +41,17 @@ export type ApiErrorResponse = {
 
 export class ApiError extends Error {
   status: number;
-  data: ApiErrorResponse | null;
+
+  data:
+    | ApiErrorResponse
+    | null;
 
   constructor(
     message: string,
     status: number,
-    data: ApiErrorResponse | null,
+    data:
+      | ApiErrorResponse
+      | null,
   ) {
     super(message);
 
@@ -55,13 +69,18 @@ export class ApiError extends Error {
 export class SsrTimeoutError extends Error {
   timeoutMs: number;
 
-  constructor(timeoutMs: number) {
+  constructor(
+    timeoutMs: number,
+  ) {
     super(
       `SSR request timed out after ${timeoutMs}ms`,
     );
 
-    this.name = "SsrTimeoutError";
-    this.timeoutMs = timeoutMs;
+    this.name =
+      "SsrTimeoutError";
+
+    this.timeoutMs =
+      timeoutMs;
 
     Object.setPrototypeOf(
       this,
@@ -70,13 +89,66 @@ export class SsrTimeoutError extends Error {
   }
 }
 
+class BackendUnavailableError extends Error {
+  cause?: unknown;
+
+  constructor(
+    message =
+      "Backend is temporarily unavailable.",
+    cause?: unknown,
+  ) {
+    super(message);
+
+    this.name =
+      "BackendUnavailableError";
+
+    this.cause = cause;
+
+    Object.setPrototypeOf(
+      this,
+      BackendUnavailableError.prototype,
+    );
+  }
+}
+
+const throwBackendUnavailable = (
+  message: string,
+  cause?: unknown,
+): never => {
+
+  if (
+    typeof window ===
+    "undefined"
+  ) {
+    throw new Response(
+      "Backend unavailable",
+      {
+        status: 503,
+        statusText:
+          "Backend Unavailable",
+      },
+    );
+  }
+
+
+  throw new BackendUnavailableError(
+    message,
+    cause,
+  );
+};
+
 const getAccessToken = () => {
-  if (typeof window === "undefined") {
+  if (
+    typeof window ===
+    "undefined"
+  ) {
     return null;
   }
 
   const token =
-    localStorage.getItem("accessToken");
+    localStorage.getItem(
+      "accessToken",
+    );
 
   return token &&
     token !== "undefined" &&
@@ -97,157 +169,190 @@ const buildUrl = (
   return `${BASE_URL}${endpoint}`;
 };
 
-const parseResponseBody = async (
-  response: Response,
-) => {
-  const contentType =
-    response.headers.get("content-type");
+const parseResponseBody =
+  async (
+    response: Response,
+  ) => {
+    const contentType =
+      response.headers.get(
+        "content-type",
+      );
 
-  if (
-    !contentType?.includes(
-      "application/json",
-    )
-  ) {
-    return null;
-  }
+    if (
+      !contentType?.includes(
+        "application/json",
+      )
+    ) {
+      return null;
+    }
 
-  try {
-    return await response.json();
-  } catch {
-    return null;
-  }
-};
+    try {
+      return await response.json();
+    } catch {
+      return null;
+    }
+  };
 
 const sleep = (
   delayMs: number,
 ) =>
-  new Promise<void>((resolve) => {
-    setTimeout(resolve, delayMs);
-  });
+  new Promise<void>(
+    (resolve) => {
+      setTimeout(
+        resolve,
+        delayMs,
+      );
+    },
+  );
 
 const isSafeToRetry = (
   method?: string,
 ) => {
   const normalizedMethod =
-    (method ?? "GET").toUpperCase();
+    (
+      method ?? "GET"
+    ).toUpperCase();
 
   return (
-    normalizedMethod === "GET" ||
-    normalizedMethod === "HEAD"
+    normalizedMethod ===
+      "GET" ||
+    normalizedMethod ===
+      "HEAD"
   );
 };
 
-const fetchWithNetworkRetry = async (
-  url: string,
-  init: RequestInit,
-): Promise<Response> => {
-  const canRetry =
-    isSafeToRetry(init.method);
+const fetchWithNetworkRetry =
+  async (
+    url: string,
+    init: RequestInit,
+  ): Promise<Response> => {
+    const canRetry =
+      isSafeToRetry(
+        init.method,
+      );
 
-  let attempt = 0;
+    let attempt = 0;
 
-  while (true) {
-    try {
-      return await fetch(
+    while (true) {
+      try {
+        return await fetch(
+          url,
+          init,
+        );
+      } catch (error) {
+        if (
+          init.signal?.aborted
+        ) {
+          throw error;
+        }
+
+        if (
+          !canRetry ||
+          attempt >=
+            MAX_NETWORK_RETRIES
+        ) {
+          throw error;
+        }
+
+        attempt += 1;
+
+        await sleep(
+          NETWORK_RETRY_DELAY_MS *
+            attempt,
+        );
+      }
+    }
+  };
+
+const fetchWithSsrTimeout =
+  async (
+    url: string,
+    init: RequestInit,
+  ): Promise<Response> => {
+    const isServer =
+      typeof window ===
+      "undefined";
+
+    const shouldUseTimeout =
+      isServer &&
+      isSafeToRetry(
+        init.method,
+      );
+
+    if (!shouldUseTimeout) {
+      return fetchWithNetworkRetry(
         url,
         init,
       );
-    } catch (error) {
-
-      if (init.signal?.aborted) {
-        throw error;
-      }
-
-      if (
-        !canRetry ||
-        attempt >=
-          MAX_NETWORK_RETRIES
-      ) {
-        throw error;
-      }
-
-      attempt += 1;
-
-      await sleep(
-        NETWORK_RETRY_DELAY_MS *
-          attempt,
-      );
     }
-  }
-};
 
-const fetchWithSsrTimeout = async (
-  url: string,
-  init: RequestInit,
-): Promise<Response> => {
-  const isServer =
-    typeof window === "undefined";
+    const timeoutController =
+      new AbortController();
 
-  const shouldUseTimeout =
-    isServer &&
-    isSafeToRetry(init.method);
+    const originalSignal =
+      init.signal;
 
-  if (!shouldUseTimeout) {
-    return fetchWithNetworkRetry(
-      url,
-      init,
-    );
-  }
+    let didTimeout = false;
 
-  const timeoutController =
-    new AbortController();
+    const handleOriginalAbort =
+      () => {
+        timeoutController.abort(
+          originalSignal?.reason,
+        );
+      };
 
-  const originalSignal =
-    init.signal;
+    if (originalSignal) {
+      if (
+        originalSignal.aborted
+      ) {
+        handleOriginalAbort();
+      } else {
+        originalSignal.addEventListener(
+          "abort",
+          handleOriginalAbort,
+          {
+            once: true,
+          },
+        );
+      }
+    }
 
-  const handleOriginalAbort =
-    () => {
-      timeoutController.abort(
-        originalSignal?.reason,
-      );
-    };
+    const timeoutId =
+      setTimeout(() => {
+        didTimeout = true;
 
-  if (originalSignal) {
-    if (originalSignal.aborted) {
-      handleOriginalAbort();
-    } else {
-      originalSignal.addEventListener(
-        "abort",
-        handleOriginalAbort,
+        timeoutController.abort();
+      }, SSR_REQUEST_TIMEOUT_MS);
+
+    try {
+      return await fetchWithNetworkRetry(
+        url,
         {
-          once: true,
+          ...init,
+
+          signal:
+            timeoutController.signal,
         },
       );
+    } catch (error) {
+      if (didTimeout) {
+        throw new SsrTimeoutError(
+          SSR_REQUEST_TIMEOUT_MS,
+        );
+      }
+
+      throw error;
+    } finally {
+      clearTimeout(
+        timeoutId,
+      );
+
+      originalSignal?.removeEventListener(
+        "abort",
+        handleOriginalAbort,
+      );
     }
-  }
-
-  const timeoutId =
-  setTimeout(() => {
-    timeoutController.abort(
-      new SsrTimeoutError(
-        SSR_REQUEST_TIMEOUT_MS,
-      ),
-    );
-  }, SSR_REQUEST_TIMEOUT_MS);
-
-  try {
-    return await fetchWithNetworkRetry(
-      url,
-      {
-        ...init,
-        signal:
-          timeoutController.signal,
-      },
-    );
-  } finally {
-    clearTimeout(timeoutId);
-
-    originalSignal?.removeEventListener(
-      "abort",
-      handleOriginalAbort,
-    );
-  }
-};
+  };
 
 export const httpClient =
   async <T>(
@@ -270,24 +375,26 @@ export const httpClient =
       authToken ??
       getAccessToken();
 
-    const requestHeaders: HeadersInit = {
-      ...(!isFormData &&
-      !skipJsonContentType
-        ? {
-            "Content-Type":
-              "application/json",
-          }
-        : {}),
+    const requestHeaders: HeadersInit =
+      {
+        ...(!isFormData &&
+        !skipJsonContentType
+          ? {
+              "Content-Type":
+                "application/json",
+            }
+          : {}),
 
-      ...(token && !skipAuth
-        ? {
-            Authorization:
-              `Bearer ${token}`,
-          }
-        : {}),
+        ...(token &&
+        !skipAuth
+          ? {
+              Authorization:
+                `Bearer ${token}`,
+            }
+          : {}),
 
-      ...headers,
-    };
+        ...headers,
+      };
 
     const preparedBody:
       | BodyInit
@@ -295,29 +402,72 @@ export const httpClient =
       | undefined =
       body &&
       !isFormData &&
-      typeof body === "object"
-        ? JSON.stringify(body)
+      typeof body ===
+        "object"
+        ? JSON.stringify(
+            body,
+          )
         : (body as
             | BodyInit
             | null
             | undefined);
 
-    const response =
-      await fetchWithSsrTimeout(
-        buildUrl(endpoint),
-        {
-          ...rest,
-          headers:
-            requestHeaders,
-          body:
-            preparedBody,
-        },
-      );
+    let response: Response;
+
+    try {
+      response =
+        await fetchWithSsrTimeout(
+          buildUrl(
+            endpoint,
+          ),
+          {
+            ...rest,
+
+            headers:
+              requestHeaders,
+
+            body:
+              preparedBody,
+          },
+        );
+    } catch (error) {
+      if (
+        error instanceof
+        SsrTimeoutError
+      ) {
+        throwBackendUnavailable(
+          "Backend did not respond in time.",
+          error,
+        );
+      }
+      
+      if (
+        error instanceof
+        TypeError
+      ) {
+        throwBackendUnavailable(
+          "Backend could not be reached.",
+          error,
+        );
+      }
+
+      throw error;
+    }
 
     const data =
       await parseResponseBody(
         response,
       );
+
+      if (
+        response.status === 502 ||
+        response.status === 503 ||
+        response.status === 504
+      ) {
+        throwBackendUnavailable(
+          `Backend is temporarily unavailable (${response.status}).`,
+        );
+      }
 
     if (!response.ok) {
       const errorData =

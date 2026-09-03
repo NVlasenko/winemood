@@ -1,38 +1,50 @@
 import {
   createCookie,
+  isRouteErrorResponse,
   Links,
   Meta,
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useRouteError,
   useRouteLoaderData,
 } from "react-router";
 
+import { useEffect } from "react";
+
 import { QueryClientProvider } from "@tanstack/react-query";
-import { AppLoadingProvider } from "@/context/AppLoadingContext";
+
 import { App } from "@/App";
 
 import { AnalyticsPageViewTracker } from "@/components/analytics/AnalyticsPageViewTracker";
 import { AnalyticsSessionTracker } from "@/components/analytics/AnalyticsSessionTracker";
+import { NavigationLoadingOverlay } from "@/components/ui/NavigationLoadingOverlay";
 
-import { AuthRequiredProvider } from "@/context/AuthRequiredContext";
-import { MoodThemeProvider } from "@/context/MoodThemeContext";
+import { AppLoadingProvider } from "@/context/AppLoadingContext";
 import { AuthProvider } from "@/context/AuthContext";
+import { AuthRequiredProvider } from "@/context/AuthRequiredContext";
 import { FavoritesProvider } from "@/context/FavoritesContext";
+import { MoodThemeProvider } from "@/context/MoodThemeContext";
 import { QuizSessionProvider } from "@/context/QuizSessionContext";
 
+import { moodThemeValues } from "@/data/moodThemes";
+
+import { getSiteAssets } from "@/shared/api/assets/siteAssetsApi";
 import { userApi } from "@/shared/api/userApi";
 import { queryClient } from "@/shared/lib/reactQuery";
-
-import { moodThemeValues } from "@/data/moodThemes";
 
 import type { MoodTheme } from "@/types/mood";
 import type { WineCatalogCard } from "@/types/wineCatalogCard";
 
+import poppinsRegularUrl from "@/assets/fonts/Poppins-Regular.woff2?url";
+import marcellusRegularUrl from "@/assets/fonts/Marcellus-Regular.woff2?url";
+
 import "@/index.scss";
+
 
 const MOOD_THEME_COOKIE_KEY =
   "moodTheme";
+
 
 const accessTokenCookie =
   createCookie("accessToken", {
@@ -41,6 +53,7 @@ const accessTokenCookie =
     sameSite: "lax",
     secure: import.meta.env.PROD,
   });
+
 
 const getMoodThemeFromCookie = (
   cookieHeader: string | null,
@@ -78,6 +91,7 @@ const getMoodThemeFromCookie = (
 
   return "default";
 };
+
 
 const getThemeStyle = (
   moodTheme: MoodTheme,
@@ -136,6 +150,28 @@ const getThemeStyle = (
   } as React.CSSProperties;
 };
 
+
+
+export function links() {
+  return [
+    {
+      rel: "preload",
+      href: poppinsRegularUrl,
+      as: "font",
+      type: "font/woff2",
+      crossOrigin: "anonymous",
+    },
+    {
+      rel: "preload",
+      href: marcellusRegularUrl,
+      as: "font",
+      type: "font/woff2",
+      crossOrigin: "anonymous",
+    },
+  ];
+}
+
+
 export async function loader({
   request,
 }: {
@@ -154,7 +190,8 @@ export async function loader({
       cookieHeader,
     );
 
-  let favoriteWines: WineCatalogCard[] = [];
+  let favoriteWines: WineCatalogCard[] =
+    [];
 
   if (authToken) {
     try {
@@ -178,9 +215,11 @@ export async function loader({
   };
 }
 
+
 export function shouldRevalidate() {
   return false;
 }
+
 
 export function Layout({
   children,
@@ -192,9 +231,22 @@ export function Layout({
       typeof loader
     >("root");
 
+
+  /*
+   * При нормальной загрузке тема приходит
+   * из root loader.
+   *
+   * Если root loader завершился ошибкой,
+   * данных loader здесь уже нет.
+   *
+   * Сам ErrorBoundary ниже отдельно
+   * устанавливает CSS variables для
+   * Preparing WineMood.
+   */
   const moodTheme =
     data?.moodTheme ??
     "default";
+
 
   return (
     <html
@@ -242,13 +294,119 @@ export function Layout({
   );
 }
 
+
+export function ErrorBoundary() {
+  const error =
+    useRouteError();
+
+  const rootData =
+    useRouteLoaderData<
+      typeof loader
+    >("root");
+
+  const moodTheme =
+    rootData?.moodTheme ??
+    "default";
+
+  const isBackendUnavailable =
+    isRouteErrorResponse(error) &&
+    error.status === 503;
+
+  useEffect(() => {
+    if (!isBackendUnavailable) {
+      return;
+    }
+
+    let cancelled = false;
+
+    let retryTimer:
+      | ReturnType<typeof setTimeout>
+      | undefined;
+
+    const checkBackend =
+      async () => {
+        try {
+          await getSiteAssets();
+
+          if (!cancelled) {
+            window.location.reload();
+          }
+        } catch {
+          if (!cancelled) {
+            retryTimer =
+              window.setTimeout(
+                checkBackend,
+                5_000,
+              );
+          }
+        }
+      };
+
+    retryTimer =
+      window.setTimeout(
+        checkBackend,
+        5_000,
+      );
+
+    return () => {
+      cancelled = true;
+
+      if (retryTimer) {
+        window.clearTimeout(
+          retryTimer,
+        );
+      }
+    };
+  }, [
+    isBackendUnavailable,
+  ]);
+
+  if (isBackendUnavailable) {
+    return (
+      <div
+        style={
+          getThemeStyle(
+            moodTheme,
+          )
+        }
+      >
+        <AppLoadingProvider>
+          <NavigationLoadingOverlay
+            forceVisible
+          />
+        </AppLoadingProvider>
+      </div>
+    );
+  }
+
+  console.error(
+    "Unhandled route error:",
+    error,
+  );
+
+  return (
+    <main>
+      <h1>
+        Something went wrong
+      </h1>
+
+      <p>
+        Please try again later.
+      </p>
+    </main>
+  );
+}
+
+
 export default function Root() {
   const {
     moodTheme,
     favoriteWines,
-  } = useLoaderData<
-    typeof loader
-  >();
+  } =
+    useLoaderData<
+      typeof loader
+    >();
+
 
   return (
     <QueryClientProvider
@@ -269,6 +427,7 @@ export default function Root() {
               <QuizSessionProvider>
                 <AppLoadingProvider>
                   <AnalyticsSessionTracker />
+
                   <AnalyticsPageViewTracker />
 
                   <App />

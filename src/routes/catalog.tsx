@@ -6,6 +6,7 @@ import { filterWines } from "@/shared/api/wineFilterApi";
 import { CATALOG_PAGE_SIZE } from "@/shared/config/catalog";
 import { buildWineFilters } from "@/shared/lib/buildWineFilters";
 
+
 const getArrayParam = (
   searchParams: URLSearchParams,
   key: string,
@@ -123,30 +124,38 @@ export async function loader({
     "foodName",
   );
 
-  const page = getPage(searchParams);
-  const sort = getSort(searchParams);
+  const page =
+    getPage(searchParams);
 
-  const response = await filterWines({
-    filters: buildWineFilters({
-      searchQuery,
-      wineTypes,
-      countries,
-      sweetnessLevels,
-      grapeVarieties,
-      wineStyles,
-      acidityLevels,
-      aromaNotes,
-      moods,
-      events,
-      seasons,
-      foodName,
-    }),
-    page,
-    size: CATALOG_PAGE_SIZE,
-    sort,
-  });
+  const sort =
+    getSort(searchParams);
 
-  if (!Array.isArray(response.data)) {
+  const response =
+    await filterWines({
+      filters: buildWineFilters({
+        searchQuery,
+        wineTypes,
+        countries,
+        sweetnessLevels,
+        grapeVarieties,
+        wineStyles,
+        acidityLevels,
+        aromaNotes,
+        moods,
+        events,
+        seasons,
+        foodName,
+      }),
+      page,
+      size: CATALOG_PAGE_SIZE,
+      sort,
+    });
+
+  if (
+    !Array.isArray(
+      response.data,
+    )
+  ) {
     throw new Error(
       "Invalid wines data",
     );

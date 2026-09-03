@@ -76,6 +76,8 @@ export const WineCatalogCard = ({
             className="catalog-page__image"
             src={wine.imageUrl}
             alt={wine.name}
+            loading="lazy"
+            decoding="async"
           />
         </div>
 

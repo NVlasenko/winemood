@@ -77,6 +77,8 @@ export const ProfileCategories = ({
                   }
                   alt={category.title}
                   className="profile-categories__image"
+                  loading="lazy"
+                  decoding="async"
                 />
 
                 <div className="profile-categories__overlay" />

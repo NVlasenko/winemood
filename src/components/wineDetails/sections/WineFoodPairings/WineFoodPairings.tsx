@@ -55,6 +55,8 @@ export const WineFoodPairings = ({ foodPairings }: Props) => {
                       className="wine-food-pairings__image"
                       src={foodPairing.foodImageUrl}
                       alt={title}
+                      loading="lazy"
+                      decoding="async"
                     />
                   ) : (
                     <div className="wine-food-pairings__image-placeholder">

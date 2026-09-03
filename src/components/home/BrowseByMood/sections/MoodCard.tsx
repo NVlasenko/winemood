@@ -27,6 +27,8 @@ export const MoodCard = memo(
             className="browse-by-mood__card-image"
             src={mood.imageUrl}
             alt={mood.title}
+            loading="lazy"
+            decoding="async"
           />
 
           <div className="browse-by-mood__card-overlay" />

@@ -308,12 +308,14 @@ export const UserReviewsList = ({
               review.wineImageUrl
             }
             alt={review.wineName}
+            loading="lazy"
+            decoding="async"
           />
 
           <div className="user-reviews__wine-info">
-            <h4>
+            <h3>
               {review.wineName}
-            </h4>
+            </h3>
 
             <span>
               ⭐ {review.rating}

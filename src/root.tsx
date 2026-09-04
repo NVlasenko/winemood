@@ -9,7 +9,7 @@ import {
   useRouteError,
   useRouteLoaderData,
 } from "react-router";
-
+import { ApiError } from "@/shared/api/httpClient";
 import { useEffect } from "react";
 
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -29,7 +29,9 @@ import { QuizSessionProvider } from "@/context/QuizSessionContext";
 
 import { moodThemeValues } from "@/data/moodThemes";
 
-import { getSiteAssets } from "@/shared/api/assets/siteAssetsApi";
+import {
+  checkBackendAvailability,
+} from "@/shared/api/assets/siteAssetsApi";
 import { userApi } from "@/shared/api/userApi";
 import { queryClient } from "@/shared/lib/reactQuery";
 
@@ -316,15 +318,24 @@ export function ErrorBoundary() {
       | ReturnType<typeof setTimeout>
       | undefined;
 
-    const checkBackend =
+      const checkBackend =
       async () => {
         try {
-          await getSiteAssets();
-
+          await checkBackendAvailability();
+    
           if (!cancelled) {
             window.location.reload();
           }
-        } catch {
+        } catch (error) {
+          if (
+            error instanceof ApiError &&
+            error.status === 401
+          ) {
+            window.location.reload();
+    
+            return;
+          }
+    
           if (!cancelled) {
             retryTimer =
               window.setTimeout(

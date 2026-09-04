@@ -8,3 +8,13 @@ export const getSiteAssets =
       "/api/assets/site",
     );
   };
+
+export const checkBackendAvailability =
+  async (): Promise<void> => {
+    await httpClient<SiteAssets>(
+      "/api/assets/site",
+      {
+        skipAuth: true,
+      },
+    );
+  };

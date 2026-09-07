@@ -12,103 +12,81 @@
     position: relative;
     z-index: 2;
     max-width: 100%;
-
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
     isolation: isolate;
-
     transform: translateY(-70px);
 
     &::before {
       @include mood-glow;
-
       top: -140px;
       left: 50%;
       z-index: -1;
-
       width: 400px;
       height: 400px;
-
       transform: translateX(-50%);
     }
   }
 
   &__title {
     margin: 0;
-
     font-family: "Marcellus", serif;
     font-weight: 400;
     font-size: 36px;
     line-height: 1.15;
     letter-spacing: 0.05em;
-
     text-align: center;
     text-transform: uppercase;
-
     color: rgba(255, 255, 255, 1);
   }
 
   &__subtitle {
     margin-top: 24px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     gap: 10px;
 
     p {
       margin: 0;
-
       font-family: "Poppins", sans-serif;
       font-weight: 500;
       font-size: 12px;
       line-height: 1;
       letter-spacing: 0.1em;
-
       text-transform: uppercase;
       white-space: nowrap;
-
       color: $text-primary;
     }
 
     span {
       width: 30px;
       height: 1px;
-
       background: rgba(177, 167, 166, 1);
     }
   }
 
   &__button {
     margin-top: 36px;
-
     padding: 14px 28px;
-
     font-size: 13px;
   }
 
   &__image {
     position: absolute;
     inset: 0;
-
     z-index: 0;
-
     width: 100%;
     height: 100%;
-
     pointer-events: none;
 
     img {
       width: 100%;
       height: 100%;
-
       object-fit: cover;
       object-position: 80% top;
-
       filter: blur(4px);
     }
   }
@@ -118,12 +96,10 @@
 
     &__content {
       max-width: 620px;
-
       transform: translateY(-105px);
 
       &::before {
         top: -150px;
-
         width: 500px;
         height: 500px;
       }
@@ -135,7 +111,6 @@
 
     &__subtitle {
       margin-top: 30px;
-
       gap: 14px;
 
       p {
@@ -149,16 +124,13 @@
 
     &__button {
       margin-top: 44px;
-
       padding: 16px 36px;
-
       font-size: 15px;
     }
 
     &__image {
       img {
         object-position: 75% top;
-
         filter: blur(0);
       }
     }
@@ -170,7 +142,6 @@
     &__content {
       max-width: 720px;
       margin-left: 103px;
-  
       align-items: center;
   
       transform: translateY(
@@ -179,7 +150,6 @@
   
       &::before {
         top: clamp(-180px, -20vh, -120px);
-  
         width: 600px;
         height: 450px;
       }
@@ -187,13 +157,11 @@
   
     &__title {
       font-size: clamp(42px, 3.5vw, 54px);
-  
       white-space: nowrap;
     }
   
     &__subtitle {
       margin-top: clamp(24px, 4vh, 36px);
-  
       gap: 10px;
   
       p {
@@ -207,17 +175,14 @@
   
     &__button {
       margin-top: clamp(32px, 5vh, 54px);
-  
       width: 296px;
       height: clamp(58px, 7vh, 68px);
-  
       padding: 20px 33px;
-  
       white-space: nowrap;
-  
       font-size: 16px;
     }
   }
+
   @media (min-width: 1440px) and (max-height: 800px) {
     .hero-section {
       min-height: 100svh;
@@ -240,7 +205,6 @@
   
       &__button {
         margin-top: 32px;
-  
         height: 58px;
       }
     }

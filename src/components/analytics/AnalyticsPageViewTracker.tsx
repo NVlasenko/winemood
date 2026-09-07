@@ -1,22 +1,19 @@
 import { useEffect, useRef } from "react";
+
 import { useLocation } from "react-router";
 
 import { analytics } from "@/shared/lib/analytics";
 
-const getAnalyticsPageUrl = (
-  pathname: string,
-  search: string,
-) => {
+const getAnalyticsPageUrl = (pathname: string, search: string) => {
   const searchParams = new URLSearchParams(search);
 
   searchParams.delete("searchOpen");
+
   searchParams.delete("search");
 
   const query = searchParams.toString();
 
-  return query
-    ? `${pathname}?${query}`
-    : pathname;
+  return query ? `${pathname}?${query}` : pathname;
 };
 
 export const AnalyticsPageViewTracker = () => {
@@ -25,10 +22,7 @@ export const AnalyticsPageViewTracker = () => {
   const lastTrackedPageRef = useRef<string | null>(null);
 
   useEffect(() => {
-    const pageUrl = getAnalyticsPageUrl(
-      location.pathname,
-      location.search,
-    );
+    const pageUrl = getAnalyticsPageUrl(location.pathname, location.search);
 
     if (lastTrackedPageRef.current === pageUrl) {
       return;
@@ -36,18 +30,12 @@ export const AnalyticsPageViewTracker = () => {
 
     lastTrackedPageRef.current = pageUrl;
 
-    analytics
-      .pageViewed(pageUrl)
-      .catch((error) => {
-        console.error(
-          "Failed to send PAGE_VIEWED analytics event:",
-          error,
-        );
-      });
-  }, [
-    location.pathname,
-    location.search,
-  ]);
+    const eventId = crypto.randomUUID();
+
+    analytics.pageViewed(pageUrl, eventId).catch((error) => {
+      console.error("Failed to send PAGE_VIEWED analytics event:", error);
+    });
+  }, [location.pathname, location.search]);
 
   return null;
 };

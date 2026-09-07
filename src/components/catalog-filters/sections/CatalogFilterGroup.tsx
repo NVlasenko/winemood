@@ -1,29 +1,25 @@
 import { memo } from "react";
-
 import ArrowDownIcon from "@/assets/images/filters/arrows/arrow-default.svg?react";
 
-import type { FilterGroup, FilterOption, WineArrayFilterKey } from "@/types/filters";
-
+import type {
+  FilterGroup,
+  FilterOption,
+  WineArrayFilterKey,
+} from "@/types/filters";
 
 type Props = {
   filter: FilterGroup;
   openedFilter: string;
   selectedFilters: Record<string, string[]>;
   onToggleFilter: (id: string) => void;
-  onToggleOption: (
-    filterId: WineArrayFilterKey,
-    value: string,
-  ) => void;
+  onToggleOption: (filterId: WineArrayFilterKey, value: string) => void;
 };
 
 type FilterOptionButtonProps = {
   filterId: WineArrayFilterKey;
   option: FilterOption;
   isSelected: boolean;
-  onToggleOption: (
-    filterId: WineArrayFilterKey,
-    value: string,
-  ) => void;
+  onToggleOption: (filterId: WineArrayFilterKey, value: string) => void;
 };
 
 const FilterOptionButton = ({
@@ -40,13 +36,9 @@ const FilterOptionButton = ({
       }`}
       onClick={() => onToggleOption(filterId, option.value)}
     >
-      <span className="catalog-filters__checkbox">
-        {isSelected && "✓"}
-      </span>
+      <span className="catalog-filters__checkbox">{isSelected && "✓"}</span>
 
-      <span className="catalog-filters__option-name">
-        {option.label}
-      </span>
+      <span className="catalog-filters__option-name">{option.label}</span>
     </button>
   );
 };
@@ -112,10 +104,7 @@ export const CatalogFilterGroup = memo(
           })}
 
           {filter.subgroups?.map((subgroup) => (
-            <div
-              className="catalog-filters__subgroup"
-              key={subgroup.id}
-            >
+            <div className="catalog-filters__subgroup" key={subgroup.id}>
               <h4 className="catalog-filters__subgroup-title">
                 {subgroup.title}
               </h4>
@@ -124,7 +113,7 @@ export const CatalogFilterGroup = memo(
                 {subgroup.options.map((option) => {
                   const isSelected =
                     selectedFilters[subgroup.filterId]?.includes(
-                      option.value,
+                      option.value
                     ) ?? false;
 
                   return (
@@ -143,7 +132,7 @@ export const CatalogFilterGroup = memo(
         </div>
       </div>
     );
-  },
+  }
 );
 
 CatalogFilterGroup.displayName = "CatalogFilterGroup";

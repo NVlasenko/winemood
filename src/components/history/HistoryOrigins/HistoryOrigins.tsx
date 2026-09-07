@@ -9,9 +9,7 @@ type HistoryOriginsProps = {
   origins: HistoryOrigin[];
 };
 
-export const HistoryOrigins = ({
-  origins,
-}: HistoryOriginsProps) => {
+export const HistoryOrigins = ({ origins }: HistoryOriginsProps) => {
   return (
     <section className="history-origins">
       <div className="container">
@@ -19,16 +17,10 @@ export const HistoryOrigins = ({
 
         <div className="history-origins__list">
           {origins.map((item) => {
-            const Icon =
-              ORIGIN_ICONS[
-                item.id as keyof typeof ORIGIN_ICONS
-              ];
+            const Icon = ORIGIN_ICONS[item.id as keyof typeof ORIGIN_ICONS];
 
             return (
-              <article
-                className="history-origins__card"
-                key={item.id}
-              >
+              <article className="history-origins__card" key={item.id}>
                 <div className="history-origins__info">
                   {Icon && (
                     <Icon
@@ -39,13 +31,9 @@ export const HistoryOrigins = ({
                   )}
 
                   <div className="history-origins__content">
-                    <h3 className="history-origins__title">
-                      {item.title}
-                    </h3>
+                    <h3 className="history-origins__title">{item.title}</h3>
 
-                    <p className="history-origins__text">
-                      {item.description}
-                    </p>
+                    <p className="history-origins__text">{item.description}</p>
                   </div>
                 </div>
 

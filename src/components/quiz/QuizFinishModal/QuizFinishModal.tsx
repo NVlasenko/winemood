@@ -21,9 +21,7 @@ export const QuizFinishModal = ({ isOpen, onBackToQuiz, onFinish }: Props) => {
       />
 
       <div className="quiz-finish-modal__panel">
-        <h2 className="quiz-finish-modal__title">
-          Are you sure you’re done?
-        </h2>
+        <h2 className="quiz-finish-modal__title">Are you sure you’re done?</h2>
 
         <p className="quiz-finish-modal__text">
           You have answered all the questions. Click below to complete the quiz

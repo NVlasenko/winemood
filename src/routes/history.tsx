@@ -11,12 +11,7 @@ import { getSiteAssets } from "@/shared/api/assets/siteAssetsApi";
 import { HistoryPage } from "@/pages/HistoryPage";
 
 export async function loader() {
-  const [
-    origins,
-    timelineItems,
-    womanImages,
-    siteAssets,
-  ] = await Promise.all([
+  const [origins, timelineItems, womanImages, siteAssets] = await Promise.all([
     getHistoryOrigins(),
     getHistoryTimeline(),
     getHistoryWomanImages(),

@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router";
-
 import { useAuth } from "@/context/AuthContext";
 import { useAuthRequired } from "@/context/AuthRequiredContext";
 
@@ -28,8 +27,7 @@ export const WineReviewsActions = ({
   const navigate = useNavigate();
 
   const { isAuthenticated } = useAuth();
-  const { openAuthRequired } =
-    useAuthRequired();
+  const { openAuthRequired } = useAuthRequired();
 
   const handleAction = () => {
     if (!isAuthenticated) {
@@ -37,35 +35,27 @@ export const WineReviewsActions = ({
         title: "Write a wine review",
         text: "To write a review, please sign up or log in to your account.",
         primaryLabel: "Sign up",
-        primaryTo:
-          "/auth?mode=register",
+        primaryTo: "/auth?mode=register",
         secondaryLabel: "Log in",
-        secondaryTo:
-          "/auth?mode=login",
+        secondaryTo: "/auth?mode=login",
       });
 
       return;
     }
 
     if (hasMyReview) {
-      navigate(
-        `/profile?section=reviews&wineId=${wineId}`,
-      );
+      navigate(`/profile?section=reviews&wineId=${wineId}`);
 
       return;
     }
 
-    navigate(
-      `/catalog/${wineId}/review`,
-    );
+    navigate(`/catalog/${wineId}/review`);
   };
 
   return (
     <div
       className={`wine-reviews__actions ${
-        isExpanded
-          ? "wine-reviews__actions--expanded"
-          : ""
+        isExpanded ? "wine-reviews__actions--expanded" : ""
       }`}
     >
       <button
@@ -73,42 +63,24 @@ export const WineReviewsActions = ({
         type="button"
         onClick={handleAction}
       >
-        <span>
-          {hasMyReview
-            ? "Go to profile to edit"
-            : "Write a review"}
-        </span>
+        <span>{hasMyReview ? "Go to profile to edit" : "Write a review"}</span>
 
         {showReviewIcon && (
-          <img
-            className="wine-reviews__write-icon"
-            src={reviewIcon}
-            alt=""
-          />
+          <img className="wine-reviews__write-icon" src={reviewIcon} alt="" />
         )}
       </button>
 
-      {hasAnyReviews &&
-        hasMoreReviews && (
-          <button
-            className="wine-reviews__button"
-            type="button"
-            onClick={
-              onToggleExpanded
-            }
-          >
-            <span>
-              {isExpanded
-                ? "Show less"
-                : "See more"}
-            </span>
+      {hasAnyReviews && hasMoreReviews && (
+        <button
+          className="wine-reviews__button"
+          type="button"
+          onClick={onToggleExpanded}
+        >
+          <span>{isExpanded ? "Show less" : "See more"}</span>
 
-            <img
-              src={arrowIcon}
-              alt=""
-            />
-          </button>
-        )}
+          <img src={arrowIcon} alt="" />
+        </button>
+      )}
     </div>
   );
 };

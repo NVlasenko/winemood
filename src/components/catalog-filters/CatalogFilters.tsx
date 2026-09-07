@@ -1,14 +1,9 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 
 import { getMetadata } from "@/shared/api/metadataApi";
 import { filterWines } from "@/shared/api/wineFilterApi";
+
 import ResetIcon from "@/assets/images/filters/reset/reset-default.svg?react";
 
 import type { MetadataFilter } from "@/types/metadata";
@@ -24,11 +19,7 @@ type Props = {
   onClose: () => void;
 };
 
-
-
-type SelectedFilters = Partial<
-  Record<WineArrayFilterKey, string[]>
->;
+type SelectedFilters = Partial<Record<WineArrayFilterKey, string[]>>;
 
 const PREVIEW_PAGE = 0;
 const PREVIEW_PAGE_SIZE = 1;
@@ -48,7 +39,7 @@ const FILTER_PARAM_KEYS = [
 ] as const satisfies readonly WineArrayFilterKey[];
 
 const buildSelectedFiltersFromUrl = (
-  searchParams: URLSearchParams,
+  searchParams: URLSearchParams
 ): SelectedFilters => {
   return FILTER_PARAM_KEYS.reduce<SelectedFilters>((acc, key) => {
     const param = searchParams.get(key);
@@ -61,7 +52,7 @@ const buildSelectedFiltersFromUrl = (
 
 const buildWineFilters = (
   selectedFilters: SelectedFilters,
-  searchQuery: string,
+  searchQuery: string
 ): WineFilterRequest => {
   const filters: WineFilterRequest = {};
 
@@ -88,32 +79,23 @@ const buildCatalogUrl = (params: URLSearchParams) => {
   return query ? `/catalog?${query}` : "/catalog";
 };
 
-export const CatalogFilters = ({
-  isOpen,
-  onClose,
-}: Props) => {
+export const CatalogFilters = ({ isOpen, onClose }: Props) => {
   const navigate = useNavigate();
-
-  const [searchParams] = useSearchParams();
-
   const previewDebounceRef = useRef<number | null>(null);
 
+  const [searchParams] = useSearchParams();
   const [metadataFilters, setMetadataFilters] = useState<MetadataFilter[]>([]);
   const [openedFilter, setOpenedFilter] = useState("");
-
-  const [selectedFilters, setSelectedFilters] =
-    useState<SelectedFilters>(() =>
-      buildSelectedFiltersFromUrl(searchParams),
-    );
-
+  const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>(() =>
+    buildSelectedFiltersFromUrl(searchParams)
+  );
   const [previewCount, setPreviewCount] = useState(0);
   const [isPreviewLoading, setIsPreviewLoading] = useState(false);
-
   const searchQuery = searchParams.get("search") ?? "";
 
   const filterGroups = useMemo(
     () => buildFilterGroups(metadataFilters),
-    [metadataFilters],
+    [metadataFilters]
   );
 
   useEffect(() => {
@@ -127,10 +109,7 @@ export const CatalogFilters = ({
           setMetadataFilters(metadata);
         }
       } catch (error) {
-        console.error(
-          "Failed to load metadata filters:",
-          error,
-        );
+        console.error("Failed to load metadata filters:", error);
       }
     };
 
@@ -146,9 +125,7 @@ export const CatalogFilters = ({
       return;
     }
 
-    setSelectedFilters(
-      buildSelectedFiltersFromUrl(searchParams),
-    );
+    setSelectedFilters(buildSelectedFiltersFromUrl(searchParams));
   }, [isOpen, searchParams]);
 
   useEffect(() => {
@@ -162,42 +139,31 @@ export const CatalogFilters = ({
       window.clearTimeout(previewDebounceRef.current);
     }
 
-    previewDebounceRef.current = window.setTimeout(
-      async () => {
-        try {
-          setIsPreviewLoading(true);
+    previewDebounceRef.current = window.setTimeout(async () => {
+      try {
+        setIsPreviewLoading(true);
 
-          const response = await filterWines({
-            filters: buildWineFilters(
-              selectedFilters,
-              searchQuery,
-            ),
-            page: PREVIEW_PAGE,
-            size: PREVIEW_PAGE_SIZE,
-          });
+        const response = await filterWines({
+          filters: buildWineFilters(selectedFilters, searchQuery),
+          page: PREVIEW_PAGE,
+          size: PREVIEW_PAGE_SIZE,
+        });
 
-          if (isMounted) {
-            setPreviewCount(
-              response.meta.totalElements,
-            );
-          }
-        } catch (error) {
-          console.error(
-            "Failed to load preview count:",
-            error,
-          );
-
-          if (isMounted) {
-            setPreviewCount(0);
-          }
-        } finally {
-          if (isMounted) {
-            setIsPreviewLoading(false);
-          }
+        if (isMounted) {
+          setPreviewCount(response.meta.totalElements);
         }
-      },
-      350,
-    );
+      } catch (error) {
+        console.error("Failed to load preview count:", error);
+
+        if (isMounted) {
+          setPreviewCount(0);
+        }
+      } finally {
+        if (isMounted) {
+          setIsPreviewLoading(false);
+        }
+      }
+    }, 350);
 
     return () => {
       isMounted = false;
@@ -207,58 +173,40 @@ export const CatalogFilters = ({
         previewDebounceRef.current = null;
       }
     };
-  }, [
-    isOpen,
-    selectedFilters,
-    searchQuery,
-  ]);
+  }, [isOpen, selectedFilters, searchQuery]);
 
   const handleClose = useCallback(() => {
     setOpenedFilter("");
     onClose();
   }, [onClose]);
 
-  const toggleFilter = useCallback(
-    (id: string) => {
-      setOpenedFilter((prev) =>
-        prev === id ? "" : id,
-      );
-    },
-    [],
-  );
+  const toggleFilter = useCallback((id: string) => {
+    setOpenedFilter((prev) => (prev === id ? "" : id));
+  }, []);
 
   const toggleOption = useCallback(
-    (
-      filterId: WineArrayFilterKey,
-      value: string,
-    ) => {
+    (filterId: WineArrayFilterKey, value: string) => {
       setSelectedFilters((prev) => {
-        const currentValues =
-          prev[filterId] ?? [];
+        const currentValues = prev[filterId] ?? [];
 
-        const isSelected =
-          currentValues.includes(value);
+        const isSelected = currentValues.includes(value);
 
         return {
           ...prev,
           [filterId]: isSelected
-            ? currentValues.filter(
-                (item) => item !== value,
-              )
+            ? currentValues.filter((item) => item !== value)
             : [...currentValues, value],
         };
       });
     },
-    [],
+    []
   );
 
   const resetFilters = useCallback(() => {
     setSelectedFilters({});
     setOpenedFilter("");
 
-    const params = new URLSearchParams(
-      searchParams,
-    );
+    const params = new URLSearchParams(searchParams);
 
     FILTER_PARAM_KEYS.forEach((key) => {
       params.delete(key);
@@ -270,17 +218,14 @@ export const CatalogFilters = ({
   }, [navigate, searchParams]);
 
   const handleShowWines = useCallback(() => {
-    const params = new URLSearchParams(
-      searchParams,
-    );
+    const params = new URLSearchParams(searchParams);
 
     FILTER_PARAM_KEYS.forEach((key) => {
       params.delete(key);
     });
 
     FILTER_PARAM_KEYS.forEach((key) => {
-      const values =
-        selectedFilters[key] ?? [];
+      const values = selectedFilters[key] ?? [];
 
       if (values.length > 0) {
         params.set(key, values.join(","));
@@ -292,21 +237,11 @@ export const CatalogFilters = ({
     navigate(buildCatalogUrl(params));
 
     onClose();
-  }, [
-    navigate,
-    onClose,
-    searchParams,
-    selectedFilters,
-  ]);
+  }, [navigate, onClose, searchParams, selectedFilters]);
 
   return (
     <div
-      className={[
-        "catalog-filters",
-        isOpen
-          ? "catalog-filters--open"
-          : "",
-      ]
+      className={["catalog-filters", isOpen ? "catalog-filters--open" : ""]
         .filter(Boolean)
         .join(" ")}
     >
@@ -320,9 +255,7 @@ export const CatalogFilters = ({
       <aside className="catalog-filters__panel">
         <div className="catalog-filters__header">
           <div className="catalog-filters__header-left">
-            <h2 className="catalog-filters__title">
-              Filters
-            </h2>
+            <h2 className="catalog-filters__title">Filters</h2>
 
             <button
               className="catalog-filters__reset"
@@ -330,7 +263,6 @@ export const CatalogFilters = ({
               onClick={resetFilters}
             >
               Reset all
-
               <ResetIcon
                 className="catalog-filters__reset-icon"
                 aria-hidden="true"

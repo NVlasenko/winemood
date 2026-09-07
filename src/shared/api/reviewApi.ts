@@ -1,26 +1,16 @@
-import type {
-  UserReviewDto,
-  WineReviewDto,
-} from "@/types/reviews";
-
 import { httpClient } from "./httpClient";
+
+import type { UserReviewDto, WineReviewDto } from "@/types/reviews";
 
 type AuthOptions = {
   authToken?: string | null;
 };
 
 export const reviewApi = {
-  getWineReviews: (
-    wineId: number,
-  ) => {
-    return httpClient<
-      WineReviewDto[]
-    >(
-      `/api/wines/${wineId}/reviews`,
-      {
-        method: "GET",
-      },
-    );
+  getWineReviews: (wineId: number) => {
+    return httpClient<WineReviewDto[]>(`/api/wines/${wineId}/reviews`, {
+      method: "GET",
+    });
   },
 
   createReview: (
@@ -28,17 +18,12 @@ export const reviewApi = {
     payload: {
       rating: number;
       reviewText: string;
-    },
+    }
   ) => {
-    return httpClient<void>(
-      `/api/wines/${wineId}/reviews`,
-      {
-        method: "POST",
-        body: JSON.stringify(
-          payload,
-        ),
-      },
-    );
+    return httpClient<void>(`/api/wines/${wineId}/reviews`, {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
   },
 
   updateReview: (
@@ -46,43 +31,24 @@ export const reviewApi = {
     payload: {
       rating: number;
       reviewText: string;
-    },
+    }
   ) => {
-    return httpClient<void>(
-      `/api/users/reviews/${reviewId}`,
-      {
-        method: "PUT",
-        body: JSON.stringify(
-          payload,
-        ),
-      },
-    );
+    return httpClient<void>(`/api/users/reviews/${reviewId}`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    });
   },
 
-  deleteReview: (
-    reviewId: number,
-  ) => {
-    return httpClient<void>(
-      `/api/users/reviews/${reviewId}`,
-      {
-        method: "DELETE",
-      },
-    );
+  deleteReview: (reviewId: number) => {
+    return httpClient<void>(`/api/users/reviews/${reviewId}`, {
+      method: "DELETE",
+    });
   },
 
-  getMyReviews: (
-    {
+  getMyReviews: ({ authToken }: AuthOptions = {}) => {
+    return httpClient<UserReviewDto[]>("/api/users/reviews", {
+      method: "GET",
       authToken,
-    }: AuthOptions = {},
-  ) => {
-    return httpClient<
-      UserReviewDto[]
-    >(
-      "/api/users/reviews",
-      {
-        method: "GET",
-        authToken,
-      },
-    );
+    });
   },
 };

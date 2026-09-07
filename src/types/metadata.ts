@@ -14,9 +14,7 @@ export type MetadataMoodOptions = {
 };
 
 type MetadataOptions =
-  | MetadataOption[]
-  | MetadataFoodGroup[]
-  | MetadataMoodOptions;
+  MetadataOption[] | MetadataFoodGroup[] | MetadataMoodOptions;
 
 export type MetadataFilter = {
   filterKey: string;

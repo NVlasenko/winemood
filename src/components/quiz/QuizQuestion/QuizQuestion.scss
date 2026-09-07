@@ -3,27 +3,23 @@
 
 .quiz-question {
   width: 100%;
-
   display: flex;
   flex-direction: column;
   align-items: center;
 
   &__step {
     margin: 0;
-
     font-family: "Poppins", sans-serif;
     font-weight: 600;
     font-size: 14px;
     line-height: 1;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-
     color: var(--mood-link-hover-color);
   }
 
   &__question {
     margin: 16px 0 0;
-
     font-family: "Marcellus", serif;
     font-weight: 400;
     font-size: 24px;
@@ -31,14 +27,12 @@
     letter-spacing: 0.08em;
     text-align: center;
     text-transform: uppercase;
-
     color: rgba(211, 211, 211, 1);
   }
 
   &__options {
     width: 100%;
     margin-top: 40px;
-
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -53,25 +47,19 @@
 
   &__card {
     position: relative;
-
     width: 100%;
     min-width: min(260px, 100%);
     min-height: 224px;
     padding: 24px 20px;
-
     flex: 0 1 260px;
-
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 14px;
-
     border: 1px solid rgba(217, 217, 217, 0.16);
     border-radius: 8px;
-
     background: rgba(11, 11, 11, 0.55);
-
     cursor: pointer;
     overflow: visible;
 
@@ -106,14 +94,11 @@
     position: absolute;
     top: -12px;
     right: 26px;
-
     width: 24px;
     height: 24px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     border-radius: 50%;
 
     background: linear-gradient(
@@ -126,29 +111,23 @@
     font-weight: 600;
     font-size: 13px;
     line-height: 1;
-
     color: $text-primary;
-
     box-shadow: 0 0 16px var(--button-shadow);
   }
 
   &__icon {
     width: 54px;
     height: 64px;
-
     object-fit: contain;
-
     filter: drop-shadow(0 0 12px var(--line-shadow));
   }
 
   &__title {
     min-height: 48px;
     margin-top: 0;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     font-family: "Marcellus", serif;
     font-weight: 400;
     font-size: 20px;
@@ -156,19 +135,16 @@
     letter-spacing: 0.08em;
     text-align: center;
     text-transform: uppercase;
-
     color: $text-primary;
   }
 
   &__description {
     max-width: 300px;
-
     font-family: "Poppins", sans-serif;
     font-weight: 400;
     font-size: 14px;
     line-height: 1.45;
     text-align: center;
-
     color: rgba(177, 167, 166, 1);
   }
 
@@ -221,7 +197,6 @@
       min-height: 224px;
       padding: 24px 18px;
       gap: 14px;
-
       flex: 0 1 260px;
     }
 
@@ -299,7 +274,6 @@
       min-height: 224px;
       padding: 24px;
       gap: 14px;
-
       flex: 0 1 260px;
     }
 
@@ -363,21 +337,17 @@
   @media (min-width: 1024px) and (max-height: 800px) {
     &__question {
       margin-top: 12px;
-  
       font-size: 28px;
     }
   
     &__options {
       margin-top: 24px;
-  
       gap: 16px;
     }
   
     &__card {
       min-height: 170px;
-  
       padding: 16px 18px;
-  
       gap: 10px;
     }
   
@@ -403,7 +373,6 @@
   
       .quiz-question__card {
         min-height: 150px;
-  
         padding: 14px 16px;
       }
   
@@ -414,7 +383,6 @@
   
       .quiz-question__title {
         min-height: 34px;
-  
         font-size: 16px;
       }
     }

@@ -11,13 +11,8 @@ type Props = {
   wines: WineCatalogCardType[];
 };
 
-export const SimilarWines = ({
-  wines,
-}: Props) => {
-  const {
-    isFavorite,
-    toggleFavorite,
-  } = useFavorites();
+export const SimilarWines = ({ wines }: Props) => {
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   if (!wines.length) {
     return null;
@@ -29,21 +24,15 @@ export const SimilarWines = ({
         <SectionTitle title="You May Also Like" />
 
         <div className="similar-wines__grid">
-          {wines.map(
-            (wine, index) => (
-              <WineCatalogCard
-                key={wine.id}
-                wine={wine}
-                index={index}
-                isFavorite={isFavorite(
-                  wine.id,
-                )}
-                onToggleFavorite={
-                  toggleFavorite
-                }
-              />
-            ),
-          )}
+          {wines.map((wine, index) => (
+            <WineCatalogCard
+              key={wine.id}
+              wine={wine}
+              index={index}
+              isFavorite={isFavorite(wine.id)}
+              onToggleFavorite={toggleFavorite}
+            />
+          ))}
         </div>
       </div>
     </section>

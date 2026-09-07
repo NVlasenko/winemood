@@ -1,11 +1,5 @@
-import {
-  useEffect,
-  useState,
-} from "react";
-
-import {
-  useNavigation,
-} from "react-router";
+import { useEffect, useState } from "react";
+import { useNavigation } from "react-router";
 
 import { useAppLoading } from "@/context/AppLoadingContext";
 
@@ -21,30 +15,17 @@ type NavigationLoadingOverlayProps = {
 export const NavigationLoadingOverlay = ({
   forceVisible = false,
 }: NavigationLoadingOverlayProps) => {
-  const navigation =
-    useNavigation();
+  const navigation = useNavigation();
 
-  const {
-    isBackendLoading,
-  } = useAppLoading();
+  const { isBackendLoading } = useAppLoading();
 
-  const isNavigating =
-    navigation.state !== "idle";
+  const isNavigating = navigation.state !== "idle";
 
-  const isLoading =
-    forceVisible ||
-    isNavigating ||
-    isBackendLoading;
+  const isLoading = forceVisible || isNavigating || isBackendLoading;
 
-  const [
-    isVisible,
-    setIsVisible,
-  ] = useState(forceVisible);
+  const [isVisible, setIsVisible] = useState(forceVisible);
 
-  const [
-    isLongWait,
-    setIsLongWait,
-  ] = useState(false);
+  const [isLongWait, setIsLongWait] = useState(false);
 
   useEffect(() => {
     if (!isLoading) {
@@ -54,49 +35,30 @@ export const NavigationLoadingOverlay = ({
       return;
     }
 
-    let showTimer:
-      | number
-      | undefined;
+    let showTimer: number | undefined;
 
-    if (
-      forceVisible ||
-      isBackendLoading
-    ) {
+    if (forceVisible || isBackendLoading) {
       setIsVisible(true);
     } else {
-      showTimer =
-        window.setTimeout(() => {
-          setIsVisible(true);
-        }, SHOW_DELAY_MS);
+      showTimer = window.setTimeout(() => {
+        setIsVisible(true);
+      }, SHOW_DELAY_MS);
     }
 
-    const longWaitTimer =
-      window.setTimeout(() => {
-        setIsLongWait(true);
-      }, LONG_WAIT_DELAY_MS);
+    const longWaitTimer = window.setTimeout(() => {
+      setIsLongWait(true);
+    }, LONG_WAIT_DELAY_MS);
 
     return () => {
       if (showTimer) {
-        window.clearTimeout(
-          showTimer,
-        );
+        window.clearTimeout(showTimer);
       }
 
-      window.clearTimeout(
-        longWaitTimer,
-      );
+      window.clearTimeout(longWaitTimer);
     };
-  }, [
-    isLoading,
-    isBackendLoading,
-    forceVisible,
-  ]);
+  }, [isLoading, isBackendLoading, forceVisible]);
 
-  if (
-    !isVisible &&
-    !isBackendLoading &&
-    !forceVisible
-  ) {
+  if (!isVisible && !isBackendLoading && !forceVisible) {
     return null;
   }
 
@@ -124,43 +86,33 @@ export const NavigationLoadingOverlay = ({
           </div>
 
           <div className="navigation-loading__copy">
-            <span className="navigation-loading__eyebrow">
-              WineMood
-            </span>
+            <span className="navigation-loading__eyebrow">WineMood</span>
 
             <h2 className="navigation-loading__title">
-              {isLongWait
-                ? "Still preparing..."
-                : "Preparing WineMood"}
+              {isLongWait ? "Still preparing..." : "Preparing WineMood"}
             </h2>
 
             {!isLongWait ? (
               <>
                 <p className="navigation-loading__text">
-                  We're getting your
-                  wine experience ready.
+                  We're getting your wine experience ready.
                 </p>
 
                 <p className="navigation-loading__hint">
-                  If you haven't visited
-                  in a while, preparation
-                  may take up to 3–5
-                  minutes.
+                  If you haven't visited in a while, preparation may take up to
+                  3–5 minutes.
                 </p>
               </>
             ) : (
               <>
                 <p className="navigation-loading__text">
-                  Everything is still
-                  loading. You don't need
-                  to refresh the page.
+                  Everything is still loading. You don't need to refresh the
+                  page.
                 </p>
 
                 <p className="navigation-loading__hint">
-                  After a longer period of
-                  inactivity, preparation
-                  can occasionally take a
-                  few minutes.
+                  After a longer period of inactivity, preparation can
+                  occasionally take a few minutes.
                 </p>
               </>
             )}

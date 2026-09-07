@@ -9,9 +9,7 @@ const SHOWN_ACHIEVEMENTS_PREFIX = "shownAchievements";
 
 export const useAchievementListener = () => {
   const { user } = useAuth();
-
   const { data: achievements = [], isSuccess } = useAchievements(!!user);
-
   const [queue, setQueue] = useState<Achievement[]>([]);
 
   const unlocked = useMemo(() => queue[0] ?? null, [queue]);

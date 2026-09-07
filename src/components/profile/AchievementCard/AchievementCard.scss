@@ -3,12 +3,9 @@
 
 .achievement {
   position: relative;
-
   height: 220px;
   padding: 24px;
-
   border-radius: 20px;
-
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -23,20 +20,15 @@
   );
 
   border: 1px solid rgba(var(--wine-glow-rgb), 0.25);
-
   overflow: hidden;
-
   transition: 0.35s ease;
 
   &__aura {
     position: absolute;
     inset: 0;
-
     background: var(--wine-glow-gradient);
     opacity: 0.5;
-
     filter: blur(80px);
-
     transition: 0.4s;
   }
 
@@ -52,18 +44,13 @@
   &__icon {
     position: relative;
     z-index: 2;
-
     width: 96px;
     height: 96px;
-
     border-radius: 20px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     margin-bottom: 16px;
-
     background: rgba(0, 0, 0, 0.45);
 
     img {
@@ -76,7 +63,6 @@
   &__placeholder {
     width: 48px;
     height: 48px;
-
     border-radius: 50%;
 
     background: radial-gradient(
@@ -155,7 +141,6 @@
     &__icon {
       width: 120px;
       height: 120px;
-
       margin-bottom: 20px;
 
       img {

@@ -3,9 +3,7 @@ import type { AnalyticsDeviceType } from "@/types/analytics";
 const ANALYTICS_SESSION_ID_KEY = "analyticsSessionId";
 
 export const getOrCreateAnalyticsSession = () => {
-  const existingSessionId = sessionStorage.getItem(
-    ANALYTICS_SESSION_ID_KEY,
-  );
+  const existingSessionId = sessionStorage.getItem(ANALYTICS_SESSION_ID_KEY);
 
   if (existingSessionId) {
     return {
@@ -16,10 +14,7 @@ export const getOrCreateAnalyticsSession = () => {
 
   const sessionId = crypto.randomUUID();
 
-  sessionStorage.setItem(
-    ANALYTICS_SESSION_ID_KEY,
-    sessionId,
-  );
+  sessionStorage.setItem(ANALYTICS_SESSION_ID_KEY, sessionId);
 
   return {
     sessionId,

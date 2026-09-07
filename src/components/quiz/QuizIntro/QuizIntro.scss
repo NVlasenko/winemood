@@ -4,27 +4,23 @@
 .quiz-intro {
   width: 100%;
   margin-top: 64px;
-
   display: flex;
   flex-direction: column;
   align-items: center;
 
   &__step {
     margin: 0;
-
     font-family: "Poppins", sans-serif;
     font-weight: 600;
     font-size: 14px;
     line-height: 1;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-
     color: var(--mood-link-hover-color);
   }
 
   &__question {
     margin: 16px 0 0;
-
     font-family: "Marcellus", serif;
     font-weight: 400;
     font-size: 24px;
@@ -32,14 +28,12 @@
     letter-spacing: 0.08em;
     text-align: center;
     text-transform: uppercase;
-
     color: rgba(211, 211, 211, 1);
   }
 
   &__options {
     width: 100%;
     margin-top: 40px;
-
     display: grid;
     grid-template-columns: 1fr;
     gap: 18px;
@@ -47,24 +41,18 @@
 
   &__card {
     position: relative;
-
     width: 100%;
     min-height: 224px;
     padding: 24px 20px;
-
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 18px;
-
     border: 1px solid rgba(217, 217, 217, 0.16);
     border-radius: 8px;
-
     background: rgba(11, 11, 11, 0.55);
-
     cursor: pointer;
-
     overflow: visible;
 
     transition:
@@ -98,14 +86,11 @@
     position: absolute;
     top: -12px;
     right: 26px;
-
     width: 24px;
     height: 24px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     border-radius: 50%;
 
     background: linear-gradient(
@@ -118,43 +103,35 @@
     font-weight: 600;
     font-size: 13px;
     line-height: 1;
-
     color: $text-primary;
-
     box-shadow: 0 0 16px var(--button-shadow);
   }
 
   &__icon {
     width: 54px;
     height: 54px;
-
     object-fit: contain;
-
     filter: drop-shadow(0 0 12px var(--line-shadow));
   }
 
   &__title {
     margin-top: 2px;
-
     font-family: "Marcellus", serif;
     font-weight: 400;
     font-size: 20px;
     line-height: 1;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-
     color: $text-primary;
   }
 
   &__description {
     max-width: 300px;
-
     font-family: "Poppins", sans-serif;
     font-weight: 400;
     font-size: 14px;
     line-height: 1.45;
     text-align: center;
-
     color: rgba(177, 167, 166, 1);
   }
 

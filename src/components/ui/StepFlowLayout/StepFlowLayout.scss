@@ -10,7 +10,6 @@
 
   &::before {
     @include mood-glow;
-
     top: 8%;
     left: 50%;
     width: 320px;
@@ -29,11 +28,9 @@
   &__back {
     width: fit-content;
     margin-top: 28px;
-
     display: flex;
     align-items: center;
     gap: 10px;
-
     text-decoration: none;
 
     transition:
@@ -65,7 +62,6 @@
   &__content {
     min-height: calc(100vh - 150px);
     padding-top: 36px;
-
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -77,7 +73,6 @@
     margin-top: auto;
     padding-top: 50px;
     padding-bottom: 50px;
-
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
@@ -90,14 +85,11 @@
   &__nav-button {
     min-width: 0;
     padding: 0;
-
     display: flex;
     align-items: center;
     gap: 10px;
-
     border: none;
     background: transparent;
-
     cursor: pointer;
 
     transition:
@@ -106,7 +98,6 @@
 
     span {
       max-width: 110px;
-
       font-family: "Poppins", sans-serif;
       font-weight: 500;
       font-size: 12px;
@@ -151,24 +142,21 @@
   &__nav-arrow {
     width: 36px;
     height: auto;
-
     display: block;
     flex-shrink: 0;
-
     object-fit: contain;
 
     &--previous {
       transform: rotate(180deg);
     }
   }
+
   &__finish-button {
     grid-area: next;
     justify-self: end;
-  
     min-width: 180px;
     height: 52px;
     padding-inline: 28px;
-  
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -183,7 +171,6 @@
   &__finish-arrow {
     width: 20px;
     height: auto;
-  
     flex-shrink: 0;
     object-fit: contain;
   }
@@ -191,10 +178,8 @@
   &__pagination {
     grid-area: pagination;
     justify-self: center;
-
     width: 100%;
     max-width: 100%;
-
     display: flex;
     align-items: center;
     justify-content: center;
@@ -205,21 +190,16 @@
     width: 32px;
     height: 32px;
     flex: 0 0 32px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     border: 1px solid rgba(217, 217, 217, 0.16);
     border-radius: 8px;
-
     background: rgba(11, 11, 11, 0.55);
-
     font-family: "Poppins", sans-serif;
     font-weight: 500;
     font-size: 13px;
     line-height: 1;
-
     color: rgba(211, 211, 211, 0.65);
 
     transition:
@@ -249,9 +229,7 @@
     width: clamp(12px, 4vw, 22px);
     height: 1px;
     flex: 0 1 clamp(12px, 4vw, 22px);
-
     background: rgba(217, 217, 217, 0.16);
-
     transition: background 0.3s ease;
   }
 
@@ -293,7 +271,6 @@
     &__navigation {
       padding-top: 70px;
       padding-bottom: 70px;
-
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-template-areas:
@@ -349,7 +326,6 @@
       width: 40px;
       height: 40px;
       flex: 0 0 40px;
-
       font-size: 15px;
     }
   }
@@ -360,13 +336,11 @@
     &::before {
       width: 700px;
       height: 700px;
-  
       filter: blur(140px);
     }
   
     &__back {
       margin-top: clamp(16px, 4vh, 48px);
-  
       gap: 8px;
   
       span {
@@ -389,17 +363,13 @@
   
     &__navigation {
       width: 100%;
-  
       margin-top: auto;
-  
       padding-top: clamp(24px, 4vh, 56px);
       padding-bottom: clamp(24px, 4vh, 48px);
-  
       display: flex;
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
-  
       gap: 24px;
     }
   
@@ -408,7 +378,6 @@
   
       span {
         max-width: none;
-  
         font-size: 16px;
         line-height: 1;
       }
@@ -426,7 +395,6 @@
     &__finish-button {
       min-width: 240px;
       height: 60px;
-  
       padding-inline: 40px;
     }
   
@@ -466,7 +434,6 @@
   
     &__content {
       min-height: calc(100svh - 110px);
-  
       padding-top: 10px;
     }
   
@@ -478,13 +445,11 @@
     &__page {
       width: 40px;
       height: 40px;
-  
       flex: 0 0 40px;
     }
   
     &__pagination-line {
       width: 36px;
-  
       flex: 0 0 36px;
     }
   

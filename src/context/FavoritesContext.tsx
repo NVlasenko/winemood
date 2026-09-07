@@ -23,130 +23,88 @@ type FavoritesContextType = {
   isLoadingFavorites: boolean;
   hasLoadedFavorites: boolean;
 
-  toggleFavorite: (
-    wine: WineCatalogCardType,
-  ) => Promise<void>;
+  toggleFavorite: (wine: WineCatalogCardType) => Promise<void>;
 
   isFavorite: (id: number) => boolean;
   isPending: (id: number) => boolean;
 };
 
-const FavoritesContext =
-  createContext<FavoritesContextType | null>(
-    null,
-  );
+const FavoritesContext = createContext<FavoritesContextType | null>(null);
 
-  type Props = {
-    children: ReactNode;
-    initialFavoriteWines?: WineCatalogCardType[];
-    initialHasLoadedFavorites?: boolean;
-  };
+type Props = {
+  children: ReactNode;
+  initialFavoriteWines?: WineCatalogCardType[];
+  initialHasLoadedFavorites?: boolean;
+};
 
-  export const FavoritesProvider = ({
-    children,
-    initialFavoriteWines = [],
-    initialHasLoadedFavorites = false,
-  }: Props) => {
-  const {
-    isAuthenticated,
-    isLoadingUser,
-    user,
-    refreshUser,
-    isAuthReady,
-  } = useAuth();
+export const FavoritesProvider = ({
+  children,
+  initialFavoriteWines = [],
+  initialHasLoadedFavorites = false,
+}: Props) => {
+  const { isAuthenticated, isLoadingUser, user, refreshUser, isAuthReady } =
+    useAuth();
 
-  const [
-    favoriteWines,
-    setFavoriteWines,
-  ] = useState<
-    WineCatalogCardType[]
-  >(initialFavoriteWines);
+  const [favoriteWines, setFavoriteWines] =
+    useState<WineCatalogCardType[]>(initialFavoriteWines);
 
-  const [
-    pendingIds,
-    setPendingIds,
-  ] = useState<number[]>([]);
+  const [pendingIds, setPendingIds] = useState<number[]>([]);
 
-  const [
-    isLoadingFavorites,
-    setIsLoadingFavorites,
-  ] = useState(false);
+  const [isLoadingFavorites, setIsLoadingFavorites] = useState(false);
 
-  const [
-    hasLoadedFavorites,
-    setHasLoadedFavorites,
-  ] = useState(
-    initialHasLoadedFavorites,
+  const [hasLoadedFavorites, setHasLoadedFavorites] = useState(
+    initialHasLoadedFavorites
   );
 
   useEffect(() => {
-    if (
-      !isAuthReady ||
-      isLoadingUser
-    ) {
+    if (!isAuthReady || isLoadingUser) {
       return;
     }
-  
-    if (
-      !isAuthenticated ||
-      !user
-    ) {
+
+    if (!isAuthenticated || !user) {
       setFavoriteWines([]);
       setIsLoadingFavorites(false);
       setHasLoadedFavorites(false);
-  
+
       return;
     }
-  
+
     if (hasLoadedFavorites) {
       return;
     }
-  
+
     let isActive = true;
-  
-    const loadFavorites =
-      async () => {
-        setIsLoadingFavorites(true);
-  
-        try {
-          const favorites =
-            await userApi.getFavorites();
-  
-          if (!isActive) {
-            return;
-          }
-  
-          setFavoriteWines(
-            favorites,
-          );
-  
-          setHasLoadedFavorites(
-            true,
-          );
-        } catch (error) {
-          if (!isActive) {
-            return;
-          }
-  
-          console.error(
-            "Failed to load favorites",
-            error,
-          );
-  
-          setHasLoadedFavorites(
-            true,
-          );
-        } finally {
-          if (isActive) {
-            setIsLoadingFavorites(
-              false,
-            );
-          }
+
+    const loadFavorites = async () => {
+      setIsLoadingFavorites(true);
+
+      try {
+        const favorites = await userApi.getFavorites();
+
+        if (!isActive) {
+          return;
         }
-      };
-  
+
+        setFavoriteWines(favorites);
+
+        setHasLoadedFavorites(true);
+      } catch (error) {
+        if (!isActive) {
+          return;
+        }
+
+        console.error("Failed to load favorites", error);
+
+        setHasLoadedFavorites(true);
+      } finally {
+        if (isActive) {
+          setIsLoadingFavorites(false);
+        }
+      }
+    };
+
     void loadFavorites();
-  
+
     return () => {
       isActive = false;
     };
@@ -158,177 +116,94 @@ const FavoritesContext =
     hasLoadedFavorites,
   ]);
 
-  const favoriteIds =
-    useMemo(
-      () =>
-        favoriteWines.map(
-          (wine) => wine.id,
-        ),
-      [favoriteWines],
-    );
+  const favoriteIds = useMemo(
+    () => favoriteWines.map((wine) => wine.id),
+    [favoriteWines]
+  );
 
-  const favoriteSet =
-    useMemo(
-      () =>
-        new Set(
-          favoriteIds,
-        ),
-      [favoriteIds],
-    );
+  const favoriteSet = useMemo(() => new Set(favoriteIds), [favoriteIds]);
 
-  const pendingSet =
-    useMemo(
-      () =>
-        new Set(
-          pendingIds,
-        ),
-      [pendingIds],
-    );
+  const pendingSet = useMemo(() => new Set(pendingIds), [pendingIds]);
 
-  const favoritesCount =
-    favoriteWines.length;
+  const favoritesCount = favoriteWines.length;
 
-  const toggleFavorite =
-    useCallback(
-      async (
-        wine: WineCatalogCardType,
-      ) => {
-        const id = wine.id;
+  const toggleFavorite = useCallback(
+    async (wine: WineCatalogCardType) => {
+      const id = wine.id;
 
-        let shouldSkip = false;
+      let shouldSkip = false;
 
-        setPendingIds(
-          (previousIds) => {
-            if (
-              previousIds.includes(
-                id,
-              )
-            ) {
-              shouldSkip = true;
+      setPendingIds((previousIds) => {
+        if (previousIds.includes(id)) {
+          shouldSkip = true;
 
-              return previousIds;
-            }
-
-            return [
-              ...previousIds,
-              id,
-            ];
-          },
-        );
-
-        if (shouldSkip) {
-          return;
+          return previousIds;
         }
 
-        const isFav =
-          favoriteSet.has(id);
+        return [...previousIds, id];
+      });
 
-        setFavoriteWines(
-          (previousWines) => {
-            if (isFav) {
-              return previousWines.filter(
-                (item) =>
-                  item.id !== id,
-              );
-            }
+      if (shouldSkip) {
+        return;
+      }
 
-            if (
-              previousWines.some(
-                (item) =>
-                  item.id === id,
-              )
-            ) {
-              return previousWines;
-            }
+      const isFav = favoriteSet.has(id);
 
-            return [
-              ...previousWines,
-              wine,
-            ];
-          },
-        );
+      setFavoriteWines((previousWines) => {
+        if (isFav) {
+          return previousWines.filter((item) => item.id !== id);
+        }
 
-        try {
+        if (previousWines.some((item) => item.id === id)) {
+          return previousWines;
+        }
+
+        return [wine, ...previousWines];
+      });
+
+      try {
+        if (isFav) {
+          await userApi.removeFavorite(id);
+        } else {
+          await userApi.addFavorite(id);
+        }
+
+        queryClient.invalidateQueries({
+          queryKey: ["favorites", user?.id],
+        });
+
+        await refetchAchievementsSafe(queryClient, user?.id);
+        await refreshUser();
+      } catch (error) {
+        console.error("Toggle favorite failed", error);
+
+        setFavoriteWines((previousWines) => {
           if (isFav) {
-            await userApi.removeFavorite(
-              id,
-            );
-          } else {
-            await userApi.addFavorite(
-              id,
-            );
+            return previousWines.some((item) => item.id === id)
+              ? previousWines
+              : [wine, ...previousWines];
           }
 
-          queryClient.invalidateQueries(
-            {
-              queryKey: [
-                "favorites",
-                user?.id,
-              ],
-            },
-          );
+          return previousWines.filter((item) => item.id !== id);
+        });
+      } finally {
+        setPendingIds((previousIds) =>
+          previousIds.filter((item) => item !== id)
+        );
+      }
+    },
+    [favoriteSet, user?.id, refreshUser]
+  );
 
-          await refetchAchievementsSafe(
-            queryClient,
-            user?.id,
-          );
-          await refreshUser();
-        } catch (error) {
-          console.error(
-            "Toggle favorite failed",
-            error,
-          );
+  const isFavorite = useCallback(
+    (id: number) => favoriteSet.has(id),
+    [favoriteSet]
+  );
 
-          setFavoriteWines(
-            (previousWines) => {
-              if (isFav) {
-                return previousWines.some(
-                  (item) =>
-                    item.id === id,
-                )
-                  ? previousWines
-                  : [
-                      ...previousWines,
-                      wine,
-                    ];
-              }
-
-              return previousWines.filter(
-                (item) =>
-                  item.id !== id,
-              );
-            },
-          );
-        } finally {
-          setPendingIds(
-            (previousIds) =>
-              previousIds.filter(
-                (item) =>
-                  item !== id,
-              ),
-          );
-        }
-      },
-      [
-        favoriteSet,
-        user?.id,
-        refreshUser,
-      ],
-    );
-
-  const isFavorite =
-    useCallback(
-      (id: number) =>
-        favoriteSet.has(id),
-      [favoriteSet],
-    );
-
-  const isPending =
-    useCallback(
-      (id: number) =>
-        pendingSet.has(id),
-      [pendingSet],
-    );
+  const isPending = useCallback(
+    (id: number) => pendingSet.has(id),
+    [pendingSet]
+  );
 
   const value = useMemo(
     () => ({
@@ -352,28 +227,21 @@ const FavoritesContext =
       toggleFavorite,
       isFavorite,
       isPending,
-    ],
+    ]
   );
 
   return (
-    <FavoritesContext.Provider
-      value={value}
-    >
+    <FavoritesContext.Provider value={value}>
       {children}
     </FavoritesContext.Provider>
   );
 };
 
 export const useFavorites = () => {
-  const context =
-    useContext(
-      FavoritesContext,
-    );
+  const context = useContext(FavoritesContext);
 
   if (!context) {
-    throw new Error(
-      "useFavorites must be used inside FavoritesProvider",
-    );
+    throw new Error("useFavorites must be used inside FavoritesProvider");
   }
 
   return context;

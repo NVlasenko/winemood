@@ -9,7 +9,6 @@
   &__step {
     width: 100%;
     margin-top: 80px;
-
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -17,33 +16,25 @@
 
   &__subtitle {
     margin: 0;
-
     font-family: "Poppins", sans-serif;
     font-weight: 500;
     font-size: 15px;
     line-height: 1.5;
     letter-spacing: 0.08em;
-
     text-align: center;
     text-transform: uppercase;
-
     color: rgba(177, 167, 166, 1);
   }
 
 
   &__stars {
     position: relative;
-  
     margin-top: 20px;
-  
     display: flex;
     align-items: center;
     justify-content: center;
-  
     gap: 10px;
-  
     touch-action: none;
-  
     user-select: none;
     -webkit-user-select: none;
   }
@@ -51,30 +42,20 @@
   &__star {
     position: relative;
     z-index: 1;
-  
     width: 64px;
     height: 64px;
-  
     padding: 5px;
-  
     display: flex;
     align-items: center;
     justify-content: center;
-  
     flex: 0 0 64px;
-  
     border: none;
     outline: none;
-  
     background: transparent;
-  
     appearance: none;
     -webkit-appearance: none;
-  
     cursor: pointer;
-  
     touch-action: none;
-  
     -webkit-tap-highlight-color: transparent;
   
     &:focus {
@@ -84,7 +65,6 @@
     &:focus-visible {
       .write-review-page__star-visual {
         border-radius: 8px;
-  
         outline: 2px solid rgba(var(--wine-glow-rgb), 0.85);
         outline-offset: 5px;
       }
@@ -93,39 +73,28 @@
   
   &__star-visual {
     position: relative;
-  
     width: 54px;
     height: 54px;
-  
     display: flex;
     align-items: center;
     justify-content: center;
-  
     flex-shrink: 0;
-  
     pointer-events: none;
   }
   
   &__star-bg,
   &__star-fill {
     position: absolute;
-  
     top: 50%;
     left: 50%;
-  
     width: max-content;
     height: max-content;
-  
     display: block;
-  
     font-family: Arial, sans-serif;
     font-size: 54px;
     line-height: 1;
-  
     transform: translate(-50%, -50%);
-  
     pointer-events: none;
-  
     user-select: none;
     -webkit-user-select: none;
   }
@@ -136,18 +105,15 @@
   
   &__star-fill {
     color: rgba(var(--wine-glow-rgb), 1);
-  
     will-change: clip-path;
   }
 
   &__rating-value {
     margin: 28px 0 0;
-
     font-family: "Marcellus", serif;
     font-size: 34px;
     line-height: 1;
     letter-spacing: 0.08em;
-
     text-align: center;
 
     color: rgba(
@@ -165,23 +131,17 @@
 
   &__textarea-wrapper {
     position: relative;
-
     width: 100%;
     max-width: 678px;
     min-height: 143px;
-
     margin-top: 32px;
     padding: 20px 24px;
-
     display: grid;
     grid-template-columns: 24px 1fr;
     column-gap: 16px;
-
     border: 0.4px solid
       rgba(177, 167, 166, 0.32);
-
     border-radius: 12px;
-
     background: rgba(0, 0, 0, 0.16);
 
     transition:
@@ -203,32 +163,23 @@
   &__textarea-icon {
     width: 24px;
     height: 24px;
-
     margin-top: 2px;
-
     object-fit: contain;
-
     opacity: 0.85;
   }
 
   &__textarea {
     width: 100%;
     min-height: 105px;
-
     padding: 0 44px 24px 0;
-
     resize: none;
-
     border: none;
     outline: none;
-
     background: transparent;
-
     font-family: "Poppins", sans-serif;
     font-weight: 400;
     font-size: 14px;
     line-height: 1.6;
-
     color: $text-primary;
 
     caret-color:
@@ -251,7 +202,6 @@
     position: absolute;
     right: 24px;
     bottom: 20px;
-
     font-family: "Poppins", sans-serif;
     font-weight: 400;
     font-size: 14px;
@@ -269,20 +219,14 @@
     width: 100%;
     max-width: 502px;
     height: 56px;
-
     margin-top: 32px;
     padding: 18px 24px;
-
     display: flex;
     align-items: center;
-
     gap: 16px;
-
     border: 0.4px solid
       rgba(177, 167, 166, 0.32);
-
     border-radius: 12px;
-
     background: rgba(0, 0, 0, 0.18);
 
     transition:
@@ -304,27 +248,21 @@
   &__input-icon {
     width: 20px;
     height: 20px;
-
     object-fit: contain;
     flex-shrink: 0;
-
     opacity: 0.9;
   }
 
   &__input {
     width: 100%;
     height: 100%;
-
     border: none;
     outline: none;
-
     background: transparent;
-
     font-family: "Poppins", sans-serif;
     font-weight: 400;
     font-size: 14px;
     line-height: 1;
-
     color: $text-primary;
 
     &::placeholder {
@@ -339,19 +277,14 @@
 
   &__modal {
     position: relative;
-
     width: 100%;
     max-width: 560px;
     max-height: 90vh;
-
     padding: 48px 42px 40px;
-
     overflow-x: hidden;
     overflow-y: auto;
-
     border: 0.4px solid
       rgba(177, 167, 166, 0.4);
-
     border-radius: 22px;
 
     background: linear-gradient(
@@ -377,16 +310,12 @@
 
     &::before {
       content: "";
-
       position: absolute;
       top: -160px;
       left: 50%;
-
       width: 360px;
       height: 360px;
-
       transform: translateX(-50%);
-
       border-radius: 50%;
 
       background:
@@ -396,13 +325,11 @@
         );
 
       filter: blur(90px);
-
       pointer-events: none;
     }
 
     &-success-text {
       margin: 0;
-
       font-size: 13px;
       text-align: center;
 
@@ -418,9 +345,7 @@
       position: fixed;
       inset: 0;
       z-index: 1000;
-
       padding: 24px;
-
       display: flex;
       align-items: center;
       justify-content: center;
@@ -441,24 +366,17 @@
 
     &-close {
       position: absolute;
-
       top: 18px;
       right: 18px;
       z-index: 2;
-
       width: 36px;
       height: 36px;
-
       border: 0.4px solid
         rgba(177, 167, 166, 0.28);
-
       border-radius: 50%;
-
       background:
         rgba(255, 255, 255, 0.04);
-
       cursor: pointer;
-
       font-family: "Poppins", sans-serif;
       font-size: 22px;
       line-height: 1;
@@ -506,7 +424,6 @@
 
       &:disabled {
         cursor: not-allowed;
-
         opacity: 0.45;
       }
     }
@@ -514,38 +431,30 @@
     &-title {
       position: relative;
       z-index: 2;
-
       margin: 0 0 28px;
-
       font-family: "Marcellus", serif;
       font-weight: 400;
       font-size: 28px;
       line-height: 1.15;
       letter-spacing: 0.08em;
-
       text-align: center;
       text-transform: uppercase;
-
       color: $text-primary;
     }
 
     &-summary {
       position: relative;
       z-index: 2;
-
       display: grid;
-
       gap: 14px;
     }
 
     &-row {
       padding: 16px 18px;
-
       border: 0.4px solid
         rgba(177, 167, 166, 0.18);
 
       border-radius: 14px;
-
       background: linear-gradient(
         135deg,
         rgba(
@@ -575,13 +484,10 @@
 
     &-label {
       display: block;
-
       margin-bottom: 8px;
-
       font-family: "Poppins", sans-serif;
       font-weight: 500;
       font-size: 11px;
-
       letter-spacing: 0.14em;
       text-transform: uppercase;
 
@@ -595,11 +501,9 @@
     &-value,
     &-review {
       margin: 0;
-
       font-family: "Poppins", sans-serif;
       font-size: 16px;
       line-height: 1.5;
-
       color: $text-primary;
     }
 
@@ -621,10 +525,8 @@
     &-button {
       position: relative;
       z-index: 2;
-
       width: 100%;
       height: 58px;
-
       margin-top: 30px;
     }
   }
@@ -633,7 +535,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-
     gap: 12px;
 
     animation:
@@ -645,13 +546,10 @@
   &__success-icon {
     width: 64px;
     height: 64px;
-
     border-radius: 50%;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     font-size: 28px;
 
     background:
@@ -702,14 +600,12 @@
       &__star {
         width: 70px;
         height: 70px;
-    
         flex-basis: 70px;
       }
     
       &__star-visual {
         width: 56px;
         height: 56px;
-    
         font-size: 56px;
         line-height: 56px;
       }
@@ -737,14 +633,12 @@
     &__star {
       width: 78px;
       height: 78px;
-  
       flex-basis: 78px;
     }
   
     &__star-visual {
       width: 64px;
       height: 64px;
-  
       font-size: 64px;
       line-height: 64px;
     }
@@ -762,7 +656,6 @@
 @keyframes reviewModalIn {
   from {
     opacity: 0;
-
     transform:
       translateY(24px)
       scale(0.96);
@@ -786,7 +679,6 @@
 
   to {
     opacity: 1;
-
     transform: scale(1);
   }
 }
@@ -794,7 +686,6 @@
 @keyframes popIn {
   0% {
     opacity: 0;
-
     transform: scale(0.5);
   }
 
@@ -804,7 +695,6 @@
 
   100% {
     opacity: 1;
-
     transform: scale(1);
   }
 }

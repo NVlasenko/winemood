@@ -1,5 +1,4 @@
 import { memo } from "react";
-
 import { MoodArrow } from "../MoodArrow";
 
 import "./MoodLinkButton.scss";
@@ -22,22 +21,15 @@ export const MoodLinkButton = memo(
   }: Props) => {
     return (
       <button
-        className={[
-          "mood-link-button",
-          className,
-        ]
-          .filter(Boolean)
-          .join(" ")}
+        className={["mood-link-button", className].filter(Boolean).join(" ")}
         type={type}
         onClick={onClick}
         disabled={disabled}
       >
         <MoodArrow className="mood-link-button__arrow" />
 
-        <span className="mood-link-button__text">
-          {text}
-        </span>
+        <span className="mood-link-button__text">{text}</span>
       </button>
     );
-  },
+  }
 );

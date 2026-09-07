@@ -10,9 +10,7 @@ type Props = {
   isCurating: boolean;
   error: string;
   onOpenFilters: () => void;
-  onToggleFavorite: (
-    wine: WineCatalogCardType,
-  ) => Promise<void>;
+  onToggleFavorite: (wine: WineCatalogCardType) => Promise<void>;
 };
 
 export const CatalogContent = ({
@@ -24,47 +22,29 @@ export const CatalogContent = ({
   onToggleFavorite,
 }: Props) => {
   if (error) {
-    return (
-      <CatalogErrorState
-        message={error}
-      />
-    );
+    return <CatalogErrorState message={error} />;
   }
 
   if (!wines.length) {
-    return (
-      <CatalogEmptyState
-        onOpenFilters={
-          onOpenFilters
-        }
-      />
-    );
+    return <CatalogEmptyState onOpenFilters={onOpenFilters} />;
   }
 
   return (
     <div className="catalog-page__curation">
       <div
         className={`catalog-page__grid ${
-          isCurating
-            ? "catalog-page__grid--curating"
-            : ""
+          isCurating ? "catalog-page__grid--curating" : ""
         }`}
       >
-        {wines.map(
-          (wine, index) => (
-            <WineCatalogCard
-              key={wine.id}
-              wine={wine}
-              index={index}
-              isFavorite={favoriteIds.has(
-                wine.id,
-              )}
-              onToggleFavorite={
-                onToggleFavorite
-              }
-            />
-          ),
-        )}
+        {wines.map((wine, index) => (
+          <WineCatalogCard
+            key={wine.id}
+            wine={wine}
+            index={index}
+            isFavorite={favoriteIds.has(wine.id)}
+            onToggleFavorite={onToggleFavorite}
+          />
+        ))}
       </div>
     </div>
   );

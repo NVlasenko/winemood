@@ -8,7 +8,6 @@
 
   &__grid {
     margin-top: 48px;
-
     display: grid;
     grid-template-columns: 1fr;
     gap: 48px;
@@ -18,7 +17,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-
     text-align: center;
 
     &:hover {
@@ -39,19 +37,14 @@
 
   &__image-wrap {
     position: relative;
-
     width: 100%;
     height: 220px;
-
     overflow: hidden;
-
     border-radius: 4px;
-
     background: #000;
 
     &::before {
       content: "";
-
       position: absolute;
       inset: 0;
       z-index: 2;
@@ -73,12 +66,9 @@
   &__image {
     width: 100%;
     height: 100%;
-
     display: block;
-
     object-fit: cover;
     object-position: center;
-
     filter: brightness(0.62);
 
     transition:
@@ -88,34 +78,24 @@
 
   &__dot {
     position: relative;
-
     width: 16px;
     height: 16px;
-
     margin-top: 24px;
     margin-bottom: 12px;
-
     border: 0.5px solid var(--button-gradient-end);
     border-radius: 50%;
-
     background: rgba(11, 11, 11, 0.55);
-
     transition: box-shadow 0.35s ease;
 
     &::before {
       content: "";
-
       position: absolute;
       top: 50%;
       left: 50%;
-
       width: 8px;
       height: 8px;
-
       border-radius: 50%;
-
       background: var(--button-gradient-end);
-
       transform: translate(-50%, -50%);
     }
   }
@@ -123,9 +103,7 @@
   &__date {
     width: auto;
     height: 38px;
-
     display: block;
-
     object-fit: contain;
     transition: transform 0.35s ease;
   }
@@ -133,12 +111,10 @@
   &__text {
     max-width: 280px;
     margin: 12px 0 0;
-
     font-family: "Poppins", sans-serif;
     font-weight: 400;
     font-size: 14px;
     line-height: 1.6;
-
     color: $text-primary;
   }
 
@@ -147,9 +123,7 @@
 
     &__grid {
       margin-top: 56px;
-
       grid-template-columns: repeat(2, 1fr);
-
       column-gap: 32px;
       row-gap: 56px;
     }
@@ -168,7 +142,6 @@
 
     &__grid {
       margin-top: 64px;
-
       grid-template-columns: repeat(4, 1fr);
       gap: 20px;
     }
@@ -190,7 +163,6 @@
 
     &__text {
       max-width: 300px;
-
       font-size: 14px;
     }
   }

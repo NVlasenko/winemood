@@ -1,7 +1,7 @@
+import { getWineDetails } from "./config/wineDetailsConfig";
 import type { Wine } from "@/types/wine";
 
 import "./WineDetailsInfo.scss";
-import { getWineDetails } from "./config/wineDetailsConfig";
 
 type Props = {
   wine: Wine;

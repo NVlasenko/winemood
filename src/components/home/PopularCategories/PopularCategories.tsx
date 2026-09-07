@@ -23,81 +23,56 @@ const normalizeCategoryType = (type: string) => {
   return type.trim().toLowerCase();
 };
 
-const isCategoryTypeKey = (
-  type: string,
-): type is CategoryTypeKey => {
+const isCategoryTypeKey = (type: string): type is CategoryTypeKey => {
   return type in WINE_TYPE_BY_CATEGORY;
 };
 
-const getCategoryTypeKey = (
-  type: string,
-): CategoryTypeKey | null => {
+const getCategoryTypeKey = (type: string): CategoryTypeKey | null => {
   const normalizedType = normalizeCategoryType(type);
 
-  return isCategoryTypeKey(normalizedType)
-    ? normalizedType
-    : null;
+  return isCategoryTypeKey(normalizedType) ? normalizedType : null;
 };
 
 const getWineTypeByCategory = (type: string) => {
   const categoryTypeKey = getCategoryTypeKey(type);
 
-  return categoryTypeKey
-    ? WINE_TYPE_BY_CATEGORY[categoryTypeKey]
-    : "";
+  return categoryTypeKey ? WINE_TYPE_BY_CATEGORY[categoryTypeKey] : "";
 };
 
 const getCardClassName = (type: string) => {
   const categoryTypeKey = getCategoryTypeKey(type);
 
-  return categoryTypeKey
-    ? CARD_CLASS_BY_TYPE[categoryTypeKey]
-    : "";
+  return categoryTypeKey ? CARD_CLASS_BY_TYPE[categoryTypeKey] : "";
 };
 
-export const PopularCategories = ({
-  categories,
-}: PopularCategoriesProps) => {
+export const PopularCategories = ({ categories }: PopularCategoriesProps) => {
   const navigate = useNavigate();
 
   const handleCategoryClick = useCallback(
     (type: string) => {
-      const wineType =
-        getWineTypeByCategory(type);
+      const wineType = getWineTypeByCategory(type);
 
-      navigate(
-        wineType
-          ? `/catalog?wineTypes=${wineType}`
-          : "/catalog",
-      );
+      navigate(wineType ? `/catalog?wineTypes=${wineType}` : "/catalog");
     },
-    [navigate],
+    [navigate]
   );
 
   const renderContent = () => {
     if (!categories.length) {
-      return (
-        <SectionState
-          variant="empty"
-          text="No categories found."
-        />
-      );
+      return <SectionState variant="empty" text="No categories found." />;
     }
 
     return (
       <div className="popular-categories__grid">
         {categories.map((category) => {
-          const cardModifier =
-            getCardClassName(category.type);
+          const cardModifier = getCardClassName(category.type);
 
           return (
             <button
               key={category.id}
               className={`popular-categories__card ${cardModifier}`}
               type="button"
-              onClick={() =>
-                handleCategoryClick(category.type)
-              }
+              onClick={() => handleCategoryClick(category.type)}
             >
               <h3 className="popular-categories__card-title">
                 {category.title}

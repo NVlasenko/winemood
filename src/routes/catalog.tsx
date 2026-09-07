@@ -6,10 +6,9 @@ import { filterWines } from "@/shared/api/wineFilterApi";
 import { CATALOG_PAGE_SIZE } from "@/shared/config/catalog";
 import { buildWineFilters } from "@/shared/lib/buildWineFilters";
 
-
 const getArrayParam = (
   searchParams: URLSearchParams,
-  key: string,
+  key: string
 ): string[] => {
   const value = searchParams.get(key);
 
@@ -23,26 +22,17 @@ const getArrayParam = (
     .filter(Boolean);
 };
 
-const getPage = (
-  searchParams: URLSearchParams,
-): number => {
-  const value = Number(
-    searchParams.get("page") ?? "1",
-  );
+const getPage = (searchParams: URLSearchParams): number => {
+  const value = Number(searchParams.get("page") ?? "1");
 
-  if (
-    !Number.isInteger(value) ||
-    value < 1
-  ) {
+  if (!Number.isInteger(value) || value < 1) {
     return 0;
   }
 
   return value - 1;
 };
 
-const getSort = (
-  searchParams: URLSearchParams,
-): string[] => {
+const getSort = (searchParams: URLSearchParams): string[] => {
   switch (searchParams.get("sort")) {
     case "TOP_RATED":
       return ["rating,desc"];
@@ -58,114 +48,66 @@ const getSort = (
   }
 };
 
-export async function loader({
-  request,
-}: {
-  request: Request;
-}) {
+export async function loader({ request }: { request: Request }) {
   const url = new URL(request.url);
   const searchParams = url.searchParams;
 
-  const searchQuery =
-    searchParams.get("search") ?? "";
+  const searchQuery = searchParams.get("search") ?? "";
 
-  const wineTypes = getArrayParam(
-    searchParams,
-    "wineTypes",
-  );
+  const wineTypes = getArrayParam(searchParams, "wineTypes");
 
-  const countries = getArrayParam(
-    searchParams,
-    "countries",
-  );
+  const countries = getArrayParam(searchParams, "countries");
 
-  const sweetnessLevels = getArrayParam(
-    searchParams,
-    "sweetnessLevels",
-  );
+  const sweetnessLevels = getArrayParam(searchParams, "sweetnessLevels");
 
-  const grapeVarieties = getArrayParam(
-    searchParams,
-    "grapeVarieties",
-  );
+  const grapeVarieties = getArrayParam(searchParams, "grapeVarieties");
 
-  const wineStyles = getArrayParam(
-    searchParams,
-    "wineStyles",
-  );
+  const wineStyles = getArrayParam(searchParams, "wineStyles");
 
-  const acidityLevels = getArrayParam(
-    searchParams,
-    "acidityLevels",
-  );
+  const acidityLevels = getArrayParam(searchParams, "acidityLevels");
 
-  const aromaNotes = getArrayParam(
-    searchParams,
-    "aromaNotes",
-  );
+  const aromaNotes = getArrayParam(searchParams, "aromaNotes");
 
-  const moods = getArrayParam(
-    searchParams,
-    "moods",
-  );
+  const moods = getArrayParam(searchParams, "moods");
 
-  const events = getArrayParam(
-    searchParams,
-    "events",
-  );
+  const events = getArrayParam(searchParams, "events");
 
-  const seasons = getArrayParam(
-    searchParams,
-    "seasons",
-  );
+  const seasons = getArrayParam(searchParams, "seasons");
 
-  const foodName = getArrayParam(
-    searchParams,
-    "foodName",
-  );
+  const foodName = getArrayParam(searchParams, "foodName");
 
-  const page =
-    getPage(searchParams);
+  const page = getPage(searchParams);
 
-  const sort =
-    getSort(searchParams);
+  const sort = getSort(searchParams);
 
-  const response =
-    await filterWines({
-      filters: buildWineFilters({
-        searchQuery,
-        wineTypes,
-        countries,
-        sweetnessLevels,
-        grapeVarieties,
-        wineStyles,
-        acidityLevels,
-        aromaNotes,
-        moods,
-        events,
-        seasons,
-        foodName,
-      }),
-      page,
-      size: CATALOG_PAGE_SIZE,
-      sort,
-    });
+  const response = await filterWines({
+    filters: buildWineFilters({
+      searchQuery,
+      wineTypes,
+      countries,
+      sweetnessLevels,
+      grapeVarieties,
+      wineStyles,
+      acidityLevels,
+      aromaNotes,
+      moods,
+      events,
+      seasons,
+      foodName,
+    }),
+    page,
+    size: CATALOG_PAGE_SIZE,
+    sort,
+  });
 
-  if (
-    !Array.isArray(
-      response.data,
-    )
-  ) {
-    throw new Error(
-      "Invalid wines data",
-    );
+  if (!Array.isArray(response.data)) {
+    throw new Error("Invalid wines data");
   }
 
   return {
     wines: response.data,
     currentPage: page,
-    totalPages:
-      response.meta.totalPages,
+    totalPages: response.meta.totalPages,
   };
 }
 
@@ -178,23 +120,14 @@ export function shouldRevalidate({
   nextUrl: URL;
   defaultShouldRevalidate: boolean;
 }) {
-  const currentParams =
-    new URLSearchParams(
-      currentUrl.searchParams,
-    );
+  const currentParams = new URLSearchParams(currentUrl.searchParams);
 
-  const nextParams =
-    new URLSearchParams(
-      nextUrl.searchParams,
-    );
+  const nextParams = new URLSearchParams(nextUrl.searchParams);
 
   currentParams.delete("searchOpen");
   nextParams.delete("searchOpen");
 
-  if (
-    currentParams.toString() ===
-    nextParams.toString()
-  ) {
+  if (currentParams.toString() === nextParams.toString()) {
     return false;
   }
 
@@ -202,18 +135,13 @@ export function shouldRevalidate({
 }
 
 export default function CatalogRoute() {
-  const data =
-    useLoaderData<typeof loader>();
+  const data = useLoaderData<typeof loader>();
 
   return (
     <CatalogPage
       wines={data.wines}
-      currentPage={
-        data.currentPage
-      }
-      totalPages={
-        data.totalPages
-      }
+      currentPage={data.currentPage}
+      totalPages={data.totalPages}
     />
   );
 }

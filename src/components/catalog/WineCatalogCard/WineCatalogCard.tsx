@@ -12,6 +12,7 @@ import bottleIcon from "@/assets/images/wine/bottle.svg";
 
 import type { WineCatalogCard as WineCatalogCardType } from "@/types/wineCatalogCard";
 import "./WineCatalogCard.scss";
+
 type Props = {
   wine: WineCatalogCardType;
   index: number;
@@ -58,11 +59,11 @@ export const WineCatalogCard = ({
       style={{ "--card-index": index } as CSSProperties}
     >
       <div className="catalog-page__card-inner">
-      <Link
-        to={`/catalog/${wine.id}`}
-        className="catalog-page__card-link"
-        aria-label={`View ${wine.name}`}
-      />
+        <Link
+          to={`/catalog/${wine.id}`}
+          className="catalog-page__card-link"
+          aria-label={`View ${wine.name}`}
+        />
         <FavoriteButton
           isFavorite={isFavorite}
           className="catalog-page__favorite"
@@ -82,13 +83,9 @@ export const WineCatalogCard = ({
         </div>
 
         <div className="catalog-page__info">
-          <p className="catalog-page__country">
-            {wine.countryName}
-          </p>
+          <p className="catalog-page__country">{wine.countryName}</p>
 
-          <h3 className="catalog-page__name">
-            {wine.name}
-          </h3>
+          <h3 className="catalog-page__name">{wine.name}</h3>
 
           <WineRating rating={wine.rating} />
 
@@ -96,9 +93,7 @@ export const WineCatalogCard = ({
             <div className="catalog-page__meta-item">
               <img src={wineDropIcon} alt="" />
 
-              <span>
-                {formatWineValue(wine.sweetnessLevel.name)}
-              </span>
+              <span>{formatWineValue(wine.sweetnessLevel.name)}</span>
             </div>
 
             <div className="catalog-page__meta-item">

@@ -5,13 +5,10 @@
   position: fixed;
   inset: 0;
   z-index: 1100;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   padding: 24px;
-
   background: rgba(0, 0, 0, 0.46);
   backdrop-filter: blur(14px);
 
@@ -25,20 +22,16 @@
   &__loader {
     width: 85px;
     height: 20px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     overflow: visible;
-
     transform: scale(0.78);
     transform-origin: center;
   }
 
   &__title {
     margin: 70px 0 0;
-
     font-family: "Marcellus", serif;
     font-weight: 400;
     font-size: 30px;
@@ -46,13 +39,11 @@
     letter-spacing: 0.08em;
     text-align: center;
     text-transform: uppercase;
-
     color: rgba(211, 211, 211, 1);
   }
 
   &__text {
     margin: 14px 0 0;
-
     font-family: "Poppins", sans-serif;
     font-weight: 500;
     font-size: 14px;
@@ -60,7 +51,6 @@
     letter-spacing: 0.08em;
     text-align: center;
     text-transform: uppercase;
-
     color: rgba(177, 167, 166, 1);
   }
 

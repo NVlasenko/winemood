@@ -1,23 +1,20 @@
+@import "@/styles/mixins";
+@import "@/styles/variables";
+
 .favorite-button {
   width: 48px;
   height: 48px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   border: 0.4px solid rgba(217, 217, 217, 0.16);
   border-radius: 12px;
-
   background: rgba(70, 70, 70, 0.22);
   backdrop-filter: blur(40px);
   -webkit-backdrop-filter: blur(40px);
-
   color: rgba(255, 255, 255, 0.28);
-
   font-size: 26px;
   line-height: 1;
-
   cursor: pointer;
 
   transition:
@@ -29,10 +26,8 @@
 
   &:hover {
     transform: scale(1.06);
-
     border-color: var(--border-color);
     color: rgba(255, 255, 255, 0.72);
-
     background: rgba(70, 70, 70, 0.32);
 
     box-shadow:
@@ -79,9 +74,7 @@
 
   &__icon {
     display: block;
-
     line-height: 1;
-
     transform: translateY(1px);
   }
 }

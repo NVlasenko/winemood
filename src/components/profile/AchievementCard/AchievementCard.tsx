@@ -1,5 +1,5 @@
-import "./AchievementCard.scss";
 import type { Achievement } from "@/types/achievement";
+import "./AchievementCard.scss";
 
 export const AchievementCard = ({
   achievement,
@@ -14,9 +14,11 @@ export const AchievementCard = ({
 
       <div className="achievement__icon">
         {achievement.iconUrl ? (
-          <img src={achievement.iconUrl} alt="" 
-          loading="lazy"
-          decoding="async" 
+          <img
+            src={achievement.iconUrl}
+            alt=""
+            loading="lazy"
+            decoding="async"
           />
         ) : (
           <div className="achievement__placeholder" />

@@ -13,12 +13,7 @@ export async function loader() {
 }
 
 export default function About() {
-  const { siteAssets } =
-    useLoaderData<typeof loader>();
+  const { siteAssets } = useLoaderData<typeof loader>();
 
-  return (
-    <AboutPage
-      siteAssets={siteAssets}
-    />
-  );
+  return <AboutPage siteAssets={siteAssets} />;
 }

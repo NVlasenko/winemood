@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-
 import { useAuth } from "@/context/AuthContext";
 
 import { quizApi } from "@/shared/api/quizApi";
@@ -8,22 +7,16 @@ import type { QuizHistoryItem } from "@/types/quizProfile";
 
 export const useQuizHistory = (
   enabled: boolean,
-  initialData?: QuizHistoryItem[],
+  initialData?: QuizHistoryItem[]
 ) => {
   const { user } = useAuth();
 
   return useQuery<QuizHistoryItem[]>({
-    queryKey: [
-      "quiz-history",
-      user?.id,
-    ],
+    queryKey: ["quiz-history", user?.id],
 
-    queryFn: () =>
-      quizApi.getHistory(),
+    queryFn: () => quizApi.getHistory(),
 
-    enabled:
-      enabled &&
-      !!user,
+    enabled: enabled && !!user,
 
     initialData,
 

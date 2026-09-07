@@ -1,8 +1,4 @@
-import {
-  useEffect,
-  useLayoutEffect,
-  useState,
-} from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 
 import {
   createCookie,
@@ -21,10 +17,7 @@ import { quizApi } from "@/shared/api/quizApi";
 import { reviewApi } from "@/shared/api/reviewApi";
 import { achievementApi } from "@/shared/api/achievementApi";
 
-import {
-  ApiError,
-  SsrTimeoutError,
-} from "@/shared/api/httpClient";
+import { ApiError, SsrTimeoutError } from "@/shared/api/httpClient";
 
 import type { Category } from "@/types/categories";
 import type { UserDto } from "@/types/user";
@@ -35,77 +28,56 @@ import type { Achievement } from "@/types/achievement";
 
 const RECOVERY_RETRY_DELAY_MS = 3_000;
 
-const accessTokenCookie =
-  createCookie("accessToken", {
-    httpOnly: true,
-    path: "/",
-    sameSite: "lax",
-    secure: import.meta.env.PROD,
-  });
+const accessTokenCookie = createCookie("accessToken", {
+  httpOnly: true,
+  path: "/",
+  sameSite: "lax",
+  secure: import.meta.env.PROD,
+});
 
-const sortFavoriteWines = (
-  wines: WineCatalogCard[],
-) => {
-  return [...wines].sort(
-    (a, b) => a.id - b.id,
-  );
+const sortFavoriteWines = (wines: WineCatalogCard[]) => {
+  return [...wines].sort((a, b) => a.id - b.id);
 };
 
-export async function loader({
-  request,
-}: {
-  request: Request;
-}) {
-  const authToken =
-    await accessTokenCookie.parse(
-      request.headers.get("Cookie"),
-    );
+export async function loader({ request }: { request: Request }) {
+  const authToken = await accessTokenCookie.parse(
+    request.headers.get("Cookie")
+  );
 
   if (!authToken) {
-    throw redirect(
-      "/auth?mode=login",
-    );
+    throw redirect("/auth?mode=login");
   }
 
   try {
-    const user =
-      await userApi.getMe({
-        authToken,
-      });
+    const user = await userApi.getMe({
+      authToken,
+    });
 
-    const [
-      categories,
-      favoriteWines,
-      quizHistory,
-      reviews,
-      achievements,
-    ] = await Promise.all([
-      getCategories(),
+    const [categories, favoriteWines, quizHistory, reviews, achievements] =
+      await Promise.all([
+        getCategories(),
 
-      userApi.getFavorites({
-        authToken,
-      }),
+        userApi.getFavorites({
+          authToken,
+        }),
 
-      quizApi.getHistory({
-        authToken,
-      }),
+        quizApi.getHistory({
+          authToken,
+        }),
 
-      reviewApi.getMyReviews({
-        authToken,
-      }),
+        reviewApi.getMyReviews({
+          authToken,
+        }),
 
-      achievementApi.getAchievements({
-        authToken,
-      }),
-    ]);
+        achievementApi.getAchievements({
+          authToken,
+        }),
+      ]);
 
     return {
       categories,
       user,
-      favoriteWines:
-        sortFavoriteWines(
-          favoriteWines,
-        ),
+      favoriteWines: sortFavoriteWines(favoriteWines),
       quizHistory,
       reviews,
       achievements,
@@ -114,130 +86,70 @@ export async function loader({
   } catch (error) {
     if (
       error instanceof ApiError &&
-      (error.status === 401 ||
-        error.status === 403)
+      (error.status === 401 || error.status === 403)
     ) {
-      throw redirect(
-        "/auth?mode=login",
-      );
+      throw redirect("/auth?mode=login");
     }
 
-    if (
-      error instanceof
-      SsrTimeoutError
-    ) {
+    if (error instanceof SsrTimeoutError) {
       console.warn(
-        "[Profile loader] Backend did not respond in time. Switching to client recovery.",
+        "[Profile loader] Backend did not respond in time. Switching to client recovery."
       );
 
       return {
-        categories:
-          [] as Category[],
+        categories: [] as Category[],
 
-        user:
-          null as UserDto | null,
+        user: null as UserDto | null,
 
-        favoriteWines:
-          [] as WineCatalogCard[],
+        favoriteWines: [] as WineCatalogCard[],
 
-        quizHistory:
-          [] as QuizHistoryItem[],
+        quizHistory: [] as QuizHistoryItem[],
 
-        reviews:
-          [] as UserReviewDto[],
+        reviews: [] as UserReviewDto[],
 
-        achievements:
-          [] as Achievement[],
+        achievements: [] as Achievement[],
 
         needsClientRecovery: true,
       };
     }
 
-    console.error(
-      "Profile SSR load failed:",
-      error,
-    );
+    console.error("Profile SSR load failed:", error);
 
     throw error;
   }
 }
 
 export default function Profile() {
-  const loaderData =
-    useLoaderData<typeof loader>();
+  const loaderData = useLoaderData<typeof loader>();
 
-  const navigate =
-    useNavigate();
+  const navigate = useNavigate();
 
-  const {
-    startBackendLoading,
-    stopBackendLoading,
-  } = useAppLoading();
+  const { startBackendLoading, stopBackendLoading } = useAppLoading();
 
-  const [
-    categories,
-    setCategories,
-  ] = useState(
-    loaderData.categories,
-  );
+  const [categories, setCategories] = useState(loaderData.categories);
 
-  const [
-    user,
-    setUser,
-  ] = useState<UserDto | null>(
-    loaderData.user,
-  );
+  const [user, setUser] = useState<UserDto | null>(loaderData.user);
 
-  const [
-    favoriteWines,
-    setFavoriteWines,
-  ] = useState(
-    loaderData.favoriteWines,
-  );
+  const [favoriteWines, setFavoriteWines] = useState(loaderData.favoriteWines);
 
-  const [
-    quizHistory,
-    setQuizHistory,
-  ] = useState(
-    loaderData.quizHistory,
-  );
+  const [quizHistory, setQuizHistory] = useState(loaderData.quizHistory);
 
-  const [
-    reviews,
-    setReviews,
-  ] = useState(
-    loaderData.reviews,
-  );
+  const [reviews, setReviews] = useState(loaderData.reviews);
 
-  const [
-    achievements,
-    setAchievements,
-  ] = useState(
-    loaderData.achievements,
-  );
+  const [achievements, setAchievements] = useState(loaderData.achievements);
 
-  const [
-    isRecovering,
-    setIsRecovering,
-  ] = useState(
-    loaderData.needsClientRecovery,
+  const [isRecovering, setIsRecovering] = useState(
+    loaderData.needsClientRecovery
   );
 
   useLayoutEffect(() => {
-    if (
-      loaderData.needsClientRecovery
-    ) {
+    if (loaderData.needsClientRecovery) {
       startBackendLoading();
     }
-  }, [
-    loaderData.needsClientRecovery,
-    startBackendLoading,
-  ]);
+  }, [loaderData.needsClientRecovery, startBackendLoading]);
 
   useEffect(() => {
-    if (
-      !loaderData.needsClientRecovery
-    ) {
+    if (!loaderData.needsClientRecovery) {
       stopBackendLoading();
 
       return;
@@ -245,103 +157,73 @@ export default function Profile() {
 
     let isCancelled = false;
 
-    let retryTimer:
-      | ReturnType<
-          typeof setTimeout
-        >
-      | undefined;
+    let retryTimer: ReturnType<typeof setTimeout> | undefined;
 
-    const recover =
-      async () => {
-        try {
-          const [
-            recoveredUser,
-            recoveredCategories,
-            recoveredFavoriteWines,
-            recoveredQuizHistory,
-            recoveredReviews,
-            recoveredAchievements,
-          ] = await Promise.all([
-            userApi.getMe(),
+    const recover = async () => {
+      try {
+        const [
+          recoveredUser,
+          recoveredCategories,
+          recoveredFavoriteWines,
+          recoveredQuizHistory,
+          recoveredReviews,
+          recoveredAchievements,
+        ] = await Promise.all([
+          userApi.getMe(),
 
-            getCategories(),
+          getCategories(),
 
-            userApi.getFavorites(),
+          userApi.getFavorites(),
 
-            quizApi.getHistory(),
+          quizApi.getHistory(),
 
-            reviewApi.getMyReviews(),
+          reviewApi.getMyReviews(),
 
-            achievementApi.getAchievements(),
-          ]);
+          achievementApi.getAchievements(),
+        ]);
 
-          if (isCancelled) {
-            return;
-          }
-
-          setUser(
-            recoveredUser,
-          );
-
-          setCategories(
-            recoveredCategories,
-          );
-
-          setFavoriteWines(
-            sortFavoriteWines(
-              recoveredFavoriteWines,
-            ),
-          );
-
-          setQuizHistory(
-            recoveredQuizHistory,
-          );
-
-          setReviews(
-            recoveredReviews,
-          );
-
-          setAchievements(
-            recoveredAchievements,
-          );
-
-          setIsRecovering(false);
-
-          stopBackendLoading();
-        } catch (error) {
-          if (isCancelled) {
-            return;
-          }
-
-          if (
-            error instanceof ApiError &&
-            (error.status === 401 ||
-              error.status === 403)
-          ) {
-            stopBackendLoading();
-
-            navigate(
-              "/auth?mode=login",
-              {
-                replace: true,
-              },
-            );
-
-            return;
-          }
-
-          console.warn(
-            "[Profile recovery] Backend is not ready yet:",
-            error,
-          );
-
-          retryTimer =
-            setTimeout(
-              recover,
-              RECOVERY_RETRY_DELAY_MS,
-            );
+        if (isCancelled) {
+          return;
         }
-      };
+
+        setUser(recoveredUser);
+
+        setCategories(recoveredCategories);
+
+        setFavoriteWines(sortFavoriteWines(recoveredFavoriteWines));
+
+        setQuizHistory(recoveredQuizHistory);
+
+        setReviews(recoveredReviews);
+
+        setAchievements(recoveredAchievements);
+
+        setIsRecovering(false);
+
+        stopBackendLoading();
+      } catch (error) {
+        if (isCancelled) {
+          return;
+        }
+
+        if (
+          error instanceof ApiError &&
+          (error.status === 401 || error.status === 403)
+        ) {
+          stopBackendLoading();
+
+          navigate("/auth?mode=login", {
+            replace: true,
+          });
+
+          return;
+        }
+
+        console.warn("[Profile recovery] Backend is not ready yet:", error);
+
+        retryTimer = setTimeout(recover, RECOVERY_RETRY_DELAY_MS);
+      }
+    };
 
     void recover();
 
@@ -349,23 +231,14 @@ export default function Profile() {
       isCancelled = true;
 
       if (retryTimer) {
-        clearTimeout(
-          retryTimer,
-        );
+        clearTimeout(retryTimer);
       }
 
       stopBackendLoading();
     };
-  }, [
-    loaderData.needsClientRecovery,
-    navigate,
-    stopBackendLoading,
-  ]);
+  }, [loaderData.needsClientRecovery, navigate, stopBackendLoading]);
 
-  if (
-    isRecovering ||
-    !user
-  ) {
+  if (isRecovering || !user) {
     return null;
   }
 
@@ -373,18 +246,10 @@ export default function Profile() {
     <ProfilePage
       categories={categories}
       user={user}
-      initialFavoriteWines={
-        favoriteWines
-      }
-      initialQuizHistory={
-        quizHistory
-      }
-      initialReviews={
-        reviews
-      }
-      initialAchievements={
-        achievements
-      }
+      initialFavoriteWines={favoriteWines}
+      initialQuizHistory={quizHistory}
+      initialReviews={reviews}
+      initialAchievements={achievements}
     />
   );
 }

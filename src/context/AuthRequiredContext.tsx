@@ -66,7 +66,7 @@ export const AuthRequiredProvider = ({ children }: Props) => {
     (options: AuthRequiredModalOptions = {}) => {
       setModalOptions(options);
     },
-    [],
+    []
   );
 
   const closeAuthRequired = useCallback(() => {
@@ -94,7 +94,7 @@ export const AuthRequiredProvider = ({ children }: Props) => {
       openAuthRequired,
       closeAuthRequired,
     }),
-    [closeAuthRequired, openAuthRequired],
+    [closeAuthRequired, openAuthRequired]
   );
 
   const isOpen = modalOptions !== null;
@@ -118,9 +118,7 @@ export const AuthRequiredProvider = ({ children }: Props) => {
         continueLabel={modalOptions?.continueLabel}
         cancelLabel={modalOptions?.cancelLabel}
         onClose={closeAuthRequired}
-        onContinue={
-          modalOptions?.onContinue ? handleContinue : undefined
-        }
+        onContinue={modalOptions?.onContinue ? handleContinue : undefined}
         onCancel={modalOptions?.onCancel ? handleCancel : undefined}
       />
     </AuthRequiredContext.Provider>
@@ -131,9 +129,7 @@ export const useAuthRequired = () => {
   const context = useContext(AuthRequiredContext);
 
   if (!context) {
-    throw new Error(
-      "useAuthRequired must be used inside AuthRequiredProvider",
-    );
+    throw new Error("useAuthRequired must be used inside AuthRequiredProvider");
   }
 
   return context;

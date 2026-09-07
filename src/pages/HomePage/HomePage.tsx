@@ -25,21 +25,15 @@ export const HomePage = ({
 }: HomePageProps) => {
   return (
     <main className="home-page">
-      <HeroSection
-        heroBackgroundUrl={heroBackgroundUrl}
-      />
+      <HeroSection heroBackgroundUrl={heroBackgroundUrl} />
 
       <BrowseByMood moods={moods} />
 
-      <PopularCategories
-        categories={categories}
-      />
+      <PopularCategories categories={categories} />
 
       <QuizCTA />
 
-      <WineCountries
-        countries={countries}
-      />
+      <WineCountries countries={countries} />
     </main>
   );
 };

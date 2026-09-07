@@ -1,8 +1,7 @@
-import type { FoodPairing } from "@/types/food";
-
 import { SectionTitle } from "@/components/ui/SectionTitle";
-
 import { FOOD_PAIRING_BACKGROUND_CLASSES } from "./config/foodPairingBackgrounds";
+
+import type { FoodPairing } from "@/types/food";
 
 import "./WineFoodPairings.scss";
 
@@ -39,7 +38,7 @@ export const WineFoodPairings = ({ foodPairings }: Props) => {
           {visibleFoodPairings.map((foodPairing, index) => {
             const backgroundClassName = getBackgroundClassName(
               foodPairing,
-              index,
+              index
             );
 
             const title = foodPairing.name;

@@ -1,9 +1,6 @@
-export type AnalyticsDeviceType =
-  | "mobile"
-  | "tablet"
-  | "desktop";
+export type AnalyticsDeviceType = "mobile" | "tablet" | "desktop";
 
-  export type AnalyticsEvent =
+export type AnalyticsEvent =
   | {
       eventId: string;
       eventType: "SEARCH_STARTED";

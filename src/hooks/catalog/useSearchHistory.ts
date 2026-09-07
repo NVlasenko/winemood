@@ -51,7 +51,7 @@ export const useSearchHistory = () => {
       const nextHistory = [
         normalizedQuery,
         ...currentHistory.filter(
-          (item) => item.toLowerCase() !== normalizedQuery.toLowerCase(),
+          (item) => item.toLowerCase() !== normalizedQuery.toLowerCase()
         ),
       ].slice(0, MAX_SEARCH_HISTORY_ITEMS);
 
@@ -64,7 +64,7 @@ export const useSearchHistory = () => {
   const removeSearchQuery = useCallback((query: string) => {
     setHistory((currentHistory) => {
       const nextHistory = currentHistory.filter(
-        (item) => item.toLowerCase() !== query.toLowerCase(),
+        (item) => item.toLowerCase() !== query.toLowerCase()
       );
 
       writeSearchHistory(nextHistory);

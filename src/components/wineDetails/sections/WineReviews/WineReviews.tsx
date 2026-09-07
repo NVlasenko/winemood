@@ -1,20 +1,15 @@
-import {
-  useCallback,
-  useMemo,
-  useState,
-} from "react";
+import { useCallback, useMemo, useState } from "react";
+
+import { SectionTitle } from "@/components/ui/SectionTitle";
+import { ReviewCard } from "./ReviewCard";
+import { WineReviewsActions } from "./WineReviewsActions";
+
+import { useAuth } from "@/context/AuthContext";
 
 import type { Wine } from "@/types/wine";
 import type { WineReviewDto } from "@/types/reviews";
 
-import { SectionTitle } from "@/components/ui/SectionTitle";
-
-
-import { useAuth } from "@/context/AuthContext";
-
 import "./WineReviews.scss";
-import { ReviewCard } from "./ReviewCard";
-import { WineReviewsActions } from "./WineReviewsActions";
 
 type Props = {
   wine: Wine;
@@ -22,13 +17,8 @@ type Props = {
   reviewsBackdropUrl?: string;
 };
 
-export const WineReviews = ({
-  wine,
-  reviews,
-  reviewsBackdropUrl,
-}: Props) => {
-  const [isExpanded, setIsExpanded] =
-    useState(false);
+export const WineReviews = ({ wine, reviews, reviewsBackdropUrl }: Props) => {
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const { user } = useAuth();
 
@@ -37,13 +27,7 @@ export const WineReviews = ({
       return null;
     }
 
-    return (
-      reviews.find(
-        (review) =>
-          review.userId ===
-          Number(user.id),
-      ) ?? null
-    );
+    return reviews.find((review) => review.userId === Number(user.id)) ?? null;
   }, [reviews, user]);
 
   const sortedReviews = useMemo(() => {
@@ -54,40 +38,25 @@ export const WineReviews = ({
     const userId = Number(user.id);
 
     return [
-      ...reviews.filter(
-        (review) =>
-          review.userId === userId,
-      ),
-      ...reviews.filter(
-        (review) =>
-          review.userId !== userId,
-      ),
+      ...reviews.filter((review) => review.userId === userId),
+      ...reviews.filter((review) => review.userId !== userId),
     ];
   }, [reviews, user]);
 
   const visibleReviews = useMemo(
-    () =>
-      isExpanded
-        ? sortedReviews
-        : sortedReviews.slice(0, 2),
-    [isExpanded, sortedReviews],
+    () => (isExpanded ? sortedReviews : sortedReviews.slice(0, 2)),
+    [isExpanded, sortedReviews]
   );
 
-  const hasMoreReviews =
-    reviews.length > 2;
+  const hasMoreReviews = reviews.length > 2;
 
-  const hasAnyReviews =
-    reviews.length > 0;
+  const hasAnyReviews = reviews.length > 0;
 
-  const isMateusRose =
-    wine.name === "Mateus Rosé";
+  const isMateusRose = wine.name === "Mateus Rosé";
 
-  const toggleExpanded =
-    useCallback(() => {
-      setIsExpanded(
-        (prev) => !prev,
-      );
-    }, []);
+  const toggleExpanded = useCallback(() => {
+    setIsExpanded((prev) => !prev);
+  }, []);
 
   return (
     <section className="wine-reviews">
@@ -96,40 +65,30 @@ export const WineReviews = ({
 
         <div
           className={`wine-reviews__content ${
-            isExpanded
-              ? "wine-reviews__content--expanded"
-              : ""
+            isExpanded ? "wine-reviews__content--expanded" : ""
           }`}
         >
           <div
             className={`wine-reviews__list ${
-              isExpanded
-                ? "wine-reviews__list--expanded"
-                : ""
+              isExpanded ? "wine-reviews__list--expanded" : ""
             }`}
           >
             {!hasAnyReviews && (
               <div className="wine-reviews__empty">
                 <p>
-                  This wine is waiting for its
-                  first story. Be the one to
-                  write it.
+                  This wine is waiting for its first story. Be the one to write
+                  it.
                 </p>
               </div>
             )}
 
-            {visibleReviews.map(
-              (review) => (
-                <ReviewCard
-                  review={review}
-                  key={review.id}
-                  isMine={
-                    review.userId ===
-                    Number(user?.id)
-                  }
-                />
-              ),
-            )}
+            {visibleReviews.map((review) => (
+              <ReviewCard
+                review={review}
+                key={review.id}
+                isMine={review.userId === Number(user?.id)}
+              />
+            ))}
           </div>
 
           {!isExpanded && (
@@ -138,9 +97,7 @@ export const WineReviews = ({
                 {reviewsBackdropUrl && (
                   <img
                     className="wine-reviews__bg"
-                    src={
-                      reviewsBackdropUrl
-                    }
+                    src={reviewsBackdropUrl}
                     alt=""
                     aria-hidden="true"
                     loading="lazy"
@@ -150,9 +107,7 @@ export const WineReviews = ({
 
                 <img
                   className={`wine-reviews__bottle ${
-                    isMateusRose
-                      ? "wine-reviews__bottle--mateus-rose"
-                      : ""
+                    isMateusRose ? "wine-reviews__bottle--mateus-rose" : ""
                   }`}
                   src={wine.imageUrl}
                   alt={wine.name}
@@ -163,48 +118,27 @@ export const WineReviews = ({
 
               <WineReviewsActions
                 wineId={wine.id}
-                isExpanded={
-                  isExpanded
-                }
-                hasMoreReviews={
-                  hasMoreReviews
-                }
-                hasAnyReviews={
-                  hasAnyReviews
-                }
-                hasMyReview={
-                  !!myReview
-                }
-                onToggleExpanded={
-                  toggleExpanded
-                }
+                isExpanded={isExpanded}
+                hasMoreReviews={hasMoreReviews}
+                hasAnyReviews={hasAnyReviews}
+                hasMyReview={!!myReview}
+                onToggleExpanded={toggleExpanded}
                 showReviewIcon
               />
             </div>
           )}
         </div>
 
-        {isExpanded &&
-          hasAnyReviews && (
-            <WineReviewsActions
-              wineId={wine.id}
-              isExpanded={
-                isExpanded
-              }
-              hasMoreReviews={
-                hasMoreReviews
-              }
-              hasAnyReviews={
-                hasAnyReviews
-              }
-              hasMyReview={
-                !!myReview
-              }
-              onToggleExpanded={
-                toggleExpanded
-              }
-            />
-          )}
+        {isExpanded && hasAnyReviews && (
+          <WineReviewsActions
+            wineId={wine.id}
+            isExpanded={isExpanded}
+            hasMoreReviews={hasMoreReviews}
+            hasAnyReviews={hasAnyReviews}
+            hasMyReview={!!myReview}
+            onToggleExpanded={toggleExpanded}
+          />
+        )}
       </div>
     </section>
   );

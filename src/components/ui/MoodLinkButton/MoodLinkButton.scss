@@ -1,14 +1,13 @@
+@import "@/styles/mixins";
 @import "@/styles/variables";
 
 .mood-link-button {
   display: inline-flex;
   align-items: center;
   gap: 20px;
-
   padding: 0;
   border: none;
   background: transparent;
-
   cursor: pointer;
 
   &:focus-visible {
@@ -25,7 +24,6 @@
   &__arrow {
     display: block;
     flex-shrink: 0;
-
     transition: transform 0.3s ease;
   }
 
@@ -35,11 +33,8 @@
     font-size: 13px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-
     white-space: nowrap;
-
     color: var(--mood-link-color);
-
     transition: color 0.3s ease;
   }
 

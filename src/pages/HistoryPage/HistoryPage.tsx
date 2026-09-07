@@ -25,22 +25,13 @@ export const HistoryPage = ({
 }: HistoryPageProps) => {
   return (
     <main className="history-page">
-      <HistoryHero
-        womanImages={womanImages}
-        siteAssets={siteAssets}
-      />
+      <HistoryHero womanImages={womanImages} siteAssets={siteAssets} />
 
-      <HistoryVideoSection
-        videoUrl={siteAssets?.history.videoUrl}
-      />
+      <HistoryVideoSection videoUrl={siteAssets?.history.videoUrl} />
 
-      <HistoryOrigins
-        origins={origins ?? []}
-      />
+      <HistoryOrigins origins={origins ?? []} />
 
-      <HistoryTimeline
-        timelineItems={timelineItems ?? []}
-      />
+      <HistoryTimeline timelineItems={timelineItems ?? []} />
     </main>
   );
 };

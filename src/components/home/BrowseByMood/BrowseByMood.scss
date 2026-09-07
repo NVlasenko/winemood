@@ -4,7 +4,6 @@
 .browse-by-mood {
   position: relative;
   z-index: 2;
-
   padding: 50px 0 0;
 
   .container {
@@ -15,38 +14,26 @@
   &__grid {
     position: relative;
     z-index: 2;
-
     display: grid;
     grid-template-columns: 1fr;
-
     gap: 30px;
-
     margin-top: 80px;
   }
 
   &__card {
     position: relative;
-  
     width: 100%;
     height: 310px;
-  
     padding: 0;
-  
     appearance: none;
     -webkit-appearance: none;
-  
     border: 1px solid rgba(125, 124, 124, 0.55);
     border-radius: 12px;
-  
     overflow: hidden;
-  
     background: #070b14;
-  
     cursor: pointer;
-  
     font: inherit;
     text-align: left;
-  
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   
     transition:
@@ -56,9 +43,7 @@
   
     &:hover {
       transform: translateY(-8px);
-  
       border-color: rgba(247, 170, 251, 0.45);
-  
       box-shadow: 0 28px 60px rgba(0, 0, 0, 0.55);
     }
   
@@ -71,7 +56,6 @@
   &__card-inner {
     position: absolute;
     inset: 0;
-  
     width: 100%;
     height: 100%;
   }
@@ -79,17 +63,13 @@
   &__card-image {
     position: absolute;
     inset: 0;
-  
     display: block;
-  
     width: 100%;
     height: 100%;
-  
     object-fit: cover;
     object-position: center;
     border: 0;
     outline: 0;
-  
     pointer-events: none;
   
     transition:
@@ -115,27 +95,19 @@
 
   &__card-title {
     position: absolute;
-
     left: 24px;
     right: 24px;
     bottom: 24px;
-
     z-index: 2;
-
     margin: 0;
-
     font-family: "Marcellus", serif;
     font-weight: 400;
     font-size: 20px;
     line-height: 1.2;
-
     letter-spacing: 0.08em;
-
     text-transform: uppercase;
     text-align: center;
-
     color: $text-primary;
-
     pointer-events: none;
   }
 
@@ -145,9 +117,7 @@
 
   &__mood-control {
     min-height: 44px;
-
     margin-bottom: 24px;
-
     display: flex;
     justify-content: flex-start;
   }
@@ -155,11 +125,8 @@
   &__reset-theme {
     display: inline-flex;
     align-items: center;
-
     min-height: 44px;
-
     padding: 10px 16px;
-
     border: 1px solid rgba(211, 211, 211, 0.16);
     border-radius: 999px;
 
@@ -176,7 +143,6 @@
     -webkit-backdrop-filter: blur(12px);
 
     cursor: pointer;
-
     font-family: "Poppins", sans-serif;
 
     transition:
@@ -187,7 +153,6 @@
 
     &:hover {
       transform: translateY(-2px);
-
       border-color: var(--mood-link-hover-color);
 
       box-shadow:
@@ -209,38 +174,29 @@
   &__reset-label {
     font-size: 13px;
     font-weight: 400;
-
     color: rgba(211, 211, 211, 0.7);
   }
 
   &__reset-value {
     margin-left: 8px;
-
     font-size: 13px;
     font-weight: 600;
-
     letter-spacing: 0.04em;
-
     text-transform: capitalize;
-
     color: $text-primary;
   }
 
   &__reset-divider {
     width: 1px;
     height: 18px;
-
     margin: 0 12px;
-
     background: rgba(211, 211, 211, 0.18);
   }
 
   &__reset-action {
     font-size: 13px;
     font-weight: 600;
-
     color: var(--mood-link-hover-color);
-
     transition: color 0.3s ease;
   }
 
@@ -253,22 +209,16 @@
     width: 100%;
     max-width: 296px;
     height: 60px;
-
     font-size: 14px;
-
     white-space: nowrap;
   }
 
   &__button-arrow {
     width: 24px;
     height: 24px;
-
     margin-left: 12px;
-
     flex-shrink: 0;
-
     object-fit: contain;
-
     transition: transform 0.3s ease;
   }
 
@@ -279,9 +229,7 @@
   &__particles-layer {
     position: fixed;
     inset: 0;
-
     z-index: 999;
-
     pointer-events: none;
   }
 
@@ -291,7 +239,6 @@
 
     &__grid {
       grid-template-columns: repeat(2, 1fr);
-
       gap: 20px;
     }
 
@@ -309,7 +256,6 @@
 
     &__grid {
       grid-template-columns: repeat(4, 1fr);
-
       gap: 20px;
     }
   }

@@ -1,84 +1,41 @@
-import {
-  useEffect,
-  useRef,
-} from "react";
+import { useEffect, useRef } from "react";
 
-import {
-  useLocation,
-} from "react-router";
+import { useLocation } from "react-router";
 
 import { analytics } from "@/shared/lib/analytics";
 
-const getAnalyticsPageUrl = (
-  pathname: string,
-  search: string,
-) => {
-  const searchParams =
-    new URLSearchParams(
-      search,
-    );
+const getAnalyticsPageUrl = (pathname: string, search: string) => {
+  const searchParams = new URLSearchParams(search);
 
-  searchParams.delete(
-    "searchOpen",
-  );
+  searchParams.delete("searchOpen");
 
-  searchParams.delete(
-    "search",
-  );
+  searchParams.delete("search");
 
-  const query =
-    searchParams.toString();
+  const query = searchParams.toString();
 
-  return query
-    ? `${pathname}?${query}`
-    : pathname;
+  return query ? `${pathname}?${query}` : pathname;
 };
 
-export const AnalyticsPageViewTracker =
-  () => {
-    const location =
-      useLocation();
+export const AnalyticsPageViewTracker = () => {
+  const location = useLocation();
 
-    const lastTrackedPageRef =
-      useRef<string | null>(
-        null,
-      );
+  const lastTrackedPageRef = useRef<string | null>(null);
 
-    useEffect(() => {
-      const pageUrl =
-        getAnalyticsPageUrl(
-          location.pathname,
-          location.search,
-        );
+  useEffect(() => {
+    const pageUrl = getAnalyticsPageUrl(location.pathname, location.search);
 
-      if (
-        lastTrackedPageRef.current ===
-        pageUrl
-      ) {
-        return;
-      }
+    if (lastTrackedPageRef.current === pageUrl) {
+      return;
+    }
 
-      lastTrackedPageRef.current =
-        pageUrl;
+    lastTrackedPageRef.current = pageUrl;
 
-      const eventId =
-        crypto.randomUUID();
+    const eventId = crypto.randomUUID();
 
-      analytics
-        .pageViewed(
-          pageUrl,
-          eventId,
-        )
-        .catch((error) => {
-          console.error(
-            "Failed to send PAGE_VIEWED analytics event:",
-            error,
-          );
-        });
-    }, [
-      location.pathname,
-      location.search,
-    ]);
+    analytics.pageViewed(pageUrl, eventId).catch((error) => {
+      console.error("Failed to send PAGE_VIEWED analytics event:", error);
+    });
+  }, [location.pathname, location.search]);
 
-    return null;
-  };
+  return null;
+};

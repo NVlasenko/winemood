@@ -1,8 +1,4 @@
-import {
-  useEffect,
-  useRef,
-} from "react";
-
+import { useEffect, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { WineDetailsErrorState } from "@/components/wineDetails/sections/WineDetailsErrorState";
@@ -37,86 +33,51 @@ export const WineDetailsPage = ({
   wineReviews,
   error,
 }: WineDetailsPageProps) => {
-  const {
-    user,
-    refreshUser,
-  } = useAuth();
+  const { user, refreshUser } = useAuth();
 
-  const queryClient =
-    useQueryClient();
+  const queryClient = useQueryClient();
 
-  const trackedWineRef =
-    useRef<number | null>(null);
+  const trackedWineRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!user || !wine) {
       return;
     }
 
-    if (
-      trackedWineRef.current ===
-      wine.id
-    ) {
+    if (trackedWineRef.current === wine.id) {
       return;
     }
 
-    trackedWineRef.current =
-      wine.id;
+    trackedWineRef.current = wine.id;
 
-    const refreshAchievements =
-      async () => {
-        try {
-          await getWineById(wine.id);
+    const refreshAchievements = async () => {
+      try {
+        await getWineById(wine.id);
 
-          await refetchAchievementsSafe(
-            queryClient,
-            user.id,
-          );
+        await refetchAchievementsSafe(queryClient, user.id);
 
-          await refreshUser();
-        } catch (error) {
-          console.error(
-            "Failed to track wine view",
-            error,
-          );
-        }
-      };
+        await refreshUser();
+      } catch (error) {
+        console.error("Failed to track wine view", error);
+      }
+    };
 
     void refreshAchievements();
-  }, [
-    wine,
-    user?.id,
-    queryClient,
-    refreshUser,
-  ]);
+  }, [wine, user?.id, queryClient, refreshUser]);
 
   return (
     <main className="wine-details-page">
-      {error && (
-        <WineDetailsErrorState
-          message={error}
-        />
-      )}
+      {error && <WineDetailsErrorState message={error} />}
 
-      {!error && !wine && (
-        <WineDetailsNotFoundState />
-      )}
+      {!error && !wine && <WineDetailsNotFoundState />}
 
       {!error && wine && (
         <WineDetails
           wine={wine}
-          pagePatternUrl={
-            pagePatternUrl
-          }
-          reviewsBackdropUrl={
-            reviewsBackdropUrl
-          }
-          similarWines={
-            similarWines
-          }
-          wineReviews={
-            wineReviews
-          }
+          pagePatternUrl={pagePatternUrl}
+          reviewsBackdropUrl={reviewsBackdropUrl}
+          similarWines={similarWines}
+          wineReviews={wineReviews}
         />
       )}
     </main>

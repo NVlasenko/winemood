@@ -17,67 +17,54 @@ export const buildWineFilters = ({
 }: UseCatalogWinesParams): WineFilterRequest => {
   const filters: WineFilterRequest = {};
 
-  const normalizedSearchQuery =
-    searchQuery.trim();
+  const normalizedSearchQuery = searchQuery.trim();
 
   if (normalizedSearchQuery) {
-    filters.search =
-      normalizedSearchQuery;
+    filters.search = normalizedSearchQuery;
   }
 
   if (wineTypes.length > 0) {
-    filters.wineTypes =
-      wineTypes;
+    filters.wineTypes = wineTypes;
   }
 
   if (countries.length > 0) {
-    filters.countries =
-      countries;
+    filters.countries = countries;
   }
 
   if (sweetnessLevels.length > 0) {
-    filters.sweetnessLevels =
-      sweetnessLevels;
+    filters.sweetnessLevels = sweetnessLevels;
   }
 
   if (grapeVarieties.length > 0) {
-    filters.grapeVarieties =
-      grapeVarieties;
+    filters.grapeVarieties = grapeVarieties;
   }
 
   if (wineStyles.length > 0) {
-    filters.wineStyles =
-      wineStyles;
+    filters.wineStyles = wineStyles;
   }
 
   if (acidityLevels.length > 0) {
-    filters.acidityLevels =
-      acidityLevels;
+    filters.acidityLevels = acidityLevels;
   }
 
   if (aromaNotes.length > 0) {
-    filters.aromaNotes =
-      aromaNotes;
+    filters.aromaNotes = aromaNotes;
   }
 
   if (moods.length > 0) {
-    filters.moods =
-      moods;
+    filters.moods = moods;
   }
 
   if (events.length > 0) {
-    filters.events =
-      events;
+    filters.events = events;
   }
 
   if (seasons.length > 0) {
-    filters.seasons =
-      seasons;
+    filters.seasons = seasons;
   }
 
   if (foodName.length > 0) {
-    filters.foodName =
-      foodName;
+    filters.foodName = foodName;
   }
 
   return filters;

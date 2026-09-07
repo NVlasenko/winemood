@@ -1,7 +1,5 @@
 import { SectionTitle } from "@/components/ui/SectionTitle";
-
 import { FEATURES } from "./config/features";
-
 import "./AboutFeatures.scss";
 
 export const AboutFeatures = () => {

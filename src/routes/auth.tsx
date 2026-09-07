@@ -1,95 +1,60 @@
-import {
-  createCookie,
-  data,
-  redirect,
-  useLoaderData,
-} from "react-router";
+import { createCookie, data, redirect, useLoaderData } from "react-router";
 
 import { AuthPage } from "@/pages/AuthPage";
-
 import { authApi } from "@/shared/api/authApi";
 
-import {
-  getSiteAssets,
-} from "@/shared/api/assets/siteAssetsApi";
+import { getSiteAssets } from "@/shared/api/assets/siteAssetsApi";
 
 import type { LoginRequestDto } from "@/types/auth";
 
-const accessTokenCookie =
-  createCookie("accessToken", {
-    httpOnly: true,
+const accessTokenCookie = createCookie("accessToken", {
+  httpOnly: true,
 
-    path: "/",
+  path: "/",
 
-    sameSite: "lax",
+  sameSite: "lax",
 
-    secure:
-      import.meta.env.PROD,
+  secure: import.meta.env.PROD,
 
-    maxAge:
-      60 * 60 * 24 * 7,
-  });
+  maxAge: 60 * 60 * 24 * 7,
+});
 
 export async function loader() {
-  const siteAssets =
-    await getSiteAssets();
+  const siteAssets = await getSiteAssets();
 
   return {
-    authBackgroundUrl:
-      siteAssets.auth.backgroundUrl,
+    authBackgroundUrl: siteAssets.auth.backgroundUrl,
   };
 }
 
-export async function action({
-  request,
-}: {
-  request: Request;
-}) {
-  const formData =
-    await request.formData();
+export async function action({ request }: { request: Request }) {
+  const formData = await request.formData();
 
-  const intent =
-    String(
-      formData.get("intent") ?? "login",
-    );
+  const intent = String(formData.get("intent") ?? "login");
 
   if (intent === "logout") {
-    return redirect(
-      "/",
-      {
-        headers: {
-          "Set-Cookie":
-            await accessTokenCookie.serialize(
-              "",
-              {
-                maxAge: 0,
-              },
-            ),
-        },
+    return redirect("/", {
+      headers: {
+        "Set-Cookie": await accessTokenCookie.serialize("", {
+          maxAge: 0,
+        }),
       },
-    );
+    });
   }
 
-  const email =
-    String(
-      formData.get("email") ?? "",
-    ).trim();
+  const email = String(formData.get("email") ?? "").trim();
 
-  const password =
-    String(
-      formData.get("password") ?? "",
-    );
+  const password = String(formData.get("password") ?? "");
 
   if (!email || !password) {
     return data(
       {
         success: false,
-        message:
-          "Email and password are required",
+        message: "Email and password are required",
       },
       {
         status: 400,
-      },
+      }
     );
   }
 
@@ -99,10 +64,7 @@ export async function action({
   };
 
   try {
-    const response =
-      await authApi.login(
-        loginData,
-      );
+    const response = await authApi.login(loginData);
 
     return data(
       {
@@ -110,45 +72,27 @@ export async function action({
       },
       {
         headers: {
-          "Set-Cookie":
-            await accessTokenCookie.serialize(
-              response.accessToken,
-            ),
+          "Set-Cookie": await accessTokenCookie.serialize(response.accessToken),
         },
-      },
+      }
     );
   } catch (error) {
-    console.error(
-      "Server login failed:",
-      error,
-    );
+    console.error("Server login failed:", error);
 
     return data(
       {
         success: false,
-        message:
-          "Invalid email or password",
+        message: "Invalid email or password",
       },
       {
         status: 401,
-      },
+      }
     );
   }
 }
 
 export default function Auth() {
-  const {
-    authBackgroundUrl,
-  } =
-    useLoaderData<
-      typeof loader
-    >();
+  const { authBackgroundUrl } = useLoaderData<typeof loader>();
 
-  return (
-    <AuthPage
-      authBackgroundUrl={
-        authBackgroundUrl
-      }
-    />
-  );
+  return <AuthPage authBackgroundUrl={authBackgroundUrl} />;
 }

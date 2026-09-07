@@ -12,9 +12,7 @@ type AboutPageProps = {
   siteAssets: SiteAssets;
 };
 
-export const AboutPage = ({
-  siteAssets,
-}: AboutPageProps) => {
+export const AboutPage = ({ siteAssets }: AboutPageProps) => {
   return (
     <main className="about-page">
       <AboutHero siteAssets={siteAssets} />

@@ -1,5 +1,4 @@
 import { Link } from "react-router";
-
 import arrowRight from "@/assets/images/icons/arrow-right.svg";
 
 import "./HeroSection.scss";
@@ -8,16 +7,12 @@ type HeroSectionProps = {
   heroBackgroundUrl: string;
 };
 
-export const HeroSection = ({
-  heroBackgroundUrl,
-}: HeroSectionProps) => {
+export const HeroSection = ({ heroBackgroundUrl }: HeroSectionProps) => {
   return (
     <section className="hero-section">
       <div className="container">
         <div className="hero-section__content">
-          <h1 className="hero-section__title">
-            Your Personal Sommelier
-          </h1>
+          <h1 className="hero-section__title">Your Personal Sommelier</h1>
 
           <div className="hero-section__subtitle">
             <span />
@@ -25,10 +20,7 @@ export const HeroSection = ({
             <span />
           </div>
 
-          <Link
-            to="/catalog"
-            className="button-primary hero-section__button"
-          >
+          <Link to="/catalog" className="button-primary hero-section__button">
             <span>Explore Collection</span>
 
             <img

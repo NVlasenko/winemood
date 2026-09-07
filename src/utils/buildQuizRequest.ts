@@ -16,7 +16,7 @@ const EXPERIENCE_LEVEL_MAP: Record<
 export const buildQuizRequest = (
   experienceLevel: QuizExperienceLevel,
   questions: QuizQuestionConfig[],
-  selectedAnswers: Record<number, string>,
+  selectedAnswers: Record<number, string>
 ): QuizRequestDto => {
   const mappedLevel = EXPERIENCE_LEVEL_MAP[experienceLevel];
 
@@ -32,7 +32,7 @@ export const buildQuizRequest = (
     if (!selectedOptionId) continue;
 
     const selectedOption = question.options.find(
-      (option) => option.id === selectedOptionId,
+      (option) => option.id === selectedOptionId
     );
 
     if (!selectedOption) {
@@ -44,9 +44,7 @@ export const buildQuizRequest = (
     }
 
     if (answers[question.apiField]) {
-      console.warn(
-        `Duplicate apiField detected: ${question.apiField}`,
-      );
+      console.warn(`Duplicate apiField detected: ${question.apiField}`);
     }
 
     answers[question.apiField] = selectedOption.apiValue;

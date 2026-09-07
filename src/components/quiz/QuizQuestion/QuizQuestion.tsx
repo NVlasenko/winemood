@@ -21,7 +21,9 @@ export const QuizQuestion = ({
   const isCompact = options.length >= 5;
 
   return (
-    <div className={`quiz-question ${isCompact ? "quiz-question--compact" : ""}`}>
+    <div
+      className={`quiz-question ${isCompact ? "quiz-question--compact" : ""}`}
+    >
       <p className="quiz-question__step">
         Question {step} of {totalSteps}
       </p>

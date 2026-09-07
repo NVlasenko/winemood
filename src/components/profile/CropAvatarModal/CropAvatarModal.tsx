@@ -97,9 +97,7 @@ export const CropAvatarModal = ({ image, onClose, onSave }: Props) => {
     setDragging(false);
   };
 
-  const handlePointerCancel = (
-    event: React.PointerEvent<HTMLImageElement>
-  ) => {
+  const handlePointerCancel = (event: React.PointerEvent<HTMLImageElement>) => {
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);
     }
@@ -150,13 +148,7 @@ export const CropAvatarModal = ({ image, onClose, onSave }: Props) => {
 
     ctx.beginPath();
 
-    ctx.arc(
-      CIRCLE_SIZE / 2,
-      CIRCLE_SIZE / 2,
-      CIRCLE_SIZE / 2,
-      0,
-      Math.PI * 2
-    );
+    ctx.arc(CIRCLE_SIZE / 2, CIRCLE_SIZE / 2, CIRCLE_SIZE / 2, 0, Math.PI * 2);
 
     ctx.clip();
 
@@ -198,17 +190,11 @@ export const CropAvatarModal = ({ image, onClose, onSave }: Props) => {
         aria-modal="true"
         aria-labelledby="avatar-modal-title"
       >
-        <div
-          className="avatar-modal__title"
-          id="avatar-modal-title"
-        >
+        <div className="avatar-modal__title" id="avatar-modal-title">
           Adjust avatar
         </div>
 
-        <div
-          ref={viewportRef}
-          className="avatar-modal__viewport"
-        >
+        <div ref={viewportRef} className="avatar-modal__viewport">
           <img
             ref={imgRef}
             src={image}

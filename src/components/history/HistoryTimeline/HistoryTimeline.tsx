@@ -9,9 +9,7 @@ type HistoryTimelineProps = {
   timelineItems: HistoryTimelineItem[];
 };
 
-export const HistoryTimeline = ({
-  timelineItems,
-}: HistoryTimelineProps) => {
+export const HistoryTimeline = ({ timelineItems }: HistoryTimelineProps) => {
   return (
     <section className="history-timeline">
       <div className="container">
@@ -19,16 +17,10 @@ export const HistoryTimeline = ({
 
         <div className="history-timeline__grid">
           {timelineItems.map((item) => {
-            const Icon =
-              TIMELINE_ICONS[
-                item.id as keyof typeof TIMELINE_ICONS
-              ];
+            const Icon = TIMELINE_ICONS[item.id as keyof typeof TIMELINE_ICONS];
 
             return (
-              <article
-                className="history-timeline__card"
-                key={item.id}
-              >
+              <article className="history-timeline__card" key={item.id}>
                 <div className="history-timeline__image-wrap">
                   <img
                     className="history-timeline__image"
@@ -47,9 +39,7 @@ export const HistoryTimeline = ({
                   />
                 )}
 
-                <p className="history-timeline__text">
-                  {item.text}
-                </p>
+                <p className="history-timeline__text">{item.text}</p>
               </article>
             );
           })}

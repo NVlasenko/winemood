@@ -1,19 +1,13 @@
 import type { SiteAssets } from "@/types/siteAssets";
-
 import "./AboutHero.scss";
 
 type AboutHeroProps = {
   siteAssets: SiteAssets;
 };
 
-export const AboutHero = ({
-  siteAssets,
-}: AboutHeroProps) => {
-  const winePattern =
-    siteAssets.shared.pagePatternUrl;
-
-  const bottleImage =
-    siteAssets.about.bottleImageUrl;
+export const AboutHero = ({ siteAssets }: AboutHeroProps) => {
+  const winePattern = siteAssets.shared.pagePatternUrl;
+  const bottleImage = siteAssets.about.bottleImageUrl;
 
   return (
     <section className="about-hero">
@@ -39,10 +33,7 @@ export const AboutHero = ({
 
       <div className="container">
         <div className="about-hero__content">
-          <h1
-            className="about-hero__brand"
-            aria-hidden="true"
-          >
+          <h1 className="about-hero__brand" aria-hidden="true">
             WineMood
           </h1>
 

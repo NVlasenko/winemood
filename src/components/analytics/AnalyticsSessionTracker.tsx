@@ -8,23 +8,16 @@ import {
 
 export const AnalyticsSessionTracker = () => {
   useEffect(() => {
-    const { sessionId, isNew } =
-      getOrCreateAnalyticsSession();
+    const { sessionId, isNew } = getOrCreateAnalyticsSession();
 
     if (!isNew) {
       return;
     }
 
     analytics
-      .sessionStarted(
-        sessionId,
-        getAnalyticsDeviceType(),
-      )
+      .sessionStarted(sessionId, getAnalyticsDeviceType())
       .catch((error) => {
-        console.error(
-          "Failed to send SESSION_STARTED analytics event:",
-          error,
-        );
+        console.error("Failed to send SESSION_STARTED analytics event:", error);
       });
   }, []);
 

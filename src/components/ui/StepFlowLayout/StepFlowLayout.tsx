@@ -1,11 +1,10 @@
 import type { ReactNode } from "react";
 import { Fragment, useMemo } from "react";
 import { Link } from "react-router";
+import { SectionTitle } from "@/components/ui/SectionTitle";
 
 import arrowRight from "@/assets/images/icons/arrow-right.svg";
 import backArrowIcon from "@/assets/images/icons/arrow-right.svg";
-import { SectionTitle } from "@/components/ui/SectionTitle";
-
 import NextArrowIcon from "@/assets/images/moods/mood-arrows/arrow-default.svg?react";
 import PreviousArrowIcon from "@/assets/images/moods/mood-arrows/arrow-grey.svg?react";
 
@@ -97,7 +96,9 @@ export const StepFlowLayout = ({
                 <Fragment key={step}>
                   <span
                     className={`step-flow-layout__page ${
-                      currentStep >= step ? "step-flow-layout__page--active" : ""
+                      currentStep >= step
+                        ? "step-flow-layout__page--active"
+                        : ""
                     }`}
                   >
                     {step}

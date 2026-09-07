@@ -12,8 +12,7 @@ export const ReviewStars = ({ rating }: Props) => {
       aria-label={`Rating ${rating} out of 5`}
     >
       {STARS.map((star) => {
-        const fillPercent =
-          Math.min(Math.max(rating - (star - 1), 0), 1) * 100;
+        const fillPercent = Math.min(Math.max(rating - (star - 1), 0), 1) * 100;
 
         return (
           <span className="wine-reviews__star" key={star} aria-hidden="true">

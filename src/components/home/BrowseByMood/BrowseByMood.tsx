@@ -1,24 +1,17 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Link } from "react-router";
+import { MoodCard } from "./sections/MoodCard";
 
-import Particles, {
-  initParticlesEngine,
-} from "@tsparticles/react";
+import Particles, { initParticlesEngine } from "@tsparticles/react";
 
 import { loadSlim } from "@tsparticles/slim";
 import { loadEmittersPlugin } from "@tsparticles/plugin-emitters";
 import { loadTextShape } from "@tsparticles/shape-text";
+import { SectionTitle } from "@/components/ui/SectionTitle";
 
 import type { Engine } from "@tsparticles/engine";
-
-import { SectionTitle } from "@/components/ui/SectionTitle";
+import type { MoodAsset, MoodCardTheme } from "@/types/mood";
 
 import { useMoodTheme } from "@/context/MoodThemeContext";
 
@@ -29,51 +22,29 @@ import {
   getParticleOptions,
 } from "@/utils/moodEffects";
 
-import { MoodCard } from "./sections/MoodCard";
-import type {
-  MoodAsset,
-  MoodCardTheme,
-} from "@/types/mood";
-
 import "./BrowseByMood.scss";
 
-type ParticleTheme = Exclude<
-  MoodCardTheme,
-  "celebration"
->;
+type ParticleTheme = Exclude<MoodCardTheme, "celebration">;
 type BrowseByMoodProps = {
   moods: MoodAsset[];
 };
 
-export const BrowseByMood = ({
-  moods,
-}: BrowseByMoodProps) => {
+export const BrowseByMood = ({ moods }: BrowseByMoodProps) => {
   const { moodTheme, setMoodTheme } = useMoodTheme();
 
+  const particleTimeoutRef = useRef<number | null>(null);
+  const animationFrameRef = useRef<number | null>(null);
 
+  const [isParticlesReady, setIsParticlesReady] = useState(false);
 
-  const particleTimeoutRef =
-    useRef<number | null>(null);
+  const [activeParticleTheme, setActiveParticleTheme] =
+    useState<ParticleTheme | null>(null);
 
-  const animationFrameRef =
-    useRef<number | null>(null);
-
-  const [isParticlesReady, setIsParticlesReady] =
-    useState(false);
-
-  const [
-    activeParticleTheme,
-    setActiveParticleTheme,
-  ] = useState<ParticleTheme | null>(null);
-
-  const [particleKey, setParticleKey] =
-    useState(0);
+  const [particleKey, setParticleKey] = useState(0);
 
   const clearParticleTimeout = useCallback(() => {
     if (particleTimeoutRef.current) {
-      window.clearTimeout(
-        particleTimeoutRef.current,
-      );
+      window.clearTimeout(particleTimeoutRef.current);
 
       particleTimeoutRef.current = null;
     }
@@ -81,9 +52,7 @@ export const BrowseByMood = ({
 
   const clearAnimationFrame = useCallback(() => {
     if (animationFrameRef.current) {
-      window.cancelAnimationFrame(
-        animationFrameRef.current,
-      );
+      window.cancelAnimationFrame(animationFrameRef.current);
 
       animationFrameRef.current = null;
     }
@@ -92,13 +61,11 @@ export const BrowseByMood = ({
   useEffect(() => {
     let isMounted = true;
 
-    initParticlesEngine(
-      async (engine: Engine) => {
-        await loadSlim(engine);
-        await loadEmittersPlugin(engine);
-        await loadTextShape(engine);
-      },
-    ).then(() => {
+    initParticlesEngine(async (engine: Engine) => {
+      await loadSlim(engine);
+      await loadEmittersPlugin(engine);
+      await loadTextShape(engine);
+    }).then(() => {
       if (isMounted) {
         setIsParticlesReady(true);
       }
@@ -114,19 +81,14 @@ export const BrowseByMood = ({
       clearParticleTimeout();
       clearAnimationFrame();
     };
-  }, [
-    clearParticleTimeout,
-    clearAnimationFrame,
-  ]);
+  }, [clearParticleTimeout, clearAnimationFrame]);
 
   const particleOptions = useMemo(() => {
     if (!activeParticleTheme) {
       return undefined;
     }
 
-    return getParticleOptions(
-      activeParticleTheme,
-    );
+    return getParticleOptions(activeParticleTheme);
   }, [activeParticleTheme]);
 
   const fireParticleEffect = useCallback(
@@ -136,28 +98,21 @@ export const BrowseByMood = ({
 
       setActiveParticleTheme(null);
 
-      animationFrameRef.current =
-        window.requestAnimationFrame(() => {
-          setParticleKey(
-            (previous) => previous + 1,
-          );
+      animationFrameRef.current = window.requestAnimationFrame(() => {
+        setParticleKey((previous) => previous + 1);
 
-          setActiveParticleTheme(theme);
+        setActiveParticleTheme(theme);
 
-          animationFrameRef.current = null;
-        });
+        animationFrameRef.current = null;
+      });
 
-      particleTimeoutRef.current =
-        window.setTimeout(() => {
-          setActiveParticleTheme(null);
+      particleTimeoutRef.current = window.setTimeout(() => {
+        setActiveParticleTheme(null);
 
-          particleTimeoutRef.current = null;
-        }, 2600);
+        particleTimeoutRef.current = null;
+      }, 2600);
     },
-    [
-      clearParticleTimeout,
-      clearAnimationFrame,
-    ],
+    [clearParticleTimeout, clearAnimationFrame]
   );
 
   const handleResetMood = useCallback(() => {
@@ -167,11 +122,7 @@ export const BrowseByMood = ({
     setActiveParticleTheme(null);
 
     setMoodTheme("default");
-  }, [
-    clearParticleTimeout,
-    clearAnimationFrame,
-    setMoodTheme,
-  ]);
+  }, [clearParticleTimeout, clearAnimationFrame, setMoodTheme]);
 
   const handleMoodClick = useCallback(
     (theme: MoodCardTheme) => {
@@ -195,32 +146,26 @@ export const BrowseByMood = ({
       clearParticleTimeout,
       clearAnimationFrame,
       fireParticleEffect,
-    ],
+    ]
   );
 
   return (
     <section className="browse-by-mood">
-      {isParticlesReady &&
-        activeParticleTheme &&
-        particleOptions && (
-          <Particles
-            key={particleKey}
-            id={`mood-particles-${particleKey}`}
-            className="browse-by-mood__particles-layer"
-            options={particleOptions}
-          />
-        )}
+      {isParticlesReady && activeParticleTheme && particleOptions && (
+        <Particles
+          key={particleKey}
+          id={`mood-particles-${particleKey}`}
+          className="browse-by-mood__particles-layer"
+          options={particleOptions}
+        />
+      )}
 
       <div className="container">
         <SectionTitle title="Choose Your Vibe" />
 
         <div className="browse-by-mood__grid">
           {moods.map((mood) => (
-            <MoodCard
-              key={mood.id}
-              mood={mood}
-              onMoodClick={handleMoodClick}
-            />
+            <MoodCard key={mood.id} mood={mood} onMoodClick={handleMoodClick} />
           ))}
         </div>
 
@@ -237,15 +182,11 @@ export const BrowseByMood = ({
                   Current Mood
                 </span>
 
-                <span className="browse-by-mood__reset-value">
-                  {moodTheme}
-                </span>
+                <span className="browse-by-mood__reset-value">{moodTheme}</span>
 
                 <span className="browse-by-mood__reset-divider" />
 
-                <span className="browse-by-mood__reset-action">
-                  Reset
-                </span>
+                <span className="browse-by-mood__reset-action">Reset</span>
               </button>
             )}
           </div>
@@ -256,7 +197,6 @@ export const BrowseByMood = ({
               className="button-primary browse-by-mood__button"
             >
               Find My Wine
-
               <img
                 src={arrowRight}
                 alt=""

@@ -7,19 +7,10 @@ type AuthOptions = {
 };
 
 export const achievementApi = {
-  getAchievements: (
-    {
+  getAchievements: ({ authToken }: AuthOptions = {}) => {
+    return httpClient<Achievement[]>("/api/users/me/achievements", {
+      method: "GET",
       authToken,
-    }: AuthOptions = {},
-  ) => {
-    return httpClient<
-      Achievement[]
-    >(
-      "/api/users/me/achievements",
-      {
-        method: "GET",
-        authToken,
-      },
-    );
+    });
   },
 };

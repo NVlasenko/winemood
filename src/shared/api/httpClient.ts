@@ -1,22 +1,13 @@
-const BASE_URL =
-  import.meta.env.VITE_API_BASE_URL;
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const MAX_NETWORK_RETRIES = 2;
 
-const NETWORK_RETRY_DELAY_MS =
-  1_000;
+const NETWORK_RETRY_DELAY_MS = 1_000;
 
-const SSR_REQUEST_TIMEOUT_MS =
-  5_000;
+const SSR_REQUEST_TIMEOUT_MS = 5_000;
 
-type HttpClientOptions = Omit<
-  RequestInit,
-  "body"
-> & {
-  body?:
-    | BodyInit
-    | object
-    | null;
+type HttpClientOptions = Omit<RequestInit, "body"> & {
+  body?: BodyInit | object | null;
 
   skipJsonContentType?: boolean;
 
@@ -42,50 +33,30 @@ export type ApiErrorResponse = {
 export class ApiError extends Error {
   status: number;
 
-  data:
-    | ApiErrorResponse
-    | null;
+  data: ApiErrorResponse | null;
 
-  constructor(
-    message: string,
-    status: number,
-    data:
-      | ApiErrorResponse
-      | null,
-  ) {
+  constructor(message: string, status: number, data: ApiErrorResponse | null) {
     super(message);
 
     this.name = "ApiError";
     this.status = status;
     this.data = data;
 
-    Object.setPrototypeOf(
-      this,
-      ApiError.prototype,
-    );
+    Object.setPrototypeOf(this, ApiError.prototype);
   }
 }
 
 export class SsrTimeoutError extends Error {
   timeoutMs: number;
 
-  constructor(
-    timeoutMs: number,
-  ) {
-    super(
-      `SSR request timed out after ${timeoutMs}ms`,
-    );
+  constructor(timeoutMs: number) {
+    super(`SSR request timed out after ${timeoutMs}ms`);
 
-    this.name =
-      "SsrTimeoutError";
+    this.name = "SsrTimeoutError";
 
-    this.timeoutMs =
-      timeoutMs;
+    this.timeoutMs = timeoutMs;
 
-    Object.setPrototypeOf(
-      this,
-      SsrTimeoutError.prototype,
-    );
+    Object.setPrototypeOf(this, SsrTimeoutError.prototype);
   }
 }
 
@@ -93,398 +64,230 @@ class BackendUnavailableError extends Error {
   cause?: unknown;
 
   constructor(
-    message =
-      "Backend is temporarily unavailable.",
-    cause?: unknown,
+    message = "Backend is temporarily unavailable.",
+    cause?: unknown
   ) {
     super(message);
 
-    this.name =
-      "BackendUnavailableError";
+    this.name = "BackendUnavailableError";
 
     this.cause = cause;
 
-    Object.setPrototypeOf(
-      this,
-      BackendUnavailableError.prototype,
-    );
+    Object.setPrototypeOf(this, BackendUnavailableError.prototype);
   }
 }
 
-const throwBackendUnavailable = (
-  message: string,
-  cause?: unknown,
-): never => {
-
-  if (
-    typeof window ===
-    "undefined"
-  ) {
-    throw new Response(
-      "Backend unavailable",
-      {
-        status: 503,
-        statusText:
-          "Backend Unavailable",
-      },
-    );
+const throwBackendUnavailable = (message: string, cause?: unknown): never => {
+  if (typeof window === "undefined") {
+    throw new Response("Backend unavailable", {
+      status: 503,
+      statusText: "Backend Unavailable",
+    });
   }
 
-
-  throw new BackendUnavailableError(
-    message,
-    cause,
-  );
+  throw new BackendUnavailableError(message, cause);
 };
 
 const getAccessToken = () => {
-  if (
-    typeof window ===
-    "undefined"
-  ) {
+  if (typeof window === "undefined") {
     return null;
   }
 
-  const token =
-    localStorage.getItem(
-      "accessToken",
-    );
+  const token = localStorage.getItem("accessToken");
 
-  return token &&
-    token !== "undefined" &&
-    token !== "null"
-    ? token
-    : null;
+  return token && token !== "undefined" && token !== "null" ? token : null;
 };
 
-const buildUrl = (
-  endpoint: string,
-) => {
+const buildUrl = (endpoint: string) => {
   if (!BASE_URL) {
-    throw new Error(
-      "VITE_API_BASE_URL is not defined.",
-    );
+    throw new Error("VITE_API_BASE_URL is not defined.");
   }
 
   return `${BASE_URL}${endpoint}`;
 };
 
-const parseResponseBody =
-  async (
-    response: Response,
-  ) => {
-    const contentType =
-      response.headers.get(
-        "content-type",
-      );
+const parseResponseBody = async (response: Response) => {
+  const contentType = response.headers.get("content-type");
 
-    if (
-      !contentType?.includes(
-        "application/json",
-      )
-    ) {
-      return null;
-    }
+  if (!contentType?.includes("application/json")) {
+    return null;
+  }
 
-    try {
-      return await response.json();
-    } catch {
-      return null;
-    }
-  };
-
-const sleep = (
-  delayMs: number,
-) =>
-  new Promise<void>(
-    (resolve) => {
-      setTimeout(
-        resolve,
-        delayMs,
-      );
-    },
-  );
-
-const isSafeToRetry = (
-  method?: string,
-) => {
-  const normalizedMethod =
-    (
-      method ?? "GET"
-    ).toUpperCase();
-
-  return (
-    normalizedMethod ===
-      "GET" ||
-    normalizedMethod ===
-      "HEAD"
-  );
+  try {
+    return await response.json();
+  } catch {
+    return null;
+  }
 };
 
-const fetchWithNetworkRetry =
-  async (
-    url: string,
-    init: RequestInit,
-  ): Promise<Response> => {
-    const canRetry =
-      isSafeToRetry(
-        init.method,
-      );
+const sleep = (delayMs: number) =>
+  new Promise<void>((resolve) => {
+    setTimeout(resolve, delayMs);
+  });
 
-    let attempt = 0;
+const isSafeToRetry = (method?: string) => {
+  const normalizedMethod = (method ?? "GET").toUpperCase();
 
-    while (true) {
-      try {
-        return await fetch(
-          url,
-          init,
-        );
-      } catch (error) {
-        if (
-          init.signal?.aborted
-        ) {
-          throw error;
-        }
+  return normalizedMethod === "GET" || normalizedMethod === "HEAD";
+};
 
-        if (
-          !canRetry ||
-          attempt >=
-            MAX_NETWORK_RETRIES
-        ) {
-          throw error;
-        }
+const fetchWithNetworkRetry = async (
+  url: string,
+  init: RequestInit
+): Promise<Response> => {
+  const canRetry = isSafeToRetry(init.method);
 
-        attempt += 1;
+  let attempt = 0;
 
-        await sleep(
-          NETWORK_RETRY_DELAY_MS *
-            attempt,
-        );
-      }
-    }
-  };
-
-const fetchWithSsrTimeout =
-  async (
-    url: string,
-    init: RequestInit,
-  ): Promise<Response> => {
-    const isServer =
-      typeof window ===
-      "undefined";
-
-    const shouldUseTimeout =
-      isServer &&
-      isSafeToRetry(
-        init.method,
-      );
-
-    if (!shouldUseTimeout) {
-      return fetchWithNetworkRetry(
-        url,
-        init,
-      );
-    }
-
-    const timeoutController =
-      new AbortController();
-
-    const originalSignal =
-      init.signal;
-
-    let didTimeout = false;
-
-    const handleOriginalAbort =
-      () => {
-        timeoutController.abort(
-          originalSignal?.reason,
-        );
-      };
-
-    if (originalSignal) {
-      if (
-        originalSignal.aborted
-      ) {
-        handleOriginalAbort();
-      } else {
-        originalSignal.addEventListener(
-          "abort",
-          handleOriginalAbort,
-          {
-            once: true,
-          },
-        );
-      }
-    }
-
-    const timeoutId =
-      setTimeout(() => {
-        didTimeout = true;
-
-        timeoutController.abort();
-      }, SSR_REQUEST_TIMEOUT_MS);
-
+  while (true) {
     try {
-      return await fetchWithNetworkRetry(
-        url,
-        {
-          ...init,
-
-          signal:
-            timeoutController.signal,
-        },
-      );
+      return await fetch(url, init);
     } catch (error) {
-      if (didTimeout) {
-        throw new SsrTimeoutError(
-          SSR_REQUEST_TIMEOUT_MS,
-        );
+      if (init.signal?.aborted) {
+        throw error;
       }
 
-      throw error;
-    } finally {
-      clearTimeout(
-        timeoutId,
-      );
+      if (!canRetry || attempt >= MAX_NETWORK_RETRIES) {
+        throw error;
+      }
 
-      originalSignal?.removeEventListener(
-        "abort",
-        handleOriginalAbort,
-      );
+      attempt += 1;
+
+      await sleep(NETWORK_RETRY_DELAY_MS * attempt);
     }
+  }
+};
+
+const fetchWithSsrTimeout = async (
+  url: string,
+  init: RequestInit
+): Promise<Response> => {
+  const isServer = typeof window === "undefined";
+
+  const shouldUseTimeout = isServer && isSafeToRetry(init.method);
+
+  if (!shouldUseTimeout) {
+    return fetchWithNetworkRetry(url, init);
+  }
+
+  const timeoutController = new AbortController();
+
+  const originalSignal = init.signal;
+
+  let didTimeout = false;
+
+  const handleOriginalAbort = () => {
+    timeoutController.abort(originalSignal?.reason);
   };
 
-export const httpClient =
-  async <T>(
-    endpoint: string,
-    options: HttpClientOptions = {},
-  ): Promise<T> => {
-    const {
-      skipJsonContentType,
-      skipAuth,
-      authToken,
-      headers,
-      body,
-      ...rest
-    } = options;
+  if (originalSignal) {
+    if (originalSignal.aborted) {
+      handleOriginalAbort();
+    } else {
+      originalSignal.addEventListener("abort", handleOriginalAbort, {
+        once: true,
+      });
+    }
+  }
 
-    const isFormData =
-      body instanceof FormData;
+  const timeoutId = setTimeout(() => {
+    didTimeout = true;
 
-    const token =
-      authToken ??
-      getAccessToken();
+    timeoutController.abort();
+  }, SSR_REQUEST_TIMEOUT_MS);
 
-    const requestHeaders: HeadersInit =
-      {
-        ...(!isFormData &&
-        !skipJsonContentType
-          ? {
-              "Content-Type":
-                "application/json",
-            }
-          : {}),
+  try {
+    return await fetchWithNetworkRetry(url, {
+      ...init,
 
-        ...(token &&
-        !skipAuth
-          ? {
-              Authorization:
-                `Bearer ${token}`,
-            }
-          : {}),
-
-        ...headers,
-      };
-
-    const preparedBody:
-      | BodyInit
-      | null
-      | undefined =
-      body &&
-      !isFormData &&
-      typeof body ===
-        "object"
-        ? JSON.stringify(
-            body,
-          )
-        : (body as
-            | BodyInit
-            | null
-            | undefined);
-
-    let response: Response;
-
-    try {
-      response =
-        await fetchWithSsrTimeout(
-          buildUrl(
-            endpoint,
-          ),
-          {
-            ...rest,
-
-            headers:
-              requestHeaders,
-
-            body:
-              preparedBody,
-          },
-        );
-    } catch (error) {
-      if (
-        error instanceof
-        SsrTimeoutError
-      ) {
-        throwBackendUnavailable(
-          "Backend did not respond in time.",
-          error,
-        );
-      }
-      
-      if (
-        error instanceof
-        TypeError
-      ) {
-        throwBackendUnavailable(
-          "Backend could not be reached.",
-          error,
-        );
-      }
-
-      throw error;
+      signal: timeoutController.signal,
+    });
+  } catch (error) {
+    if (didTimeout) {
+      throw new SsrTimeoutError(SSR_REQUEST_TIMEOUT_MS);
     }
 
-    const data =
-      await parseResponseBody(
-        response,
-      );
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
 
-      if (
-        response.status === 502 ||
-        response.status === 503 ||
-        response.status === 504
-      ) {
-        throwBackendUnavailable(
-          `Backend is temporarily unavailable (${response.status}).`,
-        );
-      }
+    originalSignal?.removeEventListener("abort", handleOriginalAbort);
+  }
+};
 
-    if (!response.ok) {
-      const errorData =
-        data as
-          | ApiErrorResponse
-          | null;
+export const httpClient = async <T>(
+  endpoint: string,
+  options: HttpClientOptions = {}
+): Promise<T> => {
+  const { skipJsonContentType, skipAuth, authToken, headers, body, ...rest } =
+    options;
 
-      const message =
-        errorData?.message ??
-        `HTTP error: ${response.status}`;
+  const isFormData = body instanceof FormData;
 
-      throw new ApiError(
-        message,
-        response.status,
-        errorData,
-      );
-    }
+  const token = authToken ?? getAccessToken();
 
-    return data as T;
+  const requestHeaders: HeadersInit = {
+    ...(!isFormData && !skipJsonContentType
+      ? {
+          "Content-Type": "application/json",
+        }
+      : {}),
+
+    ...(token && !skipAuth
+      ? {
+          Authorization: `Bearer ${token}`,
+        }
+      : {}),
+
+    ...headers,
   };
+
+  const preparedBody: BodyInit | null | undefined =
+    body && !isFormData && typeof body === "object"
+      ? JSON.stringify(body)
+      : (body as BodyInit | null | undefined);
+
+  let response: Response;
+
+  try {
+    response = await fetchWithSsrTimeout(buildUrl(endpoint), {
+      ...rest,
+
+      headers: requestHeaders,
+
+      body: preparedBody,
+    });
+  } catch (error) {
+    if (error instanceof SsrTimeoutError) {
+      throwBackendUnavailable("Backend did not respond in time.", error);
+    }
+
+    if (error instanceof TypeError) {
+      throwBackendUnavailable("Backend could not be reached.", error);
+    }
+
+    throw error;
+  }
+
+  const data = await parseResponseBody(response);
+
+  if (
+    response.status === 502 ||
+    response.status === 503 ||
+    response.status === 504
+  ) {
+    throwBackendUnavailable(
+      `Backend is temporarily unavailable (${response.status}).`
+    );
+  }
+
+  if (!response.ok) {
+    const errorData = data as ApiErrorResponse | null;
+
+    const message = errorData?.message ?? `HTTP error: ${response.status}`;
+
+    throw new ApiError(message, response.status, errorData);
+  }
+
+  return data as T;
+};

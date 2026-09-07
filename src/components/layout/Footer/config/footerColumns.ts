@@ -1,8 +1,4 @@
-import {
-  discoveryLinks,
-  resourceLinks,
-  socialLinks,
-} from "@/data/footerLinks";
+import { discoveryLinks, resourceLinks, socialLinks } from "@/data/footerLinks";
 
 export const FOOTER_COLUMNS = [
   {

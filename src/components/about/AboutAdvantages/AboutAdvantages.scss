@@ -17,7 +17,6 @@
 
   &__grid {
     margin-top: 40px;
-
     display: grid;
     grid-template-columns: 1fr;
     gap: 16px;
@@ -28,16 +27,12 @@
   
     min-height: 190px;
     padding: 28px 20px;
-  
     display: flex;
     flex-direction: column;
     gap: 22px;
-  
     border: 1px solid rgba(217, 217, 217, 0.16);
     border-radius: 8px;
-  
     background: rgba(0, 0, 0, 0.16);
-  
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   
@@ -57,10 +52,8 @@
   &__number {
     width: 53px;
     height: 53px;
-  
     object-fit: contain;
     flex-shrink: 0;
-  
     display: block;
   
     transition:
@@ -76,7 +69,6 @@
 
   &__title {
     margin: 0;
-  
     font-family: "Marcellus", serif;
     font-weight: 400;
     font-size: 18px;
@@ -91,12 +83,10 @@
 
   &__text {
     margin: 0;
-
     font-family: "Poppins", sans-serif;
     font-weight: 400;
     font-size: 13px;
     line-height: 1.7;
-
     color: rgba(177, 167, 166, 1);
   }
 
@@ -105,16 +95,12 @@
 
     &::after {
       display: block;
-    
       content: "";
-    
       position: absolute;
       top: 14%;
       right: 0;
-    
       width: 620px;
       height: 420px;
-    
       border-radius: 50%;
     
       background: radial-gradient(
@@ -128,14 +114,12 @@
       );
     
       filter: blur(120px);
-    
       pointer-events: none;
       z-index: 0;
     }
 
     &__grid {
       margin-top: 56px;
-
       grid-template-columns: repeat(3, 1fr);
       gap: 20px;
     }
@@ -157,16 +141,13 @@
   }
 
   @include on-desktop {
-  
     padding: 164px 0 0;
 
     &::after {
       top: 50%;
       right: 0;
-  
       width: 250px;
       height: 100px;
-  
       filter: blur(120px);
     }
   

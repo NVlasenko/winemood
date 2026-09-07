@@ -1,6 +1,4 @@
-import {
-  useLoaderData,
-} from "react-router";
+import { useLoaderData } from "react-router";
 
 import { HomePage } from "@/pages/HomePage";
 
@@ -10,12 +8,7 @@ import { getCategories } from "@/shared/api/categoryApi";
 import { getCountries } from "@/shared/api/countryApi";
 
 export async function loader() {
-  const [
-    siteAssets,
-    moods,
-    categories,
-    countries,
-  ] = await Promise.all([
+  const [siteAssets, moods, categories, countries] = await Promise.all([
     getSiteAssets(),
     getMoodAssets(),
     getCategories(),
@@ -23,9 +16,7 @@ export async function loader() {
   ]);
 
   return {
-    heroBackgroundUrl:
-      siteAssets.home
-        .heroBackgroundUrl,
+    heroBackgroundUrl: siteAssets.home.heroBackgroundUrl,
 
     moods,
 
@@ -36,28 +27,15 @@ export async function loader() {
 }
 
 export default function Home() {
-  const {
-    heroBackgroundUrl,
-    moods,
-    categories,
-    countries,
-  } =
-    useLoaderData<
-      typeof loader
-    >();
+  const { heroBackgroundUrl, moods, categories, countries } =
+    useLoaderData<typeof loader>();
 
   return (
     <HomePage
-      heroBackgroundUrl={
-        heroBackgroundUrl
-      }
+      heroBackgroundUrl={heroBackgroundUrl}
       moods={moods}
-      categories={
-        categories
-      }
-      countries={
-        countries
-      }
+      categories={categories}
+      countries={countries}
     />
   );
 }

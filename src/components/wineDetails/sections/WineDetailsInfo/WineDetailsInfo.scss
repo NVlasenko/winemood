@@ -3,20 +3,15 @@
 
 .wine-details-info {
   position: relative;
-
   padding: 32px 0 50px;
-
   overflow: hidden;
 
   &::before,
   &::after {
     content: "";
-
     position: absolute;
     z-index: 0;
-
     pointer-events: none;
-
     border-radius: 50%;
 
     background: radial-gradient(
@@ -37,7 +32,6 @@
   &::before {
     top: -80px;
     left: -260px;
-
     width: 620px;
     height: 620px;
   }
@@ -45,41 +39,30 @@
   &::after {
     right: -220px;
     bottom: -30px;
-
     width: 560px;
     height: 560px;
-
     opacity: 0.72;
   }
 
   &__grid {
     position: relative;
     z-index: 1;
-
     display: grid;
     grid-template-columns: 1fr;
-
     gap: 32px;
   }
 
   &__card {
     @include animated-info-card;
     @include animated-card-icon(".wine-details-info__icon");
-
     min-height: 220px;
-
     padding: 56px 28px;
-
     display: flex;
     align-items: center;
-
     gap: 28px;
-
     border: 0.5px solid rgba(217, 217, 217, 0.16);
     border-radius: 8px;
-
     background: rgba(0, 0, 0, 0.18);
-
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
@@ -87,43 +70,30 @@
   &__icon {
     width: 55px;
     height: 55px;
-
     object-fit: contain;
-
     flex-shrink: 0;
   }
 
   &__title {
     margin: 0 0 22px;
-
     font-family: "Poppins", sans-serif;
     font-weight: 500;
-
     font-size: 16px;
     line-height: 1;
-
     letter-spacing: 0.04em;
-
     text-transform: uppercase;
-
     color: var(--mood-link-hover-color);
   }
 
   &__value {
     margin: 0;
-
     font-family: "Marcellus", serif;
     font-weight: 400;
-
     font-size: 20px;
     line-height: 1.5;
-
     letter-spacing: 0.08em;
-
     text-transform: uppercase;
-
     color: $text-primary;
-
     overflow-wrap: anywhere;
   }
 
@@ -132,21 +102,18 @@
 
     &__grid {
       grid-template-columns: repeat(2, 1fr);
-
       column-gap: 20px;
       row-gap: 32px;
     }
 
     &__card {
       min-height: 200px;
-
       padding: 64px 32px;
     }
 
     &::before {
       top: -70px;
       left: -300px;
-
       width: 760px;
       height: 760px;
     }
@@ -154,7 +121,6 @@
     &::after {
       right: -260px;
       bottom: -60px;
-
       width: 680px;
       height: 680px;
     }
@@ -163,14 +129,12 @@
   @include on-desktop {
     &__card {
       min-height: 212px;
-
       padding: 88px 32px;
     }
 
     &::before {
       top: -50px;
       left: -380px;
-
       width: 900px;
       height: 900px;
     }
@@ -178,7 +142,6 @@
     &::after {
       right: -320px;
       bottom: -30px;
-
       width: 760px;
       height: 760px;
     }

@@ -1,8 +1,4 @@
-import {
-  Outlet,
-  matchPath,
-  useLocation,
-} from "react-router";
+import { Outlet, matchPath, useLocation } from "react-router";
 
 import { Header } from "./components/layout/Header";
 import { Footer } from "./components/layout/Footer";
@@ -21,37 +17,23 @@ import "./App.scss";
 export const App = () => {
   const location = useLocation();
 
-  const {
-    isBackendLoading,
-  } = useAppLoading();
+  const { isBackendLoading } = useAppLoading();
 
-  const {
-    unlocked,
-    closeAchievement,
-  } = useAchievementListener();
+  const { unlocked, closeAchievement } = useAchievementListener();
 
   const isReviewPage = matchPath(
     {
       path: "/catalog/:id/review",
     },
-    location.pathname,
+    location.pathname
   );
 
-  const isQuizPage =
-    location.pathname.startsWith(
-      ROUTES.quiz,
-    );
+  const isQuizPage = location.pathname.startsWith(ROUTES.quiz);
 
-  const isAuthPage =
-    location.pathname.startsWith(
-      ROUTES.auth,
-    );
+  const isAuthPage = location.pathname.startsWith(ROUTES.auth);
 
   const shouldHideFooter =
-    isReviewPage ||
-    isQuizPage ||
-    isAuthPage ||
-    isBackendLoading;
+    isReviewPage || isQuizPage || isAuthPage || isBackendLoading;
 
   return (
     <div className="App">
@@ -62,9 +44,7 @@ export const App = () => {
       {unlocked && (
         <AchievementUnlockedModal
           achievement={unlocked}
-          onClose={
-            closeAchievement
-          }
+          onClose={closeAchievement}
         />
       )}
 
@@ -72,9 +52,7 @@ export const App = () => {
         <Outlet />
       </main>
 
-      {!shouldHideFooter && (
-        <Footer />
-      )}
+      {!shouldHideFooter && <Footer />}
     </div>
   );
 };

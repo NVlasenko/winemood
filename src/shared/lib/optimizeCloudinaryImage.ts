@@ -4,27 +4,19 @@ type CloudinaryImageOptions = {
 
 export const optimizeCloudinaryImage = (
   url: string,
-  options: CloudinaryImageOptions = {},
+  options: CloudinaryImageOptions = {}
 ): string => {
-  if (
-    !url.includes("res.cloudinary.com") ||
-    !url.includes("/image/upload/")
-  ) {
+  if (!url.includes("res.cloudinary.com") || !url.includes("/image/upload/")) {
     return url;
   }
 
   const transformations = [
     "f_auto",
     "q_auto",
-    options.width
-      ? `w_${options.width}`
-      : null,
+    options.width ? `w_${options.width}` : null,
   ]
     .filter(Boolean)
     .join(",");
 
-  return url.replace(
-    "/image/upload/",
-    `/image/upload/${transformations}/`,
-  );
+  return url.replace("/image/upload/", `/image/upload/${transformations}/`);
 };

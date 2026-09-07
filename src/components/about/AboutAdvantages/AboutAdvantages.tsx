@@ -1,7 +1,6 @@
 import { SectionTitle } from "@/components/ui/SectionTitle";
-
-import "./AboutAdvantages.scss";
 import { ADVANTAGES } from "./config/advantages";
+import "./AboutAdvantages.scss";
 
 export const AboutAdvantages = () => {
   return (

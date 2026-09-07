@@ -158,7 +158,7 @@ export const FavoritesProvider = ({
           return previousWines;
         }
 
-        return [...previousWines, wine];
+        return [wine, ...previousWines];
       });
 
       try {
@@ -181,7 +181,7 @@ export const FavoritesProvider = ({
           if (isFav) {
             return previousWines.some((item) => item.id === id)
               ? previousWines
-              : [...previousWines, wine];
+              : [wine, ...previousWines];
           }
 
           return previousWines.filter((item) => item.id !== id);

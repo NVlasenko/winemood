@@ -3,8 +3,9 @@ export type AnalyticsDeviceType =
   | "tablet"
   | "desktop";
 
-export type AnalyticsEvent =
+  export type AnalyticsEvent =
   | {
+      eventId: string;
       eventType: "SEARCH_STARTED";
       eventData: {
         search_type: "catalog";
@@ -12,12 +13,14 @@ export type AnalyticsEvent =
       };
     }
   | {
+      eventId: string;
       eventType: "PAGE_VIEWED";
       eventData: {
         page_url: string;
       };
     }
   | {
+      eventId: string;
       eventType: "SESSION_STARTED";
       eventData: {
         session_id: string;

@@ -1,11 +1,15 @@
-import {
-  useNavigate,
-  Link,
-  useFetcher,
-} from "react-router";
+import { useNavigate, Link, useFetcher } from "react-router";
 
 import { useAuth } from "@/context/AuthContext";
+
 import { ProfileQuizResults } from "@/components/profile/ProfileQuizResults";
+import { ProfileHero } from "@/components/profile/ProfileHero";
+import { ProfileCategories } from "@/components/profile/ProfileCategories";
+import { ProfileFavorites } from "@/components/profile/ProfileFavorites";
+import { UserReviewsList } from "@/components/profile/UserReviewsList";
+import { ProfileAchievements } from "@/components/profile/ProfileAchievements";
+
+import arrowRightIcon from "@/assets/images/icons/arrow-right.svg";
 
 import type { Category } from "@/types/categories";
 import type { UserDto } from "@/types/user";
@@ -13,15 +17,6 @@ import type { WineCatalogCard } from "@/types/wineCatalogCard";
 import type { QuizHistoryItem } from "@/types/quizProfile";
 import type { UserReviewDto } from "@/types/reviews";
 import type { Achievement } from "@/types/achievement";
-
-import arrowRightIcon from "@/assets/images/icons/arrow-right.svg";
-
-import { ProfileHero } from "@/components/profile/ProfileHero";
-import { ProfileCategories } from "@/components/profile/ProfileCategories";
-import { ProfileFavorites } from "@/components/profile/ProfileFavorites";
-
-import { UserReviewsList } from "@/components/profile/UserReviewsList";
-import { ProfileAchievements } from "@/components/profile/ProfileAchievements";
 
 import "./ProfilePage.scss";
 
@@ -46,25 +41,17 @@ export const ProfilePage = ({
 
   const logoutFetcher = useFetcher();
 
-  const {
-    logout,
-  } = useAuth();
+  const { logout } = useAuth();
 
   const handleLogout = async () => {
     const formData = new FormData();
 
-    formData.set(
-      "intent",
-      "logout",
-    );
+    formData.set("intent", "logout");
 
-    await logoutFetcher.submit(
-      formData,
-      {
-        method: "post",
-        action: "/auth",
-      },
-    );
+    await logoutFetcher.submit(formData, {
+      method: "post",
+      action: "/auth",
+    });
 
     logout();
 
@@ -77,18 +64,10 @@ export const ProfilePage = ({
     <main className="profile-page">
       <div className="container">
         <div className="profile-page__top">
-          <Link
-            to="/"
-            className="profile-page__back"
-          >
-            <img
-              src={arrowRightIcon}
-              alt=""
-            />
+          <Link to="/" className="profile-page__back">
+            <img src={arrowRightIcon} alt="" />
 
-            <span>
-              Home
-            </span>
+            <span>Home</span>
           </Link>
         </div>
 
@@ -96,63 +75,39 @@ export const ProfilePage = ({
           <div className="profile-page__status">
             <span className="profile-page__status--indicator" />
 
-            <span>
-              Authenticated
-            </span>
+            <span>Authenticated</span>
           </div>
 
           <button
             className="profile-page__logout profile-page__logout--status"
             type="button"
             onClick={handleLogout}
-            disabled={
-              logoutFetcher.state !== "idle"
-            }
+            disabled={logoutFetcher.state !== "idle"}
           >
             <span className="profile-page__status-indicator" />
 
             <span>
-              {logoutFetcher.state !== "idle"
-                ? "Logging out..."
-                : "Log out"}
+              {logoutFetcher.state !== "idle" ? "Logging out..." : "Log out"}
             </span>
           </button>
         </div>
 
         <ProfileHero
           initialUser={user}
-          initialFavoritesCount={
-            initialFavoriteWines.length
-          }
+          initialFavoritesCount={initialFavoriteWines.length}
         />
 
-        <ProfileCategories
-          categories={categories}
-        />
+        <ProfileCategories categories={categories} />
 
-        <ProfileFavorites
-          initialFavoriteWines={
-            initialFavoriteWines
-          }
-        />
+        <ProfileFavorites initialFavoriteWines={initialFavoriteWines} />
 
-        <ProfileQuizResults
-          initialQuizHistory={
-            initialQuizHistory
-          }
-        />
+        <ProfileQuizResults initialQuizHistory={initialQuizHistory} />
 
-        <UserReviewsList
-          initialReviews={
-            initialReviews
-          }
-        />
+        <UserReviewsList initialReviews={initialReviews} />
 
         <ProfileAchievements
           initialUser={user}
-          initialAchievements={
-            initialAchievements
-          }
+          initialAchievements={initialAchievements}
         />
       </div>
     </main>

@@ -1,8 +1,4 @@
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { reviewApi } from "@/shared/api/reviewApi";
 
@@ -11,50 +7,27 @@ import { refetchAchievementsSafe } from "@/shared/lib/refetchAchievementsSafe";
 
 import { useAuth } from "@/context/AuthContext";
 
-export const useCreateReview = (
-  wineId: number,
-) => {
-  const queryClient =
-    useQueryClient();
+export const useCreateReview = (wineId: number) => {
+  const queryClient = useQueryClient();
 
-  const {
-    user,
-    refreshUser,
-  } = useAuth();
+  const { user, refreshUser } = useAuth();
 
   return useMutation({
-    mutationFn: (data: {
-      rating: number;
-      reviewText: string;
-    }) =>
-      reviewApi.createReview(
-        wineId,
-        data,
-      ),
+    mutationFn: (data: { rating: number; reviewText: string }) =>
+      reviewApi.createReview(wineId, data),
 
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: [
-          "wine-reviews",
-          wineId,
-        ],
+        queryKey: ["wine-reviews", wineId],
       });
 
       await queryClient.invalidateQueries({
-        queryKey: [
-          "my-reviews",
-          user?.id,
-        ],
+        queryKey: ["my-reviews", user?.id],
       });
 
-      invalidateUserData(
-        user?.id,
-      );
+      invalidateUserData(user?.id);
 
-      await refetchAchievementsSafe(
-        queryClient,
-        user?.id,
-      );
+      await refetchAchievementsSafe(queryClient, user?.id);
 
       await refreshUser();
     },
@@ -62,22 +35,14 @@ export const useCreateReview = (
 };
 
 export const useUserReviews = (
-  initialData?: Awaited<
-    ReturnType<
-      typeof reviewApi.getMyReviews
-    >
-  >,
+  initialData?: Awaited<ReturnType<typeof reviewApi.getMyReviews>>
 ) => {
   const { user } = useAuth();
 
   return useQuery({
-    queryKey: [
-      "my-reviews",
-      user?.id,
-    ],
+    queryKey: ["my-reviews", user?.id],
 
-    queryFn: () =>
-      reviewApi.getMyReviews(),
+    queryFn: () => reviewApi.getMyReviews(),
 
     enabled: Boolean(user),
 
@@ -89,16 +54,10 @@ export const useUserReviews = (
   });
 };
 
-export const useUpdateReview = (
-  wineId: number,
-) => {
-  const queryClient =
-    useQueryClient();
+export const useUpdateReview = (wineId: number) => {
+  const queryClient = useQueryClient();
 
-  const {
-    user,
-    refreshUser,
-  } = useAuth();
+  const { user, refreshUser } = useAuth();
 
   return useMutation({
     mutationFn: ({
@@ -110,37 +69,23 @@ export const useUpdateReview = (
       rating: number;
       reviewText: string;
     }) =>
-      reviewApi.updateReview(
-        reviewId,
-        {
-          rating,
-          reviewText,
-        },
-      ),
+      reviewApi.updateReview(reviewId, {
+        rating,
+        reviewText,
+      }),
 
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: [
-          "wine-reviews",
-          wineId,
-        ],
+        queryKey: ["wine-reviews", wineId],
       });
 
       await queryClient.invalidateQueries({
-        queryKey: [
-          "my-reviews",
-          user?.id,
-        ],
+        queryKey: ["my-reviews", user?.id],
       });
 
-      invalidateUserData(
-        user?.id,
-      );
+      invalidateUserData(user?.id);
 
-      await refetchAchievementsSafe(
-        queryClient,
-        user?.id,
-      );
+      await refetchAchievementsSafe(queryClient, user?.id);
 
       await refreshUser();
     },
@@ -148,44 +93,25 @@ export const useUpdateReview = (
 };
 
 export const useDeleteReview = () => {
-  const queryClient =
-    useQueryClient();
+  const queryClient = useQueryClient();
 
-  const {
-    user,
-    refreshUser,
-  } = useAuth();
+  const { user, refreshUser } = useAuth();
 
   return useMutation({
-    mutationFn: (
-      reviewId: number,
-    ) =>
-      reviewApi.deleteReview(
-        reviewId,
-      ),
+    mutationFn: (reviewId: number) => reviewApi.deleteReview(reviewId),
 
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: [
-          "my-reviews",
-          user?.id,
-        ],
+        queryKey: ["my-reviews", user?.id],
       });
 
       await queryClient.invalidateQueries({
-        queryKey: [
-          "wine-reviews",
-        ],
+        queryKey: ["wine-reviews"],
       });
 
-      invalidateUserData(
-        user?.id,
-      );
+      invalidateUserData(user?.id);
 
-      await refetchAchievementsSafe(
-        queryClient,
-        user?.id,
-      );
+      await refetchAchievementsSafe(queryClient, user?.id);
 
       await refreshUser();
     },

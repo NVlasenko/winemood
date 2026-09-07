@@ -6,17 +6,14 @@
   min-width: 0;
   margin-top: 20px;
   padding: 24px;
-
   border: 1px solid rgba(217, 217, 217, 0.16);
   border-radius: 12px;
   backdrop-filter: blur(40px);
-
   overflow: hidden;
 
   &__inner {
     width: 100%;
     min-width: 0;
-
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -26,12 +23,10 @@
   &__left {
     width: 100%;
     min-width: 0;
-
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 20px;
-
     text-align: center;
   }
 
@@ -43,21 +38,16 @@
   &__avatar {
     width: 64px;
     height: 64px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     border: 1px solid rgba(217, 217, 217, 0.16);
     border-radius: 50%;
-
     overflow: hidden;
     cursor: pointer;
-
     font-family: "Marcellus", serif;
     font-size: 24px;
     color: $text-primary;
-
     background: rgba(255, 255, 255, 0.05);
 
     img {
@@ -72,26 +62,20 @@
     position: absolute;
     right: 0;
     bottom: 0;
-
     width: 22px;
     height: 22px;
     padding: 0;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     border: 1px solid rgba(217, 217, 217, 0.2);
     border-radius: 50%;
-
     font-size: 14px;
     font-weight: 500;
     line-height: 1;
     color: #fff;
-
     background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(10px);
-
     cursor: pointer;
 
     &:focus-visible {
@@ -102,7 +86,6 @@
 
   &__user {
     min-width: 0;
-
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -110,18 +93,15 @@
 
   &__name {
     margin: 0;
-
     font-family: "Marcellus", serif;
     font-weight: 400;
     font-size: 24px;
     color: $text-primary;
-
     overflow-wrap: anywhere;
   }
 
   &__subtitle {
     margin: 4px 0 0;
-
     font-family: "Poppins", sans-serif;
     font-weight: 500;
     font-size: 14px;
@@ -131,7 +111,6 @@
   &__stats {
     display: flex;
     justify-content: flex-end;
-  
     flex: 0 0 auto;
     width: auto;
   }
@@ -140,24 +119,19 @@
     position: relative;
     min-width: 0;
     padding: 0 8px;
-
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
     text-align: center;
 
     &:not(:first-child)::before {
       content: "";
-
       position: absolute;
       top: 10%;
       bottom: 10%;
       left: 0;
-
       width: 1px;
-
       background: rgba(177, 167, 166, 1);
     }
   }
@@ -172,7 +146,6 @@
   &__label {
     max-width: 100%;
     margin-top: 6px;
-
     font-family: "Marcellus", serif;
     font-weight: 400;
     font-size: 10px;
@@ -180,9 +153,7 @@
     letter-spacing: 0.04em;
     text-transform: uppercase;
     text-align: center;
-
     color: #fff;
-
     overflow-wrap: anywhere;
   }
 
@@ -229,10 +200,8 @@
     &__left {
       width: auto;
       flex-shrink: 0;
-  
       justify-content: flex-start;
       gap: 32px;
-  
       text-align: left;
     }
   
@@ -243,7 +212,6 @@
     &__stats {
       display: flex;
       justify-content: flex-end;
-  
       flex: 0 0 auto;
       width: auto;
     }

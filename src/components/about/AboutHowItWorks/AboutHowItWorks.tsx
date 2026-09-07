@@ -1,6 +1,6 @@
 import { SectionTitle } from "@/components/ui/SectionTitle";
-import "./AboutHowItWorks.scss";
 import { STEPS } from "./config/steps";
+import "./AboutHowItWorks.scss";
 
 export const AboutHowItWorks = () => {
   return (
@@ -11,18 +11,12 @@ export const AboutHowItWorks = () => {
         <div className="about-how-it-works__grid">
           {STEPS.map((step) => (
             <article className="about-how-it-works__card" key={step.id}>
-              <span className="about-how-it-works__number">
-                {step.number}
-              </span>
+              <span className="about-how-it-works__number">{step.number}</span>
 
               <div className="about-how-it-works__content">
-                <h3 className="about-how-it-works__title">
-                  {step.title}
-                </h3>
+                <h3 className="about-how-it-works__title">{step.title}</h3>
 
-                <p className="about-how-it-works__text">
-                  {step.text}
-                </p>
+                <p className="about-how-it-works__text">{step.text}</p>
               </div>
             </article>
           ))}

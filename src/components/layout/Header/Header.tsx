@@ -23,11 +23,10 @@ export const Header = () => {
 
   const [searchParams] = useSearchParams();
   const isSearchActive =
-  location.pathname === "/catalog" &&
-  searchParams.get("searchOpen") === "true";
+    location.pathname === "/catalog" &&
+    searchParams.get("searchOpen") === "true";
 
-const isProfileActive =
-  location.pathname === "/profile";
+  const isProfileActive = location.pathname === "/profile";
 
   const { isAuthenticated } = useAuth();
   const { openAuthRequired, closeAuthRequired } = useAuthRequired();
@@ -39,16 +38,10 @@ const isProfileActive =
   useEffect(() => {
     closeMenu();
     closeAuthRequired();
-  }, [
-    closeMenu,
-    closeAuthRequired,
-    location.pathname,
-    location.search,
-  ]);
+  }, [closeMenu, closeAuthRequired, location.pathname, location.search]);
 
   const handleSearchClick = useCallback(() => {
     closeMenu();
-
 
     if (location.pathname === "/catalog") {
       const nextParams = new URLSearchParams(searchParams);
@@ -56,19 +49,14 @@ const isProfileActive =
       nextParams.set("searchOpen", "true");
 
       navigate(
-        `/catalog${nextParams.toString() ? `?${nextParams.toString()}` : ""}`,
+        `/catalog${nextParams.toString() ? `?${nextParams.toString()}` : ""}`
       );
 
       return;
     }
 
     navigate("/catalog?searchOpen=true");
-  }, [
-    closeMenu,
-    location.pathname,
-    navigate,
-    searchParams,
-  ]);
+  }, [closeMenu, location.pathname, navigate, searchParams]);
 
   const handleProfileClick = useCallback(() => {
     closeMenu();
@@ -83,12 +71,7 @@ const isProfileActive =
       title: "Continue with an account",
       text: "Please sign up or log in to access your personal profile.",
     });
-  }, [
-    closeMenu,
-    isAuthenticated,
-    navigate,
-    openAuthRequired,
-  ]);
+  }, [closeMenu, isAuthenticated, navigate, openAuthRequired]);
 
   const toggleMenu = useCallback(() => {
     setIsMenuOpen((prev) => !prev);
@@ -98,91 +81,60 @@ const isProfileActive =
     <header className="header">
       <div className="container">
         <div className="header__inner">
-          <NavLink
-            to="/"
-            className="header__logo"
-            onClick={closeMenu}
-          >
+          <NavLink to="/" className="header__logo" onClick={closeMenu}>
             WineMood
           </NavLink>
 
           <nav
-            className={`header__nav ${
-              isMenuOpen ? "header__nav--open" : ""
-            }`}
+            className={`header__nav ${isMenuOpen ? "header__nav--open" : ""}`}
           >
-
-{navLinks.map(({ to, label }) => (
-  <NavLink
-    key={to}
-    to={to}
-    prefetch={
-      to === "/history"
-        ? "intent"
-        : undefined
-    }
-    onClick={closeMenu}
-    className={({ isActive }) =>
-      `header__nav-link ${
-        isActive
-          ? "header__nav-link--active"
-          : ""
-      }`
-    }
-  >
-    {label}
-  </NavLink>
-))}
+            {navLinks.map(({ to, label }) => (
+              <NavLink
+                key={to}
+                to={to}
+                prefetch={to === "/history" ? "intent" : undefined}
+                onClick={closeMenu}
+                className={({ isActive }) =>
+                  `header__nav-link ${
+                    isActive ? "header__nav-link--active" : ""
+                  }`
+                }
+              >
+                {label}
+              </NavLink>
+            ))}
           </nav>
 
           <div className="header__actions">
-          <button
-            className={`header__icon ${
-              isSearchActive
-                ? "header__icon--active"
-                : ""
-            }`}
-            type="button"
-            aria-label="Search"
-            onClick={handleSearchClick}
-          >
-            <img
-              src={searchIcon}
-              alt=""
-              aria-hidden="true"
-            />
-          </button>
+            <button
+              className={`header__icon ${
+                isSearchActive ? "header__icon--active" : ""
+              }`}
+              type="button"
+              aria-label="Search"
+              onClick={handleSearchClick}
+            >
+              <img src={searchIcon} alt="" aria-hidden="true" />
+            </button>
 
-          <button
-            className={`header__icon ${
-              isProfileActive
-                ? "header__icon--active"
-                : ""
-            }`}
-            type="button"
-            aria-label="Profile"
-            onClick={handleProfileClick}
-          >
-            <img
-              src={iconProfile}
-              alt=""
-              aria-hidden="true"
-            />
-          </button>
+            <button
+              className={`header__icon ${
+                isProfileActive ? "header__icon--active" : ""
+              }`}
+              type="button"
+              aria-label="Profile"
+              onClick={handleProfileClick}
+            >
+              <img src={iconProfile} alt="" aria-hidden="true" />
+            </button>
           </div>
 
           <button
             className={`header__burger ${
-              isMenuOpen
-                ? "header__burger--open"
-                : ""
+              isMenuOpen ? "header__burger--open" : ""
             }`}
             type="button"
-            aria-label={
-              isMenuOpen
-                ? "Close menu"
-                : "Open menu"
-            }
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={isMenuOpen}
             onClick={toggleMenu}
           >

@@ -9,9 +9,7 @@ import { getWineById } from "@/shared/api/wineApi";
 
 const MAX_SIMILAR_WINES = 4;
 
-const getWineDetailsErrorMessage = (
-  error: unknown,
-): string => {
+const getWineDetailsErrorMessage = (error: unknown): string => {
   if (error instanceof TypeError) {
     return "Network error. Please check your internet connection.";
   }
@@ -25,11 +23,7 @@ const getWineDetailsErrorMessage = (
       return "Server error. Please try again later.";
     }
 
-    if (
-      error.message.includes(
-        "Failed to fetch",
-      )
-    ) {
+    if (error.message.includes("Failed to fetch")) {
       return "Unable to connect to the server.";
     }
   }
@@ -58,10 +52,7 @@ export async function loader({
 
   const numericId = Number(id);
 
-  if (
-    !Number.isInteger(numericId) ||
-    numericId <= 0
-  ) {
+  if (!Number.isInteger(numericId) || numericId <= 0) {
     return {
       wine: null,
       siteAssets: null,
@@ -72,12 +63,7 @@ export async function loader({
   }
 
   try {
-    const [
-      wine,
-      siteAssets,
-      similarWines,
-      wineReviews,
-    ] = await Promise.all([
+    const [wine, siteAssets, similarWines, wineReviews] = await Promise.all([
       getWineById(numericId),
       getSiteAssets(),
       getSimilarWines(numericId),
@@ -97,59 +83,35 @@ export async function loader({
     return {
       wine,
       siteAssets,
-      similarWines:
-        Array.isArray(similarWines)
-          ? similarWines.slice(
-              0,
-              MAX_SIMILAR_WINES,
-            )
-          : [],
-      wineReviews:
-        Array.isArray(wineReviews)
-          ? wineReviews
-          : [],
+      similarWines: Array.isArray(similarWines)
+        ? similarWines.slice(0, MAX_SIMILAR_WINES)
+        : [],
+      wineReviews: Array.isArray(wineReviews) ? wineReviews : [],
       error: "",
     };
   } catch (error) {
-    console.error(
-      "Failed to load wine details",
-      error,
-    );
+    console.error("Failed to load wine details", error);
 
     return {
       wine: null,
       siteAssets: null,
       similarWines: [],
       wineReviews: [],
-      error:
-        getWineDetailsErrorMessage(
-          error,
-        ),
+      error: getWineDetailsErrorMessage(error),
     };
   }
 }
 
 export default function WineDetailsRoute() {
-  const data =
-    useLoaderData<typeof loader>();
+  const data = useLoaderData<typeof loader>();
 
   return (
     <WineDetailsPage
       wine={data.wine}
-      pagePatternUrl={
-        data.siteAssets?.shared
-          .pagePatternUrl
-      }
-      reviewsBackdropUrl={
-        data.siteAssets?.reviews
-          .wineBackdropUrl
-      }
-      similarWines={
-        data.similarWines
-      }
-      wineReviews={
-        data.wineReviews
-      }
+      pagePatternUrl={data.siteAssets?.shared.pagePatternUrl}
+      reviewsBackdropUrl={data.siteAssets?.reviews.wineBackdropUrl}
+      similarWines={data.similarWines}
+      wineReviews={data.wineReviews}
       error={data.error}
     />
   );

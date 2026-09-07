@@ -6,7 +6,6 @@ type Props = {
 
 const getVisiblePages = (currentPage: number, totalPages: number) => {
   const pages: number[] = [];
-
   const startPage = Math.max(0, currentPage - 1);
   const endPage = Math.min(totalPages - 1, currentPage + 1);
 

@@ -3,7 +3,6 @@
 
 .popular-categories {
   position: relative;
-
   padding-top: 110px;
 
   .container {
@@ -14,32 +13,22 @@
   &__grid {
     position: relative;
     z-index: 2;
-
     display: grid;
     grid-template-columns: 1fr;
-
     gap: 100px;
-
     margin-top: 115px;
   }
 
   &__card {
     position: relative;
-
     display: flex;
     align-items: flex-end;
-
     height: 145px;
-
     padding: 0 24px 28px;
-
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 16px;
-
     background: rgba(11, 11, 11, 0.55);
-
     cursor: pointer;
-
     font: inherit;
     text-align: left;
 
@@ -49,25 +38,18 @@
       border-color 0.35s ease;
     &:hover {
       transform: translateY(-6px);
-
       border-color: rgba(255, 255, 255, 0.16);
-
       box-shadow: 0 22px 44px rgba(0, 0, 0, 0.34);
     }
 
     &::before {
       content: "";
-
       position: absolute;
       inset: 0;
       z-index: 1;
-
       border-radius: inherit;
-
       opacity: 0.92;
-
       pointer-events: none;
-
       transition: opacity 0.4s ease;
     }
 
@@ -111,41 +93,27 @@
   &__card-title {
     position: relative;
     z-index: 3;
-
     margin: 0;
-
     font-family: "Marcellus", serif;
     font-weight: 400;
-
     font-size: 20px;
     line-height: 1.2;
-
     letter-spacing: 0.06em;
-
     text-transform: uppercase;
-
     color: #fff;
-
     pointer-events: none;
   }
 
   &__card-image {
     position: absolute;
-
     top: -78px;
     right: -8px;
-
     z-index: 3;
-
     width: 175px;
     height: 220px;
-
     object-fit: contain;
     object-position: top right;
-
     pointer-events: none;
-
-
     transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
@@ -154,15 +122,12 @@
 
     &__grid {
       grid-template-columns: repeat(2, 1fr);
-
       gap: 100px 30px;
-
       margin-top: 140px;
     }
 
     &__card {
       height: 160px;
-
       padding: 0 30px 30px;
     }
 
@@ -173,7 +138,6 @@
     &__card-image {
       top: -86px;
       right: 44px;
-
       width: 190px;
       height: 245px;
     }
@@ -184,15 +148,12 @@
 
     &__grid {
       grid-template-columns: repeat(4, 1fr);
-
       gap: 20px;
-
       margin-top: 200px;
     }
 
     &__card {
       height: 148px;
-
       padding: 0 28px 30px;
     }
 
@@ -203,7 +164,6 @@
     &__card-image {
       top: -94px;
       right: 30px;
-
       width: 200px;
       height: 250px;
     }

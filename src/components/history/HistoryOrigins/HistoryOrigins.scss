@@ -7,7 +7,6 @@
 
   &__list {
     margin-top: 48px;
-
     display: flex;
     flex-direction: column;
     gap: 32px;
@@ -19,10 +18,8 @@
 
     position: relative;
     overflow: hidden;
-
     display: flex;
     flex-direction: column;
-
     border: 0.5px solid rgba(217, 217, 217, 0.16);
     border-radius: 8px;
 
@@ -46,22 +43,18 @@
   &__info {
     position: relative;
     z-index: 4;
-  
     padding: 36px 24px;
-  
     display: flex;
     flex-direction: column;
     gap: 28px;
   
     &::after {
       content: "";
-  
       position: absolute;
       top: 0;
       bottom: 0;
       right: -1px;
       z-index: 3;
-  
       width: 180px;
       height: 110%;
   
@@ -81,7 +74,6 @@
   &__icon {
     width: 56px;
     height: 56px;
-
     object-fit: contain;
     flex-shrink: 0;
   }
@@ -94,38 +86,31 @@
 
   &__title {
     margin: 0;
-
     font-family: "Poppins", sans-serif;
     font-weight: 500;
     font-size: 14px;
     line-height: 1.4;
-
     letter-spacing: 0.08em;
     text-transform: uppercase;
-
     color: var(--mood-link-hover-color);
   }
 
   &__text {
     margin: 14px 0 0;
-
     font-family: "Poppins", sans-serif;
     font-weight: 400;
     font-size: 13px;
     line-height: 1.65;
-
     color: $text-primary;
   }
 
   &__image-wrap {
     position: relative;
-
     height: 220px;
     overflow: hidden;
 
     &::before {
       content: "";
-
       position: absolute;
       inset: 0;
       z-index: 2;
@@ -145,9 +130,7 @@
   &__image {
     width: 100%;
     height: 100%;
-
     display: block;
-
     object-fit: cover;
     object-position: center;
 
@@ -177,7 +160,6 @@
 
     &__card {
       min-height: 250px;
-
       display: grid;
       grid-template-columns: 1.35fr 0.9fr;
     }

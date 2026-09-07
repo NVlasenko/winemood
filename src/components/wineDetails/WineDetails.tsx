@@ -1,12 +1,12 @@
-import type { Wine } from "@/types/wine";
-import type { WineCatalogCard } from "@/types/wineCatalogCard";
-import type { WineReviewDto } from "@/types/reviews";
-
 import { WineHero } from "./sections/WineHero";
 import { WineDetailsInfo } from "./sections/WineDetailsInfo";
 import { WineReviews } from "./sections/WineReviews";
 import { WineFoodPairings } from "./sections/WineFoodPairings";
 import { SimilarWines } from "./sections/SimilarWines";
+
+import type { WineCatalogCard } from "@/types/wineCatalogCard";
+import type { Wine } from "@/types/wine";
+import type { WineReviewDto } from "@/types/reviews";
 
 import "./WineDetails.scss";
 
@@ -27,27 +27,18 @@ export const WineDetails = ({
 }: Props) => {
   return (
     <section className="wine-card">
-      <WineHero
-        wine={wine}
-        pagePatternUrl={pagePatternUrl}
-      />
+      <WineHero wine={wine} pagePatternUrl={pagePatternUrl} />
 
       <WineDetailsInfo wine={wine} />
 
-      <WineFoodPairings
-        foodPairings={wine.foodPairings}
-      />
+      <WineFoodPairings foodPairings={wine.foodPairings} />
 
-      <SimilarWines
-        wines={similarWines}
-      />
+      <SimilarWines wines={similarWines} />
 
       <WineReviews
         wine={wine}
         reviews={wineReviews}
-        reviewsBackdropUrl={
-          reviewsBackdropUrl
-        }
+        reviewsBackdropUrl={reviewsBackdropUrl}
       />
     </section>
   );

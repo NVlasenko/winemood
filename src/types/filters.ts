@@ -21,10 +21,7 @@ export type FilterWinesParams = {
   signal?: AbortSignal;
 };
 
-export type WineArrayFilterKey = Exclude<
-  keyof WineFilterRequest,
-  "search"
->;
+export type WineArrayFilterKey = Exclude<keyof WineFilterRequest, "search">;
 
 export type FilterOption = {
   id: string;
@@ -46,4 +43,3 @@ export type FilterGroup = {
   options?: FilterOption[];
   subgroups?: FilterSubgroup[];
 };
-

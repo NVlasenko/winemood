@@ -1,9 +1,4 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   QuizIntro,
@@ -14,7 +9,6 @@ import { QuizFinishModal } from "@/components/quiz/QuizFinishModal";
 import { QuizPreparingResults } from "@/components/quiz/QuizPreparingResults";
 import { QuizQuestion } from "@/components/quiz/QuizQuestion";
 import { QuizResults } from "@/components/quiz/QuizResults";
-
 
 import {
   beginnerQuestions,
@@ -60,9 +54,7 @@ const getSavedQuizDraft = (): QuizDraft | null => {
   }
 
   try {
-    const saved = sessionStorage.getItem(
-      QUIZ_DRAFT_STORAGE_KEY,
-    );
+    const saved = sessionStorage.getItem(QUIZ_DRAFT_STORAGE_KEY);
 
     if (!saved) {
       return null;
@@ -75,18 +67,14 @@ const getSavedQuizDraft = (): QuizDraft | null => {
       typeof parsed !== "object" ||
       !Number.isInteger(parsed.currentStep)
     ) {
-      sessionStorage.removeItem(
-        QUIZ_DRAFT_STORAGE_KEY,
-      );
+      sessionStorage.removeItem(QUIZ_DRAFT_STORAGE_KEY);
 
       return null;
     }
 
     return parsed;
   } catch {
-    sessionStorage.removeItem(
-      QUIZ_DRAFT_STORAGE_KEY,
-    );
+    sessionStorage.removeItem(QUIZ_DRAFT_STORAGE_KEY);
 
     return null;
   }
@@ -97,10 +85,7 @@ const saveQuizDraft = (draft: QuizDraft) => {
     return;
   }
 
-  sessionStorage.setItem(
-    QUIZ_DRAFT_STORAGE_KEY,
-    JSON.stringify(draft),
-  );
+  sessionStorage.setItem(QUIZ_DRAFT_STORAGE_KEY, JSON.stringify(draft));
 };
 
 const clearQuizDraft = () => {
@@ -108,9 +93,7 @@ const clearQuizDraft = () => {
     return;
   }
 
-  sessionStorage.removeItem(
-    QUIZ_DRAFT_STORAGE_KEY,
-  );
+  sessionStorage.removeItem(QUIZ_DRAFT_STORAGE_KEY);
 };
 
 const getSavedQuizView = () => {
@@ -118,9 +101,7 @@ const getSavedQuizView = () => {
     return null;
   }
 
-  return sessionStorage.getItem(
-    QUIZ_VIEW_STORAGE_KEY,
-  );
+  return sessionStorage.getItem(QUIZ_VIEW_STORAGE_KEY);
 };
 
 const clearSavedQuizView = () => {
@@ -128,68 +109,38 @@ const clearSavedQuizView = () => {
     return;
   }
 
-  sessionStorage.removeItem(
-    QUIZ_VIEW_STORAGE_KEY,
-  );
+  sessionStorage.removeItem(QUIZ_VIEW_STORAGE_KEY);
 };
 
 export const QuizPage = () => {
-  const {
-    isAuthenticated,
-  } = useAuth();
+  const { isAuthenticated } = useAuth();
 
-  const {
-    quizResult,
-    saveQuizResult,
-    clearQuizResult,
-  } = useQuizSession();
+  const { quizResult, saveQuizResult, clearQuizResult } = useQuizSession();
 
-  const [currentStep, setCurrentStep] =
-    useState(FIRST_QUESTION_STEP);
+  const [currentStep, setCurrentStep] = useState(FIRST_QUESTION_STEP);
 
-  const [
-    selectedLevel,
-    setSelectedLevel,
-  ] = useState<QuizExperienceLevel | null>(
-    null,
-  );
+  const [selectedLevel, setSelectedLevel] =
+    useState<QuizExperienceLevel | null>(null);
 
-  const [answers, setAnswers] =
-    useState<QuizAnswers>({});
+  const [answers, setAnswers] = useState<QuizAnswers>({});
 
-  const [
-    isDraftRestored,
-    setIsDraftRestored,
-  ] = useState(false);
+  const [isDraftRestored, setIsDraftRestored] = useState(false);
 
-  const [
-    isFinishModalOpen,
-    setIsFinishModalOpen,
-  ] = useState(false);
+  const [isFinishModalOpen, setIsFinishModalOpen] = useState(false);
 
-  const [
-    isPreparingResults,
-    setIsPreparingResults,
-  ] = useState(false);
+  const [isPreparingResults, setIsPreparingResults] = useState(false);
 
-  const [quizError, setQuizError] =
-    useState<string | null>(null);
+  const [quizError, setQuizError] = useState<string | null>(null);
 
   useEffect(() => {
     let isMounted = true;
 
     const restoreQuiz = async () => {
-      const savedQuizView =
-        getSavedQuizView();
+      const savedQuizView = getSavedQuizView();
 
-      if (
-        savedQuizView === "results" &&
-        isAuthenticated &&
-        !quizResult
-      ) {
+      if (savedQuizView === "results" && isAuthenticated && !quizResult) {
         try {
-          const wines =
-            await userApi.getQuizHistory();
+          const wines = await userApi.getQuizHistory();
 
           if (!isMounted) {
             return;
@@ -207,30 +158,20 @@ export const QuizPage = () => {
 
           clearSavedQuizView();
         } catch (error) {
-          console.error(
-            "Failed to restore quiz results:",
-            error,
-          );
+          console.error("Failed to restore quiz results:", error);
 
           clearSavedQuizView();
         }
       }
 
-      const savedDraft =
-        getSavedQuizDraft();
+      const savedDraft = getSavedQuizDraft();
 
       if (savedDraft) {
-        setCurrentStep(
-          savedDraft.currentStep,
-        );
+        setCurrentStep(savedDraft.currentStep);
 
-        setSelectedLevel(
-          savedDraft.selectedLevel,
-        );
+        setSelectedLevel(savedDraft.selectedLevel);
 
-        setAnswers(
-          savedDraft.answers,
-        );
+        setAnswers(savedDraft.answers);
       }
 
       if (isMounted) {
@@ -243,17 +184,10 @@ export const QuizPage = () => {
     return () => {
       isMounted = false;
     };
-  }, [
-    isAuthenticated,
-    quizResult,
-    saveQuizResult,
-  ]);
+  }, [isAuthenticated, quizResult, saveQuizResult]);
 
   useEffect(() => {
-    if (
-      !isDraftRestored ||
-      quizResult
-    ) {
+    if (!isDraftRestored || quizResult) {
       return;
     }
 
@@ -262,314 +196,175 @@ export const QuizPage = () => {
       selectedLevel,
       answers,
     });
-  }, [
-    currentStep,
-    selectedLevel,
-    answers,
-    quizResult,
-    isDraftRestored,
-  ]);
+  }, [currentStep, selectedLevel, answers, quizResult, isDraftRestored]);
 
-  const currentQuestions =
-    useMemo(() => {
-      if (!selectedLevel) {
-        return [];
-      }
+  const currentQuestions = useMemo(() => {
+    if (!selectedLevel) {
+      return [];
+    }
 
-      return questionsByLevel[
-        selectedLevel
-      ];
-    }, [selectedLevel]);
+    return questionsByLevel[selectedLevel];
+  }, [selectedLevel]);
 
-  const currentQuestion =
-    currentQuestions.find(
-      (question) =>
-        question.step ===
-        currentStep,
-    );
+  const currentQuestion = currentQuestions.find(
+    (question) => question.step === currentStep
+  );
 
-  const selectedAnswerId =
-    answers[currentStep];
+  const selectedAnswerId = answers[currentStep];
 
   const canGoNext =
-    currentStep ===
-    FIRST_QUESTION_STEP
+    currentStep === FIRST_QUESTION_STEP
       ? Boolean(selectedLevel)
-      : Boolean(
-          selectedAnswerId,
-        );
+      : Boolean(selectedAnswerId);
 
-  const handleSelectLevel =
-    useCallback(
-      (
-        level: QuizExperienceLevel,
-      ) => {
-        clearSavedQuizView();
-
-        clearQuizResult();
-
-        setSelectedLevel(
-          level,
-        );
-
-        setAnswers({});
-
-        setCurrentStep(
-          FIRST_QUESTION_STEP,
-        );
-
-        setQuizError(null);
-      },
-      [clearQuizResult],
-    );
-
-  const handleSelectAnswer =
-    useCallback(
-      (optionId: string) => {
-        setAnswers(
-          (previous) => ({
-            ...previous,
-            [currentStep]:
-              optionId,
-          }),
-        );
-      },
-      [currentStep],
-    );
-
-  const handlePrevious =
-    useCallback(() => {
-      setCurrentStep(
-        (previous) =>
-          Math.max(
-            previous - 1,
-            FIRST_QUESTION_STEP,
-          ),
-      );
-    }, []);
-
-  const handleNext =
-    useCallback(() => {
-      if (!canGoNext) {
-        return;
-      }
-
-      if (
-        currentStep ===
-        QUIZ_TOTAL_STEPS
-      ) {
-        setIsFinishModalOpen(
-          true,
-        );
-
-        return;
-      }
-
-      setCurrentStep(
-        (previous) =>
-          previous + 1,
-      );
-    }, [
-      canGoNext,
-      currentStep,
-    ]);
-
-  const restartQuiz =
-    useCallback(() => {
+  const handleSelectLevel = useCallback(
+    (level: QuizExperienceLevel) => {
       clearSavedQuizView();
 
-      clearQuizDraft();
+      clearQuizResult();
 
-      setCurrentStep(
-        FIRST_QUESTION_STEP,
-      );
-
-      setSelectedLevel(
-        null,
-      );
+      setSelectedLevel(level);
 
       setAnswers({});
 
-      setQuizError(null);
+      setCurrentStep(FIRST_QUESTION_STEP);
 
-      setIsFinishModalOpen(
-        false,
+      setQuizError(null);
+    },
+    [clearQuizResult]
+  );
+
+  const handleSelectAnswer = useCallback(
+    (optionId: string) => {
+      setAnswers((previous) => ({
+        ...previous,
+        [currentStep]: optionId,
+      }));
+    },
+    [currentStep]
+  );
+
+  const handlePrevious = useCallback(() => {
+    setCurrentStep((previous) => Math.max(previous - 1, FIRST_QUESTION_STEP));
+  }, []);
+
+  const handleNext = useCallback(() => {
+    if (!canGoNext) {
+      return;
+    }
+
+    if (currentStep === QUIZ_TOTAL_STEPS) {
+      setIsFinishModalOpen(true);
+
+      return;
+    }
+
+    setCurrentStep((previous) => previous + 1);
+  }, [canGoNext, currentStep]);
+
+  const restartQuiz = useCallback(() => {
+    clearSavedQuizView();
+
+    clearQuizDraft();
+
+    setCurrentStep(FIRST_QUESTION_STEP);
+
+    setSelectedLevel(null);
+
+    setAnswers({});
+
+    setQuizError(null);
+
+    setIsFinishModalOpen(false);
+
+    clearQuizResult();
+  }, [clearQuizResult]);
+
+  const handleFinish = useCallback(async () => {
+    if (!selectedLevel) {
+      return;
+    }
+
+    setIsFinishModalOpen(false);
+
+    setIsPreparingResults(true);
+
+    setQuizError(null);
+
+    try {
+      const payload = buildQuizRequest(
+        selectedLevel,
+        currentQuestions,
+        answers
       );
 
-      clearQuizResult();
-    }, [
-      clearQuizResult,
-    ]);
+      const result = await quizApi.getResult(payload);
 
-  const handleFinish =
-    useCallback(
-      async () => {
-        if (!selectedLevel) {
-          return;
-        }
+      clearQuizDraft();
 
-        setIsFinishModalOpen(
-          false,
-        );
+      saveQuizResult(result);
+    } catch (error) {
+      console.error("QUIZ FINISH ERROR:", error);
 
-        setIsPreparingResults(
-          true,
-        );
-
-        setQuizError(null);
-
-        try {
-          const payload =
-            buildQuizRequest(
-              selectedLevel,
-              currentQuestions,
-              answers,
-            );
-
-          const result =
-            await quizApi.getResult(
-              payload,
-            );
-
-          clearQuizDraft();
-
-          saveQuizResult(
-            result,
-          );
-        } catch (error) {
-          console.error(
-            "QUIZ FINISH ERROR:",
-            error,
-          );
-
-          setQuizError(
-            "Failed to get quiz results",
-          );
-        } finally {
-          setIsPreparingResults(
-            false,
-          );
-        }
-      },
-      [
-        answers,
-        currentQuestions,
-        selectedLevel,
-        saveQuizResult,
-      ],
-    );
+      setQuizError("Failed to get quiz results");
+    } finally {
+      setIsPreparingResults(false);
+    }
+  }, [answers, currentQuestions, selectedLevel, saveQuizResult]);
 
   if (!isDraftRestored) {
-    return (
-      <div className="quiz-page quiz-page--restoring" />
-    );
+    return <div className="quiz-page quiz-page--restoring" />;
   }
 
   return (
-    <div
-      key={
-        quizResult
-          ? "result"
-          : "quiz"
-      }
-    >
+    <div key={quizResult ? "result" : "quiz"}>
       {quizResult ? (
-        <QuizResults
-          wines={quizResult}
-          onRestart={
-            restartQuiz
-          }
-        />
+        <QuizResults wines={quizResult} onRestart={restartQuiz} />
       ) : (
         <>
           <StepFlowLayout
             title="Wine Quiz"
             backTo="/"
             backLabel="Home"
-            currentStep={
-              currentStep
-            }
-            totalSteps={
-              QUIZ_TOTAL_STEPS
-            }
-            canGoNext={
-              canGoNext
-            }
+            currentStep={currentStep}
+            totalSteps={QUIZ_TOTAL_STEPS}
+            canGoNext={canGoNext}
             previousLabel="Previous"
             nextLabel="Next"
             completedNextLabel="Finish"
             progressAriaLabel="Quiz progress"
             className="quiz-page"
-            onPrevious={
-              handlePrevious
-            }
-            onNext={
-              handleNext
-            }
+            onPrevious={handlePrevious}
+            onNext={handleNext}
           >
-            {currentStep ===
-              FIRST_QUESTION_STEP && (
+            {currentStep === FIRST_QUESTION_STEP && (
               <QuizIntro
-                selectedLevel={
-                  selectedLevel
-                }
-                onSelectLevel={
-                  handleSelectLevel
-                }
+                selectedLevel={selectedLevel}
+                onSelectLevel={handleSelectLevel}
               />
             )}
 
-            {currentStep >
-              FIRST_QUESTION_STEP &&
-              currentQuestion && (
-                <QuizQuestion
-                  step={
-                    currentQuestion.step
-                  }
-                  totalSteps={
-                    QUIZ_TOTAL_STEPS
-                  }
-                  question={
-                    currentQuestion.question
-                  }
-                  options={
-                    currentQuestion.options
-                  }
-                  selectedOptionId={
-                    selectedAnswerId
-                  }
-                  onSelectOption={
-                    handleSelectAnswer
-                  }
-                />
-              )}
-
-            {quizError && (
-              <p className="quiz-page__error">
-                {quizError}
-              </p>
+            {currentStep > FIRST_QUESTION_STEP && currentQuestion && (
+              <QuizQuestion
+                step={currentQuestion.step}
+                totalSteps={QUIZ_TOTAL_STEPS}
+                question={currentQuestion.question}
+                options={currentQuestion.options}
+                selectedOptionId={selectedAnswerId}
+                onSelectOption={handleSelectAnswer}
+              />
             )}
+
+            {quizError && <p className="quiz-page__error">{quizError}</p>}
           </StepFlowLayout>
 
           <QuizFinishModal
-            isOpen={
-              isFinishModalOpen
-            }
-            onBackToQuiz={() =>
-              setIsFinishModalOpen(
-                false,
-              )
-            }
-            onFinish={
-              handleFinish
-            }
+            isOpen={isFinishModalOpen}
+            onBackToQuiz={() => setIsFinishModalOpen(false)}
+            onFinish={handleFinish}
           />
 
-          <QuizPreparingResults
-            isOpen={
-              isPreparingResults
-            }
-          />
+          <QuizPreparingResults isOpen={isPreparingResults} />
         </>
       )}
     </div>

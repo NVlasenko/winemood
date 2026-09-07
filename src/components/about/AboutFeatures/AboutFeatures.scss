@@ -7,7 +7,6 @@
 
   &__grid {
     margin-top: 40px;
-
     display: grid;
     grid-template-columns: 1fr;
     gap: 16px;
@@ -19,16 +18,12 @@
 
     min-height: 96px;
     padding: 20px;
-
     display: flex;
     align-items: center;
     gap: 16px;
-
     border: 0.5px solid rgba(217, 217, 217, 0.16);
     border-radius: 12px;
-
     background: rgba(0, 0, 0, 0.18);
-
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
@@ -36,22 +31,18 @@
   &__icon {
     width: 52px;
     height: 52px;
-
     object-fit: contain;
     flex-shrink: 0;
   }
 
   &__text {
     margin: 0;
-
     font-family: "Marcellus", serif;
     font-weight: 400;
     font-size: 16px;
     line-height: 1.4;
-
     letter-spacing: 0.08em;
     text-transform: uppercase;
-
     color: $text-primary;
   }
 
@@ -60,7 +51,6 @@
 
     &__grid {
       margin-top: 56px;
-
       grid-template-columns: repeat(2, 1fr);
       column-gap: 20px;
       row-gap: 24px;

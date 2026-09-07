@@ -20,8 +20,7 @@ export const FavoriteButton = ({
       } ${className}`}
       type="button"
       aria-label={
-        ariaLabel ??
-        (isFavorite ? "Remove from favorites" : "Add to favorites")
+        ariaLabel ?? (isFavorite ? "Remove from favorites" : "Add to favorites")
       }
       aria-pressed={isFavorite}
       onClick={(event) => {

@@ -1,16 +1,5 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-
-import {
-  useNavigation,
-  useSearchParams,
-} from "react-router";
-
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useNavigation, useSearchParams } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { CatalogContent } from "@/components/catalog/CatalogContent";
@@ -20,8 +9,8 @@ import {
 } from "@/components/catalog/CatalogControls";
 import { CatalogPagination } from "@/components/catalog/CatalogPagination";
 import { CatalogSearch } from "@/components/catalog/CatalogSearch";
-
 import { CatalogFilters } from "@/components/catalog-filters";
+
 import { SectionTitle } from "@/components/ui/SectionTitle";
 
 import { useAuth } from "@/context/AuthContext";
@@ -29,6 +18,7 @@ import { useFavorites } from "@/context/FavoritesContext";
 
 import { filterWines } from "@/shared/api/wineFilterApi";
 import { CATALOG_PAGE_SIZE } from "@/shared/config/catalog";
+
 import { buildWineFilters } from "@/shared/lib/buildWineFilters";
 import { refetchAchievementsSafe } from "@/shared/lib/refetchAchievementsSafe";
 
@@ -47,7 +37,7 @@ const CHEESE_FOOD_NAMES = new Set([
 
 const getArrayParam = (
   searchParams: URLSearchParams,
-  key: string,
+  key: string
 ): string[] => {
   const value = searchParams.get(key);
 
@@ -61,9 +51,7 @@ const getArrayParam = (
     .filter(Boolean);
 };
 
-const getSort = (
-  searchParams: URLSearchParams,
-): string[] => {
+const getSort = (searchParams: URLSearchParams): string[] => {
   switch (searchParams.get("sort")) {
     case "TOP_RATED":
       return ["rating,desc"];
@@ -80,10 +68,7 @@ const getSort = (
 };
 
 const scrollToCatalogTop = () => {
-  const catalogElement =
-    document.getElementById(
-      CATALOG_TOP_ID,
-    );
+  const catalogElement = document.getElementById(CATALOG_TOP_ID);
 
   if (!catalogElement) {
     window.scrollTo({
@@ -94,13 +79,9 @@ const scrollToCatalogTop = () => {
     return;
   }
 
-  const elementPosition =
-    catalogElement.getBoundingClientRect().top;
+  const elementPosition = catalogElement.getBoundingClientRect().top;
 
-  const offsetPosition =
-    elementPosition +
-    window.scrollY -
-    HEADER_OFFSET;
+  const offsetPosition = elementPosition + window.scrollY - HEADER_OFFSET;
 
   window.scrollTo({
     top: offsetPosition,
@@ -119,140 +100,64 @@ export const CatalogPage = ({
   currentPage,
   totalPages,
 }: CatalogPageProps) => {
-  const navigation =
-    useNavigation();
+  const navigation = useNavigation();
 
-  const queryClient =
-    useQueryClient();
+  const queryClient = useQueryClient();
 
-  const {
-    user,
-    refreshUser,
-  } = useAuth();
+  const { user, refreshUser } = useAuth();
 
-  const [
-    isFiltersOpen,
-    setIsFiltersOpen,
-  ] = useState(false);
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
-  const {
-    favoriteIds,
-    toggleFavorite,
-  } = useFavorites();
+  const { favoriteIds, toggleFavorite } = useFavorites();
 
-  const [
-    searchParams,
-    setSearchParams,
-  ] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const trackedFilterRequestRef =
-    useRef<string | null>(null);
+  const trackedFilterRequestRef = useRef<string | null>(null);
 
-  const searchQuery =
-    searchParams.get("search") ?? "";
+  const searchQuery = searchParams.get("search") ?? "";
 
-  const isSearchOpen =
-    searchParams.get("searchOpen") ===
-    "true";
+  const isSearchOpen = searchParams.get("searchOpen") === "true";
 
-  const sortParam =
-    searchParams.get("sort");
+  const sortParam = searchParams.get("sort");
 
-  const wineTypes =
-    getArrayParam(
-      searchParams,
-      "wineTypes",
-    );
+  const wineTypes = getArrayParam(searchParams, "wineTypes");
 
-  const countries =
-    getArrayParam(
-      searchParams,
-      "countries",
-    );
+  const countries = getArrayParam(searchParams, "countries");
 
-  const sweetnessLevels =
-    getArrayParam(
-      searchParams,
-      "sweetnessLevels",
-    );
+  const sweetnessLevels = getArrayParam(searchParams, "sweetnessLevels");
 
-  const grapeVarieties =
-    getArrayParam(
-      searchParams,
-      "grapeVarieties",
-    );
+  const grapeVarieties = getArrayParam(searchParams, "grapeVarieties");
 
-  const wineStyles =
-    getArrayParam(
-      searchParams,
-      "wineStyles",
-    );
+  const wineStyles = getArrayParam(searchParams, "wineStyles");
 
-  const acidityLevels =
-    getArrayParam(
-      searchParams,
-      "acidityLevels",
-    );
+  const acidityLevels = getArrayParam(searchParams, "acidityLevels");
 
-  const aromaNotes =
-    getArrayParam(
-      searchParams,
-      "aromaNotes",
-    );
+  const aromaNotes = getArrayParam(searchParams, "aromaNotes");
 
-  const moods =
-    getArrayParam(
-      searchParams,
-      "moods",
-    );
+  const moods = getArrayParam(searchParams, "moods");
 
-  const events =
-    getArrayParam(
-      searchParams,
-      "events",
-    );
+  const events = getArrayParam(searchParams, "events");
 
-  const seasons =
-    getArrayParam(
-      searchParams,
-      "seasons",
-    );
+  const seasons = getArrayParam(searchParams, "seasons");
 
-  const foodName =
-    getArrayParam(
-      searchParams,
-      "foodName",
-    );
+  const foodName = getArrayParam(searchParams, "foodName");
 
-  const sort =
-    getSort(searchParams);
+  const sort = getSort(searchParams);
 
-  const activeSort:
-    | CatalogSortOption
-    | null =
+  const activeSort: CatalogSortOption | null =
     sortParam === "TOP_RATED"
       ? "Top Rated"
-      : sortParam ===
-          "ALPHABETICAL"
+      : sortParam === "ALPHABETICAL"
         ? "Alphabetical"
-        : sortParam ===
-            "POPULARITY"
+        : sortParam === "POPULARITY"
           ? "Popularity"
           : null;
 
-  const isCatalogNavigation =
-    navigation.location?.pathname ===
-    "/catalog";
+  const isCatalogNavigation = navigation.location?.pathname === "/catalog";
 
-  const isCurating =
-    navigation.state === "loading" &&
-    isCatalogNavigation;
+  const isCurating = navigation.state === "loading" && isCatalogNavigation;
 
-  const favoriteIdsSet =
-    useMemo(
-      () => new Set(favoriteIds),
-      [favoriteIds],
-    );
+  const favoriteIdsSet = useMemo(() => new Set(favoriteIds), [favoriteIds]);
 
   useEffect(() => {
     if (!user) {
@@ -263,105 +168,80 @@ export const CatalogPage = ({
       return;
     }
 
-    const normalizedSearchQuery =
-      searchQuery.trim();
+    const normalizedSearchQuery = searchQuery.trim();
 
     if (normalizedSearchQuery) {
       return;
     }
 
-    const hasAchievementFilters =
-      events.length > 0 ||
-      foodName.length > 0;
+    const hasAchievementFilters = events.length > 0 || foodName.length > 0;
 
     if (!hasAchievementFilters) {
-      trackedFilterRequestRef.current =
-        null;
+      trackedFilterRequestRef.current = null;
 
       return;
     }
 
-    const filters =
-      buildWineFilters({
-        searchQuery,
-        wineTypes,
-        countries,
-        sweetnessLevels,
-        grapeVarieties,
-        wineStyles,
-        acidityLevels,
-        aromaNotes,
-        moods,
-        events,
-        seasons,
-        foodName,
-      });
+    const filters = buildWineFilters({
+      searchQuery,
+      wineTypes,
+      countries,
+      sweetnessLevels,
+      grapeVarieties,
+      wineStyles,
+      acidityLevels,
+      aromaNotes,
+      moods,
+      events,
+      seasons,
+      foodName,
+    });
 
-    const requestKey =
-      JSON.stringify({
-        filters,
-        sort,
-      });
+    const requestKey = JSON.stringify({
+      filters,
+      sort,
+    });
 
-    if (
-      trackedFilterRequestRef.current ===
-      requestKey
-    ) {
+    if (trackedFilterRequestRef.current === requestKey) {
       return;
     }
 
-    trackedFilterRequestRef.current =
-      requestKey;
+    trackedFilterRequestRef.current = requestKey;
 
-    const trackFilterAchievements =
-      async () => {
-        try {
+    const trackFilterAchievements = async () => {
+      try {
+        await filterWines({
+          filters,
+          page: 0,
+          size: CATALOG_PAGE_SIZE,
+          sort,
+        });
+
+        const selectedCheeses = foodName.filter((item) =>
+          CHEESE_FOOD_NAMES.has(item)
+        );
+
+        if (selectedCheeses.length > 0) {
           await filterWines({
-            filters,
+            filters: {
+              ...filters,
+              foodName: selectedCheeses,
+            },
             page: 0,
             size: CATALOG_PAGE_SIZE,
             sort,
           });
-
-          const selectedCheeses =
-            foodName.filter(
-              (item) =>
-                CHEESE_FOOD_NAMES.has(
-                  item,
-                ),
-            );
-
-          if (
-            selectedCheeses.length > 0
-          ) {
-            await filterWines({
-              filters: {
-                ...filters,
-                foodName:
-                  selectedCheeses,
-              },
-              page: 0,
-              size: CATALOG_PAGE_SIZE,
-              sort,
-            });
-          }
-          
-          await refetchAchievementsSafe(
-            queryClient,
-            user.id,
-          );
-
-          await refreshUser();
-        } catch (error) {
-          console.error(
-            "Failed to track catalog filter achievements",
-            error,
-          );
-
-          trackedFilterRequestRef.current =
-            null;
         }
-      };
+
+        await refetchAchievementsSafe(queryClient, user.id);
+
+        await refreshUser();
+      } catch (error) {
+        console.error("Failed to track catalog filter achievements", error);
+
+        trackedFilterRequestRef.current = null;
+      }
+    };
 
     void trackFilterAchievements();
   }, [
@@ -384,149 +264,81 @@ export const CatalogPage = ({
     refreshUser,
   ]);
 
-  const handleOpenFilters =
-    useCallback(() => {
-      setIsFiltersOpen(true);
-    }, []);
+  const handleOpenFilters = useCallback(() => {
+    setIsFiltersOpen(true);
+  }, []);
 
-  const handleCloseFilters =
-    useCallback(() => {
-      setIsFiltersOpen(false);
-    }, []);
+  const handleCloseFilters = useCallback(() => {
+    setIsFiltersOpen(false);
+  }, []);
 
-  const handleSortSelect =
-    useCallback(
-      (
-        option: CatalogSortOption,
-      ) => {
-        const nextParams =
-          new URLSearchParams(
-            searchParams,
-          );
+  const handleSortSelect = useCallback(
+    (option: CatalogSortOption) => {
+      const nextParams = new URLSearchParams(searchParams);
 
+      nextParams.delete("page");
+
+      if (option === "Top Rated") {
+        nextParams.set("sort", "TOP_RATED");
+      }
+
+      if (option === "Alphabetical") {
+        nextParams.set("sort", "ALPHABETICAL");
+      }
+
+      if (option === "Popularity") {
+        nextParams.set("sort", "POPULARITY");
+      }
+
+      setSearchParams(nextParams);
+    },
+    [searchParams, setSearchParams]
+  );
+
+  const handleCloseSearch = useCallback(() => {
+    const nextParams = new URLSearchParams(searchParams);
+
+    nextParams.delete("searchOpen");
+
+    setSearchParams(nextParams);
+  }, [searchParams, setSearchParams]);
+
+  const handlePageChange = useCallback(
+    (page: number) => {
+      const nextParams = new URLSearchParams(searchParams);
+
+      if (page <= 0) {
         nextParams.delete("page");
+      } else {
+        nextParams.set("page", String(page + 1));
+      }
 
-        if (
-          option === "Top Rated"
-        ) {
-          nextParams.set(
-            "sort",
-            "TOP_RATED",
-          );
-        }
+      setSearchParams(nextParams);
 
-        if (
-          option === "Alphabetical"
-        ) {
-          nextParams.set(
-            "sort",
-            "ALPHABETICAL",
-          );
-        }
-
-        if (
-          option === "Popularity"
-        ) {
-          nextParams.set(
-            "sort",
-            "POPULARITY",
-          );
-        }
-
-        setSearchParams(
-          nextParams,
-        );
-      },
-      [
-        searchParams,
-        setSearchParams,
-      ],
-    );
-
-  const handleCloseSearch =
-    useCallback(() => {
-      const nextParams =
-        new URLSearchParams(
-          searchParams,
-        );
-
-      nextParams.delete(
-        "searchOpen",
-      );
-
-      setSearchParams(
-        nextParams,
-      );
-    }, [
-      searchParams,
-      setSearchParams,
-    ]);
-
-  const handlePageChange =
-    useCallback(
-      (page: number) => {
-        const nextParams =
-          new URLSearchParams(
-            searchParams,
-          );
-
-        if (page <= 0) {
-          nextParams.delete(
-            "page",
-          );
-        } else {
-          nextParams.set(
-            "page",
-            String(page + 1),
-          );
-        }
-
-        setSearchParams(
-          nextParams,
-        );
-
-        requestAnimationFrame(
-          () => {
-            scrollToCatalogTop();
-          },
-        );
-      },
-      [
-        searchParams,
-        setSearchParams,
-      ],
-    );
+      requestAnimationFrame(() => {
+        scrollToCatalogTop();
+      });
+    },
+    [searchParams, setSearchParams]
+  );
 
   return (
-    <main
-      className="catalog-page"
-      id={CATALOG_TOP_ID}
-    >
+    <main className="catalog-page" id={CATALOG_TOP_ID}>
       <div className="container">
         <SectionTitle title="Catalog" />
 
         <CatalogControls
           activeSort={activeSort}
-          onSortSelect={
-            handleSortSelect
-          }
-          onOpenFilters={
-            handleOpenFilters
-          }
+          onSortSelect={handleSortSelect}
+          onOpenFilters={handleOpenFilters}
         />
 
         <CatalogSearch
           isOpen={isSearchOpen}
           hasNoResults={
-            Boolean(
-              searchQuery.trim(),
-            ) &&
-            !isCurating &&
-            wines.length === 0
+            Boolean(searchQuery.trim()) && !isCurating && wines.length === 0
           }
-          onClose={
-            handleCloseSearch
-          }
+          onClose={handleCloseSearch}
         />
 
         <CatalogContent
@@ -538,24 +350,13 @@ export const CatalogPage = ({
           onToggleFavorite={toggleFavorite}
         />
         <CatalogPagination
-          currentPage={
-            currentPage
-          }
-          totalPages={
-            totalPages
-          }
-          onPageChange={
-            handlePageChange
-          }
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
         />
       </div>
 
-      <CatalogFilters
-        isOpen={isFiltersOpen}
-        onClose={
-          handleCloseFilters
-        }
-      />
+      <CatalogFilters isOpen={isFiltersOpen} onClose={handleCloseFilters} />
     </main>
   );
 };

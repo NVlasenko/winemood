@@ -1,41 +1,24 @@
-import {
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-
+import { useEffect, useRef, useState } from "react";
 import "./HistoryVideoSection.scss";
 
 type HistoryVideoSectionProps = {
   videoUrl?: string;
 };
 
-const HISTORY_VIDEO_TIME_KEY =
-  "historyVideoCurrentTime";
+const HISTORY_VIDEO_TIME_KEY = "historyVideoCurrentTime";
 
-const getCloudinaryVideoPoster = (
-  videoUrl: string,
-) => {
+const getCloudinaryVideoPoster = (videoUrl: string) => {
   return videoUrl
-    .replace(
-      "/video/upload/",
-      "/video/upload/so_0,f_webp/",
-    )
+    .replace("/video/upload/", "/video/upload/so_0,f_webp/")
     .replace(/\.mp4$/i, ".webp");
 };
 
-export const HistoryVideoSection = ({
-  videoUrl,
-}: HistoryVideoSectionProps) => {
-  const videoRef =
-    useRef<HTMLVideoElement | null>(null);
+export const HistoryVideoSection = ({ videoUrl }: HistoryVideoSectionProps) => {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
-  const [isVideoReady, setIsVideoReady] =
-    useState(false);
+  const [isVideoReady, setIsVideoReady] = useState(false);
 
-  const posterUrl = videoUrl
-    ? getCloudinaryVideoPoster(videoUrl)
-    : undefined;
+  const posterUrl = videoUrl ? getCloudinaryVideoPoster(videoUrl) : undefined;
 
   useEffect(() => {
     const video = videoRef.current;
@@ -61,11 +44,7 @@ export const HistoryVideoSection = ({
     };
 
     const restoreVideoTime = () => {
-      const savedTime = Number(
-        sessionStorage.getItem(
-          HISTORY_VIDEO_TIME_KEY,
-        ),
-      );
+      const savedTime = Number(sessionStorage.getItem(HISTORY_VIDEO_TIME_KEY));
 
       const canRestore =
         Number.isFinite(savedTime) &&
@@ -81,13 +60,9 @@ export const HistoryVideoSection = ({
 
       isRestoring = true;
 
-      video.addEventListener(
-        "seeked",
-        handleSeeked,
-        {
-          once: true,
-        },
-      );
+      video.addEventListener("seeked", handleSeeked, {
+        once: true,
+      });
 
       video.currentTime = savedTime;
     };
@@ -95,25 +70,15 @@ export const HistoryVideoSection = ({
     if (video.readyState >= 1) {
       restoreVideoTime();
     } else {
-      video.addEventListener(
-        "loadedmetadata",
-        restoreVideoTime,
-        {
-          once: true,
-        },
-      );
+      video.addEventListener("loadedmetadata", restoreVideoTime, {
+        once: true,
+      });
     }
 
     return () => {
-      video.removeEventListener(
-        "loadedmetadata",
-        restoreVideoTime,
-      );
+      video.removeEventListener("loadedmetadata", restoreVideoTime);
 
-      video.removeEventListener(
-        "seeked",
-        handleSeeked,
-      );
+      video.removeEventListener("seeked", handleSeeked);
     };
   }, [videoUrl]);
 
@@ -124,10 +89,7 @@ export const HistoryVideoSection = ({
       return;
     }
 
-    sessionStorage.setItem(
-      HISTORY_VIDEO_TIME_KEY,
-      String(video.currentTime),
-    );
+    sessionStorage.setItem(HISTORY_VIDEO_TIME_KEY, String(video.currentTime));
   };
 
   return (
@@ -147,24 +109,16 @@ export const HistoryVideoSection = ({
             <video
               ref={videoRef}
               className={`history-video-section__video ${
-                isVideoReady
-                  ? "history-video-section__video--ready"
-                  : ""
+                isVideoReady ? "history-video-section__video--ready" : ""
               }`}
               autoPlay
               muted
               loop
               playsInline
               preload="metadata"
-              onTimeUpdate={
-                handleTimeUpdate
-              }
+              onTimeUpdate={handleTimeUpdate}
             >
-              <source
-                src={videoUrl}
-                type="video/mp4"
-              />
-
+              <source src={videoUrl} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           )}

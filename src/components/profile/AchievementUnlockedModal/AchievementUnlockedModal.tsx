@@ -23,11 +23,10 @@ export const AchievementUnlockedModal = ({
 }: AchievementUnlockedModalProps) => {
   const [isVisible, setIsVisible] = useState(true);
 
-  const [windowSize, setWindowSize] =
-    useState<WindowSize>({
-      width: 0,
-      height: 0,
-    });
+  const [windowSize, setWindowSize] = useState<WindowSize>({
+    width: 0,
+    height: 0,
+  });
 
   useEffect(() => {
     const updateWindowSize = () => {
@@ -39,16 +38,10 @@ export const AchievementUnlockedModal = ({
 
     updateWindowSize();
 
-    window.addEventListener(
-      "resize",
-      updateWindowSize,
-    );
+    window.addEventListener("resize", updateWindowSize);
 
     return () => {
-      window.removeEventListener(
-        "resize",
-        updateWindowSize,
-      );
+      window.removeEventListener("resize", updateWindowSize);
     };
   }, []);
 
@@ -61,20 +54,15 @@ export const AchievementUnlockedModal = ({
   };
 
   return (
-    <div
-      className="achievement-modal"
-      onClick={handleClose}
-    >
-      {isVisible &&
-        windowSize.width > 0 &&
-        windowSize.height > 0 && (
-          <Confetti
-            width={windowSize.width}
-            height={windowSize.height}
-            numberOfPieces={300}
-            recycle={false}
-          />
-        )}
+    <div className="achievement-modal" onClick={handleClose}>
+      {isVisible && windowSize.width > 0 && windowSize.height > 0 && (
+        <Confetti
+          width={windowSize.width}
+          height={windowSize.height}
+          numberOfPieces={300}
+          recycle={false}
+        />
+      )}
 
       <motion.div
         initial={{
@@ -102,10 +90,7 @@ export const AchievementUnlockedModal = ({
         <div className="achievement-modal__glow" />
 
         <div className="achievement-modal__icon">
-          <img
-            src={achievement.iconUrl}
-            alt=""
-          />
+          <img src={achievement.iconUrl} alt="" />
         </div>
 
         <h2>Achievement unlocked</h2>
@@ -114,10 +99,7 @@ export const AchievementUnlockedModal = ({
 
         <p>{achievement.description}</p>
 
-        <button
-          type="button"
-          onClick={handleClose}
-        >
+        <button type="button" onClick={handleClose}>
           Continue
         </button>
       </motion.div>

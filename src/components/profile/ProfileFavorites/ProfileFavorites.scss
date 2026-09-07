@@ -3,38 +3,30 @@
 
 .profile-favorites {
   --favorites-gap: 28px;
-
   margin-top: 80px;
 
   &__top {
     margin-top: 60px;
-
     scroll-margin-top: 130px;
   }
 
   &__list {
     margin-top: 40px;
-
     min-width: 0;
   }
 
   &__grid {
     width: 100%;
     min-width: 0;
-
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-
     gap: var(--favorites-gap);
-
     margin: 0;
   }
 
   &__extra {
     margin-top: var(--favorites-gap);
-
     opacity: 0;
-
     transform: translateY(12px);
 
     transition: opacity 0.35s ease,
@@ -42,18 +34,15 @@
 
     &--visible {
       opacity: 1;
-
       transform: translateY(0);
     }
   }
 
   &__actions {
     margin-top: 40px;
-
     display: flex;
     align-items: center;
     justify-content: flex-end;
-
     position: relative;
     z-index: 1;
   }
@@ -64,12 +53,10 @@
 
   @include on-tablet {
     --favorites-gap: 28px;
-
     margin-top: 150px;
 
     &__top {
       margin-top: 80px;
-
       scroll-margin-top: 140px;
     }
 
@@ -85,7 +72,6 @@
 
     &__top {
       margin-top: 100px;
-
       scroll-margin-top: 150px;
     }
 

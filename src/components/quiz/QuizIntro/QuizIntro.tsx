@@ -1,10 +1,6 @@
 import type { ComponentType, SVGProps } from "react";
 
-import {
-  BeginnerIcon,
-  ConnoisseurIcon,
-  EnthusiastIcon,
-} from "./config";
+import { BeginnerIcon, ConnoisseurIcon, EnthusiastIcon } from "./config";
 
 import "./QuizIntro.scss";
 

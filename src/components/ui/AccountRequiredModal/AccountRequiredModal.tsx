@@ -53,16 +53,10 @@ export const AccountRequiredModal = ({
       }
     };
 
-    document.addEventListener(
-      "keydown",
-      handleKeyDown,
-    );
+    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.removeEventListener(
-        "keydown",
-        handleKeyDown,
-      );
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen, onClose]);
 
@@ -96,10 +90,7 @@ export const AccountRequiredModal = ({
           <span />
         </button>
 
-        <div
-          className="account-required-modal__icon"
-          aria-hidden="true"
-        >
+        <div className="account-required-modal__icon" aria-hidden="true">
           <span className="account-required-modal__lock-shackle" />
           <span className="account-required-modal__lock-body" />
         </div>
@@ -119,25 +110,13 @@ export const AccountRequiredModal = ({
         </p>
 
         <div className="account-required-modal__actions">
-          <Link
-            to={primaryTo}
-            className="account-required-modal__primary"
-          >
-            <span>
-              {primaryLabel}
-            </span>
+          <Link to={primaryTo} className="account-required-modal__primary">
+            <span>{primaryLabel}</span>
 
-            <img
-              src={arrowRightIcon}
-              alt=""
-              aria-hidden="true"
-            />
+            <img src={arrowRightIcon} alt="" aria-hidden="true" />
           </Link>
 
-          <Link
-            to={secondaryTo}
-            className="account-required-modal__secondary"
-          >
+          <Link to={secondaryTo} className="account-required-modal__secondary">
             {secondaryLabel}
           </Link>
 
@@ -151,16 +130,15 @@ export const AccountRequiredModal = ({
             </button>
           )}
 
-          {onCancel &&
-            cancelLabel && (
-              <button
-                className="account-required-modal__cancel"
-                type="button"
-                onClick={onCancel}
-              >
-                {cancelLabel}
-              </button>
-            )}
+          {onCancel && cancelLabel && (
+            <button
+              className="account-required-modal__cancel"
+              type="button"
+              onClick={onCancel}
+            >
+              {cancelLabel}
+            </button>
+          )}
         </div>
       </div>
     </div>

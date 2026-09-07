@@ -1,7 +1,7 @@
-import type { WineReviewDto} from "@/types/reviews";
+import type { WineReviewDto } from "@/types/reviews";
+import { ReviewStars } from "./ReviewStars";
 
 import quoteIcon from "@/assets/images/wineDetailsInfo/wineReviews/quote.svg";
-import { ReviewStars } from "./ReviewStars";
 
 type Props = {
   review: WineReviewDto;
@@ -15,11 +15,12 @@ export const ReviewCard = ({ review, isMine }: Props) => {
         isMine ? "wine-reviews__card--mine" : ""
       }`}
     >
-      <img className="wine-reviews__quote" 
-      src={quoteIcon} 
-      alt="" 
-      loading="lazy"
-      decoding="async"
+      <img
+        className="wine-reviews__quote"
+        src={quoteIcon}
+        alt=""
+        loading="lazy"
+        decoding="async"
       />
 
       <p className="wine-reviews__text">{review.reviewText}</p>

@@ -24,9 +24,7 @@ export const ReviewStepLayout = ({
   children,
   isEdit = false,
 }: Props) => {
-  const backPath = isEdit
-    ? "/profile"
-    : `/catalog/${wineId}`;
+  const backPath = isEdit ? "/profile" : `/catalog/${wineId}`;
 
   return (
     <StepFlowLayout

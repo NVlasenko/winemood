@@ -1,10 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  useFetcher,
-  useNavigate,
-  useSearchParams,
-} from "react-router";
+import { useFetcher, useNavigate, useSearchParams } from "react-router";
 import { useAuth } from "@/context/AuthContext";
+import { ApiError } from "@/shared/api/httpClient";
 
 import arrowRightIcon from "@/assets/images/icons/arrow-right.svg";
 import NameIcon from "@/assets/images/auth/name.svg?react";
@@ -13,7 +10,6 @@ import PasswordHiddenIcon from "@/assets/images/auth/password.svg?react";
 import PasswordVisibleIcon from "@/assets/images/auth/password-visible.svg?react";
 
 import "./AuthPage.scss";
-import { ApiError } from "@/shared/api/httpClient";
 
 type AuthMode = "register" | "login";
 type AuthPageProps = {
@@ -122,7 +118,7 @@ const validateConfirmPassword = (password: string, confirmPassword: string) => {
 
 const getRegisterFieldError = (
   field: keyof RegisterForm,
-  form: RegisterForm,
+  form: RegisterForm
 ): string => {
   switch (field) {
     case "name":
@@ -170,9 +166,7 @@ const AuthSuccessModal = ({ isOpen, title, text }: SuccessModalProps) => {
   );
 };
 
-export const AuthPage = ({
-  authBackgroundUrl,
-}: AuthPageProps) => {
+export const AuthPage = ({ authBackgroundUrl }: AuthPageProps) => {
   const navigate = useNavigate();
 
   const loginFetcher = useFetcher<{
@@ -180,20 +174,16 @@ export const AuthPage = ({
     message?: string;
   }>();
 
-  const {
-    register,
-    login,
-    isAuthenticated,
-    isLoadingUser,
-  } = useAuth();
+  const { register, login, isAuthenticated, isLoadingUser } = useAuth();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
   const mode: AuthMode =
     searchParams.get("mode") === "login" ? "login" : "register";
 
-  const [registerForm, setRegisterForm] =
-    useState<RegisterForm>(DEFAULT_REGISTER_FORM);
+  const [registerForm, setRegisterForm] = useState<RegisterForm>(
+    DEFAULT_REGISTER_FORM
+  );
   const [loginForm, setLoginForm] = useState<LoginForm>(DEFAULT_LOGIN_FORM);
 
   const [registerTouched, setRegisterTouched] = useState<
@@ -205,19 +195,21 @@ export const AuthPage = ({
 
   const [isRegisterPasswordVisible, setIsRegisterPasswordVisible] =
     useState(false);
-  const [isRegisterConfirmPasswordVisible, setIsRegisterConfirmPasswordVisible] =
-    useState(false);
+  const [
+    isRegisterConfirmPasswordVisible,
+    setIsRegisterConfirmPasswordVisible,
+  ] = useState(false);
   const [isLoginPasswordVisible, setIsLoginPasswordVisible] = useState(false);
   const emailFromQuery = searchParams.get("email");
   const [submitError, setSubmitError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
-useEffect(() => {
-  if (isAuthenticated && !isLoadingUser) {
-    navigate("/profile");
-  }
-}, [isAuthenticated, isLoadingUser, navigate]);
+  useEffect(() => {
+    if (isAuthenticated && !isLoadingUser) {
+      navigate("/profile");
+    }
+  }, [isAuthenticated, isLoadingUser, navigate]);
 
   useEffect(() => {
     if (!isSuccessModalOpen) {
@@ -250,59 +242,40 @@ useEffect(() => {
   }, [mode, emailFromQuery]);
 
   useEffect(() => {
-    if (
-      loginFetcher.state !==
-      "idle"
-    ) {
+    if (loginFetcher.state !== "idle") {
       return;
     }
-  
+
     if (!loginFetcher.data) {
       return;
     }
-  
-    if (
-      !loginFetcher.data.success
-    ) {
-      setSubmitError(
-        loginFetcher.data.message ??
-          "Invalid email or password",
-      );
-  
+
+    if (!loginFetcher.data.success) {
+      setSubmitError(loginFetcher.data.message ?? "Invalid email or password");
+
       setIsSubmitting(false);
-  
+
       return;
     }
-  
+
     setIsSuccessModalOpen(true);
-  
-    setLoginForm(
-      DEFAULT_LOGIN_FORM,
-    );
-  
+
+    setLoginForm(DEFAULT_LOGIN_FORM);
+
     setLoginTouched({});
-  
-    setIsLoginPasswordVisible(
-      false,
-    );
-  
+
+    setIsLoginPasswordVisible(false);
+
     setIsSubmitting(false);
-  
-    const timeoutId =
-      window.setTimeout(() => {
-        navigate("/profile");
-      }, PROFILE_NAVIGATION_DELAY_MS);
-  
+
+    const timeoutId = window.setTimeout(() => {
+      navigate("/profile");
+    }, PROFILE_NAVIGATION_DELAY_MS);
+
     return () => {
-      window.clearTimeout(
-        timeoutId,
-      );
+      window.clearTimeout(timeoutId);
     };
-  }, [
-    loginFetcher.state,
-    loginFetcher.data,
-    navigate,
-  ]);
+  }, [loginFetcher.state, loginFetcher.data, navigate]);
 
   const registerErrors = useMemo<RegisterErrors>(() => {
     return {
@@ -326,7 +299,6 @@ useEffect(() => {
     !registerErrors.password &&
     !registerErrors.confirmPassword;
 
-
   const isNameValid = registerForm.name.trim() !== "" && !registerErrors.name;
 
   const isRegisterEmailValid =
@@ -338,8 +310,7 @@ useEffect(() => {
   const isConfirmPasswordValid =
     registerForm.confirmPassword !== "" && !registerErrors.confirmPassword;
 
-  const isLoginEmailValid =
-    loginForm.email.trim() !== "" && !loginErrors.email;
+  const isLoginEmailValid = loginForm.email.trim() !== "" && !loginErrors.email;
 
   const handleSwitchMode = useCallback(
     (nextMode: AuthMode) => {
@@ -350,7 +321,7 @@ useEffect(() => {
       setSubmitError("");
       setSearchParams({ mode: nextMode });
     },
-    [isSubmitting, setSearchParams],
+    [isSubmitting, setSearchParams]
   );
 
   const handleRegisterInputChange = useCallback(
@@ -362,7 +333,7 @@ useEffect(() => {
         [field]: value,
       }));
     },
-    [],
+    []
   );
 
   const handleLoginInputChange = useCallback(
@@ -374,7 +345,7 @@ useEffect(() => {
         [field]: value,
       }));
     },
-    [],
+    []
   );
 
   const handleRegisterBlur = useCallback((field: keyof RegisterForm) => {
@@ -415,29 +386,27 @@ useEffect(() => {
       setSubmitError("");
       setIsSubmitting(true);
 
-
       try {
         const email = registerForm.email.trim();
-      
+
         await register({
           name: registerForm.name.trim(),
           email: email.trim(),
           password: registerForm.password,
         });
-      
+
         setRegisterTouched({});
         setIsRegisterPasswordVisible(false);
         setIsRegisterConfirmPasswordVisible(false);
-      
+
         setTimeout(() => {
           navigate(`/auth?mode=login&email=${encodeURIComponent(email)}`);
         }, PROFILE_NAVIGATION_DELAY_MS);
-      
-        setRegisterForm(DEFAULT_REGISTER_FORM);
 
+        setRegisterForm(DEFAULT_REGISTER_FORM);
       } catch (error) {
         console.error("Registration failed:", error);
-      
+
         if (error instanceof ApiError && error.status === 409) {
           setSubmitError("User already exists");
         } else {
@@ -447,104 +416,68 @@ useEffect(() => {
         setIsSubmitting(false);
       }
     },
-    [isRegisterFormValid, isSubmitting, navigate, register, registerForm],
+    [isRegisterFormValid, isSubmitting, navigate, register, registerForm]
   );
 
   const handleLoginSubmit = useCallback(
-    async (
-      event: React.FormEvent<HTMLFormElement>,
-    ) => {
+    async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-  
+
       if (isSubmitting) {
         return;
       }
-  
-      const email =
-        loginForm.email.trim();
-  
-      const password =
-        loginForm.password;
-  
+
+      const email = loginForm.email.trim();
+
+      const password = loginForm.password;
+
       if (!email) {
-        setSubmitError(
-          "Email is required",
-        );
-  
+        setSubmitError("Email is required");
+
         return;
       }
-  
+
       if (!password) {
-        setSubmitError(
-          "Password is required",
-        );
-  
+        setSubmitError("Password is required");
+
         return;
       }
-  
+
       setSubmitError("");
       setLoginTouched({});
       setIsSubmitting(true);
-  
+
       try {
         await login({
           email,
           password,
         });
 
-        const formData =
-          new FormData();
-  
-        formData.set(
-          "intent",
-          "login",
-        );
-  
-        formData.set(
-          "email",
-          email,
-        );
-  
-        formData.set(
-          "password",
-          password,
-        );
-  
-        await loginFetcher.submit(
-          formData,
-          {
-            method: "post",
-            action: "/auth",
-          },
-        );
+        const formData = new FormData();
+
+        formData.set("intent", "login");
+
+        formData.set("email", email);
+
+        formData.set("password", password);
+
+        await loginFetcher.submit(formData, {
+          method: "post",
+          action: "/auth",
+        });
       } catch (error) {
-        console.error(
-          "Login failed:",
-          error,
-        );
-  
-        if (
-          error instanceof ApiError &&
-          error.status === 401
-        ) {
-          setSubmitError(
-            "Invalid email or password",
-          );
+        console.error("Login failed:", error);
+
+        if (error instanceof ApiError && error.status === 401) {
+          setSubmitError("Invalid email or password");
         } else {
-          setSubmitError(
-            "Something went wrong. Please try again.",
-          );
+          setSubmitError("Something went wrong. Please try again.");
         }
-  
+
         setIsSubmitting(false);
       }
     },
-    [
-      isSubmitting,
-      loginForm,
-      login,
-      loginFetcher,
-    ],
+    [isSubmitting, loginForm, login, loginFetcher]
   );
 
   return (
@@ -605,17 +538,14 @@ useEffect(() => {
                           onChange={(event) =>
                             handleRegisterInputChange(
                               "name",
-                              event.target.value,
+                              event.target.value
                             )
                           }
                           onBlur={() => handleRegisterBlur("name")}
                         />
 
                         {isNameValid && (
-                          <div
-                            className="auth-page__status"
-                            aria-hidden="true"
-                          >
+                          <div className="auth-page__status" aria-hidden="true">
                             <span className="auth-page__status-mark">✓</span>
                           </div>
                         )}
@@ -662,17 +592,14 @@ useEffect(() => {
                           onChange={(event) =>
                             handleRegisterInputChange(
                               "email",
-                              event.target.value,
+                              event.target.value
                             )
                           }
                           onBlur={() => handleRegisterBlur("email")}
                         />
 
                         {isRegisterEmailValid && (
-                          <div
-                            className="auth-page__status"
-                            aria-hidden="true"
-                          >
+                          <div className="auth-page__status" aria-hidden="true">
                             <span className="auth-page__status-mark">✓</span>
                           </div>
                         )}
@@ -734,7 +661,7 @@ useEffect(() => {
                           onChange={(event) =>
                             handleRegisterInputChange(
                               "password",
-                              event.target.value,
+                              event.target.value
                             )
                           }
                           onBlur={() => handleRegisterBlur("password")}
@@ -821,30 +748,32 @@ useEffect(() => {
                           onChange={(event) =>
                             handleRegisterInputChange(
                               "confirmPassword",
-                              event.target.value,
+                              event.target.value
                             )
                           }
                           onBlur={() => handleRegisterBlur("confirmPassword")}
                         />
 
-                          <div className="auth-page__input-actions">
-                            <button
-                              className="auth-page__visibility-toggle"
-                              type="button"
-                              disabled={isSubmitting}
-                              onClick={() =>
-                                setIsRegisterConfirmPasswordVisible((prev) => !prev)
-                              }
-                            >
-                              {isRegisterConfirmPasswordVisible ? "Hide" : "Show"}
-                            </button>
+                        <div className="auth-page__input-actions">
+                          <button
+                            className="auth-page__visibility-toggle"
+                            type="button"
+                            disabled={isSubmitting}
+                            onClick={() =>
+                              setIsRegisterConfirmPasswordVisible(
+                                (prev) => !prev
+                              )
+                            }
+                          >
+                            {isRegisterConfirmPasswordVisible ? "Hide" : "Show"}
+                          </button>
 
-                            {isConfirmPasswordValid && (
-                              <div className="auth-page__status">
-                                <span className="auth-page__status-mark">✓</span>
-                              </div>
-                            )}
-                          </div>
+                          {isConfirmPasswordValid && (
+                            <div className="auth-page__status">
+                              <span className="auth-page__status-mark">✓</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
 
                       {registerTouched.confirmPassword &&
@@ -930,10 +859,7 @@ useEffect(() => {
                         />
 
                         {isLoginEmailValid && (
-                          <div
-                            className="auth-page__status"
-                            aria-hidden="true"
-                          >
+                          <div className="auth-page__status" aria-hidden="true">
                             <span className="auth-page__status-mark">✓</span>
                           </div>
                         )}
@@ -959,9 +885,7 @@ useEffect(() => {
                             : ""
                         }`}
                       >
-                        <div className="auth-page__field-caption">
-                          Password
-                        </div>
+                        <div className="auth-page__field-caption">Password</div>
 
                         <div className="auth-page__input-icon">
                           {isLoginPasswordVisible ? (
@@ -987,7 +911,10 @@ useEffect(() => {
                           autoComplete="current-password"
                           disabled={isSubmitting}
                           onChange={(event) =>
-                            handleLoginInputChange("password", event.target.value)
+                            handleLoginInputChange(
+                              "password",
+                              event.target.value
+                            )
                           }
                           onBlur={() => handleLoginBlur("password")}
                         />
@@ -996,7 +923,9 @@ useEffect(() => {
                           className="auth-page__visibility-toggle"
                           type="button"
                           aria-label={
-                            isLoginPasswordVisible ? "Hide password" : "Show password"
+                            isLoginPasswordVisible
+                              ? "Hide password"
+                              : "Show password"
                           }
                           disabled={isSubmitting}
                           onClick={() =>

@@ -1,13 +1,10 @@
 import { httpClient } from "@/shared/api/httpClient";
-import type { FilterWinesParams, WineFilterRequest } from "@/types/filters";
 
+import type { FilterWinesParams, WineFilterRequest } from "@/types/filters";
 import type { PageDto } from "@/types/pagination";
 import type { WineCatalogCard } from "@/types/wineCatalogCard";
 
-
-const cleanFilters = (
-  filters: WineFilterRequest
-): WineFilterRequest => {
+const cleanFilters = (filters: WineFilterRequest): WineFilterRequest => {
   return Object.fromEntries(
     Object.entries(filters).filter(([, value]) => {
       if (typeof value === "string") {

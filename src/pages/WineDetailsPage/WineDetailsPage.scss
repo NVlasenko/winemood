@@ -1,4 +1,5 @@
-@import "../../styles/mixins";
+@import "@/styles/mixins";
+@import "@/styles/variables";
 
 .wine-details-page {
   min-height: 100vh;
@@ -39,15 +40,11 @@
 
   &__loader-glow {
     position: absolute;
-
     width: 260px;
     height: 260px;
-
     border-radius: 50%;
-
     background: rgba(var(--wine-glow-rgb), 0.18);
     filter: blur(80px);
-
     pointer-events: none;
   }
   

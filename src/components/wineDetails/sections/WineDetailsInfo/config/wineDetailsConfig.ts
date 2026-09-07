@@ -1,6 +1,6 @@
 import type { ComponentType, SVGProps } from "react";
-
 import type { Wine } from "@/types/wine";
+
 import { formatLabel } from "@/utils/formatLabel";
 
 import AgingIcon from "@/assets/images/wineDetailsInfo/images/aging-default.svg?react";

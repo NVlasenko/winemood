@@ -15,7 +15,6 @@ export type Wine = {
   grapeVariety: NamedEntity;
   acidity: NamedEntity;
   wineStyle: NamedEntity;
-
   agingMonths: number;
   environmentalAttributes: string[];
   fermentationType: string;
@@ -24,6 +23,5 @@ export type Wine = {
   producerName: string;
   countryName: string;
   region: string;
-
   foodPairings: FoodPairing[];
 };

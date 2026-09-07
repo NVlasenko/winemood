@@ -8,26 +8,16 @@ export const Footer = () => {
       <div className="container">
         <div className="footer__wrapper">
           <div className="footer__top">
-            <h2 className="footer__logo">
-              WineMood
-            </h2>
+            <h2 className="footer__logo">WineMood</h2>
 
             <div className="footer__content">
               {FOOTER_COLUMNS.map((column) => (
-                <div
-                  className="footer__column"
-                  key={column.title}
-                >
-                  <h3 className="footer__title">
-                    {column.title}
-                  </h3>
+                <div className="footer__column" key={column.title}>
+                  <h3 className="footer__title">{column.title}</h3>
 
                   <div className="footer__links">
                     {column.links.map((link) => (
-                      <span
-                        key={link}
-                        className="footer__link"
-                      >
+                      <span key={link} className="footer__link">
                         {link}
                       </span>
                     ))}
@@ -44,18 +34,13 @@ export const Footer = () => {
               Online wine store | All rights reserved
             </p>
 
-            <span className="footer__privacy">
-              Privacy & Cookie Policies
-            </span>
+            <span className="footer__privacy">Privacy & Cookie Policies</span>
           </div>
         </div>
       </div>
 
       <div className="footer__background-wrap">
-        <h2
-          className="footer__background-text"
-          aria-hidden="true"
-        >
+        <h2 className="footer__background-text" aria-hidden="true">
           WineMood
         </h2>
       </div>

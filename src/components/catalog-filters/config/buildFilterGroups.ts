@@ -4,7 +4,7 @@ import type {
   FilterGroup,
   FilterOption,
   FilterSubgroup,
-  WineArrayFilterKey
+  WineArrayFilterKey,
 } from "@/types/filters";
 
 import type {
@@ -14,11 +14,7 @@ import type {
   MetadataOption,
 } from "@/types/metadata";
 
-
-const FILTER_KEY_TO_QUERY_PARAM: Record<
-  string,
-  WineArrayFilterKey
-> = {
+const FILTER_KEY_TO_QUERY_PARAM: Record<string, WineArrayFilterKey> = {
   WINE_TYPE: "wineTypes",
   COUNTRY: "countries",
   SWEETNESS: "sweetnessLevels",
@@ -49,10 +45,7 @@ const normalizeEnumValue = (value: string) => {
     .toUpperCase();
 };
 
-const getOptionValue = (
-  filterKey: string,
-  value: string,
-) => {
+const getOptionValue = (filterKey: string, value: string) => {
   if (ENUM_FILTER_KEYS.has(filterKey)) {
     return normalizeEnumValue(value);
   }
@@ -60,33 +53,21 @@ const getOptionValue = (
   return value;
 };
 
-const isRecord = (
-  value: unknown,
-): value is Record<string, unknown> => {
+const isRecord = (value: unknown): value is Record<string, unknown> => {
   return value !== null && typeof value === "object";
 };
 
-const isMetadataOption = (
-  option: unknown,
-): option is MetadataOption => {
-  return (
-    isRecord(option) &&
-    typeof option.name === "string"
-  );
+const isMetadataOption = (option: unknown): option is MetadataOption => {
+  return isRecord(option) && typeof option.name === "string";
 };
 
 const isMetadataOptionArray = (
-  options: unknown,
+  options: unknown
 ): options is MetadataOption[] => {
-  return (
-    Array.isArray(options) &&
-    options.every(isMetadataOption)
-  );
+  return Array.isArray(options) && options.every(isMetadataOption);
 };
 
-const isFoodGroup = (
-  group: unknown,
-): group is MetadataFoodGroup => {
+const isFoodGroup = (group: unknown): group is MetadataFoodGroup => {
   return (
     isRecord(group) &&
     typeof group.category === "string" &&
@@ -94,18 +75,11 @@ const isFoodGroup = (
   );
 };
 
-const isFoodGroupArray = (
-  options: unknown,
-): options is MetadataFoodGroup[] => {
-  return (
-    Array.isArray(options) &&
-    options.every(isFoodGroup)
-  );
+const isFoodGroupArray = (options: unknown): options is MetadataFoodGroup[] => {
+  return Array.isArray(options) && options.every(isFoodGroup);
 };
 
-const isMoodOptions = (
-  options: unknown,
-): options is MetadataMoodOptions => {
+const isMoodOptions = (options: unknown): options is MetadataMoodOptions => {
   if (!isRecord(options)) {
     return false;
   }
@@ -119,14 +93,11 @@ const isMoodOptions = (
 
 const buildOption = (
   option: MetadataOption,
-  filterKey: string,
+  filterKey: string
 ): FilterOption => ({
   id: option.name,
   label: formatLabel(option.name),
-  value: getOptionValue(
-    filterKey,
-    option.name,
-  ),
+  value: getOptionValue(filterKey, option.name),
 });
 
 const buildSubgroup = ({
@@ -145,13 +116,11 @@ const buildSubgroup = ({
   id,
   title: formatLabel(title),
   filterId,
-  options: options.map((option) =>
-    buildOption(option, filterKey),
-  ),
+  options: options.map((option) => buildOption(option, filterKey)),
 });
 
 export const buildFilterGroups = (
-  metadataFilters: MetadataFilter[],
+  metadataFilters: MetadataFilter[]
 ): FilterGroup[] => {
   return metadataFilters.map((filter) => {
     if (isMoodOptions(filter.options)) {
@@ -201,21 +170,16 @@ export const buildFilterGroups = (
             filterId: "foodName",
             options: group.foods,
             filterKey: filter.filterKey,
-          }),
+          })
         ),
       };
     }
 
     if (isMetadataOptionArray(filter.options)) {
-      const id =
-        FILTER_KEY_TO_QUERY_PARAM[
-          filter.filterKey
-        ];
+      const id = FILTER_KEY_TO_QUERY_PARAM[filter.filterKey];
 
       if (!id) {
-        throw new Error(
-          `Unsupported filter key: ${filter.filterKey}`,
-        );
+        throw new Error(`Unsupported filter key: ${filter.filterKey}`);
       }
 
       return {
@@ -224,16 +188,11 @@ export const buildFilterGroups = (
         iconUrl: filter.iconUrl,
 
         options: filter.options.map((option) =>
-          buildOption(
-            option,
-            filter.filterKey,
-          ),
+          buildOption(option, filter.filterKey)
         ),
       };
     }
 
-    throw new Error(
-      `Invalid metadata options for filter: ${filter.filterKey}`,
-    );
+    throw new Error(`Invalid metadata options for filter: ${filter.filterKey}`);
   });
 };

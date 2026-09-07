@@ -1,30 +1,21 @@
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, useNavigate } from "react-router";
 
-import {
-  Link,
-  useNavigate,
-} from "react-router";
-
-import { useQueryClient } from "@tanstack/react-query";
 import Confetti from "react-confetti";
-
-import type { WineCatalogCard as WineCatalogCardType } from "@/types/wineCatalogCard";
 
 import { WineCatalogCard } from "@/components/catalog/WineCatalogCard";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/context/AuthContext";
 import { useAuthRequired } from "@/context/AuthRequiredContext";
 import { useFavorites } from "@/context/FavoritesContext";
 import { useQuizSession } from "@/context/QuizSessionContext";
+import { userApi } from "@/shared/api/userApi";
 
 import { refetchAchievementsSafe } from "@/shared/lib/refetchAchievementsSafe";
-import { userApi } from "@/shared/api/userApi";
+
+import type { WineCatalogCard as WineCatalogCardType } from "@/types/wineCatalogCard";
 
 import arrowRightIcon from "@/assets/images/icons/arrow-right.svg";
 
@@ -37,13 +28,9 @@ type Props = {
 
 const QUIZ_VIEW_STORAGE_KEY = "quizView:v1";
 
-const isAuthPath = (
-  path: string,
-) => path.startsWith("/auth");
+const isAuthPath = (path: string) => path.startsWith("/auth");
 
-const getPathFromAnchor = (
-  anchor: HTMLAnchorElement,
-) => {
+const getPathFromAnchor = (anchor: HTMLAnchorElement) => {
   const url = new URL(anchor.href);
 
   if (url.hash.startsWith("#/")) {
@@ -54,40 +41,23 @@ const getPathFromAnchor = (
 };
 
 const getCurrentPath = () => {
-  if (
-    window.location.hash.startsWith(
-      "#/",
-    )
-  ) {
+  if (window.location.hash.startsWith("#/")) {
     return window.location.hash.slice(1);
   }
 
   return `${window.location.pathname}${window.location.search}`;
 };
 
-export const QuizResults = ({
-  wines,
-  onRestart,
-}: Props) => {
+export const QuizResults = ({ wines, onRestart }: Props) => {
   const navigate = useNavigate();
 
-  const queryClient =
-    useQueryClient();
+  const queryClient = useQueryClient();
 
-  const {
-    favoriteIds,
-    toggleFavorite,
-  } = useFavorites();
+  const { favoriteIds, toggleFavorite } = useFavorites();
 
-  const {
-    isAuthenticated,
-    user,
-    refreshUser,
-  } = useAuth();
+  const { isAuthenticated, user, refreshUser } = useAuth();
 
-  const {
-    openAuthRequired,
-  } = useAuthRequired();
+  const { openAuthRequired } = useAuthRequired();
 
   const {
     clearQuizResult,
@@ -96,142 +66,78 @@ export const QuizResults = ({
     markWineDetailsOpenedFromQuizResults,
   } = useQuizSession();
 
-  const [
-    windowSize,
-    setWindowSize,
-  ] = useState({
+  const [windowSize, setWindowSize] = useState({
     width: 0,
     height: 0,
   });
 
-  const [
-    showConfetti,
-    setShowConfetti,
-  ] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
 
-  const isSavingQuizRef =
-    useRef(false);
+  const isSavingQuizRef = useRef(false);
 
-  const shouldBlockNavigation =
-    !isAuthenticated;
+  const shouldBlockNavigation = !isAuthenticated;
 
-  const favoriteIdsSet =
-    useMemo(
-      () =>
-        new Set(
-          favoriteIds,
-        ),
-      [favoriteIds],
-    );
+  const favoriteIdsSet = useMemo(() => new Set(favoriteIds), [favoriteIds]);
 
-  const wineIds =
-    useMemo(
-      () =>
-        wines.map(
-          (wine) => wine.id,
-        ),
-      [wines],
-    );
+  const wineIds = useMemo(() => wines.map((wine) => wine.id), [wines]);
 
-  const quizResultKey =
-    useMemo(
-      () =>
-        [...wineIds]
-          .sort(
-            (a, b) => a - b,
-          )
-          .join("-"),
-      [wineIds],
-    );
+  const quizResultKey = useMemo(
+    () => [...wineIds].sort((a, b) => a - b).join("-"),
+    [wineIds]
+  );
 
-  const quizSentKey =
-    user
-      ? `quizSent:v1:${user.id}:${quizResultKey}`
-      : `quizSent:v1:guest:${quizResultKey}`;
+  const quizSentKey = user
+    ? `quizSent:v1:${user.id}:${quizResultKey}`
+    : `quizSent:v1:guest:${quizResultKey}`;
 
   useEffect(() => {
     if (!wines.length) {
       return;
     }
 
-    sessionStorage.setItem(
-      QUIZ_VIEW_STORAGE_KEY,
-      "results",
-    );
+    sessionStorage.setItem(QUIZ_VIEW_STORAGE_KEY, "results");
   }, [wines]);
 
   useEffect(() => {
-    const updateWindowSize =
-      () => {
-        setWindowSize({
-          width:
-            window.innerWidth,
-          height:
-            window.innerHeight,
-        });
-      };
+    const updateWindowSize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
 
     updateWindowSize();
 
-    window.addEventListener(
-      "resize",
-      updateWindowSize,
-    );
+    window.addEventListener("resize", updateWindowSize);
 
     return () => {
-      window.removeEventListener(
-        "resize",
-        updateWindowSize,
-      );
+      window.removeEventListener("resize", updateWindowSize);
     };
   }, []);
 
   useEffect(() => {
     clearWineDetailsBackTarget();
-  }, [
-    clearWineDetailsBackTarget,
-  ]);
+  }, [clearWineDetailsBackTarget]);
 
   useEffect(() => {
-    if (
-      !shouldBlockNavigation
-    ) {
+    if (!shouldBlockNavigation) {
       return;
     }
 
-    const handleClick = (
-      event: MouseEvent,
-    ) => {
-      const target =
-        event.target;
+    const handleClick = (event: MouseEvent) => {
+      const target = event.target;
 
-      if (
-        !(
-          target instanceof
-          HTMLElement
-        )
-      ) {
+      if (!(target instanceof HTMLElement)) {
         return;
       }
 
-      const anchor =
-        target.closest("a");
+      const anchor = target.closest("a");
 
-      if (
-        !(
-          anchor instanceof
-          HTMLAnchorElement
-        )
-      ) {
+      if (!(anchor instanceof HTMLAnchorElement)) {
         return;
       }
 
-      const isWineCard =
-        Boolean(
-          anchor.closest(
-            "[data-quiz-result-card]",
-          ),
-        );
+      const isWineCard = Boolean(anchor.closest("[data-quiz-result-card]"));
 
       if (isWineCard) {
         markWineDetailsOpenedFromQuizResults();
@@ -239,25 +145,15 @@ export const QuizResults = ({
         return;
       }
 
-      const nextPath =
-        getPathFromAnchor(
-          anchor,
-        );
+      const nextPath = getPathFromAnchor(anchor);
 
-      const currentPath =
-        getCurrentPath();
+      const currentPath = getCurrentPath();
 
-      if (
-        !nextPath ||
-        nextPath ===
-          currentPath
-      ) {
+      if (!nextPath || nextPath === currentPath) {
         return;
       }
 
-      if (
-        isAuthPath(nextPath)
-      ) {
+      if (isAuthPath(nextPath)) {
         return;
       }
 
@@ -265,60 +161,38 @@ export const QuizResults = ({
       event.stopPropagation();
 
       openAuthRequired({
-        title:
-          "Continue with an account",
+        title: "Continue with an account",
 
-        text:
-          "If you leave now, your quiz results will not be saved.",
+        text: "If you leave now, your quiz results will not be saved.",
 
-        primaryLabel:
-          "Sign up",
+        primaryLabel: "Sign up",
 
-        primaryTo:
-          "/auth?mode=register",
+        primaryTo: "/auth?mode=register",
 
-        secondaryLabel:
-          "Log in",
+        secondaryLabel: "Log in",
 
-        secondaryTo:
-          "/auth?mode=login",
+        secondaryTo: "/auth?mode=login",
 
-        continueLabel:
-          "Continue without saving",
+        continueLabel: "Continue without saving",
 
-        cancelLabel:
-          "Stay here",
+        cancelLabel: "Stay here",
 
         onContinue: () => {
           onRestart();
 
-          sessionStorage.removeItem(
-            quizSentKey,
-          );
+          sessionStorage.removeItem(quizSentKey);
 
-          sessionStorage.removeItem(
-            QUIZ_VIEW_STORAGE_KEY,
-          );
+          sessionStorage.removeItem(QUIZ_VIEW_STORAGE_KEY);
 
-          navigate(
-            nextPath,
-          );
+          navigate(nextPath);
         },
       });
     };
 
-    document.addEventListener(
-      "click",
-      handleClick,
-      true,
-    );
+    document.addEventListener("click", handleClick, true);
 
     return () => {
-      document.removeEventListener(
-        "click",
-        handleClick,
-        true,
-      );
+      document.removeEventListener("click", handleClick, true);
     };
   }, [
     shouldBlockNavigation,
@@ -335,99 +209,57 @@ export const QuizResults = ({
       return;
     }
 
-    const send =
-      async () => {
-        if (
-          !isAuthenticated ||
-          !user
-        ) {
-          saveQuizResult(
-            wines,
-          );
+    const send = async () => {
+      if (!isAuthenticated || !user) {
+        saveQuizResult(wines);
 
-          return;
-        }
+        return;
+      }
 
-        const alreadySent =
-          sessionStorage.getItem(
-            quizSentKey,
-          );
+      const alreadySent = sessionStorage.getItem(quizSentKey);
 
-        if (
-          alreadySent ===
-          "sending"
-        ) {
-          return;
-        }
+      if (alreadySent === "sending") {
+        return;
+      }
 
-        if (
-          alreadySent ===
-          "sent"
-        ) {
-          return;
-        }
+      if (alreadySent === "sent") {
+        return;
+      }
 
-        if (
-          isSavingQuizRef.current
-        ) {
-          return;
-        }
+      if (isSavingQuizRef.current) {
+        return;
+      }
 
-        isSavingQuizRef.current =
-          true;
+      isSavingQuizRef.current = true;
 
-        sessionStorage.setItem(
-          quizSentKey,
-          "sending",
-        );
+      sessionStorage.setItem(quizSentKey, "sending");
 
-        try {
-          await userApi.saveQuizResult(
-            wineIds,
-          );
+      try {
+        await userApi.saveQuizResult(wineIds);
 
-          sessionStorage.setItem(
-            quizSentKey,
-            "sent",
-          );
+        sessionStorage.setItem(quizSentKey, "sent");
 
-          await queryClient.invalidateQueries({
-            queryKey: [
-              "quiz-history",
-              user.id,
-            ],
-          });
+        await queryClient.invalidateQueries({
+          queryKey: ["quiz-history", user.id],
+        });
 
-          await refetchAchievementsSafe(
-            queryClient,
-            user.id,
-          );
+        await refetchAchievementsSafe(queryClient, user.id);
 
-          await refreshUser();
+        await refreshUser();
 
-          setShowConfetti(
-            true,
-          );
+        setShowConfetti(true);
 
-          setTimeout(() => {
-            setShowConfetti(
-              false,
-            );
-          }, 2000);
-        } catch (error) {
-          sessionStorage.removeItem(
-            quizSentKey,
-          );
+        setTimeout(() => {
+          setShowConfetti(false);
+        }, 2000);
+      } catch (error) {
+        sessionStorage.removeItem(quizSentKey);
 
-          console.error(
-            "Failed to save quiz result",
-            error,
-          );
-        } finally {
-          isSavingQuizRef.current =
-            false;
-        }
-      };
+        console.error("Failed to save quiz result", error);
+      } finally {
+        isSavingQuizRef.current = false;
+      }
+    };
 
     send();
   }, [
@@ -441,133 +273,77 @@ export const QuizResults = ({
     refreshUser,
   ]);
 
-  const handleRestart =
-    () => {
-      sessionStorage.removeItem(
-        QUIZ_VIEW_STORAGE_KEY,
-      );
+  const handleRestart = () => {
+    sessionStorage.removeItem(QUIZ_VIEW_STORAGE_KEY);
 
-      onRestart();
-    };
+    onRestart();
+  };
 
   return (
     <>
-      {showConfetti &&
-        windowSize.width >
-          0 &&
-        windowSize.height >
-          0 && (
-          <Confetti
-            width={
-              windowSize.width
-            }
-            height={
-              windowSize.height
-            }
-            numberOfPieces={
-              250
-            }
-            recycle={false}
-          />
-        )}
+      {showConfetti && windowSize.width > 0 && windowSize.height > 0 && (
+        <Confetti
+          width={windowSize.width}
+          height={windowSize.height}
+          numberOfPieces={250}
+          recycle={false}
+        />
+      )}
 
       <main className="quiz-results">
         <div className="container">
           <div className="quiz-results__content">
             <div className="quiz-results__top">
-              <Link
-                to="/"
-                className="quiz-results__back"
-              >
-                <img
-                  src={
-                    arrowRightIcon
-                  }
-                  alt=""
-                />
+              <Link to="/" className="quiz-results__back">
+                <img src={arrowRightIcon} alt="" />
 
-                <span>
-                  Home
-                </span>
+                <span>Home</span>
               </Link>
             </div>
 
             <section className="quiz-results__hero">
-              <SectionTitle
-                title="Your Wine Matches"
-              />
+              <SectionTitle title="Your Wine Matches" />
 
               <p className="quiz-results__description">
-                Based on your
-                answers, we
-                selected wines
-                for you.
+                Based on your answers, we selected wines for you.
               </p>
             </section>
 
             <section className="quiz-results__recommendations">
               <h2 className="quiz-results__section-title">
-                Wines you might
-                enjoy
+                Wines you might enjoy
               </h2>
 
               <div className="quiz-results__grid">
-                {wines.map(
-                  (
-                    wine,
-                    index,
-                  ) => (
-                    <div
-                      key={
-                        wine.id
-                      }
-                      className="quiz-results__card"
-                      data-quiz-result-card
-                    >
-                      <WineCatalogCard
-                        wine={
-                          wine
-                        }
-                        index={
-                          index
-                        }
-                        isFavorite={favoriteIdsSet.has(
-                          wine.id,
-                        )}
-                        onToggleFavorite={
-                          toggleFavorite
-                        }
-                      />
-                    </div>
-                  ),
-                )}
+                {wines.map((wine, index) => (
+                  <div
+                    key={wine.id}
+                    className="quiz-results__card"
+                    data-quiz-result-card
+                  >
+                    <WineCatalogCard
+                      wine={wine}
+                      index={index}
+                      isFavorite={favoriteIdsSet.has(wine.id)}
+                      onToggleFavorite={toggleFavorite}
+                    />
+                  </div>
+                ))}
               </div>
 
               <div className="quiz-results__actions">
                 <button
                   className="quiz-results__try-again"
                   type="button"
-                  onClick={
-                    handleRestart
-                  }
+                  onClick={handleRestart}
                 >
                   Try Again
                 </button>
 
-                <Link
-                  to="/catalog"
-                  className="quiz-results__all-wines"
-                >
-                  <span>
-                    All wines
-                  </span>
+                <Link to="/catalog" className="quiz-results__all-wines">
+                  <span>All wines</span>
 
-                  <img
-                    src={
-                      arrowRightIcon
-                    }
-                    alt=""
-                  />
+                  <img src={arrowRightIcon} alt="" />
                 </Link>
               </div>
             </section>

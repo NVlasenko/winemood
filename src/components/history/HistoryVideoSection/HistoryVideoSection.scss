@@ -10,7 +10,6 @@
     position: relative;
     height: clamp(420px, 55vw, 700px);
     overflow: hidden;
-
     border-radius: 16px;
 
     $mask-vertical: linear-gradient(
@@ -44,34 +43,29 @@
   }
 
   &__poster,
-&__video {
-  position: absolute;
-  inset: 0;
+    &__video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 70% center;
+      transform: scale(1.03);
+    }
 
-  width: 100%;
-  height: 100%;
+    &__poster {
+      z-index: 0;
+    }
 
-  object-fit: cover;
-  object-position: 70% center;
+    &__video {
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 0.35s ease;
 
-  transform: scale(1.03);
-}
-
-&__poster {
-  z-index: 0;
-}
-
-&__video {
-  z-index: 1;
-
-  opacity: 0;
-
-  transition: opacity 0.35s ease;
-
-  &--ready {
-    opacity: 1;
-  }
-}
+      &--ready {
+        opacity: 1;
+      }
+    }
 
   &__overlay {
     position: absolute;
@@ -93,12 +87,9 @@
     left: 50%;
     bottom: 48px;
     z-index: 3;
-
     width: min(90%, 720px);
     margin: 0;
-
     transform: translateX(-50%);
-
     font-family: "Marcellus", serif;
     font-weight: 400;
     font-size: 22px;
@@ -106,9 +97,7 @@
     letter-spacing: 0.08em;
     text-transform: uppercase;
     text-align: center;
-
     color: $text-primary;
-
     text-shadow: 0 0 28px rgba(0, 0, 0, 0.9);
   }
 

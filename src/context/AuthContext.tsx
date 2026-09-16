@@ -149,23 +149,29 @@ export const AuthProvider = ({ children }: Props) => {
   const clearAuth = useCallback(
     ({ preserveQuiz }: { preserveQuiz: boolean }) => {
       localStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
-
       localStorage.removeItem(USER_STORAGE_KEY);
-
-      localStorage.removeItem("shownAchievements");
-
+      localStorage.removeItem("tokenType");
+      localStorage.removeItem("favoriteWineIds");
+  
       if (!preserveQuiz) {
+        Object.keys(localStorage).forEach((key) => {
+          if (
+            key === "shownAchievements" ||
+            key.startsWith("shownAchievements:")
+          ) {
+            localStorage.removeItem(key);
+          }
+        });
+  
         clearQuizSession();
       }
-
+  
       queryClient.clear();
-
+  
       setAccessToken(null);
-
       setUser(null);
-
+  
       setIsLoadingUser(false);
-
       setIsAuthReady(true);
     },
     [clearQuizSession]

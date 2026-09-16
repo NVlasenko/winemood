@@ -16,7 +16,11 @@ export const WineRating = ({ rating }: Props) => {
             Math.min(Math.max(rating - (star - 1), 0), 1) * 100;
 
           return (
-            <span className="catalog-page__star" key={star} aria-hidden="true">
+            <span
+              className="catalog-page__star"
+              key={star}
+              aria-hidden="true"
+            >
               <span className="catalog-page__star-bg">★</span>
 
               <span
@@ -30,7 +34,7 @@ export const WineRating = ({ rating }: Props) => {
         })}
       </div>
 
-      <span>{rating.toFixed(2)}</span>
+      {rating > 0 && <span>{rating.toFixed(2)}</span>}
     </div>
   );
 };

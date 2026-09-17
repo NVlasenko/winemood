@@ -21,7 +21,7 @@ export const ProfileHero = ({
   initialUser,
   initialFavoritesCount,
 }: ProfileHeroProps) => {
-  const { user: authUser, updateUser } = useAuth();
+  const { user: authUser, refreshUser } = useAuth();
 
   const { favoritesCount, hasLoadedFavorites } = useFavorites();
 
@@ -116,7 +116,9 @@ export const ProfileHero = ({
           </div>
 
           <div className="profile-hero__stat">
-            <span className="profile-hero__value">{user.reviewCount ?? 0}</span>
+            <span className="profile-hero__value">
+              {user.reviewCount ?? 0}
+            </span>
 
             <span className="profile-hero__label">Reviews</span>
           </div>
@@ -141,9 +143,9 @@ export const ProfileHero = ({
 
               const compressedFile = await compressImage(file);
 
-              const response = await userApi.uploadAvatar(compressedFile);
+              await userApi.uploadAvatar(compressedFile);
 
-              updateUser(response);
+              await refreshUser();
 
               setPreview(null);
 

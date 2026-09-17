@@ -1,9 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router";
+
 import { analytics } from "@/shared/lib/analytics";
+
 import recentSearchIcon from "@/assets/images/icons/recent-search.svg";
 import searchIcon from "@/assets/images/icons/search.svg";
+
 import { useSearchHistory } from "@/hooks/catalog";
+
 import "./CatalogSearch.scss";
 
 type Props = {
@@ -39,13 +43,11 @@ export const CatalogSearch = ({
   const shouldShowNoResults = Boolean(normalizedQuery && hasNoResults);
 
   useEffect(() => {
-    setSearchQuery(searchParam);
-  }, [searchParam]);
-
-  useEffect(() => {
     if (!isOpen) {
       return;
     }
+
+    setSearchQuery(searchParam);
 
     const timeoutId = window.setTimeout(() => {
       inputRef.current?.focus();

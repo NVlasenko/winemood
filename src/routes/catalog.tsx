@@ -43,8 +43,8 @@ const getSort = (searchParams: URLSearchParams): string[] => {
     case "POPULARITY":
       return ["viewCount,desc"];
 
-    default:
-      return [];
+      default:
+        return ["id,asc"];
   }
 };
 
